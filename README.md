@@ -4,7 +4,7 @@ Original Cyclos source from https://sourceforge.net/projects/cyclos/files/Cyclos
 
 Cyclos doesn't seem to come with a build system, only a bunch of source
 code. This repository contains a Gradle build script for Cyclos and continues 
-the development of Cyclos3 as the fork OpenCyclos.
+the development of Cyclos3 as a fork of OpenCyclos.
 
 ## Building
 
