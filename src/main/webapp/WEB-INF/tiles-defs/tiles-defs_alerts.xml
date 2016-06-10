@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+
+ <!DOCTYPE tiles-definitions PUBLIC
+       "-//Apache Software Foundation//DTD Tiles Configuration 1.1//EN"
+       "http://jakarta.apache.org/struts/dtds/tiles-config_1_1.dtd">
+
+<tiles-definitions>
+
+	<definition name="admin/_searchAlerts" extends=".adminLayout">
+		<put name="body" value="/pages/alerts/searchAlerts.jsp"/>
+	</definition>
+
+	<definition name="admin/_listAlerts" extends=".adminLayout">
+		<put name="body" value="/pages/alerts/listAlerts.jsp"/>
+	</definition>
+
+
+
+	<definition name="admin/_viewErrorLog" extends=".adminLayout">
+		<put name="body" value="/pages/alerts/viewErrorLog.jsp"/>
+	</definition>
+
+	<definition name="admin/_searchErrorLog" extends=".adminLayout">
+		<put name="body" value="/pages/alerts/searchErrorLog.jsp"/>
+	</definition>
+
+	<definition name="admin/_viewErrorLogEntry" extends=".adminLayout">
+		<put name="body" value="/pages/alerts/viewErrorLogEntry.jsp"/>
+	</definition>
+
+</tiles-definitions>

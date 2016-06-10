@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+
+ <!DOCTYPE tiles-definitions PUBLIC
+       "-//Apache Software Foundation//DTD Tiles Configuration 1.1//EN"
+       "http://jakarta.apache.org/struts/dtds/tiles-config_1_1.dtd">
+
+<tiles-definitions>
+
+	<definition name="member/_contactList" extends=".memberLayout">
+		<put name="body" value="/pages/members/contacts/contactList.jsp"/>
+	</definition>
+
+	<definition name="member/_contactDetails" extends=".memberLayout">
+		<put name="body" value="/pages/members/contacts/contactDetails.jsp"/>
+	</definition>
+
+
+	<definition name="operator/_contactList" extends=".operatorLayout">
+		<put name="body" value="/pages/members/contacts/contactList.jsp"/>
+	</definition>
+
+	<definition name="operator/_contactDetails" extends=".operatorLayout">
+		<put name="body" value="/pages/members/contacts/contactDetails.jsp"/>
+	</definition>
+
+</tiles-definitions>

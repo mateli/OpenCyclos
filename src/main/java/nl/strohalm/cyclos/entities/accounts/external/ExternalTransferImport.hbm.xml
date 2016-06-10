@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class dynamic-insert="true" dynamic-update="true" name="nl.strohalm.cyclos.entities.accounts.external.ExternalTransferImport" table="external_transfer_imports">
+		<id name="id" type="long">
+		    <column name="id" sql-type="integer"/>
+			<generator class="native"/>
+		</id>
+		
+        <property name="date" column="date" type="calendar" not-null="true" />
+
+		<many-to-one name="by" class="nl.strohalm.cyclos.entities.members.Administrator">
+		    <column name="by_id" not-null="true" sql-type="integer"/>
+		</many-to-one>
+
+		<many-to-one name="account" class="nl.strohalm.cyclos.entities.accounts.external.ExternalAccount">
+		    <column name="account_id" not-null="true" sql-type="integer"/>
+		</many-to-one>
+
+		<bag name="transfers" order-by="date desc" inverse="true" cascade="delete">
+        	<key>
+			    <column name="import_id" sql-type="integer"/>
+		    </key>
+       	    <one-to-many class="nl.strohalm.cyclos.entities.accounts.external.ExternalTransfer"/>
+		</bag>
+
+	</class>
+</hibernate-mapping>

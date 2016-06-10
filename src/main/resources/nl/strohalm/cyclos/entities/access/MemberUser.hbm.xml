@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <subclass dynamic-insert="true" dynamic-update="true" name="nl.strohalm.cyclos.entities.access.MemberUser" extends="nl.strohalm.cyclos.entities.access.User" discriminator-value="M">
+    	<property name="pin" length="64" column="pin" type="string"/>
+    	<property name="pinBlockedUntil" column="pin_blocked_until" type="calendar"/>
+    </subclass>
+</hibernate-mapping>

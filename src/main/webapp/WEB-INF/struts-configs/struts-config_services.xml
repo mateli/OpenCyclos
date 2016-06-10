@@ -1,0 +1,41 @@
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.1//EN" "http://jakarta.apache.org/struts/dtds/struts-config_1_1.dtd">
+<struts-config>
+	<form-beans>
+        <form-bean name="searchServiceClientsForm" type="nl.strohalm.cyclos.controls.services.SearchServiceClientsForm" />
+        <form-bean name="editServiceClientForm" type="nl.strohalm.cyclos.controls.services.EditServiceClientForm" />
+        <form-bean name="removeServiceClientForm" type="nl.strohalm.cyclos.controls.services.RemoveServiceClientForm" />
+	</form-beans>
+	
+	<action-mappings type="org.apache.struts.config.SecureActionConfig">
+
+		<action 
+			path="/admin/searchServiceClients" 
+			type="nl.strohalm.cyclos.controls.services.SearchServiceClientsAction"
+            name="searchServiceClientsForm"
+            scope="request"
+            input="admin/_searchServiceClients">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/admin/editServiceClient" 
+			type="nl.strohalm.cyclos.controls.services.EditServiceClientAction"
+            name="editServiceClientForm"
+            scope="request"
+            input="admin/_editServiceClient">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/editServiceClient" redirect="true" />
+		</action>
+
+		<action 
+			path="/admin/removeServiceClient" 
+			type="nl.strohalm.cyclos.controls.services.RemoveServiceClientAction"
+            name="removeServiceClientForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/searchServiceClients" redirect="true" />
+		</action>
+
+	</action-mappings>
+
+</struts-config>

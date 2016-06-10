@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+
+    <subclass name="nl.strohalm.cyclos.entities.accounts.InstallmentAmountReservation" extends="nl.strohalm.cyclos.entities.accounts.BaseTransferAmountReservation" discriminator-value="I">
+    </subclass>
+    
+</hibernate-mapping>

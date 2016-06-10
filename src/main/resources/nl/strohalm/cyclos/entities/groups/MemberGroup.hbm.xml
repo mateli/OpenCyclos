@@ -1,0 +1,333 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <subclass dynamic-insert="true" dynamic-update="true" name="nl.strohalm.cyclos.entities.groups.MemberGroup" extends="nl.strohalm.cyclos.entities.groups.SystemGroup" discriminator-value="M">
+        <component name="memberSettings" class="nl.strohalm.cyclos.entities.groups.MemberGroupSettings">
+	        <many-to-one name="smsChargeTransferType" class="nl.strohalm.cyclos.entities.accounts.transactions.TransferType">
+			    <column name="sms_charge_transfer_type_id" sql-type="integer"/>
+			</many-to-one>
+	        <property name="smsChargeAmount" column="sms_charge_amount" type="big_decimal" precision="15" scale="6"/>
+	        <property name="smsFree" type="integer">
+	        	<column name="sms_free_count" not-null="true" default="0" />
+	        </property>
+	        <property name="smsAdditionalCharged" type="integer">
+	        	<column name="sms_additional_charged_count" not-null="true" default="1" />
+	        </property>
+	        <property name="smsAdditionalChargedPeriod" type="timePeriod">
+	        	<column name="sms_additional_charged_period_number" />
+	        	<column name="sms_additional_charged_period_field" />
+	        </property>
+	        <property name="smsShowFreeThreshold" type="integer">
+	        	<column name="sms_show_free_threshold" not-null="true" default="50" />
+	        </property>
+	        <property name="smsContextClassName" column="sms_context_class_name" type="string"/>
+	        <property name="maxImagesPerMember" column="member_max_images_per_member" type="integer"/>
+	        <property name="maxAdsPerMember" column="member_max_ads_per_member" type="integer"/>
+	        <property name="maxAdDescriptionSize" type="integer">
+	        	<column name="member_max_ad_description_size" not-null="true" default="2048" />
+	        </property>
+	        <property name="maxAdImagesPerMember" type="integer">
+	        	<column name="member_max_ad_images_per_member" not-null="true" default="3" /> 
+	        </property>
+	        <property name="defaultAdPublicationTime" type="timePeriod" >
+	        	<column name="member_default_ad_publication_number" />
+	        	<column name="member_default_ad_publication_field" />
+	        </property>
+			<property name="maxAdPublicationTime" type="timePeriod" >
+	        	<column name="member_max_ad_publication_number" />
+	        	<column name="member_max_ad_publication_field" />
+			</property>
+	        <property name="enablePermanentAds" type="boolean">
+	        	<column name="member_enable_permanent_ads" not-null="true" default="false" />
+	        </property>
+	        <property name="showPosWebPaymentDescription" type="boolean">
+	        	<column name="member_show_posweb_pmt_dsc" not-null="true" default="false" />
+	        </property>
+	        <property name="externalAdPublication">
+	        	<column name="member_external_ad_publication" length="1" />
+	        	<type name="nl.strohalm.cyclos.utils.hibernate.StringValuedEnumType">
+	                <param name="enumClassName">nl.strohalm.cyclos.entities.groups.MemberGroupSettings$ExternalAdPublication</param>
+	            </type>
+	        </property>
+	        <property name="sendPasswordByEmail" type="boolean">
+	        	<column name="member_send_password_by_email" not-null="true" default="false" />
+	        </property>
+	        <property name="viewLoansByGroup" type="boolean">
+	        	<column name="member_view_loans_by_group" not-null="true" default="false" />
+	        </property>
+	        <property name="repayLoanByGroup" type="boolean">
+	        	<column name="member_repay_loan_by_group" not-null="true" default="false" />
+	        </property>
+	        <property name="maxSchedulingPayments" type="integer">
+	        	<column name="member_max_scheduling_payments" not-null="true" default="0" />
+	        </property>
+	        <property name="maxSchedulingPeriod" type="timePeriod">
+	        	<column name="member_max_scheduling_period_number" />
+	        	<column name="member_max_scheduling_period_field" />
+	        </property>
+	        <property name="pinLength" type="rangeConstraint">
+	        	<column name="min_pin_length" />
+	        	<column name="max_pin_length" />
+	        </property>
+	        <property name="maxPinWrongTries" column="member_max_pin_tries"/>
+	        <property name="pinBlockTimeAfterMaxTries" type="timePeriod">
+	        	<column name="member_pin_block_number" />
+	        	<column name="member_pin_block_field" />
+	        </property>
+	        <property name="expireMembersAfter" type="timePeriod">
+	        	<column name="member_expire_number" />
+	        	<column name="member_expire_field" />
+	        </property>
+	        <property name="maxPosSchedulingPayments" type="integer">
+	        	<column name="member_max_pos_scheduling_payments" not-null="true" default="0" />
+	        </property>
+	        <property name="numberOfCopies" type="integer">
+	        	<column name="member_number_of_copies" not-null="true" default="0" />
+	        </property>
+	        <property name="resultPageSize" type="integer">
+	        	<column name="member_result_page_size" not-null="true" default="0" />
+	        </property>
+	        <property name="allowMakePayment" type="boolean">
+	        	<column name="member_allow_make_payment" not-null="true" default="false" />
+	        </property>
+	        <many-to-one name="groupAfterExpiration" class="nl.strohalm.cyclos.entities.groups.MemberGroup">
+	            <column name="member_expire_group_id" sql-type="integer"/>
+	    	</many-to-one>
+			<set name="emailValidation" cascade="all" table="member_groups_email_validation">
+				<cache usage="read-write" />
+				<key>
+					<column name="group_id" sql-type="integer"/>
+				</key>
+				<element>
+					<column name="type" not-null="true" length="1" />
+		        	<type name="nl.strohalm.cyclos.utils.hibernate.StringValuedEnumType">
+		                <param name="enumClassName">nl.strohalm.cyclos.entities.groups.MemberGroupSettings$EmailValidation</param>
+		            </type>
+				</element>
+	    	</set>
+		</component>
+        <property name="active" type="boolean">
+        	<column name="member_active" not-null="true" default="false" />
+        </property>
+        <property name="initialGroupShow" type="string" length="100" column="initial_group_show" />
+        <property name="initialGroup" type="boolean">
+        	<column name="initial_group" not-null="true" default="false" />
+        </property>
+        <property name="defaultAllowChargingSms" type="boolean">
+        	<column name="member_default_allow_charging_sms" not-null="true" default="false" />
+        </property>
+        <property name="defaultAcceptFreeMailing" type="boolean">
+        	<column name="member_default_accept_free_mailing" not-null="true" default="false" />
+        </property>
+        <property name="defaultAcceptPaidMailing" type="boolean">
+        	<column name="member_default_accept_paid_mailing" not-null="true" default="false" />
+        </property>
+    	<many-to-one name="registrationAgreement" class="nl.strohalm.cyclos.entities.members.RegistrationAgreement">
+		    <column name="registration_agreement_id" sql-type="integer"/>
+		</many-to-one>
+		<many-to-one name="cardType" class="nl.strohalm.cyclos.entities.accounts.cards.CardType">
+		    <column name="card_type_id" sql-type="integer"/>
+		</many-to-one>
+
+		<bag name="accountSettings" inverse="true" cascade="delete">
+			<cache usage="read-write" />
+			<key>
+				<column name="group_id" sql-type="integer"/>
+			</key>
+			<one-to-many class="nl.strohalm.cyclos.entities.accounts.MemberGroupAccountSettings"/>
+    	</bag>
+    	
+        <bag name="canViewProfileOfGroups" table="group_view_profile_permissions">
+			<cache usage="read-write" />
+			<key>
+				<column name="owner_group_id" sql-type="integer"/>
+			</key>
+			<many-to-many class="nl.strohalm.cyclos.entities.groups.MemberGroup">
+                <column name="related_group_id" sql-type="integer"/>
+			</many-to-many>
+		</bag>
+		
+		<bag name="canViewInformationOf" table="group_view_account_information_permissions">
+			<cache usage="read-write" />
+			<key>
+				<column name="owner_group_id" sql-type="integer"/>
+			</key>
+			<many-to-many class="nl.strohalm.cyclos.entities.accounts.AccountType">
+                <column name="account_type_id" sql-type="integer"/>
+			</many-to-many>
+		</bag>
+		
+        <bag name="canViewAdsOfGroups" table="group_view_ads_permissions">
+			<cache usage="read-write" />
+			<key>
+				<column name="owner_group_id" sql-type="integer"/>
+			</key>
+			<many-to-many class="nl.strohalm.cyclos.entities.groups.MemberGroup">
+                <column name="related_group_id" sql-type="integer"/>
+			</many-to-many>
+		</bag>
+		
+		<bag name="accountFees" table="groups_account_fees" inverse="true">
+			<cache usage="read-write" />
+			<key>
+			    <column name="group_id" sql-type="integer"/>
+			</key>
+			<many-to-many class="nl.strohalm.cyclos.entities.accounts.fees.account.AccountFee">
+                <column name="account_fee_id" sql-type="integer"/>
+			</many-to-many>
+		</bag>
+		
+		<bag name="managedByGroups" table="admin_manages_member_groups" inverse="true">
+			<cache usage="read-write" />
+			<key>
+			    <column name="managed_group_id" sql-type="integer"/>
+			</key>
+			<many-to-many class="nl.strohalm.cyclos.entities.groups.AdminGroup">
+			    <column name="manager_group_id" sql-type="integer"/>	
+			</many-to-many>
+		</bag>
+		
+		<bag name="customFields" table="member_groups_custom_fields" inverse="true">
+			<cache usage="read-write" />
+			<key>
+                <column name="group_id" sql-type="integer"/>
+			</key>
+			<many-to-many class="nl.strohalm.cyclos.entities.customization.fields.CustomField">
+			    <column name="custom_field_id" sql-type="integer"/>
+			</many-to-many>
+		</bag>
+		
+		<bag name="fromTransactionFees" table="groups_from_transaction_fees" inverse="true">
+			<cache usage="read-write" />
+			<key>
+                <column name="group_id" sql-type="integer"/>
+			</key>
+			<many-to-many class="nl.strohalm.cyclos.entities.accounts.fees.transaction.TransactionFee">
+			    <column name="transaction_fee_id" sql-type="integer"/>
+			</many-to-many>
+		</bag>
+		
+		<bag name="toTransactionFees" table="groups_to_transaction_fees" inverse="true">
+			<cache usage="read-write" />
+			<key>
+                <column name="group_id" sql-type="integer"/>
+			</key>
+			<many-to-many class="nl.strohalm.cyclos.entities.accounts.fees.transaction.TransactionFee">
+			    <column name="transaction_fee_id" sql-type="integer"/>
+			</many-to-many>
+		</bag>
+		
+		<bag name="defaultMailMessages" table="member_groups_message_types">
+			<cache usage="read-write" />
+			<key>
+                <column name="group_id" sql-type="integer"/>
+			</key>
+			<element>
+				<column name="type" length="3" not-null="true" />
+				<type name="nl.strohalm.cyclos.utils.hibernate.StringValuedEnumType">
+					<param name="enumClassName">nl.strohalm.cyclos.entities.members.messages.Message$Type</param>
+				</type>
+			</element>
+		</bag>
+		
+		<bag name="smsMessages" table="member_groups_sms_message_types">
+			<cache usage="read-write" />
+			<key>
+                <column name="group_id" sql-type="integer"/>
+			</key>
+			<element>
+				<column name="type" length="3" not-null="true" />
+				<type name="nl.strohalm.cyclos.utils.hibernate.StringValuedEnumType">
+					<param name="enumClassName">nl.strohalm.cyclos.entities.members.messages.Message$Type</param>
+				</type>
+			</element>
+		</bag>
+		
+		<bag name="defaultSmsMessages" table="member_groups_default_sms_message_types">
+			<cache usage="read-write" />
+			<key>
+                <column name="group_id" sql-type="integer"/>
+			</key>
+			<element>
+				<column name="type" length="3" not-null="true" />
+				<type name="nl.strohalm.cyclos.utils.hibernate.StringValuedEnumType">
+					<param name="enumClassName">nl.strohalm.cyclos.entities.members.messages.Message$Type</param>
+				</type>
+			</element>
+		</bag>
+		
+		<bag name="channels" table="groups_channels">
+			<cache usage="read-write" />
+			<key>
+			    <column name="group_id" sql-type="integer"/>
+			</key>
+			<many-to-many class="nl.strohalm.cyclos.entities.access.Channel">
+                <column name="channel_id" sql-type="integer"/>
+			</many-to-many>
+		</bag>
+		
+		<bag name="requestPaymentByChannels" table="groups_request_payment_channels">
+			<cache usage="read-write" />
+			<key>
+			    <column name="group_id" sql-type="integer"/>
+			</key>
+			<many-to-many class="nl.strohalm.cyclos.entities.access.Channel">
+                <column name="channel_id" sql-type="integer"/>
+			</many-to-many>
+		</bag>
+		
+		<bag name="defaultChannels" table="groups_default_channels">
+			<cache usage="read-write" />
+			<key>
+			    <column name="group_id" sql-type="integer"/>
+			</key>
+			<many-to-many class="nl.strohalm.cyclos.entities.access.Channel">
+                <column name="channel_id" sql-type="integer"/>
+			</many-to-many>
+		</bag>
+
+		<bag name="canIssueCertificationToGroups" table="group_issue_certification_to">
+			<cache usage="read-write" />
+			<key>
+				<column name="owner_group_id" sql-type="integer"/>
+			</key>
+			<many-to-many class="nl.strohalm.cyclos.entities.groups.MemberGroup">
+                <column name="related_group_id" sql-type="integer"/>
+			</many-to-many>
+		</bag>
+
+		<bag name="canBuyWithPaymentObligationsFromGroups" table="group_buy_with_payment_obligations_from">
+			<cache usage="read-write" />
+			<key>
+				<column name="owner_group_id" sql-type="integer"/>
+			</key>
+			<many-to-many class="nl.strohalm.cyclos.entities.groups.MemberGroup">
+                <column name="related_group_id" sql-type="integer"/>
+			</many-to-many>
+		</bag>
+
+		<bag name="canViewGroupFilters" table="group_filters_viewable_by" inverse="true">
+			<cache usage="read-write" />
+			<key>
+			    <column name="group_id" sql-type="integer"/>
+			</key>
+			<many-to-many class="nl.strohalm.cyclos.entities.groups.GroupFilter">
+                <column name="group_filter_id" sql-type="integer"/>
+			</many-to-many>
+		</bag>
+		
+		<bag name="possibleInitialGroupOf" table="broker_groups_possible_initial_groups" inverse="true">
+			<cache usage="read-write" />
+			<key>
+			    <column name="possible_initial_group_id" sql-type="integer"/>
+			</key>
+			<many-to-many class="nl.strohalm.cyclos.entities.groups.BrokerGroup">
+			    <column name="group_id" sql-type="integer"/>	
+			</many-to-many>
+		</bag>
+		
+    </subclass>
+</hibernate-mapping>

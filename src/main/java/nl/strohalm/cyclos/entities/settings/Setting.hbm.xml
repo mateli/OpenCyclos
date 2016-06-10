@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+
+	<class dynamic-insert="true" dynamic-update="true" name="nl.strohalm.cyclos.entities.settings.Setting" table="settings">
+		<id name="id" type="long">
+		    <column name="id" sql-type="integer"/>
+			<generator class="native"/>
+		</id>
+        <property name="type" column="type" not-null="true" update="false" unique-key="uk_type_name" length="15">
+            <type name="nl.strohalm.cyclos.utils.hibernate.StringValuedEnumType">
+                <param name="enumClassName">nl.strohalm.cyclos.entities.settings.Setting$Type</param>
+            </type>
+		</property>		
+		<property name="name" column="name" not-null="true" update="false" unique-key="uk_type_name" type="string" length="100"/>
+		<property name="value" column="value" type="string" length="4096"/>
+	</class>
+
+</hibernate-mapping>

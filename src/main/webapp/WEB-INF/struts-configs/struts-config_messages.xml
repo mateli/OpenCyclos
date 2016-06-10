@@ -1,0 +1,269 @@
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.1//EN" "http://jakarta.apache.org/struts/dtds/struts-config_1_1.dtd">
+<struts-config>
+	<form-beans>
+        <form-bean name="searchMessagesForm" type="nl.strohalm.cyclos.controls.members.messages.SearchMessagesForm" />
+        <form-bean name="viewMessageForm" type="nl.strohalm.cyclos.controls.members.messages.ViewMessageForm" />
+        <form-bean name="sendMessageForm" type="nl.strohalm.cyclos.controls.members.messages.SendMessageForm" />
+        <form-bean name="changeMessageStatusForm" type="nl.strohalm.cyclos.controls.members.messages.ChangeMessageStatusForm" />
+        <form-bean name="searchMessageCategoriesAjaxForm" type="nl.strohalm.cyclos.controls.members.messages.SearchMessageCategoriesAjaxForm" />
+        <form-bean name="searchSmsLogsForm" type="nl.strohalm.cyclos.controls.members.sms.SearchSmsLogsForm" />
+        <form-bean name="searchSmsMailingVariablesAjaxForm" type="nl.strohalm.cyclos.controls.members.sms.SearchSmsMailingVariablesAjaxForm" />
+        <form-bean name="searchSmsMailingsForm" type="nl.strohalm.cyclos.controls.members.sms.SearchSmsMailingsForm" />
+        <form-bean name="sendSmsMailingForm" type="nl.strohalm.cyclos.controls.members.sms.SendSmsMailingForm" />
+        <form-bean name="editInfoTextForm" type="nl.strohalm.cyclos.controls.members.sms.EditInfoTextForm" />
+        <form-bean name="removeInfoTextForm" type="nl.strohalm.cyclos.controls.members.sms.RemoveInfoTextForm" />
+        <form-bean name="searchInfoTextsForm" type="nl.strohalm.cyclos.controls.members.sms.SearchInfoTextsForm" />
+	</form-beans>
+	
+	<action-mappings type="org.apache.struts.config.SecureActionConfig">
+
+		<action 
+			path="/admin/searchMessageCategoriesAjax" 
+			type="nl.strohalm.cyclos.controls.members.messages.SearchMessageCategoriesAjaxAction"
+            name="searchMessageCategoriesAjaxForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+		</action>
+				
+		<action 
+			path="/admin/searchMessages" 
+			type="nl.strohalm.cyclos.controls.members.messages.SearchMessagesAction"
+            name="searchMessagesForm"
+            scope="session"
+            input="admin/_searchMessages">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/admin/viewMessage" 
+			type="nl.strohalm.cyclos.controls.members.messages.ViewMessageAction"
+            name="viewMessageForm"
+            scope="request"
+            input="admin/_viewMessage">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/admin/sendMessage" 
+			type="nl.strohalm.cyclos.controls.members.messages.SendMessageAction"
+            name="sendMessageForm"
+            scope="request"
+            input="admin/_sendMessage">
+			<set-property property="secure" value="true" />
+			<forward name="backToProfile" redirect="true" path="/do/admin/profile" />
+			<forward name="backToList" redirect="true" path="/do/admin/searchMessages" />
+		</action>
+
+		<action 
+			path="/admin/changeMessageStatus" 
+			type="nl.strohalm.cyclos.controls.members.messages.ChangeMessageStatusAction"
+            name="changeMessageStatusForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" redirect="true" path="/do/admin/searchMessages" />
+		</action>
+		
+		<action 
+			path="/admin/searchSmsLogs" 
+			type="nl.strohalm.cyclos.controls.members.sms.SearchSmsLogsAction"
+            name="searchSmsLogsForm"
+            scope="session"
+            input="admin/_searchSmsLogs">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/admin/searchSmsMailings" 
+			type="nl.strohalm.cyclos.controls.members.sms.SearchSmsMailingsAction"
+            name="searchSmsMailingsForm"
+            scope="session"
+            input="admin/_searchSmsMailings">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/admin/sendSmsMailing" 
+			type="nl.strohalm.cyclos.controls.members.sms.SendSmsMailingAction"
+            name="sendSmsMailingForm"
+            scope="request"
+            input="admin/_sendSmsMailing">
+			<set-property property="secure" value="true" />
+			<forward name="success" redirect="true" path="/do/admin/searchSmsMailings" />
+		</action>
+		
+		<action 
+			path="/admin/searchSmsMailingVariablesAjax" 
+			type="nl.strohalm.cyclos.controls.members.sms.SearchSmsMailingVariablesAjaxAction"
+            name="searchSmsMailingVariablesAjaxForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/admin/editInfoText" 
+			type="nl.strohalm.cyclos.controls.members.sms.EditInfoTextAction"
+            name="editInfoTextForm"
+            scope="request"
+            input="admin/_editInfoText">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/editInfoText" redirect="true" />
+		</action>
+		
+		<action 
+			path="/admin/removeInfoText" 
+			type="nl.strohalm.cyclos.controls.members.sms.RemoveInfoTextAction"
+            name="removeInfoTextForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/searchInfoTexts" redirect="true" />
+		</action>
+
+		<action 
+			path="/admin/searchInfoTexts" 
+			type="nl.strohalm.cyclos.controls.members.sms.SearchInfoTextsAction"
+            name="searchInfoTextsForm"
+            scope="session"
+            input="admin/_searchInfoTexts">
+			<set-property property="secure" value="true" />
+		</action>
+		
+		<action 
+			path="/member/searchSmsMailingVariablesAjax" 
+			type="nl.strohalm.cyclos.controls.members.sms.SearchSmsMailingVariablesAjaxAction"
+            name="searchSmsMailingVariablesAjaxForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+		</action>
+		
+		<action 
+			path="/member/searchMessageCategoriesAjax" 
+			type="nl.strohalm.cyclos.controls.members.messages.SearchMessageCategoriesAjaxAction"
+            name="searchMessageCategoriesAjaxForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+		</action>
+		
+		<action 
+			path="/member/searchMessages" 
+			type="nl.strohalm.cyclos.controls.members.messages.SearchMessagesAction"
+            name="searchMessagesForm"
+            scope="session"
+            input="member/_searchMessages">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/member/viewMessage" 
+			type="nl.strohalm.cyclos.controls.members.messages.ViewMessageAction"
+            name="viewMessageForm"
+            scope="request"
+            input="member/_viewMessage">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/member/sendMessage" 
+			type="nl.strohalm.cyclos.controls.members.messages.SendMessageAction"
+            name="sendMessageForm"
+            scope="request"
+            input="member/_sendMessage">
+			<set-property property="secure" value="true" />
+			<forward name="backToProfile" redirect="true" path="/do/member/profile" />
+			<forward name="backToList" redirect="true" path="/do/member/searchMessages" />
+		</action>
+
+		<action 
+			path="/member/changeMessageStatus" 
+			type="nl.strohalm.cyclos.controls.members.messages.ChangeMessageStatusAction"
+            name="changeMessageStatusForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" redirect="true" path="/do/member/searchMessages" />
+		</action>
+
+		<action 
+			path="/member/searchSmsLogs" 
+			type="nl.strohalm.cyclos.controls.members.sms.SearchSmsLogsAction"
+            name="searchSmsLogsForm"
+            scope="session"
+            input="member/_searchSmsLogs">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/member/searchSmsMailings" 
+			type="nl.strohalm.cyclos.controls.members.sms.SearchSmsMailingsAction"
+            name="searchSmsMailingsForm"
+            scope="session"
+            input="member/_searchSmsMailings">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/member/sendSmsMailing" 
+			type="nl.strohalm.cyclos.controls.members.sms.SendSmsMailingAction"
+            name="sendSmsMailingForm"
+            scope="request"
+            input="member/_sendSmsMailing">
+			<set-property property="secure" value="true" />
+			<forward name="success" redirect="true" path="/do/member/searchSmsMailings" />
+		</action>
+		
+		<action 
+			path="/operator/searchMessageCategoriesAjax" 
+			type="nl.strohalm.cyclos.controls.members.messages.SearchMessageCategoriesAjaxAction"
+            name="searchMessageCategoriesAjaxForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/operator/searchMessages" 
+			type="nl.strohalm.cyclos.controls.members.messages.SearchMessagesAction"
+            name="searchMessagesForm"
+            scope="session"
+            input="operator/_searchMessages">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/operator/viewMessage" 
+			type="nl.strohalm.cyclos.controls.members.messages.ViewMessageAction"
+            name="viewMessageForm"
+            scope="request"
+            input="operator/_viewMessage">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/operator/sendMessage" 
+			type="nl.strohalm.cyclos.controls.members.messages.SendMessageAction"
+            name="sendMessageForm"
+            scope="request"
+            input="operator/_sendMessage">
+			<set-property property="secure" value="true" />
+			<forward name="backToProfile" redirect="true" path="/do/operator/profile" />
+			<forward name="backToList" redirect="true" path="/do/operator/searchMessages" />
+		</action>
+
+		<action 
+			path="/operator/changeMessageStatus" 
+			type="nl.strohalm.cyclos.controls.members.messages.ChangeMessageStatusAction"
+            name="changeMessageStatusForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" redirect="true" path="/do/operator/searchMessages" />
+		</action>
+
+		<action 
+			path="/operator/searchSmsLogs" 
+			type="nl.strohalm.cyclos.controls.members.sms.SearchSmsLogsAction"
+            name="searchSmsLogsForm"
+            scope="session"
+            input="operator/_searchSmsLogs">
+			<set-property property="secure" value="true" />
+		</action>
+		
+	</action-mappings>
+
+</struts-config>

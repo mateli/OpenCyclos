@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+	Auxiliary bean definitions
+ -->
+<beans default-autowire="byName"
+       xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="
+			http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+			http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd"
+	   >
+
+	<bean id="loggingHandler" class="nl.strohalm.cyclos.utils.logging.LoggingHandlerImpl" />
+	<bean id="logFormatter" class="nl.strohalm.cyclos.utils.logging.LogFormatter" />
+	<bean id="hashHandler" class="nl.strohalm.cyclos.utils.HashHandler" />
+	<bean id="mailHandler" class="nl.strohalm.cyclos.utils.MailHandler">
+		<property name="maxThreads" value="#{cyclosProperties['cyclos.maxMailSenderThreads']}" />
+	</bean>
+	<bean id="permissionHelper" class="nl.strohalm.cyclos.utils.access.PermissionHelper" />
+	<bean id="transactionHelper" class="nl.strohalm.cyclos.utils.TransactionHelperImpl">
+		<property name="taskExecutor">
+			<!-- we don't use the task:scheduler tag because it doesn't support the waitForTasksToCompleteOnShutdown attribute -->
+	    	<bean class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+		    	<property name="corePoolSize" value="#{cyclosProperties['cyclos.transaction.corePoolSize']}"/>
+	        	<property name="maxPoolSize" value="#{cyclosProperties['cyclos.transaction.maxPoolSize']}"/>
+				<property name="queueCapacity" value="#{cyclosProperties['cyclos.transaction.queueCapacity']}" />        
+	        	<property name="waitForTasksToCompleteOnShutdown" value="true"/>
+	        	<property name="allowCoreThreadTimeOut" value="true"/>
+	        	<property name="keepAliveSeconds" value="60"/>
+	    	</bean>
+    	</property>		
+	</bean>
+	<bean id="customObjectHandler" class="nl.strohalm.cyclos.utils.CustomObjectHandlerImpl" />
+	
+	
+	<bean id="taskRunner" class="nl.strohalm.cyclos.spring.FactoryBeanFromProperties">
+		<constructor-arg value="nl.strohalm.cyclos.utils.tasks.TaskRunner" />
+		<constructor-arg value="cyclos.taskRunner" />
+		<constructor-arg value="nl.strohalm.cyclos.utils.tasks.TaskRunnerImpl" />
+	</bean>
+	<bean id="instanceHandler" class="nl.strohalm.cyclos.spring.FactoryBeanFromProperties">
+		<constructor-arg value="nl.strohalm.cyclos.utils.instance.InstanceHandler" />
+		<constructor-arg value="cyclos.instanceHandler" />
+		<constructor-arg value="nl.strohalm.cyclos.utils.instance.LocalInstanceHandler" />
+	</bean>
+	<bean id="cacheManager" class="nl.strohalm.cyclos.spring.FactoryBeanFromProperties">
+		<constructor-arg value="nl.strohalm.cyclos.utils.cache.CacheManager" />
+		<constructor-arg value="cyclos.cacheManager" />
+		<constructor-arg value="nl.strohalm.cyclos.utils.cache.EhCacheCacheManager" />
+	</bean>
+	<bean id="lockHandlerFactory" class="nl.strohalm.cyclos.spring.FactoryBeanFromProperties">
+		<constructor-arg value="nl.strohalm.cyclos.utils.lock.LockHandlerFactory" />
+		<constructor-arg value="cyclos.lockHandlerFactory" />
+		<constructor-arg value="nl.strohalm.cyclos.utils.lock.DirectLockHandlerFactory" />
+	</bean>
+	<bean id="customizedFileHandler" class="nl.strohalm.cyclos.spring.FactoryBeanFromProperties">
+		<constructor-arg value="nl.strohalm.cyclos.utils.customizedfile.CustomizedFileHandler" />
+		<constructor-arg value="cyclos.customizedFileHandler" />
+		<constructor-arg value="nl.strohalm.cyclos.utils.customizedfile.LocalCustomizedFileHandler" />
+	</bean>
+
+	<bean id="uniqueObjectHandler" class="nl.strohalm.cyclos.spring.FactoryBeanFromProperties">
+		<constructor-arg value="nl.strohalm.cyclos.utils.lock.UniqueObjectHandler" />
+		<constructor-arg value="cyclos.uniqueHandler" />
+		<constructor-arg value="nl.strohalm.cyclos.utils.lock.LocalUniqueObjectHandlerImpl" />
+	</bean>
+
+</beans>

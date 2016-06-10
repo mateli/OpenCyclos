@@ -1,0 +1,566 @@
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.1//EN" "http://jakarta.apache.org/struts/dtds/struts-config_1_1.dtd">
+<struts-config>
+	<form-beans>
+        <form-bean name="listGuaranteeTypesForm" type="nl.strohalm.cyclos.controls.accounts.guarantees.types.ListGuaranteeTypesForm" />
+        <form-bean name="searchCertificationsForm" type="nl.strohalm.cyclos.controls.accounts.guarantees.certifications.SearchCertificationsForm" />
+        <form-bean name="editCertificationForm" type="nl.strohalm.cyclos.controls.accounts.guarantees.certifications.EditCertificationForm" />
+        <form-bean name="lockCertificationForm" type="nl.strohalm.cyclos.controls.accounts.guarantees.certifications.ChangeStatusCertificationForm" />
+        <form-bean name="unlockCertificationForm" type="nl.strohalm.cyclos.controls.accounts.guarantees.certifications.ChangeStatusCertificationForm" />
+        <form-bean name="cancelCertificationForm" type="nl.strohalm.cyclos.controls.accounts.guarantees.certifications.ChangeStatusCertificationForm" />      
+        <form-bean name="deleteCertificationForm" type="nl.strohalm.cyclos.controls.accounts.guarantees.certifications.DeleteCertificationForm" />        
+        <form-bean name="editGuaranteeTypeForm" type="nl.strohalm.cyclos.controls.accounts.guarantees.types.EditGuaranteeTypeForm" />
+        <form-bean name="registerGuaranteeForm" type="nl.strohalm.cyclos.controls.accounts.guarantees.guarantees.RegisterGuaranteeForm" />
+        <form-bean name="searchGuaranteesForm" type="nl.strohalm.cyclos.controls.accounts.guarantees.guarantees.SearchGuaranteesForm" />
+        <form-bean name="authorizeGuaranteeForm" type="nl.strohalm.cyclos.controls.accounts.guarantees.guarantees.AuthorizeGuaranteeForm" />
+        <form-bean name="denyGuaranteeForm" type="nl.strohalm.cyclos.controls.accounts.guarantees.guarantees.ChangeStatusGuaranteeForm" />
+        <form-bean name="cancelGuaranteeForm" type="nl.strohalm.cyclos.controls.accounts.guarantees.guarantees.ChangeStatusGuaranteeForm" />
+        <form-bean name="deleteGuaranteeForm" type="nl.strohalm.cyclos.controls.accounts.guarantees.guarantees.DeleteGuaranteeForm" />
+        <form-bean name="searchPaymentObligationsForm" type="nl.strohalm.cyclos.controls.accounts.guarantees.paymentobligations.SearchPaymentObligationsForm" />
+        <form-bean name="editPaymentObligationForm" type="nl.strohalm.cyclos.controls.accounts.guarantees.paymentobligations.EditPaymentObligationForm" />
+        <form-bean name="acceptPaymentObligationPackForm" type="nl.strohalm.cyclos.controls.accounts.guarantees.paymentobligations.AcceptPaymentObligationPackForm" />
+        <form-bean name="acceptPaymentObligationForm" type="nl.strohalm.cyclos.controls.accounts.guarantees.paymentobligations.AcceptPaymentObligationForm" />        
+        <form-bean name="publishPaymentObligationForm" type="nl.strohalm.cyclos.controls.accounts.guarantees.paymentobligations.ChangeStatusPaymentObligationForm" />
+        <form-bean name="concealPaymentObligationForm" type="nl.strohalm.cyclos.controls.accounts.guarantees.paymentobligations.ChangeStatusPaymentObligationForm" />
+        <form-bean name="rejectPaymentObligationForm" type="nl.strohalm.cyclos.controls.accounts.guarantees.paymentobligations.ChangeStatusPaymentObligationForm" />
+        <form-bean name="deletePaymentObligationForm" type="nl.strohalm.cyclos.controls.accounts.guarantees.paymentobligations.DeletePaymentObligationForm" />                
+        <form-bean name="deleteGuaranteeTypeForm" type="nl.strohalm.cyclos.controls.accounts.guarantees.types.DeleteGuaranteeTypeForm" />
+        <form-bean name="guaranteeDetailsForm" type="nl.strohalm.cyclos.controls.accounts.guarantees.guarantees.GuaranteeDetailsForm" />
+        <form-bean name="calculateGuaranteeFeeAjaxForm" type="nl.strohalm.cyclos.controls.accounts.guarantees.guarantees.CalculateGuaranteeFeeAjaxForm" />
+	</form-beans>
+	
+	<action-mappings type="org.apache.struts.config.SecureActionConfig">
+
+		<!-- ADMIN'S ACTIONS -->
+		<action 
+			path="/admin/deleteGuaranteeType" 
+			type="nl.strohalm.cyclos.controls.accounts.guarantees.types.DeleteGuaranteeTypeAction"
+            name="deleteGuaranteeTypeForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/listGuaranteeTypes" redirect="true"></forward>
+		</action>
+		
+		<action 
+			path="/admin/listGuaranteeTypes" 
+			type="nl.strohalm.cyclos.controls.accounts.guarantees.types.ListGuaranteeTypesAction"
+			name="listGuaranteeTypesForm"
+			scope="request"
+            input="admin/_listGuaranteeTypes">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/admin/editGuaranteeType" 
+			type="nl.strohalm.cyclos.controls.accounts.guarantees.types.EditGuaranteeTypeAction"
+			name="editGuaranteeTypeForm"
+			scope="request"
+            input="admin/_editGuaranteeType">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/editGuaranteeType" redirect="true"></forward>
+		</action>
+		
+		<action 
+			path="/admin/registerGuarantee" 
+			type="nl.strohalm.cyclos.controls.accounts.guarantees.guarantees.RegisterGuaranteeAction"
+			name="registerGuaranteeForm"
+			scope="request"
+            input="admin/_registerGuarantee">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/guaranteeDetails" redirect="true"/>
+		</action>
+		
+		<action 
+			path="/admin/searchGuarantees" 
+			type="nl.strohalm.cyclos.controls.accounts.guarantees.guarantees.SearchGuaranteesAction"
+			name="searchGuaranteesForm"
+			scope="session"
+            input="admin/_searchGuarantees">
+			<set-property property="secure" value="true" />
+		</action>
+		
+		<action 
+			path="/admin/guaranteeDetails" 
+			type="nl.strohalm.cyclos.controls.accounts.guarantees.guarantees.GuaranteeDetailsAction"
+			name="guaranteeDetailsForm"
+			scope="request"
+            input="admin/_guaranteeDetails">
+			<set-property property="secure" value="true" />		
+		</action>
+
+		<action 
+			path="/admin/authorizeGuarantee" 
+			type="nl.strohalm.cyclos.controls.accounts.guarantees.guarantees.AuthorizeGuaranteeAction"
+			name="authorizeGuaranteeForm"
+            scope="request"
+            input="admin/_authorizeGuarantee">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/guaranteeDetails" redirect="true" />
+		</action>
+
+		<action 
+			path="/admin/denyGuarantee" 
+			type="nl.strohalm.cyclos.controls.accounts.guarantees.guarantees.DenyGuaranteeAction"
+			name="denyGuaranteeForm"
+            scope="request"
+            input="admin/_denyGuarantee">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/guaranteeDetails" redirect="true" />
+		</action>
+
+		<action 
+			path="/admin/deleteGuarantee" 
+			type="nl.strohalm.cyclos.controls.accounts.guarantees.guarantees.DeleteGuaranteeAction"
+			name="deleteGuaranteeForm"
+            scope="request"
+            input="admin/_deleteGuarantee">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/searchGuarantees" redirect="true" />			
+		</action>
+
+		<action 
+			path="/admin/cancelGuarantee" 
+			type="nl.strohalm.cyclos.controls.accounts.guarantees.guarantees.CancelGuaranteeAction"
+			name="cancelGuaranteeForm"
+            scope="request"
+            input="admin/_cancelGuarantee">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/guaranteeDetails" redirect="true" />
+		</action>
+
+		<action 
+			path="/admin/searchCertifications" 
+			type="nl.strohalm.cyclos.controls.accounts.guarantees.certifications.SearchCertificationsAction"
+			name="searchCertificationsForm"
+			scope="session"
+            input="admin/_searchCertifications">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/admin/editCertification" 
+			type="nl.strohalm.cyclos.controls.accounts.guarantees.certifications.EditCertificationAction"
+            name="editCertificationForm"
+            scope="request"
+            input="admin/_editCertification">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/editCertification" redirect="true" />
+		</action>
+
+		<action 
+			path="/admin/cancelCertification" 
+			type="nl.strohalm.cyclos.controls.accounts.guarantees.certifications.CancelCertificationAction"
+			name="cancelCertificationForm"
+            scope="request"
+            input="admin/_cancelCertification">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/editCertification" redirect="true" />
+		</action>
+		
+		<action 
+			path="/admin/deleteCertification" 
+			type="nl.strohalm.cyclos.controls.accounts.guarantees.certifications.DeleteCertificationAction"
+            name="deleteCertificationForm"
+            scope="request"
+            input="admin/_deleteCertification">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/searchCertifications" redirect="true"></forward>
+		</action>
+		
+		<action 
+			path="/admin/searchPaymentObligations" 
+			type="nl.strohalm.cyclos.controls.accounts.guarantees.paymentobligations.SearchPaymentObligationsAction"
+			name="searchPaymentObligationsForm"
+			scope="session"
+            input="admin/_searchPaymentObligations">
+			<set-property property="secure" value="true" />
+		</action>
+		
+		<action 
+			path="/admin/editPaymentObligation" 
+			type="nl.strohalm.cyclos.controls.accounts.guarantees.paymentobligations.EditPaymentObligationAction"
+            name="editPaymentObligationForm"
+            scope="request"
+            input="admin/_editPaymentObligation">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/editPaymentObligation" redirect="true" />			
+		</action>		
+
+		<action 
+			path="/admin/calculateGuaranteeFee" 
+			type="nl.strohalm.cyclos.controls.accounts.guarantees.guarantees.CalculateGuaranteeFeeAjaxAction"
+            name="calculateGuaranteeFeeAjaxForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<!-- MEMBER'S ACTIONS -->
+		<action 
+			path="/member/searchGuarantees" 
+			type="nl.strohalm.cyclos.controls.accounts.guarantees.guarantees.SearchGuaranteesAction"
+			name="searchGuaranteesForm"
+			scope="session"
+            input="member/_searchGuarantees">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/member/guaranteeDetails" 
+			type="nl.strohalm.cyclos.controls.accounts.guarantees.guarantees.GuaranteeDetailsAction"
+			name="guaranteeDetailsForm"
+			scope="request"
+            input="member/_guaranteeDetails">
+			<set-property property="secure" value="true" />
+		</action>		
+
+		<action 
+			path="/member/authorizeGuarantee" 
+			type="nl.strohalm.cyclos.controls.accounts.guarantees.guarantees.AuthorizeGuaranteeAction"
+			name="authorizeGuaranteeForm"
+            scope="request"
+            input="member/_authorizeGuarantee">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/member/guaranteeDetails" redirect="true" />
+		</action>
+
+		<action 
+			path="/member/denyGuarantee" 
+			type="nl.strohalm.cyclos.controls.accounts.guarantees.guarantees.DenyGuaranteeAction"
+			name="denyGuaranteeForm"
+            scope="request"
+            input="memer/_denyGuarantee">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/member/guaranteeDetails" redirect="true" />
+		</action>
+		
+		<action 
+			path="/member/searchCertifications" 
+			type="nl.strohalm.cyclos.controls.accounts.guarantees.certifications.SearchCertificationsAction"
+			name="searchCertificationsForm"
+			scope="session"
+            input="member/_searchCertifications">
+			<set-property property="secure" value="true" />
+		</action>
+		
+		<action 
+			path="/member/editCertification" 
+			type="nl.strohalm.cyclos.controls.accounts.guarantees.certifications.EditCertificationAction"
+            name="editCertificationForm"
+            scope="request"
+            input="member/_editCertification">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/member/editCertification" redirect="true" />
+		</action>
+
+		<action 
+			path="/member/lockCertification" 
+			type="nl.strohalm.cyclos.controls.accounts.guarantees.certifications.LockCertificationAction"
+			name="lockCertificationForm"
+            scope="request"
+            input="member/_lockCertification">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/member/editCertification" redirect="true" />
+		</action>
+
+		<action 
+			path="/member/unlockCertification" 
+			type="nl.strohalm.cyclos.controls.accounts.guarantees.certifications.UnlockCertificationAction"
+			name="unlockCertificationForm"
+            scope="request"
+            input="member/_unlockCertification">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/member/editCertification" redirect="true" />
+		</action>
+
+		<action 
+			path="/member/cancelCertification" 
+			type="nl.strohalm.cyclos.controls.accounts.guarantees.certifications.CancelCertificationAction"
+			name="cancelCertificationForm"
+            scope="request"
+            input="member/_cancelCertification">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/member/editCertification" redirect="true" />
+		</action>
+
+		<action path="/member/deleteCertification"
+			type="nl.strohalm.cyclos.controls.accounts.guarantees.certifications.DeleteCertificationAction"
+			name="deleteCertificationForm" 
+			scope="request"
+			input="member/_deleteCertification">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/member/searchCertifications?executeQuery=true" redirect="true" />
+		</action>
+	
+		<action 
+			path="/member/searchPaymentObligations" 
+			type="nl.strohalm.cyclos.controls.accounts.guarantees.paymentobligations.SearchPaymentObligationsAction"
+			name="searchPaymentObligationsForm"
+			scope="session"
+            input="member/_searchPaymentObligations">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/member/editPaymentObligation" 
+			type="nl.strohalm.cyclos.controls.accounts.guarantees.paymentobligations.EditPaymentObligationAction"
+            name="editPaymentObligationForm"
+            scope="request"
+            input="member/_editPaymentObligation">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/member/editPaymentObligation" redirect="true" />
+		</action>		
+				
+		<action 
+			path="/member/acceptPaymentObligationPack" 
+			type="nl.strohalm.cyclos.controls.accounts.guarantees.paymentobligations.AcceptPaymentObligationPackAction"
+            name="acceptPaymentObligationPackForm"
+            scope="request"
+            input="member/_acceptPaymentObligationPack">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/member/searchPaymentObligations?executeQuery=true" redirect="true" />
+		</action>
+
+		<action 
+			path="/member/acceptPaymentObligation" 
+			type="nl.strohalm.cyclos.controls.accounts.guarantees.paymentobligations.AcceptPaymentObligationAction"
+            name="acceptPaymentObligationForm"
+            scope="request"
+            input="member/_acceptPaymentObligation">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/member/editPaymentObligation" redirect="true" />
+		</action>
+
+		<action 
+			path="/member/publishPaymentObligation" 
+			type="nl.strohalm.cyclos.controls.accounts.guarantees.paymentobligations.PublishPaymentObligationAction"
+			name="publishPaymentObligationForm"
+            scope="request"
+            input="member/_publishPaymentObligation">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/member/editPaymentObligation" redirect="true" />
+		</action>
+
+		<action 
+			path="/member/concealPaymentObligation" 
+			type="nl.strohalm.cyclos.controls.accounts.guarantees.paymentobligations.ConcealPaymentObligationAction"
+			name="concealPaymentObligationForm"
+            scope="request"
+            input="member/_concealPaymentObligation">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/member/editPaymentObligation" redirect="true" />
+		</action>
+
+		<action 
+			path="/member/rejectPaymentObligation" 
+			type="nl.strohalm.cyclos.controls.accounts.guarantees.paymentobligations.RejectPaymentObligationAction"
+			name="rejectPaymentObligationForm"
+            scope="request"
+            input="member/_rejectPaymentObligation">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/member/editPaymentObligation" redirect="true" />
+		</action>
+		
+		<action 
+			path="/member/deletePaymentObligation" 
+			type="nl.strohalm.cyclos.controls.accounts.guarantees.paymentobligations.DeletePaymentObligationAction"
+			name="deletePaymentObligationForm"
+            scope="request"
+            input="member/_deletePaymentObligation">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/member/searchPaymentObligations" redirect="true" />
+		</action>
+
+		<action 
+			path="/member/calculateGuaranteeFee" 
+			type="nl.strohalm.cyclos.controls.accounts.guarantees.guarantees.CalculateGuaranteeFeeAjaxAction"
+            name="calculateGuaranteeFeeAjaxForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+		</action>
+		
+		<!-- OPERATOR'S ACTIONS -->
+		<action 
+			path="/operator/searchCertifications" 
+			type="nl.strohalm.cyclos.controls.accounts.guarantees.certifications.SearchCertificationsAction"
+			name="searchCertificationsForm"
+			scope="session"
+            input="operator/_searchCertifications">
+			<set-property property="secure" value="true" />
+		</action>
+		
+		<action 
+			path="/operator/editPaymentObligation" 
+			type="nl.strohalm.cyclos.controls.accounts.guarantees.paymentobligations.EditPaymentObligationAction"
+            name="editPaymentObligationForm"
+            scope="request"
+            input="operator/_editPaymentObligation">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/operator/editPaymentObligation" redirect="true" />
+		</action>		
+
+		<action 
+			path="/operator/editCertification" 
+			type="nl.strohalm.cyclos.controls.accounts.guarantees.certifications.EditCertificationAction"
+            name="editCertificationForm"
+            scope="request"
+            input="operator/_editCertification">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/operator/editCertification" redirect="true" />
+		</action>
+
+		<action 
+			path="/operator/lockCertification" 
+			type="nl.strohalm.cyclos.controls.accounts.guarantees.certifications.LockCertificationAction"
+			name="lockCertificationForm"
+            scope="request"
+            input="operator/_lockCertification">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/operator/editCertification" redirect="true" />
+		</action>
+
+		<action 
+			path="/operator/unlockCertification" 
+			type="nl.strohalm.cyclos.controls.accounts.guarantees.certifications.UnlockCertificationAction"
+			name="unlockCertificationForm"
+            scope="request"
+            input="operator/_unlockCertification">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/operator/editCertification" redirect="true" />
+		</action>
+
+		<action 
+			path="/operator/cancelCertification" 
+			type="nl.strohalm.cyclos.controls.accounts.guarantees.certifications.CancelCertificationAction"
+			name="cancelCertificationForm"
+            scope="request"
+            input="operator/_cancelCertification">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/operator/editCertification" redirect="true" />
+		</action>
+
+		<action path="/operator/deleteCertification"
+			type="nl.strohalm.cyclos.controls.accounts.guarantees.certifications.DeleteCertificationAction"
+			name="deleteCertificationForm" 
+			scope="request"
+			input="operator/_deleteCertification">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/operator/searchCertifications?executeQuery=true" redirect="true" />
+		</action>
+
+		<action 
+			path="/operator/searchGuarantees" 
+			type="nl.strohalm.cyclos.controls.accounts.guarantees.guarantees.SearchGuaranteesAction"
+			name="searchGuaranteesForm"
+			scope="session"
+            input="operator/_searchGuarantees">
+			<set-property property="secure" value="true" />
+		</action>
+		
+		<action 
+			path="/operator/searchPaymentObligations" 
+			type="nl.strohalm.cyclos.controls.accounts.guarantees.paymentobligations.SearchPaymentObligationsAction"
+			name="searchPaymentObligationsForm"
+			scope="session"
+            input="operator/_searchPaymentObligations">
+			<set-property property="secure" value="true" />
+		</action>
+				
+		<action 
+			path="/operator/guaranteeDetails" 
+			type="nl.strohalm.cyclos.controls.accounts.guarantees.guarantees.GuaranteeDetailsAction"
+			name="guaranteeDetailsForm"
+			scope="request"
+            input="operator/_guaranteeDetails">
+			<set-property property="secure" value="true" />
+		</action>		
+
+		<action 
+			path="/operator/acceptPaymentObligationPack" 
+			type="nl.strohalm.cyclos.controls.accounts.guarantees.paymentobligations.AcceptPaymentObligationPackAction"
+            name="acceptPaymentObligationPackForm"
+            scope="request"
+            input="operator/_acceptPaymentObligationPack">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/operator/searchPaymentObligations?executeQuery=true" redirect="true" />
+		</action>
+
+		<action 
+			path="/operator/acceptPaymentObligation" 
+			type="nl.strohalm.cyclos.controls.accounts.guarantees.paymentobligations.AcceptPaymentObligationAction"
+            name="acceptPaymentObligationForm"
+            scope="request"
+            input="operator/_acceptPaymentObligation">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/operator/editPaymentObligation" redirect="true" />
+		</action>
+
+		<action 
+			path="/operator/authorizeGuarantee" 
+			type="nl.strohalm.cyclos.controls.accounts.guarantees.guarantees.AuthorizeGuaranteeAction"
+			name="authorizeGuaranteeForm"
+            scope="request"
+            input="operator/_authorizeGuarantee">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/operator/guaranteeDetails" redirect="true" />
+		</action>
+		
+		<action 
+			path="/operator/denyGuarantee" 
+			type="nl.strohalm.cyclos.controls.accounts.guarantees.guarantees.DenyGuaranteeAction"
+			name="denyGuaranteeForm"
+            scope="request"
+            input="operator/_denyGuarantee">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/operator/guaranteeDetails" redirect="true" />
+		</action>
+
+		<action 
+			path="/operator/deletePaymentObligation" 
+			type="nl.strohalm.cyclos.controls.accounts.guarantees.paymentobligations.DeletePaymentObligationAction"
+			name="deletePaymentObligationForm"
+            scope="request"
+            input="operator/_deletePaymentObligation">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/operator/searchPaymentObligations" redirect="true" />
+		</action>
+		
+		<action 
+			path="/operator/publishPaymentObligation" 
+			type="nl.strohalm.cyclos.controls.accounts.guarantees.paymentobligations.PublishPaymentObligationAction"
+			name="publishPaymentObligationForm"
+            scope="request"
+            input="operator/_publishPaymentObligation">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/operator/editPaymentObligation" redirect="true" />
+		</action>
+
+		<action 
+			path="/operator/concealPaymentObligation" 
+			type="nl.strohalm.cyclos.controls.accounts.guarantees.paymentobligations.ConcealPaymentObligationAction"
+			name="concealPaymentObligationForm"
+            scope="request"
+            input="operator/_concealPaymentObligation">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/operator/editPaymentObligation" redirect="true" />
+		</action>
+
+		<action 
+			path="/operator/rejectPaymentObligation" 
+			type="nl.strohalm.cyclos.controls.accounts.guarantees.paymentobligations.RejectPaymentObligationAction"
+			name="rejectPaymentObligationForm"
+            scope="request"
+            input="operator/_rejectPaymentObligation">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/operator/editPaymentObligation" redirect="true" />
+		</action>
+		
+		<action 
+			path="/operator/calculateGuaranteeFee" 
+			type="nl.strohalm.cyclos.controls.accounts.guarantees.guarantees.CalculateGuaranteeFeeAjaxAction"
+            name="calculateGuaranteeFeeAjaxForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+		</action>
+				
+	</action-mappings>
+	
+</struts-config>

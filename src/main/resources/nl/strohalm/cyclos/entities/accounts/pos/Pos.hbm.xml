@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	
+	<class dynamic-insert="true" dynamic-update="true" name="nl.strohalm.cyclos.entities.accounts.pos.Pos" table="pos">
+		
+		<id name="id" type="long">
+		    <column name="id" sql-type="integer"/>
+			<generator class="native"/>
+		</id>
+		
+		<property name="posId" column="pos_id" type="string" length="64" not-null="true" unique="true"/>
+		<property name="description" column="description" type="string" length="100" />
+    	<property name="status" column="status" length="1" not-null="true">
+            <type name="nl.strohalm.cyclos.utils.hibernate.StringValuedEnumType">
+                <param name="enumClassName">nl.strohalm.cyclos.entities.accounts.pos.Pos$Status</param>
+            </type>
+		</property>
+		
+		<many-to-one name="memberPos" class="nl.strohalm.cyclos.entities.accounts.pos.MemberPos">
+		    <column name="member_pos_id" sql-type="integer"/>
+		</many-to-one>
+		
+		<bag name="posLog" table="pos_logs" inverse="true" order-by="date desc">
+		    <key column="pos_id"/>
+			<one-to-many class="nl.strohalm.cyclos.entities.accounts.pos.PosLog"/>
+		</bag>
+		
+	</class>
+</hibernate-mapping>    
+    

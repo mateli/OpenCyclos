@@ -1,0 +1,127 @@
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.1//EN" "http://jakarta.apache.org/struts/dtds/struts-config_1_1.dtd">
+<struts-config>
+
+	<form-beans>
+        <form-bean name="scheduledPaymentForm" type="nl.strohalm.cyclos.controls.payments.scheduled.ScheduledPaymentForm" />
+	</form-beans>
+	
+	<action-mappings type="org.apache.struts.config.SecureActionConfig">
+
+		<!-- Members -->
+		<action 
+			path="/member/cancelScheduledPayment" 
+			type="nl.strohalm.cyclos.controls.payments.scheduled.CancelScheduledPaymentAction"
+            name="scheduledPaymentForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/member/viewScheduledPayment" redirect="true" />
+		</action>
+
+		<action 
+			path="/member/blockScheduledPayment" 
+			type="nl.strohalm.cyclos.controls.payments.scheduled.BlockScheduledPaymentAction"
+            name="scheduledPaymentForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/member/viewScheduledPayment" redirect="true" />
+		</action>
+		
+		<action 
+			path="/member/unblockScheduledPayment" 
+			type="nl.strohalm.cyclos.controls.payments.scheduled.UnblockScheduledPaymentAction"
+            name="scheduledPaymentForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/member/viewScheduledPayment" redirect="true" />
+		</action>
+
+		<action 
+			path="/member/confirmScheduledPayment" 
+			type="nl.strohalm.cyclos.controls.payments.scheduled.ConfirmScheduledPaymentAction"
+            name="scheduledPaymentForm"
+            scope="request"
+			input="member/_confirmScheduledPayment">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/member/viewScheduledPayment" redirect="true" />
+		</action>
+
+		<!-- Admins -->
+		<action 
+			path="/admin/cancelScheduledPayment" 
+			type="nl.strohalm.cyclos.controls.payments.scheduled.CancelScheduledPaymentAction"
+            name="scheduledPaymentForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/viewScheduledPayment" redirect="true" />
+		</action>
+
+		<action 
+			path="/admin/blockScheduledPayment" 
+			type="nl.strohalm.cyclos.controls.payments.scheduled.BlockScheduledPaymentAction"
+            name="scheduledPaymentForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/viewScheduledPayment" redirect="true" />
+		</action>
+		
+		<action 
+			path="/admin/unblockScheduledPayment" 
+			type="nl.strohalm.cyclos.controls.payments.scheduled.UnblockScheduledPaymentAction"
+            name="scheduledPaymentForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/viewScheduledPayment" redirect="true" />
+		</action>
+
+		<action 
+			path="/admin/confirmScheduledPayment" 
+			type="nl.strohalm.cyclos.controls.payments.scheduled.ConfirmScheduledPaymentAction"
+            name="scheduledPaymentForm"
+            scope="request"
+            input="admin/_confirmScheduledPayment">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/viewScheduledPayment" redirect="true" />
+		</action>
+
+		
+		<!-- Operators -->
+		<action 
+			path="/operator/cancelScheduledPayment" 
+			type="nl.strohalm.cyclos.controls.payments.scheduled.CancelScheduledPaymentAction"
+            name="scheduledPaymentForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/operator/viewScheduledPayment" redirect="true" />
+		</action>
+
+		<action 
+			path="/operator/blockScheduledPayment" 
+			type="nl.strohalm.cyclos.controls.payments.scheduled.BlockScheduledPaymentAction"
+            name="scheduledPaymentForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/operator/viewScheduledPayment" redirect="true" />
+		</action>
+		
+		<action 
+			path="/operator/unblockScheduledPayment" 
+			type="nl.strohalm.cyclos.controls.payments.scheduled.UnblockScheduledPaymentAction"
+            name="scheduledPaymentForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/operator/viewScheduledPayment" redirect="true" />
+		</action>
+
+		<action 
+			path="/operator/confirmScheduledPayment" 
+			type="nl.strohalm.cyclos.controls.payments.scheduled.ConfirmScheduledPaymentAction"
+            name="scheduledPaymentForm"
+            scope="request"
+            input="operator/_confirmScheduledPayment">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/operator/viewScheduledPayment" redirect="true" />
+		</action>
+
+	</action-mappings>
+
+</struts-config>

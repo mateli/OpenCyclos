@@ -1,0 +1,94 @@
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.1//EN" "http://jakarta.apache.org/struts/dtds/struts-config_1_1.dtd">
+<struts-config>
+	<form-beans>
+        <form-bean name="listBrokeringsForm" type="nl.strohalm.cyclos.controls.members.brokering.ListBrokeringsForm" />
+        <form-bean name="changeBrokerForm" type="nl.strohalm.cyclos.controls.members.brokering.ChangeBrokerForm" />
+        <form-bean name="addMemberToBrokerForm" type="nl.strohalm.cyclos.controls.members.brokering.ChangeBrokerForm" />
+        <form-bean name="removeBrokeredMemberForm" type="nl.strohalm.cyclos.controls.members.brokering.ChangeBrokerForm" />
+	</form-beans>
+	
+	<action-mappings type="org.apache.struts.config.SecureActionConfig">
+
+		<action 
+			path="/member/listBrokerings" 
+			type="nl.strohalm.cyclos.controls.members.brokering.ListBrokeringsAction"
+            input="member/_listBrokerings"
+            name="listBrokeringsForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+		</action>		
+		
+		<action 
+			path="/member/printBrokerings" 
+			type="nl.strohalm.cyclos.controls.members.brokering.PrintBrokeringsAction"
+            input="_printBrokerings"
+            name="listBrokeringsForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+		</action>		
+		
+		<action 
+			path="/member/exportBrokeringsToCsv" 
+			type="nl.strohalm.cyclos.controls.members.brokering.ExportBrokeringsToCsvAction"
+            name="listBrokeringsForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+		</action>
+		
+		<action 
+			path="/admin/listBrokerings" 
+			type="nl.strohalm.cyclos.controls.members.brokering.ListBrokeringsAction"
+            input="admin/_listBrokerings"
+            name="listBrokeringsForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+		</action>		
+		
+		<action 
+			path="/admin/printBrokerings" 
+			type="nl.strohalm.cyclos.controls.members.brokering.PrintBrokeringsAction"
+            input="_printBrokerings"
+            name="listBrokeringsForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+		</action>		
+
+		<action 
+			path="/admin/exportBrokeringsToCsv" 
+			type="nl.strohalm.cyclos.controls.members.brokering.ExportBrokeringsToCsvAction"
+            name="listBrokeringsForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/admin/changeBroker" 
+			type="nl.strohalm.cyclos.controls.members.brokering.ChangeBrokerAction"
+            input="admin/_changeBroker"
+            name="changeBrokerForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/changeBroker" redirect="true"/>
+		</action>
+		
+		<action 
+			path="/admin/removeBrokeredMember" 
+			type="nl.strohalm.cyclos.controls.members.brokering.ManageBrokeredMemberAction"
+            name="removeBrokeredMemberForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/listBrokerings" redirect="true"/>
+		</action>
+		
+		<action 
+			path="/admin/addMemberToBroker" 
+			type="nl.strohalm.cyclos.controls.members.brokering.ManageBrokeredMemberAction"
+            name="addMemberToBrokerForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/listBrokerings" redirect="true"/>
+		</action>
+		
+	</action-mappings>
+
+</struts-config>

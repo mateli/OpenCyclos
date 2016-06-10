@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>	
+	<subclass dynamic-insert="true" dynamic-update="true" name="nl.strohalm.cyclos.entities.customization.images.StyleImage" extends="nl.strohalm.cyclos.entities.customization.images.Image" discriminator-value="sty">
+	</subclass>
+</hibernate-mapping>

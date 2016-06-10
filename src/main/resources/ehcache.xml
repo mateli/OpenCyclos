@@ -1,0 +1,31 @@
+<ehcache 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:noNamespaceSchemaLocation="../config/ehcache.xsd"
+	updateCheck="false">
+
+    <defaultCache
+        maxElementsInMemory="2000"
+		eternal="false"
+		timeToLiveSeconds="3600"
+        overflowToDisk="false" />
+
+	<!-- When in a cluster, enable cache replication using Hazelcast-->
+	<!-- 
+	<cacheManagerPeerProviderFactory
+		class="nl.strohalm.cyclos.utils.cache.ehcache.HazelcastCacheManagerPeerProviderFactory"
+		/>
+		
+    <defaultCache
+        maxElementsInMemory="2000"
+		eternal="false"
+		timeToLiveSeconds="3600"
+        overflowToDisk="false">
+        
+        <cacheEventListenerFactory 
+        	class="nl.strohalm.cyclos.utils.cache.ehcache.HazelcastCacheReplicatorFactory"
+  			/>
+  			
+    </defaultCache>
+ 	-->
+        
+</ehcache>

@@ -1,0 +1,179 @@
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.1//EN" "http://jakarta.apache.org/struts/dtds/struts-config_1_1.dtd">
+<struts-config>
+	<form-beans>
+        <form-bean name="mobileLoginForm" type="nl.strohalm.cyclos.controls.access.LoginForm" />
+        <form-bean name="mobileDoPaymentForm" type="nl.strohalm.cyclos.controls.mobile.MobileDoPaymentForm" />
+        <form-bean name="mobileConfirmPaymentForm" type="nl.strohalm.cyclos.controls.mobile.MobileConfirmPaymentForm" />
+        <form-bean name="mobileViewPaymentsForm" type="nl.strohalm.cyclos.controls.mobile.MobileViewPaymentsForm" />
+        <form-bean name="mobileConfirmAccountForm" type="nl.strohalm.cyclos.controls.mobile.MobileConfirmAccountForm" />
+	</form-beans>
+	
+	<global-forwards>
+		<forward name="mobileError" path="/do/mobile/error" redirect="true"/>
+		<forward name="mobileHome" path="/do/mobile/home" redirect="true"/>
+		<forward name="wapError" path="/do/wap/error" redirect="true"/>
+		<forward name="wapHome" path="/do/wap/home" redirect="true"/>
+	</global-forwards>
+	
+	<action-mappings type="org.apache.struts.config.SecureActionConfig">
+
+        <action
+            path="/mobile/error"
+            type="org.apache.struts.actions.ForwardAction"
+            parameter="mobile/_error">
+            <set-property property="secure" value="true" />
+		</action>
+
+        <action
+            path="/mobile/login"
+            type="nl.strohalm.cyclos.controls.mobile.MobileLoginAction"
+            name="mobileLoginForm"
+            scope="request"
+            input="mobile/_login">
+            <set-property property="secure" value="true" />
+            <forward name="success" path="/do/mobile/home" redirect="true"/>
+		</action>
+
+        <action
+            path="/mobile/logout"
+            type="nl.strohalm.cyclos.controls.mobile.MobileLogoutAction">
+            <set-property property="secure" value="true" />
+            <forward name="success" path="/do/mobile/login" redirect="true"/>
+		</action>
+
+        <action
+            path="/mobile/home"
+            type="nl.strohalm.cyclos.controls.mobile.MobileHomeAction"
+            input="mobile/_home">
+            <set-property property="secure" value="true" />    
+		</action>
+
+        <action
+            path="/mobile/doPayment"
+            type="nl.strohalm.cyclos.controls.mobile.MobileDoPaymentAction"
+            name="mobileDoPaymentForm"
+            scope="session"
+            input="mobile/_doPayment">
+            <set-property property="secure" value="true" />    
+            <forward name="success" path="/do/mobile/confirmPayment" redirect="true"/>
+		</action>
+
+        <action
+            path="/mobile/confirmPayment"
+            type="nl.strohalm.cyclos.controls.mobile.MobileConfirmPaymentAction"
+            input="mobile/_confirmPayment"
+            name="mobileConfirmPaymentForm"
+            scope="request">
+            <set-property property="secure" value="true" />    
+            <forward name="success" path="/do/mobile/home" redirect="true"/>
+		</action>
+
+        <action
+            path="/mobile/viewPayments"
+            type="nl.strohalm.cyclos.controls.mobile.MobileViewPaymentsAction"
+            input="mobile/_viewPayments"
+            name="mobileViewPaymentsForm"
+            scope="request">
+            <set-property property="secure" value="true" />    
+		</action>
+		
+		<action
+            path="/mobile/changeAccount"
+            type="nl.strohalm.cyclos.controls.mobile.MobileChangeAccountAction"
+            input="mobile/_changeAccount"
+            scope="request">
+            <set-property property="secure" value="true" />    
+		</action>
+		
+		<action
+            path="/mobile/confirmAccount"
+            type="nl.strohalm.cyclos.controls.mobile.MobileConfirmAccountAction"
+            name="mobileConfirmAccountForm"
+            scope="request">
+            <set-property property="secure" value="true" />
+            <forward name="success" path="/do/mobile/home" redirect="true"/>
+		</action>
+		
+
+
+
+        <action
+            path="/wap/error"
+            type="org.apache.struts.actions.ForwardAction"
+            parameter="wap/_error">
+            <set-property property="secure" value="true" />
+		</action>
+
+        <action
+            path="/wap/login"
+            type="nl.strohalm.cyclos.controls.mobile.MobileLoginAction"
+            name="mobileLoginForm"
+            scope="request"
+            input="wap/_login">
+            <set-property property="secure" value="true" />
+            <forward name="success" path="/do/wap/home" redirect="true"/>
+		</action>
+
+        <action
+            path="/wap/logout"
+            type="nl.strohalm.cyclos.controls.mobile.MobileLogoutAction">
+            <set-property property="secure" value="true" />
+            <forward name="success" path="/do/wap/login" redirect="true"/>
+		</action>
+
+        <action
+            path="/wap/home"
+            type="nl.strohalm.cyclos.controls.mobile.MobileHomeAction"
+            input="wap/_home">
+            <set-property property="secure" value="true" />    
+		</action>
+
+        <action
+            path="/wap/doPayment"
+            type="nl.strohalm.cyclos.controls.mobile.MobileDoPaymentAction"
+            name="mobileDoPaymentForm"
+            scope="session"
+            input="wap/_doPayment">
+            <set-property property="secure" value="true" />    
+            <forward name="success" path="/do/wap/confirmPayment" redirect="true"/>
+		</action>
+
+        <action
+            path="/wap/confirmPayment"
+            type="nl.strohalm.cyclos.controls.mobile.MobileConfirmPaymentAction"
+            input="wap/_confirmPayment"
+            name="mobileConfirmPaymentForm"
+            scope="request">
+            <set-property property="secure" value="true" />    
+            <forward name="success" path="/do/wap/home" redirect="true"/>
+		</action>
+
+        <action
+            path="/wap/viewPayments"
+            type="nl.strohalm.cyclos.controls.mobile.MobileViewPaymentsAction"
+            input="wap/_viewPayments"
+            name="mobileViewPaymentsForm"
+            scope="request">
+            <set-property property="secure" value="true" />    
+		</action>
+		
+		<action
+            path="/wap/changeAccount"
+            type="nl.strohalm.cyclos.controls.mobile.MobileChangeAccountAction"
+            input="wap/_changeAccount"
+            scope="request">
+            <set-property property="secure" value="true" />    
+		</action>
+		
+		<action
+            path="/wap/confirmAccount"
+            type="nl.strohalm.cyclos.controls.mobile.MobileConfirmAccountAction"
+            name="mobileConfirmAccountForm"
+            scope="request">
+            <set-property property="secure" value="true" />
+            <forward name="success" path="/do/wap/home" redirect="true"/>
+		</action>
+
+	</action-mappings>
+
+</struts-config>

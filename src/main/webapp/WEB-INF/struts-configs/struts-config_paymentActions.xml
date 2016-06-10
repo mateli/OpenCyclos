@@ -1,0 +1,97 @@
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.1//EN" "http://jakarta.apache.org/struts/dtds/struts-config_1_1.dtd">
+<struts-config>
+
+	<form-beans>
+        <form-bean name="transferAuthorizationForm" type="nl.strohalm.cyclos.controls.payments.authorization.TransferAuthorizationForm" />
+	</form-beans>
+	
+	<action-mappings type="org.apache.struts.config.SecureActionConfig">
+
+		<!-- Members -->
+		<action 
+			path="/member/authorizePayment" 
+			type="nl.strohalm.cyclos.controls.payments.authorization.AuthorizePaymentAction"
+            name="transferAuthorizationForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/member/viewTransaction" redirect="true" />
+		</action>
+
+		<action 
+			path="/member/denyPayment" 
+			type="nl.strohalm.cyclos.controls.payments.authorization.DenyPaymentAction"
+            name="transferAuthorizationForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/member/viewTransaction" redirect="true" />
+		</action>
+		
+		<action 
+			path="/member/cancelPayment" 
+			type="nl.strohalm.cyclos.controls.payments.authorization.CancelPaymentAction"
+            name="transferAuthorizationForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/member/viewTransaction" redirect="true" />
+		</action>
+
+
+		<!-- Admins -->
+		<action 
+			path="/admin/authorizePayment" 
+			type="nl.strohalm.cyclos.controls.payments.authorization.AuthorizePaymentAction"
+            name="transferAuthorizationForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/viewTransaction" redirect="true" />
+		</action>
+
+		<action 
+			path="/admin/denyPayment" 
+			type="nl.strohalm.cyclos.controls.payments.authorization.DenyPaymentAction"
+            name="transferAuthorizationForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/viewTransaction" redirect="true" />
+		</action>
+		
+		<action 
+			path="/admin/cancelPayment" 
+			type="nl.strohalm.cyclos.controls.payments.authorization.CancelPaymentAction"
+            name="transferAuthorizationForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/viewTransaction" redirect="true" />
+		</action>
+		
+		<!-- Operators -->
+		<action 
+			path="/operator/authorizePayment" 
+			type="nl.strohalm.cyclos.controls.payments.authorization.AuthorizePaymentAction"
+            name="transferAuthorizationForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/operator/viewTransaction" redirect="true" />
+		</action>
+
+		<action 
+			path="/operator/denyPayment" 
+			type="nl.strohalm.cyclos.controls.payments.authorization.DenyPaymentAction"
+            name="transferAuthorizationForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/operator/transactionDetails" redirect="true" />
+		</action>
+		
+		<action 
+			path="/operator/cancelPayment" 
+			type="nl.strohalm.cyclos.controls.payments.authorization.CancelPaymentAction"
+            name="transferAuthorizationForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/operator/transactionDetails" redirect="true" />
+		</action>
+
+	</action-mappings>
+
+</struts-config>

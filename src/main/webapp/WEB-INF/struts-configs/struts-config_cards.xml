@@ -1,0 +1,119 @@
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.1//EN" "http://jakarta.apache.org/struts/dtds/struts-config_1_1.dtd">
+<struts-config>
+	
+	<form-beans>
+         <form-bean name="searchCardsForm" type="nl.strohalm.cyclos.controls.accounts.cards.SearchCardsForm" />
+         <form-bean name="cardForm" type="nl.strohalm.cyclos.controls.accounts.cards.CardForm" />       
+	</form-beans>
+	
+	<action-mappings type="org.apache.struts.config.SecureActionConfig">
+
+	
+		<action 
+			path="/admin/printCards" 
+			type="nl.strohalm.cyclos.controls.accounts.cards.PrintCardsAction"
+            name="searchCardsForm"
+            scope="request"
+            input="_printCards">
+			<set-property property="secure" value="true" />
+		</action>
+		<!-- admin -->		
+		<action 
+			path="/admin/searchCards" 
+			type="nl.strohalm.cyclos.controls.accounts.cards.SearchCardsNormalAction"
+            name="searchCardsForm"
+            scope="session"
+            input="admin/_searchCards">
+			<set-property property="secure" value="true" />
+		</action>
+		
+		<action 
+			path="/admin/cardDetails" 
+			type="nl.strohalm.cyclos.controls.accounts.cards.CardDetailsAction"
+            name="cardForm"
+            scope="session"
+            input="admin/_cardDetails">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/cardDetails" redirect="true"/>
+		</action>
+		
+		<action 
+			path="/admin/updateCard" 
+			type="nl.strohalm.cyclos.controls.accounts.cards.UpdateCardAction"
+            name="cardForm"
+            scope="session">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/cardDetails" redirect="true"/>
+		</action>
+		
+		<action 
+			path="/admin/createCard" 
+			type="nl.strohalm.cyclos.controls.accounts.cards.CreateCardAction"
+            name="cardForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="view" path="/do/admin/cardDetails" redirect="true"/>
+		</action>
+		
+		<action 
+			path="/admin/exportCardsToCsv" 
+			type="nl.strohalm.cyclos.controls.accounts.cards.ExportCardsToCsvAction"
+            name="searchCardsForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+		</action>
+		
+		<!-- Broker -->
+		
+		<action 
+			path="/member/createCard" 
+			type="nl.strohalm.cyclos.controls.accounts.cards.CreateCardAction"
+            name="cardForm"
+            scope="request"
+            input="member/_createCard">
+			<set-property property="secure" value="true" />
+			<forward name="view" path="/do/member/cardDetails" redirect="true"/>
+		</action>
+		
+		<!-- Member -->
+		
+		<action 
+			path="/member/cardDetails" 
+			type="nl.strohalm.cyclos.controls.accounts.cards.CardDetailsAction"
+            name="cardForm"
+            scope="session"
+            input="member/_cardDetails">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/member/cardDetails" redirect="true"/>
+		</action>
+		
+		<action 
+			path="/member/searchCards" 
+			type="nl.strohalm.cyclos.controls.accounts.cards.SearchCardsNormalAction"
+            name="searchCardsForm"
+            scope="session"
+            input="member/_searchCards">
+			<set-property property="secure" value="true" />
+		</action>
+		
+		<action 
+			path="/member/searchCardsAsBroker" 
+			type="nl.strohalm.cyclos.controls.accounts.cards.SearchCardsAsBrokerAction"
+            name="searchCardsForm"
+            scope="session"
+            input="member/_searchCards">
+			<set-property property="secure" value="true" />
+		</action>
+		
+		<action 
+			path="/member/updateCard" 
+			type="nl.strohalm.cyclos.controls.accounts.cards.UpdateCardAction"
+            name="cardForm"
+            scope="session">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/member/cardDetails" redirect="true"/>
+		</action>
+		
+	</action-mappings>
+
+</struts-config>

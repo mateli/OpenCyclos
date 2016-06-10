@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+
+ <!DOCTYPE tiles-definitions PUBLIC
+       "-//Apache Software Foundation//DTD Tiles Configuration 1.1//EN"
+       "http://jakarta.apache.org/struts/dtds/tiles-config_1_1.dtd">
+
+<tiles-definitions>
+
+	<!-- member -->
+	<definition name="member/_memberReferences" extends=".memberLayout">
+		<put name="body" value="/pages/members/references/memberReferences.jsp"/>
+	</definition>
+
+	<definition name="member/_generalReferenceDetails" extends=".memberLayout">
+		<put name="body" value="/pages/members/references/generalReferenceDetails.jsp"/>
+	</definition>
+
+	<definition name="member/_transactionFeedbackDetails" extends=".memberLayout">
+		<put name="body" value="/pages/members/references/transactionFeedbackDetails.jsp"/>
+	</definition>
+
+	<definition name="member/_searchPaymentsAwaitingFeedback" extends=".memberLayout">
+		<put name="body" value="/pages/members/references/searchPaymentsAwaitingFeedback.jsp"/>
+	</definition>
+
+	<!-- admin -->
+	<definition name="admin/_memberReferences" extends=".adminLayout">
+		<put name="body" value="/pages/members/references/memberReferences.jsp"/>
+	</definition>
+
+	<definition name="admin/_generalReferenceDetails" extends=".adminLayout">
+		<put name="body" value="/pages/members/references/generalReferenceDetails.jsp"/>
+	</definition>
+
+	<definition name="admin/_transactionFeedbackDetails" extends=".adminLayout">
+		<put name="body" value="/pages/members/references/transactionFeedbackDetails.jsp"/>
+	</definition>
+
+	<!-- operator -->
+	<definition name="operator/_memberReferences" extends=".operatorLayout">
+		<put name="body" value="/pages/members/references/memberReferences.jsp"/>
+	</definition>
+
+	<definition name="operator/_generalReferenceDetails" extends=".operatorLayout">
+		<put name="body" value="/pages/members/references/generalReferenceDetails.jsp"/>
+	</definition>
+
+	<definition name="operator/_transactionFeedbackDetails" extends=".operatorLayout">
+		<put name="body" value="/pages/members/references/transactionFeedbackDetails.jsp"/>
+	</definition>
+
+	<definition name="operator/_searchPaymentsAwaitingFeedback" extends=".operatorLayout">
+		<put name="body" value="/pages/members/references/searchPaymentsAwaitingFeedback.jsp"/>
+	</definition>
+
+</tiles-definitions>

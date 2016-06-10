@@ -1,0 +1,51 @@
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.1//EN" "http://jakarta.apache.org/struts/dtds/struts-config_1_1.dtd">
+<struts-config>
+	<form-beans>
+        <form-bean name="requestPaymentForm" type="nl.strohalm.cyclos.controls.payments.request.RequestPaymentForm" />
+        <form-bean name="searchPaymentRequestsForm" type="nl.strohalm.cyclos.controls.payments.request.SearchPaymentRequestsForm" />
+	</form-beans>
+	
+	<action-mappings type="org.apache.struts.config.SecureActionConfig">
+
+		<action 
+			path="/member/requestPayment" 
+			type="nl.strohalm.cyclos.controls.payments.request.RequestPaymentAction"
+            name="requestPaymentForm"
+            scope="request"
+            input="member/_requestPayment">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/member/requestPayment" redirect="true" />
+		</action>
+
+		<action 
+			path="/member/searchPaymentRequests" 
+			type="nl.strohalm.cyclos.controls.payments.request.SearchPaymentRequestsAction"
+            name="searchPaymentRequestsForm"
+            scope="request"
+            input="member/_searchPaymentRequests">
+			<set-property property="secure" value="true" />
+		</action>
+
+
+		<action 
+			path="/operator/requestPayment" 
+			type="nl.strohalm.cyclos.controls.payments.request.RequestPaymentAction"
+            name="requestPaymentForm"
+            scope="request"
+            input="operator/_requestPayment">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/operator/requestPayment" redirect="true" />
+		</action>
+
+		<action 
+			path="/operator/searchPaymentRequests" 
+			type="nl.strohalm.cyclos.controls.payments.request.SearchPaymentRequestsAction"
+            name="searchPaymentRequestsForm"
+            scope="request"
+            input="operator/_searchPaymentRequests">
+			<set-property property="secure" value="true" />
+		</action>
+
+	</action-mappings>
+
+</struts-config>

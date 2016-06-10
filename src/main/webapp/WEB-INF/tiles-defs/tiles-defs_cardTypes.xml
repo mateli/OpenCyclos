@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+
+ <!DOCTYPE tiles-definitions PUBLIC
+       "-//Apache Software Foundation//DTD Tiles Configuration 1.1//EN"
+       "http://jakarta.apache.org/struts/dtds/tiles-config_1_1.dtd">
+
+<tiles-definitions>
+
+	<definition name="admin/_manageCardTypes" extends=".adminLayout">
+		<put name="body" value="/pages/accounts/cards/listCardType.jsp"/>
+	</definition>
+	
+	<definition name="admin/_viewCardType" extends=".adminLayout">
+		<put name="body" value="/pages/accounts/cards/viewCardType.jsp"/>
+	</definition>
+	
+	<definition name="admin/_editCardType" extends=".adminLayout">
+		<put name="body" value="/pages/accounts/cards/editCardType.jsp"/>
+	</definition>
+	
+</tiles-definitions>

@@ -1,0 +1,1347 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+
+<taglib xmlns="http://java.sun.com/xml/ns/j2ee"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-jsptaglibrary_2_0.xsd"
+  version="2.0">
+  
+    <description>Cyclos Core Tag Library</description>
+    <tlib-version>1.1</tlib-version>
+    <short-name>cyclos</short-name>	
+    <uri>http://devel.cyclos.org/tlibs/cyclos-core</uri>
+
+	<tag>
+	    <description>Sets the no-cache response headers.</description>
+		<name>noCache</name>
+		<tag-class>nl.strohalm.cyclos.taglibs.NoCacheTag</tag-class>
+       	<body-content>empty</body-content>
+    </tag>
+    
+	<tag>
+       	<description>
+       		Escapes a String to JavaScript, either writing it to the response
+	        or exporting it to a scoped variable. 
+    	    The string may be the value attribute or the tag body.
+    	</description>
+		<name>escapeJS</name>
+		<tag-class>nl.strohalm.cyclos.taglibs.EscapeJSTag</tag-class>
+       	<body-content>JSP</body-content>
+		
+        <attribute>
+        	<description>
+        		The string value to be escaped. If not set, the tag body will be used instead.
+        	</description>
+	    	<name>value</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.Object</type>
+        </attribute>
+        <attribute>
+        	<description>
+        		A context variable name. If provided, instead of writing the escaped value to the response
+        		output, it will be set on the scope determined by the scope attribute, under this variable name
+        	</description>
+	    	<name>var</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.String</type>
+        </attribute>
+        <attribute>
+        	<description>
+        		The scope name for the variable to be exported. 
+        		May be one of: page, request, session or application.
+        		Defaults to page.
+        	</description>
+	    	<name>scope</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.String</type>
+        </attribute>
+    </tag>
+
+	<tag>
+       	<description>
+       		Escapes a String to HTML, either writing it to the response
+	        or exporting it to a scoped variable. 
+    	    The string may be the value attribute or the tag body.
+    	</description>
+		<name>escapeHTML</name>
+		<tag-class>nl.strohalm.cyclos.taglibs.EscapeHTMLTag</tag-class>
+       	<body-content>JSP</body-content>
+		
+        <attribute>
+        	<description>
+        		The string value to be escaped. If not set, the tag body will be used instead.
+        	</description>
+	    	<name>value</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.Object</type>
+        </attribute>
+        <attribute>
+        	<description>If set to true, will only replace line breaks for br tags, ignoring other processing. Defaults to false</description>
+	    	<name>brOnly</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>boolean</type>
+        </attribute>
+        <attribute>
+        	<description>
+        		A context variable name. If provided, instead of writing the escaped value to the response
+        		output, it will be set on the scope determined by the scope attribute, under this variable name
+        	</description>
+	    	<name>var</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.String</type>
+        </attribute>
+        <attribute>
+        	<description>
+        		The scope name for the variable to be exported. 
+        		May be one of: page, request, session or application.
+        		Defaults to page.
+        	</description>
+	    	<name>scope</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.String</type>
+        </attribute>
+    </tag>
+
+	<tag>
+       	<description>
+       		Renders a customized file path, or exports it to the given variable, if the var attribute is specified.
+       		When a user is logged, first check if the given file is customized for his specific group. 
+       		If not, use the main customized file. Alternatively, a group or group filter may be specified using the groupId or groupFilterId attributes.
+    	</description>
+		<name>customizedFilePath</name>
+		<tag-class>nl.strohalm.cyclos.taglibs.CustomizedFilePathTag</tag-class>
+       	<body-content>empty</body-content>
+		
+        <attribute>
+	       	<description>
+    	   		The customized file type, may be one of static, style or help.
+    		</description>
+	    	<name>type</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.String</type>
+        </attribute>
+		
+        <attribute>
+	       	<description>
+    	   		The customized file name
+    		</description>
+	    	<name>name</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.String</type>
+        </attribute>
+		
+        <attribute>
+	       	<description>
+    	   		A group id (other than the logged user's one) to determine a specific customized file for that group
+    		</description>
+	    	<name>groupId</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.Long</type>
+        </attribute>
+		
+        <attribute>
+	       	<description>
+    	   		A group filter id to determine a specific customized file for that group filter
+    		</description>
+	    	<name>groupFilterId</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.Long</type>
+        </attribute>
+		
+        <attribute>
+        	<description>
+        		A context variable name. If provided, instead of writing the customized file path to the response
+        		output, it will be set on the scope determined by the scope attribute, under this variable name
+        	</description>
+	    	<name>var</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.String</type>
+        </attribute>
+
+        <attribute>
+        	<description>
+        		The scope name for the variable to be exported. 
+        		May be one of: page, request, session or application.
+        		Defaults to page.
+        	</description>
+	    	<name>scope</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.String</type>
+        </attribute>
+    </tag>
+
+	<tag>
+       	<description>
+       		Includes a customized file on the current response.
+       		When a user is logged, first check if the given file is customized for his specific group. 
+       		If not, use the main customized file. Alternatively, a group or group filter may be specified using the groupId or groupFilterId attributes.
+    	</description>
+		<name>includeCustomizedFile</name>
+		<tag-class>nl.strohalm.cyclos.taglibs.IncludeCustomizedFileTag</tag-class>
+       	<body-content>empty</body-content>
+		
+        <attribute>
+	       	<description>
+    	   		The customized file type, may be one of static, style or help
+    		</description>
+	    	<name>type</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.String</type>
+        </attribute>
+		
+        <attribute>
+	       	<description>
+    	   		The customized file name
+    		</description>
+	    	<name>name</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.String</type>
+        </attribute>
+		
+        <attribute>
+	       	<description>
+    	   		A group id (other than the logged user's one) to determine a specific customized file for that group
+    		</description>
+	    	<name>groupId</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.Long</type>
+        </attribute>
+
+        <attribute>
+	       	<description>
+    	   		A group filter id to determine a specific customized file for that group filter
+    		</description>
+	    	<name>groupFilterId</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.Long</type>
+        </attribute>
+    </tag>
+
+	<tag>
+	    <description>
+	    	Formats a given data according to the application's settings.
+	    	One of the following attributes should be set: number, amount, date, dateTime or bytes.
+	    	When none of those attributes were set, or the specified one was null, the default attribute is used to determine the output.
+	    </description>
+		<name>format</name>
+		<tag-class>nl.strohalm.cyclos.taglibs.FormatTag</tag-class>
+       	<body-content>empty</body-content>
+
+        <attribute>
+        	<description>
+        		The default value to be used if the input is null. If not specified, an empty string is used
+        	</description>
+	    	<name>default</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.Object</type>
+        </attribute>
+
+        <attribute>
+        	<description>
+        		A number to be formatted
+        	</description>
+	    	<name>number</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.Object</type>
+        </attribute>
+
+        <attribute>
+        	<description>
+        		A units pattern (like the one on currencies) containing the #amount# string, that will be replaced by the actual number
+        	</description>
+	    	<name>unitsPattern</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.String</type>
+        </attribute>
+
+        <attribute>
+        	<description>
+        		If specified, uses a custom precision for number formatting.
+        		Defaults to the application settings' precision.
+        	</description>
+	    	<name>precision</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.Integer</type>
+        </attribute>
+
+        <attribute>
+        	<description>
+        		If set to true, forces positive numbers to be prefixed with a + signal.
+        	</description>
+	    	<name>forceSignal</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>boolean</type>
+        </attribute>
+
+        <attribute>
+        	<description>
+        		An instance of nl.strohalm.cyclos.utils.Amount to be formatted
+        	</description>
+	    	<name>amount</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>nl.strohalm.cyclos.utils.Amount</type>
+        </attribute>
+
+        <attribute>
+        	<description>
+        		An instance of java.util.Calendar or java.util.Date to be formatted 
+        		using the application settings' raw date pattern
+        	</description>
+	    	<name>rawDate</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.util.Calendar</type>
+        </attribute>
+
+        <attribute>
+        	<description>
+        		An instance of java.util.Calendar or java.util.Date to be formatted 
+        		using the application settings' date pattern
+        	</description>
+	    	<name>date</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.util.Calendar</type>
+        </attribute>
+
+        <attribute>
+        	<description>
+        		An instance of java.util.Calendar or java.util.Date to be formatted 
+        		using the application settings' date / time pattern
+        	</description>
+	    	<name>dateTime</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.util.Calendar</type>
+        </attribute>
+
+        <attribute>
+        	<description>
+        		An instance of java.util.Calendar or java.util.Date to be formatted 
+        		using the application settings' time pattern
+        	</description>
+	    	<name>time</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.util.Calendar</type>
+        </attribute>
+
+        <attribute>
+        	<description>
+        		A number of bytes to be formatted as human readable number, like 4 MB, 1 GB or 300 bytes.
+        	</description>
+	    	<name>bytes</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.Long</type>
+        </attribute>
+        
+        <attribute>
+        	<description>
+        		A String format that determines how card number must be formatted
+        	</description>
+	    	<name>cardNumberPattern</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.String</type>
+        </attribute>
+    </tag>
+
+	<tag>
+	    <description>
+	    	Renders a custom field. This tag can be used just output a 
+	    	custom field value (when the textOnly attribute) is set to true
+	    	or to render a HTML control for that field.
+	    </description>
+		<name>customField</name>
+		<tag-class>nl.strohalm.cyclos.taglibs.CustomFieldTag</tag-class>
+       	<body-content>empty</body-content>
+
+        <attribute>
+        	<description>
+        		The nl.strohalm.cyclos.entities.customization.fields.CustomField instance
+        	</description>
+	    	<name>field</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>nl.strohalm.cyclos.entities.customization.fields.CustomField</type>
+        </attribute>
+
+        <attribute>
+        	<description>
+        		The field value. May be a String or a nl.strohalm.cyclos.entities.customization.fields.CustomFieldPossibleValue instance
+        	</description>
+	    	<name>value</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.Object</type>
+        </attribute>
+
+        <attribute>
+        	<description>
+        		The field id. Currently used only if field editor is a text box
+        	</description>
+	    	<name>styleId</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.String</type>
+        </attribute>
+
+        <attribute>
+        	<description>
+        		The forced field size
+        	</description>
+	    	<name>size</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.String</type>
+        </attribute>
+
+        <attribute>
+        	<description>
+        		When specified, must be a collection of nl.strohalm.cyclos.entities.customization.fields.CustomFieldValue instances.
+        		The collection is used to look up a value using the informed custom field using the field attribute.
+        	</description>
+	    	<name>collection</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.util.Collection</type>
+        </attribute>
+
+        <attribute>
+        	<description>
+        		The name for the HTML input that will contain the custom field id
+        	</description>        
+	    	<name>fieldName</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.String</type>
+        </attribute>
+
+        <attribute>
+        	<description>
+        		The name for the HTML input that will contain the field value
+        	</description>        
+	    	<name>valueName</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.String</type>
+        </attribute>
+
+        <attribute>
+        	<description>
+        		A flag indicating if the field will be enabled by default. Defaults to true.
+        	</description>        
+	    	<name>enabled</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>boolean</type>
+        </attribute>
+
+        <attribute>
+        	<description>
+        		A flag indicating if the field will be editable. Defaults to true.
+        	</description>        
+	    	<name>editable</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>boolean</type>
+        </attribute>
+
+        <attribute>
+        	<description>
+        		A flag indicating if the field will be used on a search page. 
+        		If set to true and the field is a HTML Select control, renders multi drop down instead of a normal select.
+        		Defaults to false.
+        	</description>        
+	    	<name>search</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>boolean</type>
+        </attribute>
+
+        <attribute>
+        	<description>
+        		If set to true, just outputs the field value, instead of rendering a HTML control.
+        		Defaults to false.
+        	</description>        
+	    	<name>textOnly</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>boolean</type>
+        </attribute>
+
+        <attribute>
+        	<description>
+        		If set to false, skip the HTML encoding when using the textOnly mode.
+        		Defaults to true.
+        	</description>        
+	    	<name>encodeHtml</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>boolean</type>
+        </attribute>
+    </tag>
+
+	<tag>
+	    <description>
+	    	Renders a menu item. May be nested, however, currently, only 2 levels are supported.
+	    </description>
+		<name>menu</name>
+		<tag-class>nl.strohalm.cyclos.taglibs.MenuTag</tag-class>
+       	<body-content>JSP</body-content>
+
+        <attribute>
+        	<description>
+        		The menu item label
+        	</description>
+	    	<name>label</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.String</type>
+        </attribute>
+
+        <attribute>
+        	<description>
+        		A resource bundle key used to retrieve the menu item label
+        	</description>
+	    	<name>key</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.String</type>
+        </attribute>
+
+        <attribute>
+        	<description>
+        		The url for this menu item, if any. Must start with a /, and is relative to the context root.
+        	</description>
+	    	<name>url</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.String</type>
+        </attribute>
+
+        <attribute>
+        	<description>
+        		If set, a JavaScript confirmation will be prompted to the user before navigating to the
+        		specified url. Is a resource bundle key, used to retrieve the confirmation message.
+        	</description>
+	    	<name>confirmationKey</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.String</type>
+        </attribute>
+
+        <attribute>
+        	<description>
+        		Module enumeration value. If set, adds a permission check for this menu item to be rendered. The logged user must have
+        		the permission to this module. If a parent menu has many children, and the logged user does
+        		not have permission to any of them, the parent menu won't be displayed either.
+        	</description>
+	    	<name>module</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>nl.strohalm.cyclos.access.Module</type>
+        </attribute>
+
+        <attribute>
+        	<description>
+        		Permission enumeration value. If set, adds a permission check for this specific operation, under the module attribute.
+        		If not set, check for any operation on the specified module.
+        	</description>
+	    	<name>permission</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>nl.strohalm.cyclos.access.Permission</type>
+        </attribute>
+    </tag>
+    
+    <tag>
+	    <description>
+	    	Renders element information like name and username. If the logged user has the required permissions a link to the profile is shown.
+	    </description>
+		<name>profile</name>
+		<tag-class>nl.strohalm.cyclos.taglibs.ProfileTag</tag-class>
+       	<body-content>JSP</body-content>
+
+        <attribute>
+        	<description>
+        		The element id.
+        	</description>
+	    	<name>elementId</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.Long</type>
+        </attribute>
+
+        <attribute>
+        	<description>
+        		A text to be displayed in the link. If not given, the username or name will be displayed.
+        	</description>
+	    	<name>text</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.String</type>
+        </attribute>
+        
+        <attribute>
+        	<description>
+        		When the attribute text is not present, a pattern can be followed to display the name and/or username.
+        		examples: "name - username" or "name(username)" or "name"        		  
+        	</description>
+	    	<name>pattern</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.String</type>
+        </attribute>
+        
+        <attribute>
+        	<description>
+        		A string to be concatenated to the class attribute of the link tag.        		  
+        	</description>
+	    	<name>styleClass</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.String</type>
+        </attribute>
+
+        <attribute>
+        	<description>
+        		A length to truncate the text to be displayed. If not given the text will be truncated by a default value.
+        	</description>
+	    	<name>fieldLength</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.Integer</type>
+        </attribute>       
+        
+        <attribute>
+        	<description>
+        		Indicate wether the result should only be a label.
+        	</description>
+	    	<name>onlyShowLabel</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.Boolean</type>
+        </attribute>
+    </tag>
+
+	<tag>
+	    <description>
+	    	Renders the help icon, inside or not a TD element
+	    </description>
+		<name>help</name>
+		<tag-class>nl.strohalm.cyclos.taglibs.HelpTag</tag-class>
+       	<body-content>empty</body-content>
+
+        <attribute>
+		    <description>
+		    	The help page
+		    </description>
+	    	<name>page</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.String</type>
+        </attribute>
+
+        <attribute>
+		    <description>
+		    	The td width
+		    </description>
+	    	<name>width</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.String</type>
+        </attribute>
+
+        <attribute>
+		    <description>
+		    	If set to false, do not render the td element outside the help icon.
+		    	Should be set to false other icons (like export and print) will be rendered under the same td element.
+		    	Defaults to true.
+		    </description>
+	    	<name>td</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>boolean</type>
+        </attribute>
+    </tag>
+
+	<tag>
+	    <description>
+	    	Renders an image index, allowing them to be edited
+	    </description>
+		<name>images</name>
+		<tag-class>nl.strohalm.cyclos.taglibs.ImagesTag</tag-class>
+       	<body-content>empty</body-content>
+
+        <attribute>
+		    <description>
+		    	A list with nl.strohalm.cyclos.entities.customization.images.CustomImage instances
+		    </description>
+	    	<name>images</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.util.List</type>
+        </attribute>
+
+        <attribute>
+        	<description>
+        		A JavaScript variable name. If set, the image container instance will be accessible through that variable
+        	</description>
+	    	<name>varName</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.String</type>
+        </attribute>
+
+        <attribute>
+		    <description>
+		    	A flag indicating if the editing actions will be rendered, like changing captions or removing.
+		    	Defaults to false.
+		    </description>
+	    	<name>editable</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>boolean</type>
+        </attribute>
+
+        <attribute>
+		    <description>
+		    	If set to true, renders only the image itself, with no elements arround it.
+		    	Useful to set to true on search results, to show 1 image per row.
+		    	Defaults to false.
+		    </description>
+	    	<name>imageOnly</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>boolean</type>
+        </attribute>
+        
+        <attribute>
+		    <description>
+		    	Sets the div style
+		    </description>
+	    	<name>style</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.String</type>
+        </attribute>
+    </tag>
+
+	<tag>
+	    <description>
+	    	This tag generates a HTML table element with a fixed column count. 
+	    	As nested cell tags are used, they fill in those columns.
+	    	When the column count reaches the table's column limit, a row break is generated.
+	    	The row break may also be forces with a rowBreak tag.
+	    	Arbitrary attributes may be passed to the table tag, with the following replacements: class should be 
+	    	specified as className, and id as elementId.
+	    </description>
+		<name>layout</name>
+		<tag-class>nl.strohalm.cyclos.taglibs.LayoutTag</tag-class>
+       	<body-content>JSP</body-content>
+
+        <attribute>
+			<description>
+				The column count for this table
+			</description>
+	    	<name>columns</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>int</type>
+        </attribute>
+
+	    <dynamic-attributes>true</dynamic-attributes>
+    </tag>
+
+	<tag>
+	    <description>
+	    	This tag generates a HTML cell inside a layout tag.
+	    	Arbitrary attributes may be passed to the table tag, with the following replacements: class should be 
+	    	specified as className, and id as elementId.
+	    </description>
+		<name>cell</name>
+		<tag-class>nl.strohalm.cyclos.taglibs.CellTag</tag-class>
+       	<body-content>JSP</body-content>
+
+        <attribute>
+        	<description>
+        		A cell may use more than one column. 
+        		This attribute indicates how many columns will it use.
+        		Defaults to 1.
+        	</description>
+	    	<name>colspan</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>int</type>
+        </attribute>
+
+	    <dynamic-attributes>true</dynamic-attributes>
+    </tag>
+    
+	<tag>
+	    <description>
+	    	Forces a row break inside a layout tag
+	    </description>
+		<name>rowBreak</name>
+		<tag-class>nl.strohalm.cyclos.taglibs.RowBreakTag</tag-class>
+       	<body-content>empty</body-content>
+    </tag>
+
+	<tag>
+	    <description>
+	    	Renders a multi drop down control.
+	    	A multi drop down is a control generated via JavaScript that is like a HTML multiple select, but is
+	    	expandable, having a checkbox on each option.
+	    </description>
+		<name>multiDropDown</name>
+		<tag-class>nl.strohalm.cyclos.taglibs.MultiDropDownTag</tag-class>
+       	<body-content>JSP</body-content>
+
+        <attribute>
+        	<description>
+        		The name for this control. When the form is submitted, this will be the request parameter name.
+        	</description>
+	    	<name>name</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.String</type>
+        </attribute>
+        <attribute>
+        	<description>
+        		A JavaScript variable name. If set, the multi drop down instance will be accessible through that variable
+        	</description>
+	    	<name>varName</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.String</type>
+        </attribute>
+        <attribute>
+        	<description>
+        		If set to true, instead of submitting multiple times the same argument (making the request parameter to be an array),
+        		a single, comma-separated string will be submitted.
+        		Defaults to false.
+        	</description>
+	    	<name>singleField</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>boolean</type>
+        </attribute>
+        <attribute>
+        	<description>
+        		If set to true, the control will be always open, like a HTML select with a size attribute.
+        	</description>
+	    	<name>open</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>boolean</type>
+        </attribute>
+        <attribute>
+        	<description>
+        		The number of visible items on the list. 
+        		Depending on the platform / browser, the items may not fit exactly to this size.
+        		However, a scrollbar will be accessible when there are more items than the visible ones.
+        	</description>
+	    	<name>size</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.Integer</type>
+        </attribute>
+        <attribute>
+        	<description>
+        		A flag indicating if the field will be disabled.
+        		Defaults to false.
+        	</description>
+	    	<name>disabled</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.Integer</type>
+        </attribute>
+        <attribute>
+        	<description>
+        		The minimum width (in pixels) for this control.
+        	</description>
+	    	<name>minWidth</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.Integer</type>
+        </attribute>
+        <attribute>
+        	<description>
+        		The maximum width (in pixels) for this control.
+        	</description>
+	    	<name>maxWidth</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.Integer</type>
+        </attribute>
+        <attribute>
+        	<description>
+        		A string that will be the control label when no items are selected
+        	</description>
+	    	<name>emptyLabel</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.String</type>
+        </attribute>
+        <attribute>
+        	<description>
+        		A resource bundle key used to lookup the control label when no items are selected
+        	</description>
+	    	<name>emptyLabelKey</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.String</type>
+        </attribute>
+        <attribute>
+        	<description>
+        		A callback JavaScript code to be executed when the multi drop down selection changes
+        	</description>
+	    	<name>onchange</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.String</type>
+        </attribute>
+    </tag>
+	<tag>
+	    <description>
+	    	Renders a multi drop down option
+	    </description>
+		<name>option</name>
+		<tag-class>nl.strohalm.cyclos.taglibs.OptionTag</tag-class>
+       	<body-content>empty</body-content>
+
+        <attribute>
+        	<description>
+        		The internal value for this option
+        	</description>
+	    	<name>value</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.String</type>
+        </attribute>
+        <attribute>
+        	<description>
+        		The display label for this option
+        	</description>
+	    	<name>text</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.String</type>
+        </attribute>
+        <attribute>
+        	<description>
+        		A boolean indicating if this option is initially selected.
+        		Defaults to false.
+        	</description>
+	    	<name>selected</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.Boolean</type>
+        </attribute>
+	</tag>
+
+	<tag>
+	    <description>
+	    	Renders a pagination index for a search results.
+	    	When the user clicks a page number, a HTML hidden is created on the first form,
+	    	with the name 'query(pageParameters).currentPage'. This attribute matches the page parameters
+	    	for actions extending nl.strohalm.cyclos.controls.BaseQueryAction.
+	    	For an alternative form, the form attribute may be used, indicating the form name.
+	    </description>
+		<name>pagination</name>
+		<tag-class>nl.strohalm.cyclos.taglibs.PaginationTag</tag-class>
+       	<body-content>empty</body-content>
+
+        <attribute>
+        	<description>
+        		The page. Should resolve to an instance of nl.strohalm.cyclos.utils.query.Page.
+        		If is not a page instance, there will be no output.
+        	</description>
+	    	<name>items</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.Object</type>
+        </attribute>
+        <attribute>
+        	<description>
+        		A form name. If not set, the first form is used.
+        	</description>
+	    	<name>form</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.String</type>
+        </attribute>
+        <attribute>
+        	<description>
+        		A custom action handler. When passed, should be the name of a function, declared on the current page, 
+        		that will receive the new page number as argument. In this case, the default action will not be executed,
+        		which is to change a form field (creating one if needed) for the new page number and submitting the form.
+        	</description>
+	    	<name>onClickHandler</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.String</type>
+        </attribute>
+	</tag>
+
+	<tag>
+	    <description>
+	    	Truncates a string for a given number of lines, with a given max length each.
+	    </description>
+		<name>truncate</name>
+		<tag-class>nl.strohalm.cyclos.taglibs.TruncateTag</tag-class>
+       	<body-content>empty</body-content>
+
+        <attribute>
+        	<description>
+        		The string value
+        	</description>
+	    	<name>value</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.Object</type>
+        </attribute>
+        
+        <attribute>
+        	<description>
+        		The maximum length per line.
+        		Defaults to 60.
+        	</description>
+	    	<name>length</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>int</type>
+        </attribute>
+        
+        <attribute>
+        	<description>
+        		The maximum line count.
+        		Defaults to 1.
+        	</description>
+	    	<name>lines</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>int</type>
+        </attribute>
+        
+        <attribute>
+        	<description>
+        		Determines whether the value is formatted as HTML
+        	</description>
+	    	<name>html</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>boolean</type>
+        </attribute>
+	</tag>
+
+	<tag>
+	    <description>
+	    	Renders the url for a given custom image
+	    </description>
+		<name>customImageUrl</name>
+		<tag-class>nl.strohalm.cyclos.taglibs.CustomImageUrlTag</tag-class>
+       	<body-content>empty</body-content>
+
+        <attribute>
+        	<description>
+        		The image name.
+        	</description>
+	    	<name>name</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.String</type>
+        </attribute>
+
+        <attribute>
+        	<description>
+        		A boolean value, indicating (if true) that the thumbnail should be used, not the full image.
+        		Defaults to false.
+        	</description>
+	    	<name>thumbnail</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>boolean</type>
+        </attribute>
+
+        <attribute>
+        	<description>
+        		The image type. May be one of: system, custom or style. 
+        		Defaults to custom.
+        	</description>
+	    	<name>type</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.String</type>
+        </attribute>
+	</tag>
+
+	<tag>
+	    <description>
+	    	Renders an img tag for a given custom image.
+	    	Arbitrary attributes may be passed to the img tag, with the following replacements: class should be 
+	    	specified as className, and id as elementId.	    	
+	    </description>
+		<name>customImage</name>
+		<tag-class>nl.strohalm.cyclos.taglibs.CustomImageTag</tag-class>
+       	<body-content>empty</body-content>
+
+        <attribute>
+        	<description>
+        		The image name.
+        	</description>
+	    	<name>name</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.String</type>
+        </attribute>
+
+        <attribute>
+        	<description>
+        		A boolean value, indicating (if true) that the thumbnail should be used, not the full image.
+        		Defaults to false.
+        	</description>
+	    	<name>thumbnail</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>boolean</type>
+        </attribute>
+
+        <attribute>
+        	<description>
+        		The image type. May be one of: system, custom or style. 
+        		Defaults to custom.
+        	</description>
+	    	<name>type</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.String</type>
+        </attribute>
+
+	    <dynamic-attributes>true</dynamic-attributes>
+	</tag>
+
+	<tag>
+	    <description>
+	    	Renders a textarea with options to select if the content is plain text or rich text
+	    </description>
+		<name>richTextArea</name>
+		<tag-class>nl.strohalm.cyclos.taglibs.RichTextAreaTag</tag-class>
+       	<body-content>empty</body-content>
+
+        <attribute>
+        	<description>
+        		The textarea's name
+        	</description>
+	    	<name>name</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.String</type>
+        </attribute>
+
+        <attribute>
+        	<description>
+        		The current value
+        	</description>
+	    	<name>value</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>boolean</type>
+        </attribute>
+
+        <attribute>
+        	<description>
+        		The textarea class name
+        	</description>
+	    	<name>styleClass</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.String</type>
+        </attribute>
+
+        <attribute>
+        	<description>
+        		The textarea element id
+        	</description>
+	    	<name>styleId</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.String</type>
+        </attribute>
+
+        <attribute>
+        	<description>
+        		Determines if the textarea is initially disabled
+        	</description>
+	    	<name>disabled</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>boolean</type>
+        </attribute>
+
+	    <dynamic-attributes>true</dynamic-attributes>
+	</tag>
+
+	<tag>
+	    <description>
+	    	Given a collection of custom fields, select those who matches specified conditions, storing the resulting collection
+	    	on the page
+	    </description>
+		<name>selectCustomFields</name>
+		<tag-class>nl.strohalm.cyclos.taglibs.SelectCustomFieldsTag</tag-class>
+       	<body-content>empty</body-content>
+
+        <attribute>
+        	<description>
+        		The list containing all fields.
+        	</description>
+	    	<name>allFields</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.util.List</type>
+        </attribute>
+
+        <attribute>
+        	<description>
+        		A group used to filter custom fields: only custom fields related to the given group will be selected.
+        	</description>
+	    	<name>group</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>nl.strohalm.cyclos.entities.groups.Group</type>
+        </attribute>
+
+        <attribute>
+        	<description>
+        		A context variable name. If provided, instead of writing the escaped value to the response
+        		output, it will be set on the scope determined by the scope attribute, under this variable name
+        	</description>
+	    	<name>var</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.String</type>
+        </attribute>
+        
+        <attribute>
+        	<description>
+        		The scope name for the variable to be exported. 
+        		May be one of: page, request, session or application.
+        		Defaults to page.
+        	</description>
+	    	<name>scope</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.String</type>
+        </attribute>
+	</tag>
+
+	<tag>
+	    <description>
+	    	Renders a script tag, appending the cyclos version as a parameter to avoid browser cache between versions
+	    </description>
+		<name>script</name>
+		<tag-class>nl.strohalm.cyclos.taglibs.ScriptTag</tag-class>
+       	<body-content>empty</body-content>
+
+        <attribute>
+        	<description>
+        		The script file
+        	</description>
+	    	<name>src</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+            <type>java.lang.String</type>
+        </attribute>
+	</tag>
+
+	<tag>
+	    <description>
+	    	Invokes the CacheCleaner.clearCache() method
+	    </description>
+		<name>clearCache</name>
+		<tag-class>nl.strohalm.cyclos.taglibs.ClearCacheTag</tag-class>
+       	<body-content>empty</body-content>
+	</tag>
+	
+	<function>
+		<description>
+			Returns if the logged user has granted the given permission
+		</description>
+		<name>granted</name>
+		<function-class>nl.strohalm.cyclos.taglibs.Functions</function-class>
+		<function-signature>boolean granted(nl.strohalm.cyclos.access.Permission)</function-signature>
+	</function>
+
+	<function>
+		<description>
+			Given an enumeration instance, returns it's name
+		</description>
+		<name>name</name>
+		<function-class>nl.strohalm.cyclos.taglibs.Functions</function-class>
+		<function-signature>String name(java.lang.Object)</function-signature>
+	</function>
+
+	<function>
+		<description>
+			Given an enumeration instance, returns it's value.
+			The value is determined using the following heuristic:
+				If the enum implements nl.strohalm.cyclos.utils.StringValuedEnum or nl.strohalm.cyclos.utils.IntValuedEnum the getValue() method is called, 
+				otherwise, the enum name is returned.
+		</description>
+		<name>value</name>
+		<function-class>nl.strohalm.cyclos.taglibs.Functions</function-class>
+		<function-signature>Object value(java.lang.Object)</function-signature>
+	</function>
+
+	<function>
+		<description>
+			Returns if a collection, array or map contains a given value (or key if a map)
+		</description>
+		<name>contains</name>
+		<function-class>nl.strohalm.cyclos.taglibs.Functions</function-class>
+		<function-signature>boolean contains(java.lang.Object, java.lang.Object)</function-signature>
+	</function>
+
+	<function>
+		<description>
+			Rounds a given number according to the local settings
+		</description>
+		<name>round</name>
+		<function-class>nl.strohalm.cyclos.taglibs.Functions</function-class>
+		<function-signature>java.math.BigDecimal round(java.lang.Object)</function-signature>
+	</function>
+
+	<function>
+		<description>
+			If both objects are non-null then check for equality (using the equals'' implementation of the first argument). 
+			if any of them is empty then return false.  
+		</description>
+		<name>equals</name>
+		<function-class>nl.strohalm.cyclos.taglibs.Functions</function-class>
+		<function-signature>boolean equals(java.lang.Object, java.lang.Object)</function-signature>
+	</function>
+</taglib>

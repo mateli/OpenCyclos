@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+
+    <subclass dynamic-insert="true" dynamic-update="true" name="nl.strohalm.cyclos.entities.accounts.SystemAccountType" extends="nl.strohalm.cyclos.entities.accounts.AccountType" discriminator-value="S">
+        <many-to-one name="account" class="nl.strohalm.cyclos.entities.accounts.SystemAccount">
+            <column name="system_account_id" sql-type="integer"/>
+    	</many-to-one>
+    	
+    	<bag name="viewedByGroups" table="admin_view_account_information" inverse="true">
+			<key>
+			    <column name="account_type_id" sql-type="integer"/>
+			</key>
+			<many-to-many class="nl.strohalm.cyclos.entities.groups.AdminGroup">
+			    <column name="group_id" sql-type="integer"/>	
+			</many-to-many>
+		</bag>
+		
+		<bag name="externalAccounts" order-by="name" inverse="true" cascade="delete">
+        	<key>
+			    <column name="system_account_id" sql-type="integer"/>
+		    </key>
+			<one-to-many class="nl.strohalm.cyclos.entities.accounts.external.ExternalAccount"/>
+		</bag>
+	
+    </subclass>
+    
+</hibernate-mapping>

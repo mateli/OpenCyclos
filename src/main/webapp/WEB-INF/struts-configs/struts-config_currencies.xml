@@ -1,0 +1,59 @@
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.1//EN" "http://jakarta.apache.org/struts/dtds/struts-config_1_1.dtd">
+<struts-config>
+	<form-beans>
+        <form-bean name="removeCurrencyForm" type="nl.strohalm.cyclos.controls.accounts.currencies.RemoveCurrencyForm" />
+        <form-bean name="editCurrencyForm" type="nl.strohalm.cyclos.controls.accounts.currencies.EditCurrencyForm" />
+        <form-bean name="reinitializeRatesForm" type="nl.strohalm.cyclos.controls.accounts.currencies.ReinitializeRatesForm" />
+        <form-bean name="manageCurrencyForm" type="nl.strohalm.cyclos.controls.accounts.currencies.ManageCurrencyForm" />
+	</form-beans>
+	
+	<action-mappings type="org.apache.struts.config.SecureActionConfig">
+
+		<action 
+			path="/admin/listCurrencies" 
+			type="nl.strohalm.cyclos.controls.accounts.currencies.ListCurrenciesAction"
+            input="admin/_listCurrencies">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/admin/removeCurrency" 
+			type="nl.strohalm.cyclos.controls.accounts.currencies.RemoveCurrencyAction"
+            name="removeCurrencyForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/listCurrencies" redirect="true"></forward>
+		</action>
+
+		<action 
+			path="/admin/editCurrency" 
+			type="nl.strohalm.cyclos.controls.accounts.currencies.EditCurrencyAction"
+            name="editCurrencyForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/manageCurrency" redirect="true"></forward>
+		</action>
+		
+		<action 
+			path="/admin/reinitializeRates" 
+			type="nl.strohalm.cyclos.controls.accounts.currencies.ReinitializeRatesAction"
+            name="reinitializeRatesForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/manageCurrency" redirect="true"></forward>
+		</action>
+		
+		<action 
+			path="/admin/manageCurrency" 
+			type="nl.strohalm.cyclos.controls.accounts.currencies.ManageCurrencyAction"
+            name="manageCurrencyForm"
+            scope="request"
+            input="admin/_manageCurrency">
+			<set-property property="secure" value="true" />
+		</action>
+		
+		
+	
+	</action-mappings>
+
+</struts-config>

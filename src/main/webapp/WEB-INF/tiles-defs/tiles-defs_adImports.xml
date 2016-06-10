@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+
+ <!DOCTYPE tiles-definitions PUBLIC
+       "-//Apache Software Foundation//DTD Tiles Configuration 1.1//EN"
+       "http://jakarta.apache.org/struts/dtds/tiles-config_1_1.dtd">
+
+<tiles-definitions>
+
+	<definition name="admin/_importAds" extends=".adminLayout">
+		<put name="body" value="/pages/productsServices/imports/importAds.jsp"/>
+	</definition>
+
+	<definition name="admin/_importedAdsSummary" extends=".adminLayout">
+		<put name="body" value="/pages/productsServices/imports/importedAdsSummary.jsp"/>
+	</definition>
+
+	<definition name="admin/_importedAdsDetails" extends=".adminLayout">
+		<put name="body" value="/pages/productsServices/imports/importedAdsDetails.jsp"/>
+	</definition>
+
+	<definition name="admin/_importedAdCategories" extends=".adminLayout">
+		<put name="body" value="/pages/productsServices/imports/importedAdCategories.jsp"/>
+	</definition>
+
+</tiles-definitions>

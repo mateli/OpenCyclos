@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+
+    <class dynamic-insert="true" dynamic-update="true" name="nl.strohalm.cyclos.entities.accounts.AccountRates" table="account_rates">
+		<id name="id" type="long">
+		    <column name="id" sql-type="bigint"/>
+			<generator class="native"/>
+		</id>
+        <property name="emissionDate" column="emission_date" type="calendar"/>
+        <property name="expirationDate" column="expiration_date" type="calendar"/>
+        <property name="iRate" column="i_rate" type="big_decimal" precision="15" scale="6" />
+        <property name="rateBalanceCorrection" column="rate_balance_correction" type="big_decimal" precision="21" scale="6"/>
+
+    	<many-to-one name="account" update="false" class="nl.strohalm.cyclos.entities.accounts.Account">
+		    <column name="account_id" index="ix_accntrts_account_date" sql-type="integer" not-null="true"/>
+		</many-to-one>
+
+    	<many-to-one name="lastTransfer" class="nl.strohalm.cyclos.entities.accounts.transactions.Transfer">
+		    <column name="transfer_id" index="ix_accntrts_transfer" sql-type="bigint" not-null="true"/>
+		</many-to-one>
+    </class>
+    
+</hibernate-mapping>

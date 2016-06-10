@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+
+ <!DOCTYPE tiles-definitions PUBLIC
+       "-//Apache Software Foundation//DTD Tiles Configuration 1.1//EN"
+       "http://jakarta.apache.org/struts/dtds/tiles-config_1_1.dtd">
+
+<tiles-definitions>
+
+	<definition name="admin/_listMemberRecordTypes" extends=".adminLayout">
+		<put name="body" value="/pages/members/records/listMemberRecordTypes.jsp"/>
+	</definition>
+	
+	<definition name="admin/_editMemberRecordType" extends=".adminLayout">
+		<put name="body" value="/pages/members/records/editMemberRecordType.jsp"/>
+	</definition>
+	
+	<definition name="admin/_searchMemberRecords" extends=".adminLayout">
+		<put name="body" value="/pages/members/records/searchMemberRecords.jsp"/>
+	</definition>
+	
+	<definition name="admin/_editMemberRecord" extends=".adminLayout">
+		<put name="body" value="/pages/members/records/editMemberRecord.jsp"/>
+	</definition>
+	
+	<definition name="admin/_flatMemberRecords" extends=".adminLayout">
+		<put name="body" value="/pages/members/records/flatMemberRecords.jsp"/>
+	</definition>
+	
+	<definition name="member/_searchMemberRecords" extends=".memberLayout">
+		<put name="body" value="/pages/members/records/searchMemberRecords.jsp"/>
+	</definition>
+	
+	<definition name="member/_editMemberRecord" extends=".memberLayout">
+		<put name="body" value="/pages/members/records/editMemberRecord.jsp"/>
+	</definition>
+
+	<definition name="member/_flatMemberRecords" extends=".memberLayout">
+		<put name="body" value="/pages/members/records/flatMemberRecords.jsp"/>
+	</definition>
+	
+</tiles-definitions>

@@ -1,0 +1,51 @@
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.1//EN" "http://jakarta.apache.org/struts/dtds/struts-config_1_1.dtd">
+
+<struts-config>
+
+	<form-beans>
+        <form-bean name="themeForm"       type="nl.strohalm.cyclos.controls.customization.themes.ThemeForm" />
+        <form-bean name="importThemeForm" type="nl.strohalm.cyclos.controls.customization.themes.ImportThemeForm" />
+        <form-bean name="exportThemeForm" type="nl.strohalm.cyclos.controls.customization.themes.ExportThemeForm" />
+	</form-beans>
+	
+	<action-mappings type="org.apache.struts.config.SecureActionConfig">
+		
+		<action 
+			path="/admin/selectTheme" 
+			type="nl.strohalm.cyclos.controls.customization.themes.SelectThemeAction"
+            name="themeForm"
+            scope="request"
+            input="admin/_manageThemes">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/selectTheme" redirect="true" />
+		</action>
+		
+		<action 
+			path="/admin/removeTheme" 
+			type="nl.strohalm.cyclos.controls.customization.themes.RemoveThemeAction"
+            name="themeForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/selectTheme" redirect="true" />
+		</action>
+		
+		<action 
+			path="/admin/importTheme" 
+			type="nl.strohalm.cyclos.controls.customization.themes.ImportThemeAction"
+            name="importThemeForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/selectTheme" redirect="true" />
+		</action>
+
+		<action 
+			path="/admin/exportTheme" 
+			type="nl.strohalm.cyclos.controls.customization.themes.ExportThemeAction"
+			name="exportThemeForm"
+			scope="request">
+			<set-property property="secure" value="true" />
+		</action>
+		
+	</action-mappings>
+
+</struts-config>

@@ -1,0 +1,81 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+
+    <class dynamic-insert="true" dynamic-update="true" name="nl.strohalm.cyclos.entities.services.ServiceClient" table="service_clients" abstract="true">
+        <id name="id" type="long">
+		    <column name="id" sql-type="integer"/>
+            <generator class="native"/>
+        </id>
+
+    	<property name="name" length="100" column="name" not-null="true" />
+    	<property name="hostname" length="100" column="hostname" not-null="true" />
+    	<property name="addressBegin" length="100" column="address_begin" />
+    	<property name="addressEnd" length="100" column="address_end" />
+    	<property name="username" length="100" column="username" />
+    	<property name="password" length="100" column="password" />
+    	<property name="credentialsRequired" column="credentials_required" type="boolean" not-null="true"/>
+    	<property name="ignoreRegistrationValidations" column="ignore_registration_validations" type="boolean" not-null="true"/>
+
+        <many-to-one name="member" class="nl.strohalm.cyclos.entities.members.Member">
+            <column name="member_id" sql-type="integer"/>
+    	</many-to-one>
+    	
+        <many-to-one name="channel" class="nl.strohalm.cyclos.entities.access.Channel">
+            <column name="channel_id" sql-type="integer"/>
+    	</many-to-one>
+		
+		<set name="permissions" table="service_client_permissions">
+			<key>
+			    <column name="service_client_id" sql-type="integer"/>
+			</key>
+			<element>
+	            <column name="operation" length="50" not-null="true" />
+	            <type name="nl.strohalm.cyclos.utils.hibernate.StringValuedEnumType">
+	                <param name="enumClassName">nl.strohalm.cyclos.entities.services.ServiceOperation</param>
+	            </type>
+			</element>
+		</set>
+		
+		<set name="doPaymentTypes" table="service_clients_do_payment_types">
+			<key>
+			    <column name="service_client_id" sql-type="integer"/>
+			</key>
+			<many-to-many class="nl.strohalm.cyclos.entities.accounts.transactions.TransferType">
+			    <column name="transfer_type_id" sql-type="integer"/>	
+			</many-to-many>
+		</set>
+
+		<set name="receivePaymentTypes" table="service_clients_receive_payment_types">
+			<key>
+			    <column name="service_client_id" sql-type="integer"/>
+			</key>
+			<many-to-many class="nl.strohalm.cyclos.entities.accounts.transactions.TransferType">
+			    <column name="transfer_type_id" sql-type="integer"/>	
+			</many-to-many>
+		</set>
+
+		<set name="chargebackPaymentTypes" table="service_clients_chargeback_payment_types">
+			<key>
+			    <column name="service_client_id" sql-type="integer"/>
+			</key>
+			<many-to-many class="nl.strohalm.cyclos.entities.accounts.transactions.TransferType">
+			    <column name="transfer_type_id" sql-type="integer"/>	
+			</many-to-many>
+		</set>
+
+		<set name="manageGroups" table="service_clients_manage_groups">
+			<key>
+			    <column name="service_client_id" sql-type="integer"/>
+			</key>
+			<many-to-many class="nl.strohalm.cyclos.entities.groups.MemberGroup">
+			    <column name="group_id" sql-type="integer"/>	
+			</many-to-many>
+		</set>
+		
+    </class>
+    
+</hibernate-mapping>

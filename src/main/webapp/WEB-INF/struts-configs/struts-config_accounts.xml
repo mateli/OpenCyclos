@@ -1,0 +1,321 @@
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.1//EN" "http://jakarta.apache.org/struts/dtds/struts-config_1_1.dtd">
+<struts-config>
+	<form-beans>
+        <form-bean name="accountOverviewForm" type="nl.strohalm.cyclos.controls.accounts.details.AccountOverviewForm" />
+        <form-bean name="accountHistoryForm" type="nl.strohalm.cyclos.controls.accounts.details.AccountHistoryForm" />
+        <form-bean name="viewTransactionForm" type="nl.strohalm.cyclos.controls.accounts.details.ViewTransactionForm" />
+        <form-bean name="viewScheduledPaymentForm" type="nl.strohalm.cyclos.controls.payments.scheduled.ScheduledPaymentForm" />
+        <form-bean name="transfersAwaitingAuthorizationForm" type="nl.strohalm.cyclos.controls.accounts.details.TransfersAwaitingAuthorizationForm" />
+        <form-bean name="searchTransferAuthorizationsForm" type="nl.strohalm.cyclos.controls.accounts.details.SearchTransferAuthorizationsForm" />
+        <form-bean name="searchScheduledPaymentsForm" type="nl.strohalm.cyclos.controls.accounts.details.SearchScheduledPaymentsForm" />
+	</form-beans>
+	
+	<action-mappings type="org.apache.struts.config.SecureActionConfig">
+
+		<action 
+			path="/printTransaction" 
+			type="nl.strohalm.cyclos.controls.accounts.details.PrintTransactionAction"
+            name="viewTransactionForm"
+            scope="request"
+            input="_printTransaction">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/transactionReceipt" 
+			type="nl.strohalm.cyclos.controls.accounts.details.TransactionReceiptAjaxAction"
+            name="viewTransactionForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/printScheduledPayment" 
+			type="nl.strohalm.cyclos.controls.accounts.details.PrintScheduledPaymentAction"
+            name="viewScheduledPaymentForm"
+            scope="request"
+            input="_printScheduledPayment">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/scheduledPaymentReceipt" 
+			type="nl.strohalm.cyclos.controls.accounts.details.ScheduledPaymentReceiptAjaxAction"
+            name="viewScheduledPaymentForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+		</action>
+		
+		<action 
+			path="/member/exportAccountHistoryToCsv" 
+			type="nl.strohalm.cyclos.controls.accounts.details.ExportTransactionsToCsvAction"
+            name="accountHistoryForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+		</action>
+		
+		<action 
+			path="/member/printAccountHistory" 
+			type="nl.strohalm.cyclos.controls.accounts.details.PrintAccountHistoryAction"
+            name="accountHistoryForm"
+            scope="request"
+            input="_printAccountHistory">
+			<set-property property="secure" value="true" />
+		</action>
+		
+		<action 
+			path="/member/printScheduledPaymentsSearch" 
+			type="nl.strohalm.cyclos.controls.accounts.details.PrintScheduledPaymentsSearchAction"
+            name="searchScheduledPaymentsForm"
+            scope="request"
+            input="_printScheduledPaymentsSearch">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/member/accountOverview" 
+			type="nl.strohalm.cyclos.controls.accounts.details.AccountOverviewAction"
+            name="accountOverviewForm"
+            scope="request"
+            input="member/_accountOverview">
+			<set-property property="secure" value="true" />
+			<forward name="accountDetails" path="/do/member/accountHistory" redirect="true"/>
+		</action>
+		
+		<action 
+			path="/member/accountHistory" 
+			type="nl.strohalm.cyclos.controls.accounts.details.AccountHistoryAction"
+            name="accountHistoryForm"
+            scope="session"
+            input="member/_accountHistory">
+			<set-property property="secure" value="true" />
+		</action>
+		
+		<action 
+			path="/member/viewTransaction" 
+			type="nl.strohalm.cyclos.controls.accounts.details.ViewTransactionAction"
+            name="viewTransactionForm"
+            scope="request"
+            input="member/_viewTransaction">
+			<set-property property="secure" value="true" />
+		</action>
+		
+		<action 
+			path="/member/viewScheduledPayment" 
+			type="nl.strohalm.cyclos.controls.accounts.details.ViewScheduledPaymentAction"
+            name="viewScheduledPaymentForm"
+            scope="request"
+            input="member/_viewScheduledPayment">
+			<set-property property="secure" value="true" />
+		</action>
+		
+		<action 
+			path="/member/transfersAwaitingAuthorization" 
+			type="nl.strohalm.cyclos.controls.accounts.details.TransfersAwaitingAuthorizationAction"
+            name="transfersAwaitingAuthorizationForm"
+            scope="request"
+            input="member/_transfersAwaitingAuthorization">
+			<set-property property="secure" value="true" />
+		</action>
+		
+		<action 
+			path="/member/searchTransferAuthorizations" 
+			type="nl.strohalm.cyclos.controls.accounts.details.SearchTransferAuthorizationsAction"
+            name="searchTransferAuthorizationsForm"
+            scope="request"
+            input="member/_searchTransferAuthorizations">
+			<set-property property="secure" value="true" />
+		</action>
+		
+		<action 
+			path="/member/searchScheduledPayments" 
+			type="nl.strohalm.cyclos.controls.accounts.details.SearchScheduledPaymentsAction"
+            name="searchScheduledPaymentsForm"
+            scope="session"
+            input="member/_searchScheduledPayments">
+			<set-property property="secure" value="true" />
+		</action>
+		
+		<action 
+			path="/admin/printScheduledPaymentsSearch" 
+			type="nl.strohalm.cyclos.controls.accounts.details.PrintScheduledPaymentsSearchAction"
+            name="searchScheduledPaymentsForm"
+            scope="request"
+            input="_printScheduledPaymentsSearch">
+			<set-property property="secure" value="true" />
+		</action>
+		
+		<action 
+			path="/admin/exportAccountHistoryToCsv" 
+			type="nl.strohalm.cyclos.controls.accounts.details.ExportTransactionsToCsvAction"
+            name="accountHistoryForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+		</action>
+		
+		<action 
+			path="/admin/printAccountHistory" 
+			type="nl.strohalm.cyclos.controls.accounts.details.PrintAccountHistoryAction"
+            name="accountHistoryForm"
+            scope="request"
+            input="_printAccountHistory">
+			<set-property property="secure" value="true" />
+		</action>
+		
+		<action 
+			path="/admin/accountOverview" 
+			type="nl.strohalm.cyclos.controls.accounts.details.AccountOverviewAction"
+            name="accountOverviewForm"
+            scope="request"
+            input="admin/_accountOverview">
+			<set-property property="secure" value="true" />
+			<forward name="accountDetails" path="/do/admin/accountHistory" redirect="true"/>
+		</action>
+
+		<action 
+			path="/admin/accountHistory" 
+			type="nl.strohalm.cyclos.controls.accounts.details.AccountHistoryAction"
+            name="accountHistoryForm"
+            scope="session"
+            input="admin/_accountHistory">
+			<set-property property="secure" value="true" />
+		</action>
+		
+		<action 
+			path="/admin/viewTransaction" 
+			type="nl.strohalm.cyclos.controls.accounts.details.ViewTransactionAction"
+            name="viewTransactionForm"
+            scope="request"
+            input="admin/_viewTransaction">
+			<set-property property="secure" value="true" />
+		</action>
+		
+		<action 
+			path="/admin/viewScheduledPayment" 
+			type="nl.strohalm.cyclos.controls.accounts.details.ViewScheduledPaymentAction"
+            name="viewScheduledPaymentForm"
+            scope="request"
+            input="admin/_viewScheduledPayment">
+			<set-property property="secure" value="true" />
+		</action>
+		
+		<action 
+			path="/admin/transfersAwaitingAuthorization" 
+			type="nl.strohalm.cyclos.controls.accounts.details.TransfersAwaitingAuthorizationAction"
+            name="transfersAwaitingAuthorizationForm"
+            scope="request"
+            input="admin/_transfersAwaitingAuthorization">
+			<set-property property="secure" value="true" />
+		</action>
+		
+		<action 
+			path="/admin/searchTransferAuthorizations" 
+			type="nl.strohalm.cyclos.controls.accounts.details.SearchTransferAuthorizationsAction"
+            name="searchTransferAuthorizationsForm"
+            scope="request"
+            input="admin/_searchTransferAuthorizations">
+			<set-property property="secure" value="true" />
+		</action>
+		
+		<action 
+			path="/admin/searchScheduledPayments" 
+			type="nl.strohalm.cyclos.controls.accounts.details.SearchScheduledPaymentsAction"
+            name="searchScheduledPaymentsForm"
+            scope="session"
+            input="admin/_searchScheduledPayments">
+			<set-property property="secure" value="true" />
+		</action>
+
+
+		<action 
+			path="/operator/accountOverview" 
+			type="nl.strohalm.cyclos.controls.accounts.details.AccountOverviewAction"
+            name="accountOverviewForm"
+            scope="request"
+            input="operator/_accountOverview">
+			<set-property property="secure" value="true" />
+			<forward name="accountDetails" path="/do/operator/accountHistory" redirect="true"/>
+		</action>
+		
+		<action 
+			path="/operator/accountHistory" 
+			type="nl.strohalm.cyclos.controls.accounts.details.AccountHistoryAction"
+            name="accountHistoryForm"
+            scope="session"
+            input="operator/_accountHistory">
+			<set-property property="secure" value="true" />
+		</action>
+		
+		<action 
+			path="/operator/viewTransaction" 
+			type="nl.strohalm.cyclos.controls.accounts.details.ViewTransactionAction"
+            name="viewTransactionForm"
+            scope="request"
+            input="operator/_viewTransaction">
+			<set-property property="secure" value="true" />
+		</action>
+		
+		<action 
+			path="/operator/viewScheduledPayment" 
+			type="nl.strohalm.cyclos.controls.accounts.details.ViewScheduledPaymentAction"
+            name="viewScheduledPaymentForm"
+            scope="request"
+            input="operator/_viewScheduledPayment">
+			<set-property property="secure" value="true" />
+		</action>
+		
+		<action 
+			path="/operator/transfersAwaitingAuthorization" 
+			type="nl.strohalm.cyclos.controls.accounts.details.TransfersAwaitingAuthorizationAction"
+            name="transfersAwaitingAuthorizationForm"
+            scope="request"
+            input="operator/_transfersAwaitingAuthorization">
+			<set-property property="secure" value="true" />
+		</action>
+		
+		<action 
+			path="/operator/searchTransferAuthorizations" 
+			type="nl.strohalm.cyclos.controls.accounts.details.SearchTransferAuthorizationsAction"
+            name="searchTransferAuthorizationsForm"
+            scope="request"
+            input="operator/_searchTransferAuthorizations">
+			<set-property property="secure" value="true" />
+		</action>
+		
+		<action 
+			path="/operator/searchScheduledPayments" 
+			type="nl.strohalm.cyclos.controls.accounts.details.SearchScheduledPaymentsAction"
+            name="searchScheduledPaymentsForm"
+            scope="session"
+            input="operator/_searchScheduledPayments">
+			<set-property property="secure" value="true" />
+		</action>
+		
+		<action 
+			path="/operator/exportAccountHistoryToCsv" 
+			type="nl.strohalm.cyclos.controls.accounts.details.ExportTransactionsToCsvAction"
+            name="accountHistoryForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+		</action>
+		
+		<action 
+			path="/operator/printAccountHistory" 
+			type="nl.strohalm.cyclos.controls.accounts.details.PrintAccountHistoryAction"
+            name="accountHistoryForm"
+            scope="request"
+            input="_printAccountHistory">
+			<set-property property="secure" value="true" />
+		</action>
+		
+		<action 
+			path="/operator/printScheduledPaymentsSearch" 
+			type="nl.strohalm.cyclos.controls.accounts.details.PrintScheduledPaymentsSearchAction"
+            name="searchScheduledPaymentsForm"
+            scope="request"
+            input="_printScheduledPaymentsSearch">
+			<set-property property="secure" value="true" />
+		</action>
+	</action-mappings>
+
+</struts-config>

@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+
+ <!DOCTYPE tiles-definitions PUBLIC
+       "-//Apache Software Foundation//DTD Tiles Configuration 1.1//EN"
+       "http://jakarta.apache.org/struts/dtds/tiles-config_1_1.dtd">
+
+<tiles-definitions>
+
+	<definition name="_printAccountHistory" extends=".printLayout">
+		<put name="body" value="/pages/accounts/details/printAccountHistory.jsp"/>
+	</definition>
+
+	<definition name="_printTransaction" extends=".printLayout">
+		<put name="body" value="/pages/accounts/details/printTransaction.jsp"/>
+	</definition>
+
+	<definition name="_printScheduledPayment" extends=".printLayout">
+		<put name="body" value="/pages/accounts/details/printScheduledPayment.jsp"/>
+	</definition>
+	
+	<definition name="_printScheduledPaymentsSearch" extends=".printLayout">
+		<put name="body" value="/pages/accounts/details/printScheduledPaymentsSearch.jsp"/>
+	</definition>
+
+	<definition name="member/_accountOverview" extends=".memberLayout">
+		<put name="body" value="/pages/accounts/details/accountOverview.jsp"/>
+	</definition>
+
+	<definition name="member/_accountHistory" extends=".memberLayout">
+		<put name="body" value="/pages/accounts/details/accountHistory.jsp"/>
+	</definition>
+
+	<definition name="member/_viewTransaction" extends=".memberLayout">
+		<put name="body" value="/pages/accounts/details/viewTransaction.jsp"/>
+	</definition>
+	
+	<definition name="member/_viewScheduledPayment" extends=".memberLayout">
+		<put name="body" value="/pages/accounts/details/viewScheduledPayment.jsp"/>
+	</definition>
+	
+	<definition name="member/_transfersAwaitingAuthorization" extends=".memberLayout">
+		<put name="body" value="/pages/accounts/details/transfersAwaitingAuthorization.jsp"/>
+	</definition>
+	
+	<definition name="member/_searchTransferAuthorizations" extends=".memberLayout">
+		<put name="body" value="/pages/accounts/details/searchTransferAuthorizations.jsp"/>
+	</definition>
+	
+	<definition name="member/_searchScheduledPayments" extends=".memberLayout">
+		<put name="body" value="/pages/accounts/details/searchScheduledPayments.jsp"/>
+	</definition>
+
+	<definition name="admin/_accountOverview" extends=".adminLayout">
+		<put name="body" value="/pages/accounts/details/accountOverview.jsp"/>
+	</definition>
+
+	<definition name="admin/_accountHistory" extends=".adminLayout">
+		<put name="body" value="/pages/accounts/details/accountHistory.jsp"/>
+	</definition>
+
+	<definition name="admin/_viewTransaction" extends=".adminLayout">
+		<put name="body" value="/pages/accounts/details/viewTransaction.jsp"/>
+	</definition>
+	
+	<definition name="admin/_viewScheduledPayment" extends=".adminLayout">
+		<put name="body" value="/pages/accounts/details/viewScheduledPayment.jsp"/>
+	</definition>
+
+	<definition name="admin/_transfersAwaitingAuthorization" extends=".adminLayout">
+		<put name="body" value="/pages/accounts/details/transfersAwaitingAuthorization.jsp"/>
+	</definition>
+	
+	<definition name="admin/_searchTransferAuthorizations" extends=".adminLayout">
+		<put name="body" value="/pages/accounts/details/searchTransferAuthorizations.jsp"/>
+	</definition>
+	
+	<definition name="admin/_searchScheduledPayments" extends=".adminLayout">
+		<put name="body" value="/pages/accounts/details/searchScheduledPayments.jsp"/>
+	</definition>
+
+	<definition name="operator/_accountOverview" extends=".operatorLayout">
+		<put name="body" value="/pages/accounts/details/accountOverview.jsp"/>
+	</definition>
+
+	<definition name="operator/_accountHistory" extends=".operatorLayout">
+		<put name="body" value="/pages/accounts/details/accountHistory.jsp"/>
+	</definition>
+
+	<definition name="operator/_viewTransaction" extends=".operatorLayout">
+		<put name="body" value="/pages/accounts/details/viewTransaction.jsp"/>
+	</definition>
+	
+	<definition name="operator/_viewScheduledPayment" extends=".operatorLayout">
+		<put name="body" value="/pages/accounts/details/viewScheduledPayment.jsp"/>
+	</definition>
+	
+	<definition name="operator/_transfersAwaitingAuthorization" extends=".operatorLayout">
+		<put name="body" value="/pages/accounts/details/transfersAwaitingAuthorization.jsp"/>
+	</definition>
+	
+	<definition name="operator/_searchTransferAuthorizations" extends=".operatorLayout">
+		<put name="body" value="/pages/accounts/details/searchTransferAuthorizations.jsp"/>
+	</definition>
+	
+	<definition name="operator/_searchScheduledPayments" extends=".operatorLayout">
+		<put name="body" value="/pages/accounts/details/searchScheduledPayments.jsp"/>
+	</definition>
+
+</tiles-definitions>

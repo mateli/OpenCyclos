@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+
+    <class dynamic-insert="true" dynamic-update="true" name="nl.strohalm.cyclos.entities.accounts.MemberGroupAccountSettings" table="member_group_account_settings">
+    	<cache usage="read-write"/>
+		<id name="id" type="long">
+		    <column name="id" sql-type="integer"/>
+			<generator class="native"/>
+		</id>
+        <many-to-one name="group" class="nl.strohalm.cyclos.entities.groups.MemberGroup">
+            <column name="group_id" not-null="true" sql-type="integer"/>
+    	</many-to-one>
+        <many-to-one name="accountType" class="nl.strohalm.cyclos.entities.accounts.MemberAccountType">
+            <column name="type_id" not-null="true" sql-type="integer"/>
+    	</many-to-one>        
+    	<property name="default" column="default_type" type="boolean" not-null="true" />
+    	<property name="transactionPasswordRequired" column="transaction_password_required" type="boolean" not-null="true" />
+    	<property name="hideWhenNoCreditLimit" column="hide_when_no_credit_limit" type="boolean" not-null="true" />
+        <property name="defaultCreditLimit" column="default_credit_limit" type="big_decimal" precision="15" scale="6" not-null="true" />
+        <property name="defaultUpperCreditLimit" column="default_upper_credit_limit" type="big_decimal" precision="15" scale="6" />
+    	<property name="initialCredit" column="initial_credit" type="big_decimal" precision="15" scale="6" />
+    	<many-to-one name="initialCreditTransferType" class="nl.strohalm.cyclos.entities.accounts.transactions.TransferType">
+            <column name="initial_credit_transfer_type_id" not-null="false" sql-type="integer"/>
+    	</many-to-one>
+    	<property name="lowUnits" column="low_units" type="big_decimal" precision="15" scale="6" />
+    	<property name="lowUnitsMessage" column="low_units_message" type="text" />
+    </class>
+    
+</hibernate-mapping>

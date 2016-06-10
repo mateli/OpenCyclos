@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+
+ <!DOCTYPE tiles-definitions PUBLIC
+       "-//Apache Software Foundation//DTD Tiles Configuration 1.1//EN"
+       "http://jakarta.apache.org/struts/dtds/tiles-config_1_1.dtd">
+
+<tiles-definitions>
+
+	<!-- General -->
+	<definition name="_login" page="/pages/access/login.jsp" />
+	
+	<definition name="_changeExpiredPassword" extends=".standaloneLayout">
+		<put name="body" value="/pages/access/changePassword.jsp"/>
+	</definition>
+
+	<definition name="_transactionPassword" page="/pages/access/transactionPassword/transactionPassword.jsp"/>
+
+
+	<!-- Admin -->
+	<definition name="admin/_changePassword" extends=".adminLayout">
+		<put name="body" value="/pages/access/changePassword.jsp"/>
+	</definition>
+	
+	<definition name="admin/_manageTransactionPassword" extends=".adminLayout">
+		<put name="body" value="/pages/access/transactionPassword/manageTransactionPassword.jsp"/>
+	</definition>
+
+	<definition name="admin/_managePasswords" extends=".adminLayout">
+		<put name="body" value="/pages/access/managePasswords.jsp"/>
+	</definition>
+	
+	<definition name="admin/_manageExternalAccess" extends=".adminLayout">
+		<put name="body" value="/pages/access/channels/manageExternalAccess.jsp"/>
+	</definition>
+	
+	<definition name="admin/_listConnectedUsers" extends=".adminLayout">
+		<put name="body" value="/pages/access/listConnectedUsers.jsp"/>
+	</definition>
+
+
+	<!--  Member -->
+	<definition name="member/_changePassword" extends=".memberLayout">
+		<put name="body" value="/pages/access/changePassword.jsp"/>
+	</definition>
+	
+	<definition name="member/_manageTransactionPassword" extends=".memberLayout">
+		<put name="body" value="/pages/access/transactionPassword/manageTransactionPassword.jsp"/>
+	</definition>
+	
+	<definition name="member/_managePasswords" extends=".memberLayout">
+		<put name="body" value="/pages/access/managePasswords.jsp"/>
+	</definition>
+	
+	<definition name="member/_manageExternalAccess" extends=".memberLayout">
+		<put name="body" value="/pages/access/channels/manageExternalAccess.jsp"/>
+	</definition>
+	
+	<definition name="member/_listConnectedUsers" extends=".memberLayout">
+		<put name="body" value="/pages/access/listConnectedUsers.jsp"/>
+	</definition>
+
+
+	<!-- Operator -->
+	<definition name="operator/_changePassword" extends=".operatorLayout">
+		<put name="body" value="/pages/access/changePassword.jsp"/>
+	</definition>
+	
+</tiles-definitions>

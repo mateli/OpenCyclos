@@ -1,0 +1,75 @@
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.1//EN" "http://jakarta.apache.org/struts/dtds/struts-config_1_1.dtd">
+<struts-config>
+
+	<controller 
+		className="nl.strohalm.cyclos.struts.CyclosControllerConfig" 
+		processorClass="nl.strohalm.cyclos.struts.CyclosRequestProcessor"/>
+
+	<!-- Message resources are not configured in struts-config -->
+
+	<plug-in className="org.apache.struts.tiles.TilesPlugin">
+		<set-property property="definitions-config" value="
+			/WEB-INF/tiles-defs/tiles-defs.xml,
+			/WEB-INF/tiles-defs/tiles-defs_general.xml,
+			/WEB-INF/tiles-defs/tiles-defs_static.xml,
+			/WEB-INF/tiles-defs/tiles-defs_image.xml,
+			/WEB-INF/tiles-defs/tiles-defs_access.xml,
+			/WEB-INF/tiles-defs/tiles-defs_channels.xml,
+			/WEB-INF/tiles-defs/tiles-defs_admins.xml,
+			/WEB-INF/tiles-defs/tiles-defs_members.xml,
+			/WEB-INF/tiles-defs/tiles-defs_memberImports.xml,
+			/WEB-INF/tiles-defs/tiles-defs_memberBulkActions.xml,
+			/WEB-INF/tiles-defs/tiles-defs_operators.xml,
+			/WEB-INF/tiles-defs/tiles-defs_messages.xml,
+			/WEB-INF/tiles-defs/tiles-defs_brokering.xml,
+			/WEB-INF/tiles-defs/tiles-defs_contacts.xml,
+			/WEB-INF/tiles-defs/tiles-defs_references.xml,
+			/WEB-INF/tiles-defs/tiles-defs_groups.xml,
+			/WEB-INF/tiles-defs/tiles-defs_groupFilters.xml,
+			/WEB-INF/tiles-defs/tiles-defs_currencies.xml,
+			/WEB-INF/tiles-defs/tiles-defs_accountTypes.xml,
+			/WEB-INF/tiles-defs/tiles-defs_accounts.xml,
+			/WEB-INF/tiles-defs/tiles-defs_accountFees.xml,
+			/WEB-INF/tiles-defs/tiles-defs_transferTypes.xml,
+			/WEB-INF/tiles-defs/tiles-defs_transactionFees.xml,
+			/WEB-INF/tiles-defs/tiles-defs_paymentFilters.xml,
+			/WEB-INF/tiles-defs/tiles-defs_loans.xml,
+			/WEB-INF/tiles-defs/tiles-defs_ads.xml,
+			/WEB-INF/tiles-defs/tiles-defs_adImports.xml,
+			/WEB-INF/tiles-defs/tiles-defs_payments.xml,
+			/WEB-INF/tiles-defs/tiles-defs_paymentRequests.xml,
+			/WEB-INF/tiles-defs/tiles-defs_scheduledPayments.xml,
+			/WEB-INF/tiles-defs/tiles-defs_webshop.xml,
+			/WEB-INF/tiles-defs/tiles-defs_posweb.xml,
+			/WEB-INF/tiles-defs/tiles-defs_invoices.xml,
+			/WEB-INF/tiles-defs/tiles-defs_mobile.xml,
+			/WEB-INF/tiles-defs/tiles-defs_alerts.xml,
+			/WEB-INF/tiles-defs/tiles-defs_loanGroups.xml,
+			/WEB-INF/tiles-defs/tiles-defs_translationMessages.xml,
+			/WEB-INF/tiles-defs/tiles-defs_themes.xml,
+			/WEB-INF/tiles-defs/tiles-defs_customizedFiles.xml,
+			/WEB-INF/tiles-defs/tiles-defs_customImages.xml,
+			/WEB-INF/tiles-defs/tiles-defs_customFields.xml,
+			/WEB-INF/tiles-defs/tiles-defs_documents.xml,
+			/WEB-INF/tiles-defs/tiles-defs_settings.xml,
+			/WEB-INF/tiles-defs/tiles-defs_reports.xml,
+			/WEB-INF/tiles-defs/tiles-defs_messageCategory.xml,
+			/WEB-INF/tiles-defs/tiles-defs_preferences.xml,
+			/WEB-INF/tiles-defs/tiles-defs_externalAccounts.xml,
+			/WEB-INF/tiles-defs/tiles-defs_memberRecords.xml,
+			/WEB-INF/tiles-defs/tiles-defs_commissions.xml,
+			/WEB-INF/tiles-defs/tiles-defs_services.xml,
+			/WEB-INF/tiles-defs/tiles-defs_adminTasks.xml,
+			/WEB-INF/tiles-defs/tiles-defs_guarantees.xml,
+			/WEB-INF/tiles-defs/tiles-defs_cards.xml,
+			/WEB-INF/tiles-defs/tiles-defs_cardTypes.xml,
+			/WEB-INF/tiles-defs/tiles-defs_pos.xml
+		" />
+		<set-property property="definitions-parser-validate" value="true" />
+		<set-property property="moduleAware" value="true" />
+	</plug-in>
+
+	<!-- Details on security configuration, please, refer to cyclos.properties -->
+	<plug-in className="nl.strohalm.cyclos.struts.CyclosSecurePlugIn"/>
+
+</struts-config>

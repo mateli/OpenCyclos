@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class dynamic-insert="true" dynamic-update="true" name="nl.strohalm.cyclos.entities.access.User" table="users" abstract="true">
+        <id name="id" type="long">
+		    <column name="id" sql-type="integer"/>
+            <generator class="foreign">
+                <param name="property">element</param>
+            </generator>
+        </id>
+        <discriminator column="subclass" type="string" length="1"/>
+        <property name="salt" length="32" column="salt" type="string" />
+        <property name="username" length="64" column="username" not-null="true" type="string" index="ix_username" />
+        <property name="password" length="64" column="password" type="string"/>
+        <property name="transactionPassword" length="64" column="transaction_password" type="string"/>
+        <property name="transactionPasswordStatus" column="transaction_password_status" not-null="true" length="1">
+            <type name="nl.strohalm.cyclos.utils.hibernate.StringValuedEnumType">
+                <param name="enumClassName">nl.strohalm.cyclos.entities.access.User$TransactionPasswordStatus</param>
+            </type>
+        </property>
+        <property name="lastLogin" column="last_login" type="calendar"/>
+        <property name="passwordDate" column="password_date" type="calendar"/>
+        <property name="passwordBlockedUntil" column="password_blocked_until" type="calendar"/>
+        <one-to-one name="element" class="nl.strohalm.cyclos.entities.members.Element" constrained="true"/>
+        
+		<bag name="loginHistory" cascade="delete" inverse="true">
+            <key> 
+            	<column name="user_id" sql-type="integer"/>
+            </key>
+	        <one-to-many class="nl.strohalm.cyclos.entities.access.LoginHistoryLog"/>
+	    </bag>
+
+	</class>
+</hibernate-mapping>

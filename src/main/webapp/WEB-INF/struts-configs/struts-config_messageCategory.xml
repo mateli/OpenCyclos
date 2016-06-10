@@ -1,0 +1,39 @@
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.1//EN" "http://jakarta.apache.org/struts/dtds/struts-config_1_1.dtd">
+<struts-config>
+	<form-beans>
+        <form-bean name="editMessageCategoryForm" type="nl.strohalm.cyclos.controls.members.messages.EditMessageCategoryForm" />
+        <form-bean name="removeMessageCategoryForm" type="nl.strohalm.cyclos.controls.members.messages.RemoveMessageCategoryForm" />
+
+	</form-beans>
+	
+	<action-mappings type="org.apache.struts.config.SecureActionConfig">
+	
+		<action 
+			path="/admin/editMessageCategory"
+			type="nl.strohalm.cyclos.controls.members.messages.EditMessageCategoryAction"
+			input="admin/_editMessageCategory"
+			name="editMessageCategoryForm"
+			scope="request">
+			<set-property property="secure" value="true"/>
+	    	<forward name="success" path="/do/admin/listMessageCategories" redirect="true" />
+		</action>
+		
+		<action 
+			path="/admin/listMessageCategories"
+			type="nl.strohalm.cyclos.controls.members.messages.ListMessageCategoriesAction"
+            input="admin/_listMessageCategories">
+			<set-property property="secure" value="true" />
+		</action>
+		
+		<action 
+			path="/admin/removeMessageCategory"
+			type="nl.strohalm.cyclos.controls.members.messages.RemoveMessageCategoryAction"
+            name="removeMessageCategoryForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+	    	<forward name="success" path="/do/admin/listMessageCategories" redirect="true" />
+		</action>
+		
+	</action-mappings>
+	
+</struts-config>

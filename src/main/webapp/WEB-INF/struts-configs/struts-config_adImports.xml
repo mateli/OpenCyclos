@@ -1,0 +1,52 @@
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.1//EN" "http://jakarta.apache.org/struts/dtds/struts-config_1_1.dtd">
+<struts-config>
+	<form-beans>
+		<form-bean name="importAdsForm" type="nl.strohalm.cyclos.controls.ads.imports.ImportAdsForm" />
+		<form-bean name="importedAdsSummaryForm" type="nl.strohalm.cyclos.controls.ads.imports.ImportedAdsSummaryForm" />
+		<form-bean name="importedAdsDetailsForm" type="nl.strohalm.cyclos.controls.ads.imports.ImportedAdsDetailsForm" />
+		<form-bean name="importedAdCategoriesForm" type="nl.strohalm.cyclos.controls.ads.imports.ImportedAdCategoriesForm" />
+	</form-beans>
+	
+	<action-mappings type="org.apache.struts.config.SecureActionConfig">
+	
+		<action 
+			path="/admin/importAds" 
+			type="nl.strohalm.cyclos.controls.ads.imports.ImportAdsAction"
+            name="importAdsForm"
+            scope="request"
+            input="admin/_importAds">
+			<set-property property="secure" value="true" />
+	    	<forward name="success" path="/do/admin/importedAdsSummary" redirect="true" />
+		</action>
+
+		<action 
+			path="/admin/importedAdsSummary" 
+			type="nl.strohalm.cyclos.controls.ads.imports.ImportedAdsSummaryAction"
+            name="importedAdsSummaryForm"
+            scope="request"
+            input="admin/_importedAdsSummary">
+			<set-property property="secure" value="true" />
+	    	<forward name="success" path="/do/admin/importAds" redirect="true" />
+		</action>
+				
+		<action 
+			path="/admin/importedAdsDetails" 
+			type="nl.strohalm.cyclos.controls.ads.imports.ImportedAdsDetailsAction"
+            name="importedAdsDetailsForm"
+            scope="request"
+            input="admin/_importedAdsDetails">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/admin/importedAdCategories" 
+			type="nl.strohalm.cyclos.controls.ads.imports.ImportedAdCategoriesAction"
+            name="importedAdCategoriesForm"
+            scope="request"
+            input="admin/_importedAdCategories">
+			<set-property property="secure" value="true" />
+		</action>
+
+	</action-mappings>
+
+</struts-config>

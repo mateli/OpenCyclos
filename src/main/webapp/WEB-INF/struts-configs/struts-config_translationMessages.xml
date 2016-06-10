@@ -1,0 +1,64 @@
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.1//EN" "http://jakarta.apache.org/struts/dtds/struts-config_1_1.dtd">
+<struts-config>
+	<form-beans>
+        <form-bean name="searchTranslationMessagesForm" type="nl.strohalm.cyclos.controls.customization.translationMessages.SearchTranslationMessagesForm" />
+        <form-bean name="editTranslationMessageForm" type="nl.strohalm.cyclos.controls.customization.translationMessages.EditTranslationMessageForm" />
+        <form-bean name="removeTranslationMessagesForm" type="nl.strohalm.cyclos.controls.customization.translationMessages.RemoveTranslationMessagesForm" />
+        <form-bean name="importTranslationMessagesForm" type="nl.strohalm.cyclos.controls.customization.translationMessages.ImportTranslationMessagesForm" />
+	</form-beans>
+	
+	<action-mappings type="org.apache.struts.config.SecureActionConfig">
+		
+		<action 
+			path="/admin/searchTranslationMessages" 
+			type="nl.strohalm.cyclos.controls.customization.translationMessages.SearchTranslationMessagesAction"
+            name="searchTranslationMessagesForm"
+            scope="session"
+            input="admin/_searchTranslationMessages">
+			<set-property property="secure" value="true" />
+		</action>
+		
+		<action 
+			path="/admin/editTranslationMessage" 
+			type="nl.strohalm.cyclos.controls.customization.translationMessages.EditTranslationMessageAction"
+            name="editTranslationMessageForm"
+            scope="request"
+            input="admin/_editTranslationMessage">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/searchTranslationMessages" redirect="true" />
+		</action>
+		
+		<action 
+			path="/admin/removeTranslationMessages" 
+			type="nl.strohalm.cyclos.controls.customization.translationMessages.RemoveTranslationMessagesAction"
+            name="removeTranslationMessagesForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/searchTranslationMessages" redirect="true" />
+		</action>
+
+		<action 
+			path="/admin/manageTranslationMessages" 
+			type="nl.strohalm.cyclos.controls.customization.translationMessages.ManageTranslationMessagesAction"
+            input="admin/_manageTranslationMessages">
+			<set-property property="secure" value="true" />
+		</action>
+		
+		<action 
+			path="/admin/importTranslationMessages" 
+			type="nl.strohalm.cyclos.controls.customization.translationMessages.ImportTranslationMessagesAction"
+            name="importTranslationMessagesForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/manageTranslationMessages" redirect="true" />
+		</action>
+		
+		<action 
+			path="/admin/exportTranslationMessages" 
+			type="nl.strohalm.cyclos.controls.customization.translationMessages.ExportTranslationMessagesAction">
+			<set-property property="secure" value="true" />
+		</action>
+
+	</action-mappings>
+
+</struts-config>

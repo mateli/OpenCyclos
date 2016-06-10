@@ -1,0 +1,148 @@
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.1//EN" "http://jakarta.apache.org/struts/dtds/struts-config_1_1.dtd">
+<struts-config>
+
+	<form-beans>
+		<form-bean name="editMemberRecordForm" type="nl.strohalm.cyclos.controls.members.records.EditMemberRecordForm" />
+		<form-bean name="editMemberRecordTypeForm" type="nl.strohalm.cyclos.controls.members.records.EditMemberRecordTypeForm" />
+		<form-bean name="removeMemberRecordForm" type="nl.strohalm.cyclos.controls.members.records.RemoveMemberRecordForm" />
+        <form-bean name="removeMemberRecordTypeForm" type="nl.strohalm.cyclos.controls.members.records.RemoveMemberRecordTypeForm" />
+        <form-bean name="searchMemberRecordsForm" type="nl.strohalm.cyclos.controls.members.records.SearchMemberRecordsForm" />
+    </form-beans>
+	
+	<action-mappings type="org.apache.struts.config.SecureActionConfig">
+
+		<action 
+			path="/admin/listMemberRecordTypes" 
+			type="nl.strohalm.cyclos.controls.members.records.ListMemberRecordTypesAction"
+            input="admin/_listMemberRecordTypes">
+			<set-property property="secure" value="true" />
+		</action>
+		
+		<action 
+			path="/admin/editMemberRecordType" 
+			type="nl.strohalm.cyclos.controls.members.records.EditMemberRecordTypeAction"
+            name="editMemberRecordTypeForm"
+            scope="request"
+            input="admin/_editMemberRecordType">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/editMemberRecordType" redirect="true"></forward>
+		</action>
+		
+		<action 
+			path="/admin/removeMemberRecordType" 
+			type="nl.strohalm.cyclos.controls.members.records.RemoveMemberRecordTypeAction"
+            name="removeMemberRecordTypeForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/listMemberRecordTypes" redirect="true"></forward>
+		</action>
+		
+		<action 
+			path="/admin/searchMemberRecords" 
+			type="nl.strohalm.cyclos.controls.members.records.SearchMemberRecordsAction"
+			name="searchMemberRecordsForm"
+			scope="session"
+            input="admin/_searchMemberRecords">
+			<set-property property="secure" value="true" />
+			<forward name="successList" path="/do/admin/searchMemberRecords" redirect="true"></forward>
+		</action>
+
+		<action 
+			path="/admin/exportMemberRecordsToCsv" 
+			type="nl.strohalm.cyclos.controls.members.records.ExportMemberRecordsToCsvAction"
+            name="searchMemberRecordsForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+		</action>
+		
+		<action 
+			path="/admin/editMemberRecord" 
+			type="nl.strohalm.cyclos.controls.members.records.EditMemberRecordAction"
+            name="editMemberRecordForm"
+            scope="request"
+            input="admin/_editMemberRecord">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/editMemberRecord" redirect="true"></forward>
+			<forward name="successFlat" path="/do/admin/flatMemberRecords" redirect="true"></forward>
+			<forward name="successList" path="/do/admin/searchMemberRecords" redirect="true"></forward>
+		</action>
+		
+		<action 
+			path="/admin/removeMemberRecord" 
+			type="nl.strohalm.cyclos.controls.members.records.RemoveMemberRecordAction"
+            name="removeMemberRecordForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/searchMemberRecords" redirect="true"></forward>
+			<forward name="successFlat" path="/do/admin/flatMemberRecords" redirect="true"></forward>
+		</action>
+		
+		<action 
+			path="/admin/flatMemberRecords" 
+			type="nl.strohalm.cyclos.controls.members.records.FlatMemberRecordsAction"
+            name="editMemberRecordForm"
+            scope="request"
+            input="admin/_flatMemberRecords">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/flatMemberRecords" redirect="true"></forward>
+			<forward name="successFlat" path="/do/admin/flatMemberRecords" redirect="true"></forward>
+			<forward name="successList" path="/do/admin/searchMemberRecords" redirect="true"></forward>
+		</action>
+
+		
+		<action 
+			path="/member/searchMemberRecords" 
+			type="nl.strohalm.cyclos.controls.members.records.SearchMemberRecordsAction"
+			name="searchMemberRecordsForm"
+            input="member/_searchMemberRecords">
+			<set-property property="secure" value="true" />
+			<forward name="successList" path="/do/member/searchMemberRecords" redirect="true"></forward>
+		</action>
+
+		<action 
+			path="/member/exportMemberRecordsToCsv" 
+			type="nl.strohalm.cyclos.controls.members.records.ExportMemberRecordsToCsvAction"
+            name="searchMemberRecordsForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+		</action>
+				
+		<action 
+			path="/member/editMemberRecord" 
+			type="nl.strohalm.cyclos.controls.members.records.EditMemberRecordAction"
+            name="editMemberRecordForm"
+            scope="request"
+            input="member/_editMemberRecord">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/member/editMemberRecord" redirect="true"></forward>
+			<forward name="successFlat" path="/do/member/flatMemberRecords" redirect="true"></forward>
+			<forward name="successList" path="/do/member/searchMemberRecords" redirect="true"></forward>
+		</action>
+		
+		<action 
+			path="/member/removeMemberRecord" 
+			type="nl.strohalm.cyclos.controls.members.records.RemoveMemberRecordAction"
+            name="removeMemberRecordForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="backToSearch" path="/do/member/searchMemberRecords" redirect="true"></forward>
+			<forward name="backToFlat" path="/do/member/flatMemberRecords" redirect="true"></forward>
+			<forward name="success" path="/do/member/searchMemberRecords" redirect="true"></forward>
+			<forward name="successFlat" path="/do/member/flatMemberRecords" redirect="true"></forward>
+		</action>
+		
+		<action 
+			path="/member/flatMemberRecords" 
+			type="nl.strohalm.cyclos.controls.members.records.FlatMemberRecordsAction"
+            name="editMemberRecordForm"
+            scope="request"
+            input="member/_flatMemberRecords">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/member/flatMemberRecords" redirect="true"></forward>
+			<forward name="successFlat" path="/do/member/flatMemberRecords" redirect="true"></forward>
+			<forward name="successList" path="/do/member/searchMemberRecords" redirect="true"></forward>
+		</action>
+		
+	</action-mappings>
+
+</struts-config>

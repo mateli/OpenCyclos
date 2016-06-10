@@ -1,0 +1,95 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+
+    <class dynamic-insert="true" dynamic-update="true" name="nl.strohalm.cyclos.entities.accounts.guarantees.GuaranteeType" table="guarantee_types" >
+    	<cache usage="read-write"/>
+        <id name="id" type="long">
+		    <column name="id" sql-type="integer"/>
+            <generator class="native"/>
+        </id>
+		<property name="name" column="name" type="string" length="100" not-null="true"/>
+		<property name="description" column="description" type="text"/>
+		<property name="model" column="model" length="2" not-null="true">
+            <type name="nl.strohalm.cyclos.utils.hibernate.StringValuedEnumType">
+                <param name="enumClassName">nl.strohalm.cyclos.entities.accounts.guarantees.GuaranteeType$Model</param>
+            </type>
+		</property>
+		<property name="authorizedBy" column="authorized_by" length="1" not-null="true">
+            <type name="nl.strohalm.cyclos.utils.hibernate.StringValuedEnumType">
+                <param name="enumClassName">nl.strohalm.cyclos.entities.accounts.guarantees.GuaranteeType$AuthorizedBy</param>
+            </type>
+		</property>
+		<property name="enabled" column="enabled" type="boolean" not-null="true" />
+		
+		<!-- property name="allowLoanPaymentSetup" column="allow_loan_payment_setup" type="boolean" not-null="true" /-->
+		<property name="pendingGuaranteeExpiration" type="timePeriod">
+        	<column name="pending_guarantee_expiration_number"/>
+        	<column name="pending_guarantee_expiration_field"/>
+		</property>
+		<property name="paymentObligationPeriod" type="timePeriod">
+        	<column name="payment_obligation_period_number"/>
+        	<column name="payment_obligation_period_field"/>
+		</property>
+		<property name="creditFeePayer" column="credit_fee_payer" length="1" not-null="true">
+            <type name="nl.strohalm.cyclos.utils.hibernate.StringValuedEnumType">
+                <param name="enumClassName">nl.strohalm.cyclos.entities.accounts.guarantees.GuaranteeType$FeePayer</param>
+            </type>
+		</property>
+		<property name="issueFeePayer" column="issue_fee_payer" length="1" not-null="true">
+            <type name="nl.strohalm.cyclos.utils.hibernate.StringValuedEnumType">
+                <param name="enumClassName">nl.strohalm.cyclos.entities.accounts.guarantees.GuaranteeType$FeePayer</param>
+            </type>
+		</property>
+		
+		<many-to-one name="currency" class="nl.strohalm.cyclos.entities.accounts.Currency">
+            <column name="currency_id" not-null="true" sql-type="integer"/>
+    	</many-to-one>
+
+        <component name="creditFee" class="nl.strohalm.cyclos.services.accounts.guarantees.GuaranteeTypeFeeVO">
+	        <property name="fee" type="big_decimal">
+	        	<column name="credit_fee" not-null="true" precision="15" scale="6" default="0"/>
+	        </property>
+	        <property name="type">
+				<column name="credit_fee_type" length="1" not-null="true"/>
+				<type name="nl.strohalm.cyclos.utils.hibernate.StringValuedEnumType">
+                	<param name="enumClassName">nl.strohalm.cyclos.entities.accounts.guarantees.GuaranteeType$FeeType</param>
+            	</type>
+	        </property>	        
+			<property name="readonly" column="credit_fee_readonly" type="boolean" not-null="true" />		       
+        </component>
+
+        <component name="issueFee" class="nl.strohalm.cyclos.services.accounts.guarantees.GuaranteeTypeFeeVO">
+	        <property name="fee" type="big_decimal">
+	        	<column name="issue_fee" not-null="true" precision="15" scale="6" default="0"/>
+	        </property>
+	        <property name="type">
+				<column name="issue_fee_type" length="1" not-null="true"/>
+				<type name="nl.strohalm.cyclos.utils.hibernate.StringValuedEnumType">
+                	<param name="enumClassName">nl.strohalm.cyclos.entities.accounts.guarantees.GuaranteeType$FeeType</param>
+            	</type>
+	        </property>	        		       
+			<property name="readonly" column="issue_fee_readonly" type="boolean" not-null="true" />	        
+        </component>
+    	
+    	<many-to-one name="loanTransferType" class="nl.strohalm.cyclos.entities.accounts.transactions.TransferType">
+		    <column name="loan_transfer_type_id" not-null="true" sql-type="integer"/>
+		</many-to-one>
+		
+		<many-to-one name="creditFeeTransferType" class="nl.strohalm.cyclos.entities.accounts.transactions.TransferType">
+		    <column name="credit_fee_transfer_type_id" not-null="false" sql-type="integer"/>
+		</many-to-one>
+
+		<many-to-one name="issueFeeTransferType" class="nl.strohalm.cyclos.entities.accounts.transactions.TransferType">
+		    <column name="issue_fee_transfer_type_id" not-null="false" sql-type="integer"/>
+		</many-to-one>
+		
+		<many-to-one name="forwardTransferType" class="nl.strohalm.cyclos.entities.accounts.transactions.TransferType">
+		    <column name="forward_transfer_type_id" not-null="false" sql-type="integer"/>
+		</many-to-one>
+    </class>
+
+</hibernate-mapping>

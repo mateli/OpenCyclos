@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+
+    <subclass dynamic-insert="true" dynamic-update="true" name="nl.strohalm.cyclos.entities.accounts.fees.transaction.BrokerCommission" extends="nl.strohalm.cyclos.entities.accounts.fees.transaction.TransactionFee" discriminator-value="B">
+   		<property name="whichBroker" column="which_broker" length="1">
+            <type name="nl.strohalm.cyclos.utils.hibernate.StringValuedEnumType">
+                <param name="enumClassName">nl.strohalm.cyclos.entities.accounts.fees.transaction.BrokerCommission$WhichBroker</param>
+            </type>
+   		</property>
+   		<property name="when" column="when_apply" length="1">
+            <type name="nl.strohalm.cyclos.utils.hibernate.StringValuedEnumType">
+                <param name="enumClassName">nl.strohalm.cyclos.entities.accounts.fees.transaction.BrokerCommission$When</param>
+            </type>
+   		</property>
+        <property name="count" type="integer">
+        	<column name="when_count" sql-type="integer"/>
+        </property>
+        <property name="allBrokerGroups" type="boolean">
+        	<column name="all_broker_groups" not-null="true" default="false" />
+        </property>
+        <bag name="brokerGroups" table="broker_groups_transaction_fees">
+			<key>
+			    <column name="transaction_fee_id" sql-type="integer"/>
+			</key>
+			<many-to-many class="nl.strohalm.cyclos.entities.groups.BrokerGroup">
+                <column name="group_id" sql-type="integer"/>
+			</many-to-many>
+		</bag>
+    </subclass>
+
+</hibernate-mapping>

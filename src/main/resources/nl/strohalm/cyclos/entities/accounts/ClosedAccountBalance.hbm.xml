@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+
+    <class name="nl.strohalm.cyclos.entities.accounts.ClosedAccountBalance" table="closed_account_balances">
+		<id name="id" type="long">
+		    <column name="id" sql-type="bigint"/>
+			<generator class="native"/>
+		</id>
+		<many-to-one name="account" update="false" class="nl.strohalm.cyclos.entities.accounts.Account">
+		    <column name="account_id" index="ix_cldacctbal_account_date" sql-type="integer" not-null="true"/>
+		</many-to-one>
+        <property name="date" update="false" type="calendar_date">
+        	<column name="date" index="ix_cldacctbal_account_date" not-null="true" />
+        </property>
+        <property name="balance" update="false" type="big_decimal">
+        	<column name="balance" precision="21" scale="6" not-null="true" default="0"/>
+        </property>
+        <property name="reserved" update="false" type="big_decimal">
+        	<column name="reserved" precision="21" scale="6" not-null="true" default="0"/>
+        </property>
+    </class>
+    
+</hibernate-mapping>

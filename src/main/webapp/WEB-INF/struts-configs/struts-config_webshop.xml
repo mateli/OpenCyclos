@@ -1,0 +1,55 @@
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.1//EN" "http://jakarta.apache.org/struts/dtds/struts-config_1_1.dtd">
+<struts-config>
+	<form-beans>
+        <form-bean name="newWebShopPaymentForm" type="nl.strohalm.cyclos.controls.webshop.NewWebShopPaymentForm" />
+        <form-bean name="webshopPaymentForm" type="nl.strohalm.cyclos.controls.webshop.WebShopPaymentForm" />
+        <form-bean name="confirmWebShopPaymentForm" type="nl.strohalm.cyclos.controls.webshop.ConfirmWebShopPaymentForm" />
+	</form-beans>
+	
+	<action-mappings type="org.apache.struts.config.SecureActionConfig">
+
+		<action 
+			path="/webshop/payment" 
+			type="nl.strohalm.cyclos.controls.webshop.NewWebShopPaymentAction"
+            name="newWebShopPaymentForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/webshop/doPayment" redirect="true" />
+		</action>
+
+		<action 
+			path="/webshop/doPayment" 
+			type="nl.strohalm.cyclos.controls.webshop.WebShopPaymentAction"
+            name="webshopPaymentForm"
+            scope="request"
+            input="webshop/_payment">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/webshop/confirmPayment" redirect="true" />
+		</action>
+
+		<action 
+			path="/webshop/confirmPayment" 
+			type="nl.strohalm.cyclos.controls.webshop.ConfirmWebShopPaymentAction"
+            name="confirmWebShopPaymentForm"
+            scope="request"
+            input="webshop/_confirm">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/webshop/print" redirect="true" />
+		</action>
+
+		<action 
+			path="/webshop/print" 
+			type="nl.strohalm.cyclos.controls.webshop.PrintWebShopPaymentAction"
+            input="webshop/_print">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/webshop/cancel" 
+			type="nl.strohalm.cyclos.controls.webshop.CancelWebShopPaymentAction">
+			<set-property property="secure" value="true" />
+		</action>
+		
+	</action-mappings>
+
+</struts-config>

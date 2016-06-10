@@ -1,0 +1,257 @@
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.1//EN" "http://jakarta.apache.org/struts/dtds/struts-config_1_1.dtd">
+<struts-config>
+	<form-beans>
+        <form-bean name="searchAdsForm" type="nl.strohalm.cyclos.controls.ads.SearchAdsForm" />
+        <form-bean name="memberAdsForm" type="nl.strohalm.cyclos.controls.ads.MemberAdsForm" />
+        <form-bean name="adForm" type="nl.strohalm.cyclos.controls.ads.AdForm" />
+        <form-bean name="adCategoryForm" type="nl.strohalm.cyclos.controls.ads.categories.AdCategoryForm" />
+        <form-bean name="listAdCategoryForm" type="nl.strohalm.cyclos.controls.ads.categories.ListAdCategoryForm" />
+        <form-bean name="setAdCategoryOrderForm" type="nl.strohalm.cyclos.controls.ads.categories.SetAdCategoryOrderForm" />
+        <form-bean name="importAdCategoriesForm" type="nl.strohalm.cyclos.controls.ads.categories.ImportAdCategoriesForm" />
+	</form-beans>
+	
+	<action-mappings type="org.apache.struts.config.SecureActionConfig">
+		
+		<action 
+			path="/admin/printAds" 
+			type="nl.strohalm.cyclos.controls.ads.PrintAdsAction"
+            name="searchAdsForm"
+            scope="request"
+            input="_printAds">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/admin/searchAds" 
+			type="nl.strohalm.cyclos.controls.ads.SearchAdsAction"
+            name="searchAdsForm"
+            scope="session"
+            input="admin/_searchAds">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/admin/exportAdsToCsv" 
+			type="nl.strohalm.cyclos.controls.ads.ExportAdsToCsvAction"
+            name="searchAdsForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/admin/memberAds" 
+			type="nl.strohalm.cyclos.controls.ads.MemberAdsAction"
+            name="memberAdsForm"
+            scope="request"
+            input="admin/_memberAds">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/admin/viewAd" 
+			type="nl.strohalm.cyclos.controls.ads.ViewAdAction"
+            name="adForm"
+            scope="request"
+            input="admin/_viewAd">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/admin/editAd" 
+			type="nl.strohalm.cyclos.controls.ads.EditAdAction"
+            name="adForm"
+            scope="request"
+            input="admin/_editAd">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/editAd" redirect="true"/>
+			<forward name="view" path="/do/admin/viewAd" redirect="true"/>
+		</action>
+		
+		<action 
+			path="/admin/removeAd" 
+			type="nl.strohalm.cyclos.controls.ads.RemoveAdAction"
+            name="adForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="memberAds" path="/do/admin/memberAds" redirect="true"/>
+			<forward name="searchAds" path="/do/admin/searchAds" redirect="true"/>
+		</action>
+		
+		<action 
+			path="/admin/listAdCategories" 
+			type="nl.strohalm.cyclos.controls.ads.categories.ListAdCategoriesAction"
+			name="listAdCategoryForm"
+			scope="session"
+            input="admin/_listAdCategories">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/admin/setAdCategoryOrder"
+			type="nl.strohalm.cyclos.controls.ads.categories.SetAdCategoryOrderAction"
+            name="setAdCategoryOrderForm"
+            scope="request"
+            input="admin/_setAdCategoryOrder">
+			<set-property property="secure" value="true" />
+	    	<forward name="success" path="/do/admin/setAdCategoryOrder" redirect="true" />
+		</action>		
+		
+		<action 
+			path="/admin/editAdCategory" 
+			type="nl.strohalm.cyclos.controls.ads.categories.EditAdCategoryAction"
+            name="adCategoryForm"
+            scope="request"
+            input="admin/_adCategoryDetails">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/editAdCategory" redirect="true"/>
+			<forward name="list" path="/do/admin/listAdCategories" redirect="true"/>
+		</action>
+		
+		<action 
+			path="/admin/removeAdCategory" 
+			type="nl.strohalm.cyclos.controls.ads.categories.RemoveAdCategoryAction"
+            name="adCategoryForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/editAdCategory" redirect="true"/>
+			<forward name="list" path="/do/admin/listAdCategories" redirect="true"/>
+		</action>
+		
+		<action 
+			path="/admin/manageAdCategories" 
+			type="nl.strohalm.cyclos.controls.ads.categories.ManageAdCategoriesAction"
+			input="admin/_manageAdCategories">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/admin/exportAdCategories" 
+			type="nl.strohalm.cyclos.controls.ads.categories.ExportAdCategoriesAction">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/admin/importAdCategories" 
+			type="nl.strohalm.cyclos.controls.ads.categories.ImportAdCategoriesAction"
+			name="importAdCategoriesForm"
+			scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/manageAdCategories" redirect="true"/>
+		</action>
+		
+		<action 
+			path="/member/printAds" 
+			type="nl.strohalm.cyclos.controls.ads.PrintAdsAction"
+            name="searchAdsForm"
+            scope="request"
+            input="_printAds">
+			<set-property property="secure" value="true" />
+		</action>
+		
+		<action 
+			path="/member/searchAds" 
+			type="nl.strohalm.cyclos.controls.ads.SearchAdsAction"
+            name="searchAdsForm"
+            scope="session"
+            input="member/_searchAds">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/member/memberAds" 
+			type="nl.strohalm.cyclos.controls.ads.MemberAdsAction"
+            name="memberAdsForm"
+            scope="request"
+            input="member/_memberAds">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/member/viewAd" 
+			type="nl.strohalm.cyclos.controls.ads.ViewAdAction"
+            name="adForm"
+            scope="request"
+            input="member/_viewAd">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/member/editAd" 
+			type="nl.strohalm.cyclos.controls.ads.EditAdAction"
+            name="adForm"
+            scope="request"
+            input="member/_editAd">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/member/editAd" redirect="true"/>
+			<forward name="view" path="/do/member/viewAd" redirect="true"/>
+		</action>
+
+		<action 
+			path="/member/removeAd" 
+			type="nl.strohalm.cyclos.controls.ads.RemoveAdAction"
+            name="adForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/member/memberAds" redirect="true"/>
+		</action>
+
+		<!-- operator -->		
+		<action 
+			path="/operator/searchAds" 
+			type="nl.strohalm.cyclos.controls.ads.SearchAdsAction"
+            name="searchAdsForm"
+            scope="session"
+            input="operator/_searchAds">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/operator/memberAds" 
+			type="nl.strohalm.cyclos.controls.ads.MemberAdsAction"
+            name="memberAdsForm"
+            scope="request"
+            input="operator/_memberAds">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/operator/viewAd" 
+			type="nl.strohalm.cyclos.controls.ads.ViewAdAction"
+            name="adForm"
+            scope="request"
+            input="operator/_viewAd">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/operator/editAd" 
+			type="nl.strohalm.cyclos.controls.ads.EditAdAction"
+            name="adForm"
+            scope="request"
+            input="operator/_editAd">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/operator/editAd" redirect="true"/>
+			<forward name="view" path="/do/operator/viewAd" redirect="true"/>
+		</action>
+
+		<action 
+			path="/operator/removeAd" 
+			type="nl.strohalm.cyclos.controls.ads.RemoveAdAction"
+            name="adForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/operator/memberAds" redirect="true"/>
+		</action>
+		
+		<action 
+			path="/operator/printAds" 
+			type="nl.strohalm.cyclos.controls.ads.PrintAdsAction"
+            name="searchAdsForm"
+            scope="request"
+            input="_printAds">
+			<set-property property="secure" value="true" />
+		</action>
+
+	</action-mappings>
+
+</struts-config>

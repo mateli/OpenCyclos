@@ -1,0 +1,150 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <subclass dynamic-insert="true" dynamic-update="true" name="nl.strohalm.cyclos.entities.groups.AdminGroup" extends="nl.strohalm.cyclos.entities.groups.SystemGroup" discriminator-value="A">
+
+		<bag name="transferTypesAsMember" table="groups_transfer_types_as_member">
+			<cache usage="read-write"/>
+			<key>
+			    <column name="group_id" sql-type="integer"/>
+			</key>
+			<many-to-many class="nl.strohalm.cyclos.entities.accounts.transactions.TransferType">
+			    <column name="transfer_type_id" sql-type="integer"/>	
+			</many-to-many>
+		</bag>
+
+		<bag name="managesGroups" table="admin_manages_member_groups">
+			<cache usage="read-write"/>
+			<key>
+			    <column name="manager_group_id" sql-type="integer"/>
+			</key>
+			<many-to-many class="nl.strohalm.cyclos.entities.groups.MemberGroup">
+			    <column name="managed_group_id" sql-type="integer"/>	
+			</many-to-many>
+		</bag>
+
+		<bag name="viewInformationOf" table="admin_view_account_information">
+			<cache usage="read-write"/>
+			<key>
+			    <column name="group_id" sql-type="integer"/>
+			</key>
+			<many-to-many class="nl.strohalm.cyclos.entities.accounts.SystemAccountType">
+			    <column name="account_type_id" sql-type="integer"/>	
+			</many-to-many>
+		</bag>
+		
+		<bag name="viewConnectedAdminsOf" table="admin_view_connected_users_of">
+			<cache usage="read-write"/>
+			<key>
+			    <column name="viewer_group_id" sql-type="integer"/>
+			</key>
+			<many-to-many class="nl.strohalm.cyclos.entities.groups.AdminGroup">
+			    <column name="viewed_group_id" sql-type="integer"/>	
+			</many-to-many>
+		</bag>
+		
+		<bag name="connectedAdminsViewedBy" table="admin_view_connected_users_of" inverse="true">
+			<cache usage="read-write"/>
+			<key>
+			    <column name="viewed_group_id" sql-type="integer"/>
+			</key>
+			<many-to-many class="nl.strohalm.cyclos.entities.groups.AdminGroup">
+			    <column name="viewer_group_id" sql-type="integer"/>	
+			</many-to-many>
+		</bag>
+		
+		<bag name="adminCustomFields" table="admin_groups_custom_fields" inverse="true">
+			<cache usage="read-write"/>
+			<key>
+                <column name="group_id" sql-type="integer"/>
+			</key>
+			<many-to-many class="nl.strohalm.cyclos.entities.customization.fields.AdminCustomField">
+			    <column name="custom_field_id" sql-type="integer"/>
+			</many-to-many>
+		</bag>
+		
+		<bag name="viewMemberRecordTypes" table="admin_groups_member_record_types">
+			<cache usage="read-write"/>
+			<key>
+                <column name="group_id" sql-type="integer"/>
+			</key>
+			<many-to-many class="nl.strohalm.cyclos.entities.members.records.MemberRecordType">
+                <column name="member_record_type_id" sql-type="integer"/>
+			</many-to-many>
+		</bag>
+		
+		<bag name="createMemberRecordTypes" table="admin_groups_create_member_record_types">
+			<cache usage="read-write"/>
+			<key>
+                <column name="group_id" sql-type="integer"/>
+			</key>
+			<many-to-many class="nl.strohalm.cyclos.entities.members.records.MemberRecordType">
+                <column name="member_record_type_id" sql-type="integer"/>
+			</many-to-many>
+		</bag>
+		
+		<bag name="modifyMemberRecordTypes" table="admin_groups_modify_member_record_types">
+			<cache usage="read-write"/>
+			<key>
+                <column name="group_id" sql-type="integer"/>
+			</key>
+			<many-to-many class="nl.strohalm.cyclos.entities.members.records.MemberRecordType">
+                <column name="member_record_type_id" sql-type="integer"/>
+			</many-to-many>
+		</bag>
+		
+		<bag name="deleteMemberRecordTypes" table="admin_groups_delete_member_record_types">
+			<cache usage="read-write"/>
+			<key>
+                <column name="group_id" sql-type="integer"/>
+			</key>
+			<many-to-many class="nl.strohalm.cyclos.entities.members.records.MemberRecordType">
+                <column name="member_record_type_id" sql-type="integer"/>
+			</many-to-many>
+		</bag>
+		
+		<bag name="viewAdminRecordTypes" table="admin_groups_admin_record_types">
+			<cache usage="read-write"/>
+			<key>
+                <column name="group_id" sql-type="integer"/>
+			</key>
+			<many-to-many class="nl.strohalm.cyclos.entities.members.records.MemberRecordType">
+                <column name="member_record_type_id" sql-type="integer"/>
+			</many-to-many>
+		</bag>
+		
+		<bag name="createAdminRecordTypes" table="admin_groups_create_admin_record_types">
+			<cache usage="read-write"/>
+			<key>
+                <column name="group_id" sql-type="integer"/>
+			</key>
+			<many-to-many class="nl.strohalm.cyclos.entities.members.records.MemberRecordType">
+                <column name="member_record_type_id" sql-type="integer"/>
+			</many-to-many>
+		</bag>
+		
+		<bag name="modifyAdminRecordTypes" table="admin_groups_modify_admin_record_types">
+			<cache usage="read-write"/>
+			<key>
+                <column name="group_id" sql-type="integer"/>
+			</key>
+			<many-to-many class="nl.strohalm.cyclos.entities.members.records.MemberRecordType">
+                <column name="member_record_type_id" sql-type="integer"/>
+			</many-to-many>
+		</bag>
+		
+		<bag name="deleteAdminRecordTypes" table="admin_groups_delete_admin_record_types">
+			<cache usage="read-write"/>
+			<key>
+                <column name="group_id" sql-type="integer"/>
+			</key>
+			<many-to-many class="nl.strohalm.cyclos.entities.members.records.MemberRecordType">
+                <column name="member_record_type_id" sql-type="integer"/>
+			</many-to-many>
+		</bag>
+		
+    </subclass>
+</hibernate-mapping>

@@ -1,0 +1,43 @@
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.1//EN" "http://jakarta.apache.org/struts/dtds/struts-config_1_1.dtd">
+<struts-config>
+	<form-beans>
+        <form-bean name="searchCardTypeForm" type="nl.strohalm.cyclos.controls.accounts.cards.SearchCardTypeForm" />
+        <form-bean name="cardTypeForm" type="nl.strohalm.cyclos.controls.accounts.cards.CardTypeForm" />
+        <form-bean name="editCardTypeForm" type="nl.strohalm.cyclos.controls.accounts.cards.EditCardTypeForm" />        
+	</form-beans>
+	
+	<action-mappings type="org.apache.struts.config.SecureActionConfig">
+
+	<!-- admin -->		
+		<action 
+			path="/admin/manageCardTypes" 
+			type="nl.strohalm.cyclos.controls.accounts.cards.ListCardTypeAction"
+            name="searchCardTypeForm"
+            scope="session"
+            input="admin/_manageCardTypes">
+			<set-property property="secure" value="true" />
+		</action>	
+				
+		<action 
+			path="/admin/editCardType" 
+			type="nl.strohalm.cyclos.controls.accounts.cards.EditCardTypeAction"
+            name="editCardTypeForm"
+            scope="request"
+            input="admin/_editCardType">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/manageCardTypes" redirect="true"/>
+		</action>
+		
+		<action 
+			path="/admin/removeCardType" 
+			type="nl.strohalm.cyclos.controls.accounts.cards.RemoveCardTypeAction"
+            name="editCardTypeForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/manageCardTypes" redirect="true" />
+		</action>
+		
+	</action-mappings>
+
+</struts-config>
+

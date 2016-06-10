@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+
+    <subclass dynamic-insert="true" dynamic-update="true" name="nl.strohalm.cyclos.entities.customization.fields.MemberCustomFieldValue" extends="nl.strohalm.cyclos.entities.customization.fields.CustomFieldValue" discriminator-value="member">
+		<many-to-one name="member" class="nl.strohalm.cyclos.entities.members.Member">
+		    <column name="member_id" sql-type="integer"/>
+		</many-to-one>
+		<many-to-one name="pendingMember" class="nl.strohalm.cyclos.entities.members.PendingMember">
+		    <column name="pending_member_id" sql-type="integer"/>
+		</many-to-one>
+		<many-to-one name="importedMember" class="nl.strohalm.cyclos.entities.members.imports.ImportedMember">
+		    <column name="imported_member_id" sql-type="integer"/>
+		</many-to-one>
+        <property name="hidden" type="boolean">
+        	<column name="member_hidden" not-null="true" default="0" />
+        </property>
+	</subclass>
+	
+</hibernate-mapping>

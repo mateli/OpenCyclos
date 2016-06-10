@@ -1,0 +1,42 @@
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.1//EN" "http://jakarta.apache.org/struts/dtds/struts-config_1_1.dtd">
+<struts-config>
+	<form-beans>
+        <form-bean name="systemImagesForm" type="nl.strohalm.cyclos.controls.customization.images.SystemImagesForm" />
+        <form-bean name="customImagesForm" type="nl.strohalm.cyclos.controls.customization.images.CustomImagesForm" />
+        <form-bean name="removeCustomImageForm" type="nl.strohalm.cyclos.controls.customization.images.RemoveCustomImageForm" />
+	</form-beans>
+	
+	<action-mappings type="org.apache.struts.config.SecureActionConfig">
+		
+		<action 
+	    	path="/admin/systemImages" 
+	    	type="nl.strohalm.cyclos.controls.customization.images.SystemImagesAction"
+			input="admin/_systemImages"
+			name="systemImagesForm"
+			scope="request">
+	    	<set-property property="secure" value="true" />
+	    	<forward name="success" path="/do/admin/systemImages" redirect="true" />
+	   	</action>
+		
+		<action 
+			path="/admin/customImages" 
+			type="nl.strohalm.cyclos.controls.customization.images.CustomImagesAction"
+            input="admin/_customImages"
+            name="customImagesForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+	    	<forward name="success" path="/do/admin/customImages" redirect="true" />
+		</action>
+
+		<action 
+			path="/admin/removeCustomImage" 
+			type="nl.strohalm.cyclos.controls.customization.images.RemoveCustomImageAction"
+            name="removeCustomImageForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/customImages" redirect="true" />
+		</action>
+
+	</action-mappings>
+
+</struts-config>

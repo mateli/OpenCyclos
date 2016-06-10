@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class dynamic-insert="true" dynamic-update="true" name="nl.strohalm.cyclos.entities.members.brokerings.DefaultBrokerCommission" table="default_broker_commissions">
+        <id name="id" type="long">
+		    <column name="id" sql-type="integer"/>
+            <generator class="native"/>
+        </id>
+		<many-to-one name="broker" not-null="true" update="false" class="nl.strohalm.cyclos.entities.members.Member">
+		    <column name="broker_id" sql-type="integer"/>
+		</many-to-one>
+		<many-to-one name="brokerCommission" not-null="true" class="nl.strohalm.cyclos.entities.accounts.fees.transaction.BrokerCommission">
+		    <column name="broker_commission_id" sql-type="integer"/>
+		</many-to-one>
+		<property name="amount" type="amount">
+			<column name="amount" precision="15" scale="6" not-null="true"/>
+			<column name="amount_type" length="1" not-null="true"/>
+		</property>
+		<property name="when" column="when_apply" length="1" not-null="true">
+            <type name="nl.strohalm.cyclos.utils.hibernate.StringValuedEnumType">
+                <param name="enumClassName">nl.strohalm.cyclos.entities.accounts.fees.transaction.BrokerCommission$When</param>
+            </type>
+   		</property>
+		<property name="count" type="integer">
+        	<column name="when_count" sql-type="integer"/>
+        </property>
+        <property name="setByBroker" type="boolean" column="set_by_broker"/>
+        <property name="suspended" type="boolean" column="suspended"/>
+	</class>
+</hibernate-mapping>

@@ -1,0 +1,221 @@
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.1//EN" "http://jakarta.apache.org/struts/dtds/struts-config_1_1.dtd">
+<struts-config>
+	<form-beans>
+        <form-bean name="paymentForm" type="nl.strohalm.cyclos.controls.payments.PaymentForm" />
+        <form-bean name="selfPaymentForm" type="nl.strohalm.cyclos.controls.payments.SelfPaymentForm" />
+        <form-bean name="calculatePaymentsForm" type="nl.strohalm.cyclos.controls.payments.CalculatePaymentsAjaxForm" />
+        <form-bean name="confirmPaymentForm" type="nl.strohalm.cyclos.controls.payments.ConfirmPaymentForm" />
+        <form-bean name="successfulPaymentForm" type="nl.strohalm.cyclos.controls.payments.SuccessfulPaymentForm" />
+        <form-bean name="chargebackPaymentForm" type="nl.strohalm.cyclos.controls.payments.ChargebackPaymentForm" />
+        <form-bean name="simulateConversionForm" type="nl.strohalm.cyclos.controls.payments.conversionsimulation.SimulateConversionForm" />
+	</form-beans>
+	
+	<action-mappings type="org.apache.struts.config.SecureActionConfig">
+
+		<action 
+			path="/paymentCustomFields" 
+			type="nl.strohalm.cyclos.controls.accounts.transfertypes.PaymentCustomFieldsAjaxAction">
+			<set-property property="secure" value="true" />
+		</action>
+
+
+		<!-- Members -->
+		
+		<action 
+			path="/member/payment" 
+			type="nl.strohalm.cyclos.controls.payments.PaymentAction"
+            name="paymentForm"
+            scope="request"
+            input="member/_payment">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/member/confirmPayment" redirect="true" />
+		</action>
+
+		<action 
+			path="/member/calculatePayments" 
+			type="nl.strohalm.cyclos.controls.payments.CalculatePaymentsAjaxAction"
+            name="calculatePaymentsForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/member/selfPayment" 
+			type="nl.strohalm.cyclos.controls.payments.SelfPaymentAction"
+            name="selfPaymentForm"
+            scope="request"
+            input="member/_selfPayment">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/member/confirmPayment" redirect="true" />
+		</action>
+
+		<action 
+			path="/member/confirmPayment" 
+			type="nl.strohalm.cyclos.controls.payments.ConfirmPaymentAction"
+            name="confirmPaymentForm"
+            scope="request"
+            input="member/_confirmPayment">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/member/successfulPayment" redirect="true" />
+			<forward name="scheduledPayment" path="/do/member/viewScheduledPayment" redirect="true" />
+		</action>
+		
+		<action 
+			path="/member/successfulPayment" 
+			type="nl.strohalm.cyclos.controls.payments.SuccessfulPaymentAction"
+			name="successfulPaymentForm"
+			scope="request"
+            input="member/_successfulPayment">
+			<set-property property="secure" value="true" />
+		</action>
+		
+		<action 
+			path="/member/simulateConversion" 
+			type="nl.strohalm.cyclos.controls.payments.conversionsimulation.SimulateConversionAction"
+			name="simulateConversionForm"
+			scope="request"
+            input="member/_simulateConversion">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/member/chargebackPayment" 
+			type="nl.strohalm.cyclos.controls.payments.ChargebackPaymentAction"
+            name="chargebackPaymentForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/member/viewTransaction" redirect="true" />
+		</action>
+
+		<!-- Admins -->
+		
+		<action 
+			path="/admin/payment" 
+			type="nl.strohalm.cyclos.controls.payments.PaymentAction"
+            name="paymentForm"
+            scope="request"
+            input="admin/_payment">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/confirmPayment" redirect="true" />
+		</action>
+
+		<action 
+			path="/admin/chargebackPayment" 
+			type="nl.strohalm.cyclos.controls.payments.ChargebackPaymentAction"
+            name="chargebackPaymentForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/viewTransaction" redirect="true" />
+		</action>
+		
+		<action 
+			path="/admin/calculatePayments" 
+			type="nl.strohalm.cyclos.controls.payments.CalculatePaymentsAjaxAction"
+            name="calculatePaymentsForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/admin/selfPayment" 
+			type="nl.strohalm.cyclos.controls.payments.SelfPaymentAction"
+            name="selfPaymentForm"
+            scope="request"
+            input="admin/_selfPayment">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/confirmPayment" redirect="true" />
+		</action>
+
+		<action 
+			path="/admin/confirmPayment" 
+			type="nl.strohalm.cyclos.controls.payments.ConfirmPaymentAction"
+            name="confirmPaymentForm"
+            scope="request"
+            input="admin/_confirmPayment">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/successfulPayment" redirect="true" />
+			<forward name="scheduledPayment" path="/do/admin/viewScheduledPayment" redirect="true" />
+		</action>
+		
+		<action 
+			path="/admin/successfulPayment" 
+			type="nl.strohalm.cyclos.controls.payments.SuccessfulPaymentAction"
+			name="successfulPaymentForm"
+			scope="request"
+            input="admin/_successfulPayment">
+			<set-property property="secure" value="true" />
+		</action>
+		
+		<action 
+			path="/admin/simulateConversion" 
+			type="nl.strohalm.cyclos.controls.payments.conversionsimulation.SimulateConversionAction"
+			name="simulateConversionForm"
+			scope="request"
+            input="admin/_simulateConversion">
+			<set-property property="secure" value="true" />
+		</action>
+		
+		
+		
+		<!-- Operators -->
+		
+		<action 
+			path="/operator/payment" 
+			type="nl.strohalm.cyclos.controls.payments.PaymentAction"
+            name="paymentForm"
+            scope="request"
+            input="operator/_payment">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/operator/confirmPayment" redirect="true" />
+		</action>
+
+		<action 
+			path="/operator/calculatePayments" 
+			type="nl.strohalm.cyclos.controls.payments.CalculatePaymentsAjaxAction"
+            name="calculatePaymentsForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/operator/selfPayment" 
+			type="nl.strohalm.cyclos.controls.payments.SelfPaymentAction"
+            name="selfPaymentForm"
+            scope="request"
+            input="operator/_selfPayment">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/operator/confirmPayment" redirect="true" />
+		</action>
+
+		<action 
+			path="/operator/confirmPayment" 
+			type="nl.strohalm.cyclos.controls.payments.ConfirmPaymentAction"
+            name="confirmPaymentForm"
+            scope="request"
+            input="operator/_confirmPayment">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/operator/successfulPayment" redirect="true" />
+			<forward name="scheduledPayment" path="/do/operator/viewScheduledPayment" redirect="true" />
+		</action>
+		
+		<action 
+			path="/operator/successfulPayment" 
+			type="nl.strohalm.cyclos.controls.payments.SuccessfulPaymentAction"
+			name="successfulPaymentForm"
+			scope="request"
+            input="operator/_successfulPayment">
+			<set-property property="secure" value="true" />
+		</action>
+		
+		<action 
+			path="/operator/simulateConversion" 
+			type="nl.strohalm.cyclos.controls.payments.conversionsimulation.SimulateConversionAction"
+			name="simulateConversionForm"
+			scope="request"
+            input="operator/_simulateConversion">
+			<set-property property="secure" value="true" />
+		</action>
+
+	</action-mappings>
+
+</struts-config>

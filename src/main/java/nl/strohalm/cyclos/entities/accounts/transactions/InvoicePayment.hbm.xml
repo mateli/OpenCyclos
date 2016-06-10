@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+
+    <class dynamic-insert="true" dynamic-update="true" name="nl.strohalm.cyclos.entities.accounts.transactions.InvoicePayment" table="invoice_payments">
+        <id name="id" type="long">
+		    <column name="id" sql-type="integer"/>
+            <generator class="native"/>
+        </id>
+		<many-to-one name="invoice" update="false" class="nl.strohalm.cyclos.entities.accounts.transactions.Invoice">
+		    <column name="invoice_id" sql-type="integer"/>
+		</many-to-one>
+		<property name="date" column="date" update="false" not-null="true" type="calendar"/>
+		<property name="amount" column="amount" update="false" not-null="true" type="big_decimal" precision="15" scale="6"/>
+		<many-to-one name="transfer" class="nl.strohalm.cyclos.entities.accounts.transactions.Transfer">
+		    <column name="transfer_id" sql-type="bigint"/>
+		</many-to-one>
+    </class>
+
+</hibernate-mapping>

@@ -1,0 +1,180 @@
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.1//EN" "http://jakarta.apache.org/struts/dtds/struts-config_1_1.dtd">
+<struts-config>
+	
+	<form-beans>
+        <form-bean name="listCustomFieldsForm" type="nl.strohalm.cyclos.controls.customization.fields.ListCustomFieldsForm" />
+        <form-bean name="editCustomFieldForm" type="nl.strohalm.cyclos.controls.customization.fields.EditCustomFieldForm" />
+        <form-bean name="removeCustomFieldForm" type="nl.strohalm.cyclos.controls.customization.fields.RemoveCustomFieldForm" />
+        <form-bean name="editCustomFieldPossibleValueForm" type="nl.strohalm.cyclos.controls.customization.fields.EditCustomFieldPossibleValueForm" />
+        <form-bean name="removeCustomFieldPossibleValueForm" type="nl.strohalm.cyclos.controls.customization.fields.RemoveCustomFieldPossibleValueForm" />
+        <form-bean name="setCustomFieldOrderForm" type="nl.strohalm.cyclos.controls.customization.fields.SetCustomFieldOrderForm" />
+        <form-bean name="searchPossibleValuesAjaxForm" type="nl.strohalm.cyclos.controls.customization.fields.SearchPossibleValuesAjaxForm" />
+        <form-bean name="linkPaymentCustomFieldForm" type="nl.strohalm.cyclos.controls.customization.fields.LinkPaymentCustomFieldForm" />
+        <form-bean name="moveCustomFieldPossibleValueForm" type="nl.strohalm.cyclos.controls.customization.fields.MoveCustomFieldPossibleValueForm" />
+	</form-beans>
+	
+	<action-mappings type="org.apache.struts.config.SecureActionConfig">
+		
+		<action 
+	    	path="/searchPossibleValuesAjax" 
+	    	type="nl.strohalm.cyclos.controls.customization.fields.SearchPossibleValuesAjaxAction"
+			name="searchPossibleValuesAjaxForm"
+			scope="request">
+	    	<set-property property="secure" value="true" />
+	   	</action>
+		
+		<action 
+	    	path="/admin/listCustomFields" 
+	    	type="nl.strohalm.cyclos.controls.customization.fields.ListCustomFieldsAction"
+			input="admin/_listCustomFields"
+			name="listCustomFieldsForm"
+			scope="session">
+	    	<set-property property="secure" value="true" />
+	   	</action>
+		
+		<action 
+			path="/admin/editCustomField" 
+			type="nl.strohalm.cyclos.controls.customization.fields.EditCustomFieldAction"
+            input="admin/_editCustomField"
+            name="editCustomFieldForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+	    	<forward name="success" path="/do/admin/editCustomField" redirect="true" />
+		</action>
+
+		<action 
+			path="/admin/removeCustomField"
+			type="nl.strohalm.cyclos.controls.customization.fields.RemoveCustomFieldAction"
+            name="removeCustomFieldForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="editMemberRecordType" path="/do/admin/editMemberRecordType" redirect="true" />
+			<forward name="editTransferType" path="/do/admin/editTransferType" redirect="true" />
+			<forward name="success" path="/do/admin/listCustomFields" redirect="true" />
+		</action>
+		
+		<action 
+			path="/admin/editCustomFieldPossibleValue" 
+			type="nl.strohalm.cyclos.controls.customization.fields.EditCustomFieldPossibleValueAction"
+            name="editCustomFieldPossibleValueForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+	    	<forward name="success" path="/do/admin/editCustomField" redirect="true" />
+		</action>
+
+		<action 
+			path="/admin/removeCustomFieldPossibleValue"
+			type="nl.strohalm.cyclos.controls.customization.fields.RemoveCustomFieldPossibleValueAction"
+            name="removeCustomFieldPossibleValueForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+	    	<forward name="success" path="/do/admin/editCustomField" redirect="true" />
+		</action>
+
+		<action 
+			path="/admin/setCustomFieldOrder"
+			type="nl.strohalm.cyclos.controls.customization.fields.SetCustomFieldOrderAction"
+            name="setCustomFieldOrderForm"
+            scope="request"
+            input="admin/_setCustomFieldOrder">
+			<set-property property="secure" value="true" />
+	    	<forward name="success" path="/do/admin/setCustomFieldOrder" redirect="true" />
+	    	<forward name="editMemberRecordType" path="/do/admin/editMemberRecordType" redirect="true" />
+	    	<forward name="editTransferType" path="/do/admin/editTransferType" redirect="true" />
+		</action>
+		
+		<action 
+			path="/admin/linkPaymentCustomField"
+			type="nl.strohalm.cyclos.controls.customization.fields.LinkPaymentCustomFieldAction"
+            name="linkPaymentCustomFieldForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+	    	<forward name="success" path="/do/admin/editTransferType" redirect="true" />
+		</action>
+
+		<action 
+	    	path="/admin/listPaymentFieldsAjax"
+	    	type="nl.strohalm.cyclos.controls.customization.fields.ListPaymentFieldsAjaxAction">
+	    	<set-property property="secure" value="true" />
+	   	</action>
+
+		<action 
+			path="/admin/moveCustomFieldPossibleValue"
+			type="nl.strohalm.cyclos.controls.customization.fields.MoveCustomFieldPossibleValueAction"
+            name="moveCustomFieldPossibleValueForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+	    	<forward name="success" path="/do/admin/editCustomField" redirect="true" />
+		</action>
+
+
+
+		
+		<action 
+	    	path="/member/listCustomFields"
+	    	type="nl.strohalm.cyclos.controls.customization.fields.ListCustomFieldsAction"
+			input="member/_listCustomFields"
+			name="listCustomFieldsForm"
+			scope="session">
+	    	<set-property property="secure" value="true" />
+	   	</action>
+	   	
+	   	<action 
+			path="/member/editCustomField" 
+			type="nl.strohalm.cyclos.controls.customization.fields.EditCustomFieldAction"
+            input="member/_editCustomField"
+            name="editCustomFieldForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+	    	<forward name="success" path="/do/member/editCustomField" redirect="true" />
+		</action>
+
+		<action 
+			path="/member/removeCustomField"
+			type="nl.strohalm.cyclos.controls.customization.fields.RemoveCustomFieldAction"
+            name="removeCustomFieldForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/member/listCustomFields" redirect="true" />
+		</action>
+		
+		<action 
+			path="/member/editCustomFieldPossibleValue" 
+			type="nl.strohalm.cyclos.controls.customization.fields.EditCustomFieldPossibleValueAction"
+            name="editCustomFieldPossibleValueForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+	    	<forward name="success" path="/do/member/editCustomField" redirect="true" />
+		</action>
+
+		<action 
+			path="/member/removeCustomFieldPossibleValue"
+			type="nl.strohalm.cyclos.controls.customization.fields.RemoveCustomFieldPossibleValueAction"
+            name="removeCustomFieldPossibleValueForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+	    	<forward name="success" path="/do/member/editCustomField" redirect="true" />
+		</action>
+
+		<action 
+			path="/member/setCustomFieldOrder"
+			type="nl.strohalm.cyclos.controls.customization.fields.SetCustomFieldOrderAction"
+            name="setCustomFieldOrderForm"
+            scope="request"
+            input="member/_setCustomFieldOrder">
+			<set-property property="secure" value="true" />
+	    	<forward name="success" path="/do/member/setCustomFieldOrder" redirect="true" />
+		</action>
+
+		<action 
+			path="/member/moveCustomFieldPossibleValue"
+			type="nl.strohalm.cyclos.controls.customization.fields.MoveCustomFieldPossibleValueAction"
+            name="moveCustomFieldPossibleValueForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+	    	<forward name="success" path="/do/member/editCustomField" redirect="true" />
+		</action>
+
+	</action-mappings>
+	
+</struts-config>

@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+
+    <subclass dynamic-insert="true" dynamic-update="true" name="nl.strohalm.cyclos.entities.accounts.InitializableRateParameters" extends="nl.strohalm.cyclos.entities.accounts.RateParameters" abstract="true"  >
+		<property name="initValue" update="false" column="init_value" type="big_decimal" precision="15" scale="6" />
+        <property name="initDate" update="false" column="init_date" type="calendar" />
+    </subclass>
+
+</hibernate-mapping>

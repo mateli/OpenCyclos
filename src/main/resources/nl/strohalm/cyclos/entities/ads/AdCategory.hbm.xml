@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+
+    <class dynamic-insert="true" dynamic-update="true" name="nl.strohalm.cyclos.entities.ads.AdCategory" table="ad_categories" >
+    	<cache usage="read-write"/>
+        <id name="id" type="long">
+		    <column name="id" sql-type="integer"/>
+            <generator class="native"/>
+        </id>
+        <property name="order" type="integer">
+            <column name="order_index" sql-type="smallint" not-null="true" default="0" />
+        </property>
+		<property name="name" column="name" type="string" length="100" not-null="true"/>
+		<property name="active" column="active" type="boolean" not-null="true"/>
+		<many-to-one name="parent" class="nl.strohalm.cyclos.entities.ads.AdCategory">
+		    <column name="parent_id" sql-type="integer"/>
+		</many-to-one>
+		<bag name="children" inverse="true" cascade="delete" order-by="order_index, name">
+			<cache usage="read-write"/>
+            <key column="parent_id"/>
+	        <one-to-many class="nl.strohalm.cyclos.entities.ads.AdCategory"/>
+	    </bag>
+    </class>
+
+</hibernate-mapping>

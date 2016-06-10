@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class dynamic-insert="true" dynamic-update="true" name="nl.strohalm.cyclos.entities.access.LoginHistoryLog" table="login_history">
+		<id name="id" type="long">
+			<column name="id" sql-type="integer"/>
+			<generator class="native"/>
+		</id>
+		<many-to-one name="user" class="nl.strohalm.cyclos.entities.access.User" >
+			<column name="user_id" sql-type="integer" not-null="true"/>
+		</many-to-one>
+		<property name="date" column="date" type="calendar" not-null="true"/>
+		<property name="remoteAddress" column="remote_address" type="string" length="40" not-null="true"/>
+	</class>
+</hibernate-mapping>

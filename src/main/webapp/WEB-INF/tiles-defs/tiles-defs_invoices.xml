@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+
+ <!DOCTYPE tiles-definitions PUBLIC
+       "-//Apache Software Foundation//DTD Tiles Configuration 1.1//EN"
+       "http://jakarta.apache.org/struts/dtds/tiles-config_1_1.dtd">
+
+<tiles-definitions>
+
+	<definition name="_printInvoice" extends=".printLayout">
+		<put name="body" value="/pages/invoices/printInvoice.jsp"/>
+	</definition>
+
+	<definition name="member/_searchInvoices" extends=".memberLayout">
+		<put name="body" value="/pages/invoices/searchInvoices.jsp"/>
+	</definition>
+
+	<definition name="member/_sendInvoice" extends=".memberLayout">
+		<put name="body" value="/pages/invoices/sendInvoice.jsp"/>
+	</definition>
+
+	<definition name="member/_acceptInvoice" extends=".memberLayout">
+		<put name="body" value="/pages/invoices/acceptInvoice.jsp"/>
+	</definition>
+
+	<definition name="member/_invoiceDetails" extends=".memberLayout">
+		<put name="body" value="/pages/invoices/invoiceDetails.jsp"/>
+	</definition>
+
+	<definition name="admin/_searchInvoices" extends=".adminLayout">
+		<put name="body" value="/pages/invoices/searchInvoices.jsp"/>
+	</definition>
+
+	<definition name="admin/_sendInvoice" extends=".adminLayout">
+		<put name="body" value="/pages/invoices/sendInvoice.jsp"/>
+	</definition>
+
+	<definition name="admin/_acceptInvoice" extends=".adminLayout">
+		<put name="body" value="/pages/invoices/acceptInvoice.jsp"/>
+	</definition>
+
+	<definition name="admin/_invoiceDetails" extends=".adminLayout">
+		<put name="body" value="/pages/invoices/invoiceDetails.jsp"/>
+	</definition>
+
+	<definition name="operator/_searchInvoices" extends=".operatorLayout">
+		<put name="body" value="/pages/invoices/searchInvoices.jsp"/>
+	</definition>
+
+	<definition name="operator/_sendInvoice" extends=".operatorLayout">
+		<put name="body" value="/pages/invoices/sendInvoice.jsp"/>
+	</definition>
+
+	<definition name="operator/_acceptInvoice" extends=".operatorLayout">
+		<put name="body" value="/pages/invoices/acceptInvoice.jsp"/>
+	</definition>
+
+	<definition name="operator/_invoiceDetails" extends=".operatorLayout">
+		<put name="body" value="/pages/invoices/invoiceDetails.jsp"/>
+	</definition>
+
+</tiles-definitions>

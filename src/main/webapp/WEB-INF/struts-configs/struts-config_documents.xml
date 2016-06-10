@@ -1,0 +1,171 @@
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.1//EN" "http://jakarta.apache.org/struts/dtds/struts-config_1_1.dtd">
+<struts-config>
+	
+	<form-beans>
+        <form-bean name="editDynamicDocumentForm" type="nl.strohalm.cyclos.controls.customization.documents.EditDynamicDocumentForm" />
+        <form-bean name="editStaticDocumentForm" type="nl.strohalm.cyclos.controls.customization.documents.EditStaticDocumentForm" />
+        <form-bean name="editMemberDocumentForm" type="nl.strohalm.cyclos.controls.customization.documents.EditMemberDocumentForm" />
+        <form-bean name="selectDocumentForm" type="nl.strohalm.cyclos.controls.members.documents.SelectDocumentForm" />
+        <form-bean name="previewDocumentForm" type="nl.strohalm.cyclos.controls.customization.documents.PreviewDocumentForm" />
+        <form-bean name="viewDocumentForm" type="nl.strohalm.cyclos.controls.customization.documents.ViewDocumentForm" />
+        <form-bean name="removeDocumentForm" type="nl.strohalm.cyclos.controls.customization.documents.RemoveDocumentForm" />
+	</form-beans>
+	
+	<action-mappings type="org.apache.struts.config.SecureActionConfig">
+
+		<action 
+			path="/admin/previewDynamicDocument"
+			type="nl.strohalm.cyclos.controls.customization.documents.PreviewDynamicDocumentAction"
+            name="previewDocumentForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+	    	<forward name="success" path="_previewDynamicDocument" redirect="false" />
+		</action>
+		
+		<action
+			path="/admin/viewStaticDocument"
+			type="nl.strohalm.cyclos.controls.customization.documents.ViewStaticDocumentNormalAction"
+            name="previewDocumentForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+		</action>
+		
+		<action 
+			path="/admin/viewMemberDocument"
+			type="nl.strohalm.cyclos.controls.customization.documents.ViewDocumentAction"
+            name="previewDocumentForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+	    	path="/admin/listDocuments" 
+	    	type="nl.strohalm.cyclos.controls.customization.documents.ListDocumentsAction"
+			input="admin/_listDocuments">
+	    	<set-property property="secure" value="true" />
+	   	</action>
+	   	
+	   	<action 
+			path="/admin/selectDocument" 
+			type="nl.strohalm.cyclos.controls.members.documents.SelectDocumentAction"
+            name="selectDocumentForm"
+            scope="request"
+            input="admin/_selectDocument">
+			<set-property property="secure" value="true" />
+		</action>
+		
+		<action 
+			path="/admin/editDynamicDocument" 
+			type="nl.strohalm.cyclos.controls.customization.documents.EditDynamicDocumentAction"
+            input="admin/_editDynamicDocument"
+            name="editDynamicDocumentForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+	    	<forward name="success" path="/do/admin/editDynamicDocument" redirect="true" />
+		</action>
+		
+		<action 
+			path="/admin/editMemberDocument" 
+			type="nl.strohalm.cyclos.controls.customization.documents.EditMemberDocumentAction"
+            input="admin/_editMemberDocument"
+            name="editMemberDocumentForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+	    	<forward name="success" path="/do/admin/editMemberDocument" redirect="true" />
+		</action>
+		
+		<action 
+			path="/admin/editStaticDocument" 
+			type="nl.strohalm.cyclos.controls.customization.documents.EditStaticDocumentAction"
+            input="admin/_editStaticDocument"
+            name="editStaticDocumentForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+	    	<forward name="success" path="/do/admin/editStaticDocument" redirect="true" />
+		</action>
+		
+		<action 
+			path="/admin/removeDocument" 
+			type="nl.strohalm.cyclos.controls.customization.documents.RemoveDocumentAction"
+            name="removeDocumentForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+	    	<forward name="listDocuments" path="/do/admin/listDocuments" redirect="true" />
+	    	<forward name="selectDocument" path="/do/admin/selectDocument" redirect="true" />
+		</action>
+
+		<action 
+			path="/admin/viewDynamicDocument"
+			type="nl.strohalm.cyclos.controls.customization.documents.ViewDynamicDocumentAction"
+            input="admin/_viewDocumentForm"
+            name="viewDocumentForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+	    	<forward name="success" path="_viewDocument" redirect="false" />
+		</action>
+
+		<action 
+			path="/member/viewStaticDocument"
+			type="nl.strohalm.cyclos.controls.customization.documents.ViewStaticDocumentNormalAction"
+            name="previewDocumentForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+		</action>
+		
+		<action 
+			path="/member/viewStaticDocumentAsBroker"
+			type="nl.strohalm.cyclos.controls.customization.documents.ViewStaticDocumentAsBrokerAction"
+            name="previewDocumentForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+		</action>
+		
+		<action 
+			path="/member/viewMemberDocument"
+			type="nl.strohalm.cyclos.controls.customization.documents.ViewDocumentAction"
+            name="previewDocumentForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/member/selectDocument" 
+			type="nl.strohalm.cyclos.controls.members.documents.SelectDocumentAction"
+            name="selectDocumentForm"
+            scope="request"
+            input="member/_selectDocument">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/member/viewDynamicDocument"
+			type="nl.strohalm.cyclos.controls.customization.documents.ViewDynamicDocumentAction"
+            input="member/_viewDocumentForm"
+            name="viewDocumentForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+	    	<forward name="success" path="_viewDocument" redirect="false" />
+		</action>
+		
+		<action 
+			path="/member/editMemberDocument"
+			type="nl.strohalm.cyclos.controls.customization.documents.EditMemberDocumentAction"
+            input="member/_editMemberDocument"
+            name="editMemberDocumentForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+	    	<forward name="success" path="/do/member/editMemberDocument" redirect="true" />
+		</action>
+		
+		<action 
+			path="/member/removeDocument" 
+			type="nl.strohalm.cyclos.controls.customization.documents.RemoveDocumentAction"
+            name="removeDocumentForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+	    	<forward name="selectDocument" path="/do/member/selectDocument" redirect="true" />
+		</action>
+
+	</action-mappings>
+
+</struts-config>

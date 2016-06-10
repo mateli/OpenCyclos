@@ -1,0 +1,78 @@
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.1//EN" "http://jakarta.apache.org/struts/dtds/struts-config_1_1.dtd">
+<struts-config>
+	<form-beans>
+        <form-bean name="removeAccountFeeForm" type="nl.strohalm.cyclos.controls.accounts.accountfees.RemoveAccountFeeForm" />
+        <form-bean name="editAccountFeeForm" type="nl.strohalm.cyclos.controls.accounts.accountfees.EditAccountFeeForm" />
+        <form-bean name="accountFeeLogForm" type="nl.strohalm.cyclos.controls.accounts.accountfees.AccountFeeLogForm" />
+        <form-bean name="accountFeeExecutionForm" type="nl.strohalm.cyclos.controls.accounts.accountfees.AccountFeeExecutionForm" />
+        <form-bean name="accountFeeLogDetailsForm" type="nl.strohalm.cyclos.controls.accounts.accountfees.AccountFeeLogDetailsForm" />
+	</form-beans>
+	
+	<action-mappings type="org.apache.struts.config.SecureActionConfig">
+
+		<action 
+			path="/admin/editAccountFee" 
+			type="nl.strohalm.cyclos.controls.accounts.accountfees.EditAccountFeeAction"
+            name="editAccountFeeForm"
+            scope="request"
+            input="admin/_editAccountFee">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/editAccountFee" redirect="true" />
+		</action>
+
+		<action 
+			path="/admin/listGeneratedTransferTypesForAccountFee" 
+			type="nl.strohalm.cyclos.controls.accounts.accountfees.ListGeneratedTypesAjaxAction"
+            name="editAccountFeeForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/admin/removeAccountFee" 
+			type="nl.strohalm.cyclos.controls.accounts.accountfees.RemoveAccountFeeAction"
+            name="removeAccountFeeForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/editAccountType" redirect="true" />
+		</action>
+
+		<action 
+			path="/admin/listAccountFeeLog" 
+			type="nl.strohalm.cyclos.controls.accounts.accountfees.ListAccountFeeLogAction"
+            input="admin/_listAccountFeeLog"
+            name="accountFeeLogForm"
+            scope="session">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/admin/viewAccountFeeLogDetails" 
+			type="nl.strohalm.cyclos.controls.accounts.accountfees.AccountFeeLogDetailsAction"
+			name="accountFeeLogDetailsForm"
+            input="admin/_accountFeeLogDetails"
+            scope="request">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/admin/runAccountFee" 
+			type="nl.strohalm.cyclos.controls.accounts.accountfees.RunAccountFeeAction"
+            name="accountFeeExecutionForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/listAccountFeeLog" redirect="true" />
+		</action>
+
+		<action 
+			path="/admin/rechargeFailedAccountFeeLog" 
+			type="nl.strohalm.cyclos.controls.accounts.accountfees.RechargeFailedAccountFeeLogAction"
+            name="accountFeeExecutionForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/viewAccountFeeLogDetails" redirect="true" />
+		</action>
+
+	</action-mappings>
+
+</struts-config>

@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+
+	<class dynamic-insert="true" dynamic-update="true" name="nl.strohalm.cyclos.entities.customization.binaryfiles.BinaryFile" table="binary_files">
+		<id name="id" type="long">
+		    <column name="id" sql-type="integer"/>
+			<generator class="native"/>
+		</id>
+		<property name="name" column="name" type="string" length="255"/>
+		<property name="contentType" column="content_type" type="string" length="100" not-null="true"/>
+		<property name="size" column="size" type="integer" not-null="true"/>
+		<property name="lastModified" column="last_modified" type="calendar" not-null="true"/>
+		<property name="contents" column="contents" type="blob" length="10000000" not-null="true"/>
+	</class>
+
+</hibernate-mapping>

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+
+ <!DOCTYPE tiles-definitions PUBLIC
+       "-//Apache Software Foundation//DTD Tiles Configuration 1.1//EN"
+       "http://jakarta.apache.org/struts/dtds/tiles-config_1_1.dtd">
+
+<tiles-definitions>
+
+	<definition name="member/_searchMessages" extends=".memberLayout">
+		<put name="body" value="/pages/members/messages/searchMessages.jsp"/>
+	</definition>
+
+	<definition name="member/_viewMessage" extends=".memberLayout">
+		<put name="body" value="/pages/members/messages/viewMessage.jsp"/>
+	</definition>
+
+	<definition name="member/_sendMessage" extends=".memberLayout">
+		<put name="body" value="/pages/members/messages/sendMessage.jsp"/>
+	</definition>
+	
+	<definition name="member/_searchSmsLogs" extends=".memberLayout">
+		<put name="body" value="/pages/members/sms/searchSmsLogs.jsp"/>
+	</definition>
+
+	<definition name="member/_searchSmsMailings" extends=".memberLayout">
+		<put name="body" value="/pages/members/sms/searchSmsMailings.jsp"/>
+	</definition>
+
+	<definition name="member/_sendSmsMailing" extends=".memberLayout">
+		<put name="body" value="/pages/members/sms/sendSmsMailing.jsp"/>
+	</definition>
+
+
+
+	<definition name="operator/_searchMessages" extends=".operatorLayout">
+		<put name="body" value="/pages/members/messages/searchMessages.jsp"/>
+	</definition>
+
+	<definition name="operator/_viewMessage" extends=".operatorLayout">
+		<put name="body" value="/pages/members/messages/viewMessage.jsp"/>
+	</definition>
+
+	<definition name="operator/_sendMessage" extends=".operatorLayout">
+		<put name="body" value="/pages/members/messages/sendMessage.jsp"/>
+	</definition>
+	
+	<definition name="operator/_searchSmsLogs" extends=".operatorLayout">
+		<put name="body" value="/pages/members/sms/searchSmsLogs.jsp"/>
+	</definition>
+
+
+
+	<definition name="admin/_searchMessages" extends=".adminLayout">
+		<put name="body" value="/pages/members/messages/searchMessages.jsp"/>
+	</definition>
+
+	<definition name="admin/_viewMessage" extends=".adminLayout">
+		<put name="body" value="/pages/members/messages/viewMessage.jsp"/>
+	</definition>
+
+	<definition name="admin/_sendMessage" extends=".adminLayout">
+		<put name="body" value="/pages/members/messages/sendMessage.jsp"/>
+	</definition>
+	
+	<definition name="admin/_searchSmsLogs" extends=".adminLayout">
+		<put name="body" value="/pages/members/sms/searchSmsLogs.jsp"/>
+	</definition>
+
+	<definition name="admin/_searchSmsMailings" extends=".adminLayout">
+		<put name="body" value="/pages/members/sms/searchSmsMailings.jsp"/>
+	</definition>
+
+	<definition name="admin/_sendSmsMailing" extends=".adminLayout">
+		<put name="body" value="/pages/members/sms/sendSmsMailing.jsp"/>
+	</definition>
+
+	<definition name="admin/_searchInfoTexts" extends=".adminLayout">
+		<put name="body" value="/pages/members/sms/searchInfoTexts.jsp"/>
+	</definition>
+
+	<definition name="admin/_editInfoText" extends=".adminLayout">
+		<put name="body" value="/pages/members/sms/editInfoText.jsp"/>
+	</definition>
+
+</tiles-definitions>

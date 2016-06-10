@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+
+    <subclass dynamic-insert="true" dynamic-update="true" name="nl.strohalm.cyclos.entities.customization.fields.MemberRecordCustomField" extends="nl.strohalm.cyclos.entities.customization.fields.CustomField" discriminator-value="record">
+    	<many-to-one name="memberRecordType" class="nl.strohalm.cyclos.entities.members.records.MemberRecordType">
+		    <column name="member_record_type_id" sql-type="integer"/>
+		</many-to-one>
+		<property name="showInSearch" type="boolean">
+        	<column name="record_show_in_search" not-null="true" default="0" />
+        </property>
+        <property name="showInList" type="boolean">
+        	<column name="record_show_in_list" not-null="true" default="0" />
+        </property>
+        <property name="brokerAccess" column="record_broker_access" length="1">
+            <type name="nl.strohalm.cyclos.utils.hibernate.StringValuedEnumType">
+                <param name="enumClassName">nl.strohalm.cyclos.entities.customization.fields.MemberRecordCustomField$Access</param>
+            </type>
+		</property>
+    </subclass>
+	
+</hibernate-mapping>

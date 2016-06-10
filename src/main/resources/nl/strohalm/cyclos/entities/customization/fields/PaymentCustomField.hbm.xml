@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+
+    <typedef name="pmtcfAccess" class="nl.strohalm.cyclos.utils.hibernate.StringValuedEnumType">
+        <param name="enumClassName">nl.strohalm.cyclos.entities.customization.fields.PaymentCustomField$Access</param>
+    </typedef>
+
+    <subclass dynamic-insert="true" dynamic-update="true" name="nl.strohalm.cyclos.entities.customization.fields.PaymentCustomField" extends="nl.strohalm.cyclos.entities.customization.fields.CustomField" discriminator-value="pmt">
+    	<many-to-one name="transferType" update="false" class="nl.strohalm.cyclos.entities.accounts.transactions.TransferType">
+		    <column name="transfer_type_id" sql-type="integer"/>
+		</many-to-one>
+        <property name="enabled">
+        	<column name="payment_enabled" not-null="true" default="true" />
+        </property>
+        <property name="searchAccess" type="pmtcfAccess" column="payment_search_access" length="1" />
+        <property name="listAccess" type="pmtcfAccess" column="payment_list_access" length="1" />
+	
+		<bag name="linkedTransferTypes" inverse="true" table="transfer_types_linked_custom_fields">
+			<cache usage="read-write"/>
+	        <key> 
+	        	<column name="field_id" sql-type="integer"/>
+	        </key>
+			<many-to-many class="nl.strohalm.cyclos.entities.accounts.transactions.TransferType">
+			    <column name="transfer_type_id" sql-type="integer"/>
+			</many-to-many>
+	    </bag>
+	</subclass>
+    
+</hibernate-mapping>

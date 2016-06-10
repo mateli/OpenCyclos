@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class dynamic-insert="true" dynamic-update="true" name="nl.strohalm.cyclos.entities.access.UsernameChangeLog" table="username_change_logs">
+        <id name="id" type="long">
+		    <column name="id" sql-type="integer"/>
+            <generator class="native"/>
+        </id>
+		<property name="date" column="date" type="calendar" not-null="true" update="false"/>
+		<many-to-one name="by" class="nl.strohalm.cyclos.entities.members.Element" update="false">
+		    <column name="by_id" sql-type="integer" not-null="true"/>
+		</many-to-one>
+		<many-to-one name="user" class="nl.strohalm.cyclos.entities.access.User" update="false">
+			<column name="user_id" sql-type="integer" not-null="true"/>
+		</many-to-one>
+        <property name="previousUsername" update="false" length="64" column="previous_username" not-null="true" type="string"/>
+        <property name="newUsername" update="false" length="64" column="new_username" not-null="true" type="string"/>
+	</class>
+</hibernate-mapping>

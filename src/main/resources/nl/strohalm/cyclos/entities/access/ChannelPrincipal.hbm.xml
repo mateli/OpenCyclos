@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class dynamic-insert="true" dynamic-update="true" name="nl.strohalm.cyclos.entities.access.ChannelPrincipal" table="channels_principals">
+    	<cache usage="read-write"/>
+        <id name="id" type="long">
+		    <column name="id" sql-type="integer"/>
+            <generator class="native"/>
+        </id>
+		<many-to-one name="channel" class="nl.strohalm.cyclos.entities.access.Channel">
+		    <column name="channel_id" not-null="true" sql-type="integer"/>
+		</many-to-one>
+        <property name="principal" column="principal" not-null="true" length="1">
+            <type name="nl.strohalm.cyclos.utils.hibernate.StringValuedEnumType">
+                <param name="enumClassName">nl.strohalm.cyclos.entities.access.Channel$Principal</param>
+            </type>
+        </property>
+		<many-to-one name="customField" class="nl.strohalm.cyclos.entities.customization.fields.MemberCustomField">
+		    <column name="custom_field_id" sql-type="integer"/>
+		</many-to-one>
+		<property name="default" column="is_default" not-null="true" />
+	</class>
+</hibernate-mapping>

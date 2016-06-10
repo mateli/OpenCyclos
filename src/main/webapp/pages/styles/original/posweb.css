@@ -1,0 +1,67 @@
+body, td, th, input, textarea, select, .tdHeaderTable, a {
+	font-size: 11pt;
+	margin: 0px;
+}
+
+.poswebBanner {
+	background: white url(posweb_header_background.jpg) repeat-x;
+	height: 129px;
+	margin-bottom: 50px;
+	position: relative;	
+}
+
+.poswebBannerText {
+	font-size:   10pt;
+	font-weight: bold;
+	color: white;
+	position: absolute;
+	bottom: 8px;
+	right: 10px;
+	display: inline;
+}
+
+table.poswebLoginTable {
+	width: 		400px;
+	float:		none;
+}
+
+table.poswebTopTable {
+	margin:			0px;
+	float:			none;
+}
+
+input.button, input.ButtonDisabled, button {
+	font-size: 		10pt !important;
+	float: 			right;
+	margin-left: 	10px;
+	padding: 5px 10px;
+}
+
+.ieold button, .ieold .button, .ieold .linkButton, .ieold .ButtonDisabled {
+	padding: 2px 0px;
+}
+
+input.poswebAction {
+	margin: 		6px;
+}
+
+input.date {
+	width: 			115px !important;
+}
+
+table.poswebRoot {
+	height: 		100%;
+	width: 			100%;
+}
+table.poswebRoot>tr>td, table.poswebRoot>tbody>tr>td {
+	text-align: 	center;
+	vertical-align: center;
+}
+
+select {
+	height: auto;
+}
+
+.tdHeaderTable {
+    font-size: 12pt;    
+}

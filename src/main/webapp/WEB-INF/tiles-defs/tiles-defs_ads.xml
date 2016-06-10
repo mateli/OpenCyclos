@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+
+ <!DOCTYPE tiles-definitions PUBLIC
+       "-//Apache Software Foundation//DTD Tiles Configuration 1.1//EN"
+       "http://jakarta.apache.org/struts/dtds/tiles-config_1_1.dtd">
+
+<tiles-definitions>
+
+	<definition name="_printAds" extends=".printLayout">
+		<put name="body" value="/pages/productsServices/printAds.jsp"/>
+	</definition>
+
+	<definition name="member/_searchAds" extends=".memberLayout">
+		<put name="body" value="/pages/productsServices/searchAds.jsp"/>
+	</definition>
+
+	<definition name="member/_memberAds" extends=".memberLayout">
+		<put name="body" value="/pages/productsServices/memberAds.jsp"/>
+	</definition>
+
+	<definition name="member/_viewAd" extends=".memberLayout">
+		<put name="body" value="/pages/productsServices/viewAd.jsp"/>
+	</definition>
+
+	<definition name="member/_editAd" extends=".memberLayout">
+		<put name="body" value="/pages/productsServices/editAd.jsp"/>
+	</definition>
+
+	<definition name="admin/_searchAds" extends=".adminLayout">
+		<put name="body" value="/pages/productsServices/searchAds.jsp"/>
+	</definition>
+
+	<definition name="admin/_memberAds" extends=".adminLayout">
+		<put name="body" value="/pages/productsServices/memberAds.jsp"/>
+	</definition>
+
+	<definition name="admin/_viewAd" extends=".adminLayout">
+		<put name="body" value="/pages/productsServices/viewAd.jsp"/>
+	</definition>
+
+	<definition name="admin/_editAd" extends=".adminLayout">
+		<put name="body" value="/pages/productsServices/editAd.jsp"/>
+	</definition>
+
+	<definition name="admin/_listAdCategories" extends=".adminLayout">
+		<put name="body" value="/pages/productsServices/categories/listAdCategories.jsp"/>
+	</definition>
+
+	<definition name="admin/_setAdCategoryOrder" extends=".adminLayout">
+		<put name="body" value="/pages/productsServices/categories/setAdCategoryOrder.jsp"/>
+	</definition>
+
+	<definition name="admin/_adCategoryDetails" extends=".adminLayout">
+		<put name="body" value="/pages/productsServices/categories/adCategoryDetails.jsp"/>
+	</definition>
+	
+	<definition name="admin/_manageAdCategories" extends=".adminLayout">
+		<put name="body" value="/pages/productsServices/categories/manageAdCategories.jsp"/>
+	</definition>
+
+	<!-- operator -->
+	<definition name="operator/_searchAds" extends=".operatorLayout">
+		<put name="body" value="/pages/productsServices/searchAds.jsp"/>
+	</definition>
+
+	<definition name="operator/_memberAds" extends=".operatorLayout">
+		<put name="body" value="/pages/productsServices/memberAds.jsp"/>
+	</definition>
+
+	<definition name="operator/_viewAd" extends=".operatorLayout">
+		<put name="body" value="/pages/productsServices/viewAd.jsp"/>
+	</definition>
+
+	<definition name="operator/_editAd" extends=".operatorLayout">
+		<put name="body" value="/pages/productsServices/editAd.jsp"/>
+	</definition>
+
+</tiles-definitions>

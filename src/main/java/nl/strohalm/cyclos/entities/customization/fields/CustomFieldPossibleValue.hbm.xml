@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+
+    <class dynamic-insert="true" dynamic-update="true" name="nl.strohalm.cyclos.entities.customization.fields.CustomFieldPossibleValue" table="custom_field_possible_values">
+    	<cache usage="read-write"/>
+        <id name="id" type="long">
+		    <column name="id" sql-type="integer"/>
+            <generator class="native"/>
+        </id>
+		<many-to-one name="field" update="false" class="nl.strohalm.cyclos.entities.customization.fields.CustomField">
+		    <column name="field_id" unique-key="uk_field_value" sql-type="integer"/>
+		</many-to-one>
+		<many-to-one name="parent" update="false" class="nl.strohalm.cyclos.entities.customization.fields.CustomFieldPossibleValue">
+		    <column name="parent_id" unique-key="uk_field_value" sql-type="integer"/>
+		</many-to-one>
+        <property name="value" unique-key="uk_field_value" column="value" not-null="true" type="string" length="255"/>
+        <property name="enabled" type="boolean">
+        	<column name="is_enabled" not-null="true" default="true"></column>
+        </property>
+        <property name="defaultValue" type="boolean">
+        	<column name="is_default" not-null="true" default="false"></column>
+        </property>
+	</class>
+
+</hibernate-mapping>

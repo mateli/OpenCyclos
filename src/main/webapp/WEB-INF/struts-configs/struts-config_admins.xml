@@ -1,0 +1,81 @@
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.1//EN" "http://jakarta.apache.org/struts/dtds/struts-config_1_1.dtd">
+<struts-config>
+	<form-beans>
+        <form-bean name="createAdminForm" type="nl.strohalm.cyclos.controls.admins.CreateAdminForm" />
+        <form-bean name="searchAdminsForm" type="nl.strohalm.cyclos.controls.admins.SearchAdminsForm" />
+        <form-bean name="adminProfileForm" type="nl.strohalm.cyclos.controls.admins.AdminProfileForm" />
+        <form-bean name="changeAdminGroupForm" type="nl.strohalm.cyclos.controls.admins.ChangeAdminGroupForm" />
+        <form-bean name="removeAdminForm" type="nl.strohalm.cyclos.controls.admins.RemoveAdminForm" />
+        <form-bean name="mailPreferencesForm" type="nl.strohalm.cyclos.controls.admins.mailPreferences.MailPreferencesForm" />
+	</form-beans>
+	
+	<action-mappings type="org.apache.struts.config.SecureActionConfig">
+
+		<action 
+			path="/admin/createAdmin" 
+			type="nl.strohalm.cyclos.controls.admins.CreateAdminAction"
+            name="createAdminForm"
+            scope="request"
+            input="admin/_createAdmin">
+			<set-property property="secure" value="true" />
+			<forward name="new" path="/do/admin/createAdmin" redirect="true"/>
+			<forward name="profile" path="/do/admin/adminProfile" redirect="true"/>
+		</action>
+
+		<action 
+			path="/admin/searchAdmins" 
+			type="nl.strohalm.cyclos.controls.admins.SearchAdminsAction"
+            name="searchAdminsForm"
+            scope="session"
+            input="admin/_searchAdmins">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/admin/adminProfile" 
+			type="nl.strohalm.cyclos.controls.admins.AdminProfileAction"
+            name="adminProfileForm"
+            scope="request"
+            input="admin/_adminProfile">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/adminProfile" redirect="true"/>
+		</action>
+		
+		<action 
+			path="/admin/changeAdminGroup" 
+			type="nl.strohalm.cyclos.controls.admins.ChangeAdminGroupAction"
+            input="admin/_changeAdminGroup"
+            name="changeAdminGroupForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/adminProfile" redirect="true"/>
+		</action>		
+		
+		<action 
+			path="/admin/removeAdmin" 
+			type="nl.strohalm.cyclos.controls.admins.RemoveAdminAction"
+            name="removeAdminForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/searchAdmins" redirect="true"/>
+		</action>		
+		
+		<action 
+			path="/admin/mailPreferences" 
+			type="nl.strohalm.cyclos.controls.admins.mailPreferences.MailPreferencesAction"
+			input="admin/_mailpreferences"
+            name="mailPreferencesForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/mailPreferences" redirect="true"/>
+		</action>	
+
+		<action 
+			path="/admin/getApplicationStatusAjax" 
+			type="nl.strohalm.cyclos.controls.admins.GetApplicationStatusAjaxAction">
+			<set-property property="secure" value="true" />
+		</action>		
+
+	</action-mappings>
+
+</struts-config>

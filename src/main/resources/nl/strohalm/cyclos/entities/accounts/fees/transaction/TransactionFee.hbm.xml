@@ -1,0 +1,74 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+
+    <class dynamic-insert="true" dynamic-update="true" name="nl.strohalm.cyclos.entities.accounts.fees.transaction.TransactionFee" table="transaction_fees">
+    	<cache usage="read-write"/>
+        <id name="id" type="long">
+		    <column name="id" sql-type="integer"/>
+            <generator class="native"/>
+        </id>
+        <discriminator column="subclass" length="1"/>
+        <property name="payer" column="payer" length="3" not-null="true">
+            <type name="nl.strohalm.cyclos.utils.hibernate.StringValuedEnumType">
+                <param name="enumClassName">nl.strohalm.cyclos.entities.accounts.fees.transaction.TransactionFee$Subject</param>
+            </type>
+   		</property>
+		<property name="enabled" column="enabled" type="boolean" not-null="true"/>
+		<many-to-one name="originalTransferType" class="nl.strohalm.cyclos.entities.accounts.transactions.TransferType">
+		    <column name="original_type_id" not-null="true" sql-type="integer"/>
+		</many-to-one>
+		<many-to-one name="generatedTransferType" class="nl.strohalm.cyclos.entities.accounts.transactions.TransferType">
+		    <column name="generated_type_id" not-null="true" sql-type="integer"/>
+		</many-to-one>
+		<property name="name" column="name" type="string" not-null="true" length="100"/>
+		<property name="fromAllGroups" column="from_all_groups" type="boolean" not-null="true"/>
+		<property name="toAllGroups" column="to_all_groups" type="boolean" not-null="true"/>
+		<property name="description" column="description" type="text"/>
+        <property name="deductAmount" column="deduct_amount" type="boolean" not-null="true" />
+		<property name="value" column="amount" type="big_decimal" precision="15" scale="6"/>
+        <property name="chargeType" column="amount_type" length="1" not-null="true">
+            <type name="nl.strohalm.cyclos.utils.hibernate.StringValuedEnumType">
+                <param name="enumClassName">nl.strohalm.cyclos.entities.accounts.fees.transaction.TransactionFee$ChargeType</param>
+            </type>
+   		</property>
+		<property name="maxFixedValue" column="max_fixed_value" type="big_decimal" precision="15" scale="6"/>
+		<property name="maxPercentageValue" column="max_percentage_value" type="big_decimal" precision="15" scale="6"/>
+		<property name="initialAmount" column="initial_amount" type="big_decimal" precision="15" scale="6"/>
+		<property name="finalAmount" column="final_amount" type="big_decimal" precision="15" scale="6"/>
+		
+		<many-to-one name="fromFixedMember" update="false" class="nl.strohalm.cyclos.entities.members.Member">
+		    <column name="from_member_id" sql-type="integer"/>
+		</many-to-one>
+		
+        <bag name="transfers" inverse="true">
+    		<cache usage="read-write"/>
+            <key>
+            	<column name="fee_id" sql-type="integer" />
+            </key>
+            <one-to-many class="nl.strohalm.cyclos.entities.accounts.transactions.Transfer"/>
+        </bag>
+		<bag name="fromGroups" table="groups_from_transaction_fees">
+    		<cache usage="read-write"/>
+			<key>
+			    <column name="transaction_fee_id" sql-type="integer"/>
+			</key>
+			<many-to-many class="nl.strohalm.cyclos.entities.groups.MemberGroup">
+                <column name="group_id" sql-type="integer"/>
+			</many-to-many>
+		</bag>
+		<bag name="toGroups" table="groups_to_transaction_fees">
+    		<cache usage="read-write"/>
+			<key>
+			    <column name="transaction_fee_id" sql-type="integer"/>
+			</key>
+			<many-to-many class="nl.strohalm.cyclos.entities.groups.MemberGroup">
+                <column name="group_id" sql-type="integer"/>
+			</many-to-many>
+		</bag>
+    </class>
+
+</hibernate-mapping>

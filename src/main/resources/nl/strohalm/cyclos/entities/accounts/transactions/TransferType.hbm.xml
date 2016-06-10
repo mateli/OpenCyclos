@@ -1,0 +1,192 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+
+    <class dynamic-insert="true" dynamic-update="true" name="nl.strohalm.cyclos.entities.accounts.transactions.TransferType" table="transfer_types">
+    	<cache usage="read-write"/>
+        <id name="id" type="long">
+		    <column name="id" sql-type="integer"/>
+            <generator class="native"/>
+        </id>
+		<many-to-one name="from" class="nl.strohalm.cyclos.entities.accounts.AccountType">
+		    <column name="from_account_type_id" sql-type="integer" not-null="true"/>
+		</many-to-one>
+		<many-to-one name="to" class="nl.strohalm.cyclos.entities.accounts.AccountType">
+		    <column name="to_account_type_id" sql-type="integer" not-null="true"/>
+		</many-to-one>
+		<component name="context" class="nl.strohalm.cyclos.entities.accounts.transactions.TransferType$Context">
+			<property name="payment" column="allowed_payment" not-null="true" type="boolean"/>
+			<property name="selfPayment" column="allowed_self_payment" not-null="true" type="boolean"/>
+		</component>
+		<property name="priority" column="priority" type="boolean" not-null="true"/>
+		<property name="conciliable" column="conciliable" type="boolean" not-null="true"/>
+		<property name="requiresAuthorization" column="requires_authorization" type="boolean" not-null="true"/>
+		<property name="allowsScheduledPayments" column="allows_scheduled_payments" type="boolean" not-null="true"/>
+		<property name="name" column="name" type="string" not-null="true" length="100"/>
+		<property name="description" column="description" not-null="true" type="text"/>
+		<property name="confirmationMessage" column="confirmation_message" type="text"/>
+		<property name="maxAmountPerDay" column="max_amount_per_day" type="big_decimal" precision="15" scale="6"/>
+		<property name="minAmount" column="min_amount" type="big_decimal" precision="15" scale="6"/>
+		<property name="reserveTotalAmountOnScheduling" column="reserve_total_on_sched" type="boolean" not-null="true" />
+		<property name="allowCancelScheduledPayments" column="allow_cancel_sched" type="boolean" not-null="true"/>
+		<property name="allowBlockScheduledPayments" column="allow_block_sched" type="boolean" not-null="true"/>
+		<property name="showScheduledPaymentsToDestination" column="show_sched_to_dest" type="boolean" not-null="true"/>
+		<property name="allowSmsNotification" column="allow_sms_notification" type="boolean" not-null="true"/>
+		<property name="requiresFeedback" column="requires_feedback" type="boolean" not-null="true" />
+		<property name="transferListenerClass" column="transfer_listener_class" type="string" length="200" />
+		<property name="feedbackEnabledSince" column="feedback_enabled_since" type="calendar_date" />
+		<property name="feedbackExpirationTime" type="timePeriod" >
+        	<column name="feedback_expiration_time_number" />
+        	<column name="feedback_expiration_time_field" />
+		</property>
+		<property name="feedbackReplyExpirationTime" type="timePeriod" >
+        	<column name="feedback_reply_expiration_time_number" />
+        	<column name="feedback_reply_expiration_time_field" />
+		</property>
+		<property name="defaultFeedbackComments" column="default_feedback_comments" type="text"/>
+        <property name="defaultFeedbackLevel">
+        	<column name="default_feedback_level" sql-type="tinyint" />
+            <type name="nl.strohalm.cyclos.utils.hibernate.IntValuedEnumType">
+                <param name="enumClassName">nl.strohalm.cyclos.entities.members.Reference$Level</param>
+            </type>
+		</property>
+		<many-to-one name="fixedDestinationMember" class="nl.strohalm.cyclos.entities.members.Member">
+		    <column name="fixed_destination_member_id" sql-type="integer"/>
+		</many-to-one>
+        <property name="transactionHierarchyVisibility" column="tx_hierarchy_visibility" length="1">
+            <type name="nl.strohalm.cyclos.utils.hibernate.StringValuedEnumType">
+                <param name="enumClassName">nl.strohalm.cyclos.entities.accounts.transactions.TransferType$TransactionHierarchyVisibility</param>
+            </type>
+		</property>
+        <component name="loan" class="nl.strohalm.cyclos.entities.accounts.loans.LoanParameters">
+            <property name="type" column="loan_type" length="1">
+                <type name="nl.strohalm.cyclos.utils.hibernate.StringValuedEnumType">
+                    <param name="enumClassName">nl.strohalm.cyclos.entities.accounts.loans.Loan$Type</param>
+                </type>
+            </property>
+    		<many-to-one name="repaymentType" class="nl.strohalm.cyclos.entities.accounts.transactions.TransferType">
+	    	    <column name="loan_repayment_type_id" sql-type="integer"/>
+		    </many-to-one>
+            <property name="grantFee" type="amount">
+                <column name="loan_grant_fee_value" precision="15" scale="6"/>
+                <column name="loan_grant_fee_type" length="1"/>
+            </property>
+    		<many-to-one name="grantFeeRepaymentType" class="nl.strohalm.cyclos.entities.accounts.transactions.TransferType">
+	    	    <column name="loan_grant_fee_type_id" sql-type="integer"/>
+		    </many-to-one>
+            <property name="monthlyInterest" column="loan_monthly_interest" type="big_decimal" precision="15" scale="6"/>
+    		<many-to-one name="monthlyInterestRepaymentType" class="nl.strohalm.cyclos.entities.accounts.transactions.TransferType">
+	    	    <column name="loan_monthly_interest_type_id" sql-type="integer"/>
+		    </many-to-one>
+            <property name="expirationFee" type="amount">
+                <column name="loan_expiration_fee_value" precision="15" scale="6"/>
+                <column name="loan_expiration_fee_type" length="1"/>
+            </property>
+    		<many-to-one name="expirationFeeRepaymentType" class="nl.strohalm.cyclos.entities.accounts.transactions.TransferType">
+	    	    <column name="loan_expiration_fee_type_id" sql-type="integer"/>
+		    </many-to-one>
+            <property name="expirationDailyInterest" column="loan_expiration_daily_interest" type="big_decimal" precision="15" scale="6"/>
+    		<many-to-one name="expirationDailyInterestRepaymentType" class="nl.strohalm.cyclos.entities.accounts.transactions.TransferType">
+	    	    <column name="loan_exp_daily_interest_type_id" sql-type="integer"/>
+		    </many-to-one>
+    		<property name="repaymentDays" type="int">
+                <column name="loan_repayment_days" sql-type="integer"/>
+            </property>
+        </component>
+        
+		<bag name="groups" table="groups_transfer_types" inverse="true">
+			<cache usage="read-write"/>
+			<key>
+			    <column name="transfer_type_id" sql-type="integer"/>
+			</key>
+			<many-to-many class="nl.strohalm.cyclos.entities.groups.Group">
+			    <column name="group_id" sql-type="integer"/>	
+			</many-to-many>
+		</bag>
+
+		<bag name="groupsAsMember" table="groups_transfer_types_as_member" inverse="true">
+			<cache usage="read-write"/>
+			<key>
+			    <column name="transfer_type_id" sql-type="integer"/>
+			</key>
+			<many-to-many class="nl.strohalm.cyclos.entities.groups.Group">
+			    <column name="group_id" sql-type="integer"/>	
+			</many-to-many>
+		</bag>
+
+		<bag name="transactionFees" inverse="true" cascade="delete" order-by="name">
+			<cache usage="read-write"/>
+            <key>
+            	<column name="original_type_id" sql-type="integer"/>
+            </key>
+	        <one-to-many class="nl.strohalm.cyclos.entities.accounts.fees.transaction.TransactionFee"/>
+	    </bag>
+
+		<bag name="generatedByTransactionFees" inverse="true" cascade="delete">
+			<cache usage="read-write"/>
+            <key>
+            	<column name="generated_type_id" sql-type="integer"/>
+            </key>
+	        <one-to-many class="nl.strohalm.cyclos.entities.accounts.fees.transaction.TransactionFee"/>
+	    </bag>
+
+		<bag name="generatedByAccountFees" inverse="true" cascade="delete">
+			<cache usage="read-write"/>
+            <key>
+            	<column name="transfer_type_id" sql-type="integer"/>
+            </key>
+	        <one-to-many class="nl.strohalm.cyclos.entities.accounts.fees.account.AccountFee"/>
+	    </bag>
+
+		<bag name="paymentFilters" table="transfer_types_payment_filters">
+			<cache usage="read-write"/>
+			<key>
+			    <column name="transfer_type_id" sql-type="integer"/>
+			</key>
+			<many-to-many class="nl.strohalm.cyclos.entities.accounts.transactions.PaymentFilter">
+                <column name="payment_filter_id" sql-type="integer"/>
+			</many-to-many>
+		</bag>
+
+		<bag name="authorizationLevels" inverse="true" cascade="delete" order-by="level">
+			<cache usage="read-write"/>
+            <key>
+            	<column name="type_id" sql-type="integer"/>
+            </key>
+	        <one-to-many class="nl.strohalm.cyclos.entities.accounts.transactions.AuthorizationLevel"/>
+	    </bag>
+	    
+	    <bag name="channels" table="transfer_types_channels">
+	    	<cache usage="read-write"/>
+			<key>
+			    <column name="transfer_type_id" sql-type="integer"/>
+			</key>
+			<many-to-many class="nl.strohalm.cyclos.entities.access.Channel">
+                <column name="channel_id" sql-type="integer"/>
+			</many-to-many>
+		</bag>
+
+		<bag name="customFields" cascade="delete" inverse="true" order-by="order_number">
+			<cache usage="read-write"/>
+            <key>
+            	<column name="transfer_type_id" sql-type="integer"/>
+            </key>
+	        <one-to-many class="nl.strohalm.cyclos.entities.customization.fields.PaymentCustomField"/>
+	    </bag>
+	    
+		<bag name="linkedCustomFields" table="transfer_types_linked_custom_fields">
+			<cache usage="read-write"/>
+            <key>
+            	<column name="transfer_type_id" sql-type="integer"/>
+            </key>
+			<many-to-many class="nl.strohalm.cyclos.entities.customization.fields.PaymentCustomField">
+                <column name="field_id" sql-type="integer"/>
+			</many-to-many>
+	    </bag>
+	    
+    </class>
+
+</hibernate-mapping>

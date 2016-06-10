@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+	Bean definitions for data access objects
+ -->
+<beans default-autowire="byName"
+       xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+			http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd"
+	   >
+
+    <bean id="applicationDao" class="nl.strohalm.cyclos.dao.ApplicationDAOImpl" />
+    <bean id="fetchDao" class="nl.strohalm.cyclos.dao.FetchDAOImpl" />
+    <bean id="indexOperationDao" class="nl.strohalm.cyclos.dao.IndexOperationDAOImpl" />
+    <bean id="settingDao" class="nl.strohalm.cyclos.dao.settings.SettingDAOImpl">
+    	<property name="cyclosProperties"><ref bean="hibernateProperties"/></property>
+    </bean>
+    <bean id="channelDao" class="nl.strohalm.cyclos.dao.access.ChannelDAOImpl" />
+    <bean id="channelPrincipalDao" class="nl.strohalm.cyclos.dao.access.ChannelPrincipalDAOImpl" />
+    <bean id="groupDao" class="nl.strohalm.cyclos.dao.groups.GroupDAOImpl" />
+    <bean id="groupFilterDao" class="nl.strohalm.cyclos.dao.groups.GroupFilterDAOImpl" />
+    <bean id="errorLogEntryDao" class="nl.strohalm.cyclos.dao.alerts.ErrorLogEntryDAOImpl" />
+    <bean id="alertDao" class="nl.strohalm.cyclos.dao.alerts.AlertDAOImpl" />
+    
+    <bean id="elementDao" class="nl.strohalm.cyclos.dao.members.ElementDAOImpl" />
+    <bean id="pendingMemberDao" class="nl.strohalm.cyclos.dao.members.PendingMemberDAOImpl" />
+    <bean id="pendingEmailChangeDao" class="nl.strohalm.cyclos.dao.members.PendingEmailChangeDAOImpl" />
+    <bean id="userDao" class="nl.strohalm.cyclos.dao.access.UserDAOImpl" />
+    <bean id="brokeringDao" class="nl.strohalm.cyclos.dao.members.brokerings.BrokeringDAOImpl" />
+    <bean id="contactDao" class="nl.strohalm.cyclos.dao.members.ContactDAOImpl" />
+    <bean id="referenceDao" class="nl.strohalm.cyclos.dao.members.ReferenceDAOImpl" />
+    <bean id="remarkDao" class="nl.strohalm.cyclos.dao.members.RemarkDAOImpl" />
+    <bean id="groupHistoryLogDao" class="nl.strohalm.cyclos.dao.groups.GroupHistoryLogDAOImpl" />
+    <bean id="messageDao" class="nl.strohalm.cyclos.dao.members.MessageDAOImpl" />
+    <bean id="adInterestDao" class="nl.strohalm.cyclos.dao.members.AdInterestDAOImpl" />
+    <bean id="registrationAgreementDao" class="nl.strohalm.cyclos.dao.members.RegistrationAgreementDAOImpl" />
+    <bean id="registrationAgreementLogDao" class="nl.strohalm.cyclos.dao.members.RegistrationAgreementLogDAOImpl" />
+    
+    <bean id="adDao" class="nl.strohalm.cyclos.dao.ads.AdDAOImpl" />
+    <bean id="adCategoryDao" class="nl.strohalm.cyclos.dao.ads.AdCategoryDAOImpl" />
+
+    <bean id="currencyDao" class="nl.strohalm.cyclos.dao.accounts.CurrencyDAOImpl" />
+    <bean id="aRateParametersDao" class="nl.strohalm.cyclos.dao.accounts.ARateParametersDAOImpl" />
+    <bean id="dRateParametersDao" class="nl.strohalm.cyclos.dao.accounts.DRateParametersDAOImpl" />
+    <bean id="iRateParametersDao" class="nl.strohalm.cyclos.dao.accounts.IRateParametersDAOImpl" />
+    <bean id="accountTypeDao" class="nl.strohalm.cyclos.dao.accounts.AccountTypeDAOImpl" />
+    <bean id="accountDao" class="nl.strohalm.cyclos.dao.accounts.AccountDAOImpl" />
+    <bean id="closedAccountBalanceDao" class="nl.strohalm.cyclos.dao.accounts.ClosedAccountBalanceDAOImpl" />
+    <bean id="amountReservationDao" class="nl.strohalm.cyclos.dao.accounts.AmountReservationDAOImpl" />
+    <bean id="accountLimitLogDao" class="nl.strohalm.cyclos.dao.accounts.AccountLimitLogDAOImpl" />
+    <bean id="accountRatesDao" class="nl.strohalm.cyclos.dao.accounts.AccountRatesDAOImpl" />
+    <bean id="memberGroupAccountSettingsDao" class="nl.strohalm.cyclos.dao.accounts.MemberGroupAccountSettingsDAOImpl" />
+    <bean id="accountFeeDao" class="nl.strohalm.cyclos.dao.accounts.fee.account.AccountFeeDAOImpl"/>
+    <bean id="accountFeeAmountDao" class="nl.strohalm.cyclos.dao.accounts.fee.account.AccountFeeAmountDAOImpl"/>
+    <bean id="transferTypeDao" class="nl.strohalm.cyclos.dao.accounts.transactions.TransferTypeDAOImpl" />
+    <bean id="authorizationLevelDao" class="nl.strohalm.cyclos.dao.accounts.transactions.AuthorizationLevelDAOImpl" />
+    <bean id="accountFeeLogDao" class="nl.strohalm.cyclos.dao.accounts.fee.account.AccountFeeLogDAOImpl" />
+    <bean id="memberAccountFeeLogDao" class="nl.strohalm.cyclos.dao.accounts.fee.account.MemberAccountFeeLogDAOImpl" />
+    <bean id="transactionFeeDao" class="nl.strohalm.cyclos.dao.accounts.fee.transaction.TransactionFeeDAOImpl" />
+    <bean id="transferDao" class="nl.strohalm.cyclos.dao.accounts.transactions.TransferDAOImpl" />
+    <bean id="scheduledPaymentDao" class="nl.strohalm.cyclos.dao.accounts.transactions.ScheduledPaymentDAOImpl" />
+    <bean id="transferAuthorizationDao" class="nl.strohalm.cyclos.dao.accounts.transactions.TransferAuthorizationDAOImpl" />
+    <bean id="loanGroupDao" class="nl.strohalm.cyclos.dao.accounts.loans.LoanGroupDAOImpl" />
+    <bean id="loanDao" class="nl.strohalm.cyclos.dao.accounts.loans.LoanDAOImpl" />
+    <bean id="loanPaymentDao" class="nl.strohalm.cyclos.dao.accounts.loans.LoanPaymentDAOImpl" />
+    <bean id="ticketDao" class="nl.strohalm.cyclos.dao.accounts.transactions.TicketDAOImpl" />
+    <bean id="paymentFilterDao" class="nl.strohalm.cyclos.dao.accounts.transactions.PaymentFilterDAOImpl" />
+    <bean id="invoiceDao" class="nl.strohalm.cyclos.dao.accounts.transactions.InvoiceDAOImpl" />
+    <bean id="invoicePaymentDao" class="nl.strohalm.cyclos.dao.accounts.transactions.InvoicePaymentDAOImpl" />
+    <bean id="guaranteeTypeDao" class="nl.strohalm.cyclos.dao.accounts.guarantees.GuaranteeTypeDAOImpl" />
+    <bean id="certificationDao" class="nl.strohalm.cyclos.dao.accounts.guarantees.CertificationDAOImpl" />
+    <bean id="certificationLogDao" class="nl.strohalm.cyclos.dao.accounts.guarantees.CertificationLogDAOImpl" />
+    <bean id="guaranteeDao" class="nl.strohalm.cyclos.dao.accounts.guarantees.GuaranteeDAOImpl" />
+    <bean id="guaranteeLogDao" class="nl.strohalm.cyclos.dao.accounts.guarantees.GuaranteeLogDAOImpl" />
+    <bean id="paymentObligationDao" class="nl.strohalm.cyclos.dao.accounts.guarantees.PaymentObligationDAOImpl" />    
+    <bean id="paymentObligationLogDao" class="nl.strohalm.cyclos.dao.accounts.guarantees.PaymentObligationLogDAOImpl" />
+    <bean id="traceNumberDao" class="nl.strohalm.cyclos.dao.accounts.transactions.TraceNumberDAOImpl" />
+            
+	<bean id="externalAccountDao" class="nl.strohalm.cyclos.dao.accounts.external.ExternalAccountDAOImpl" />    
+	<bean id="externalTransferTypeDao" class="nl.strohalm.cyclos.dao.accounts.external.ExternalTransferTypeDAOImpl" />        
+	<bean id="externalTransferImportDao" class="nl.strohalm.cyclos.dao.accounts.external.ExternalTransferImportDAOImpl" />
+	<bean id="externalTransferDao" class="nl.strohalm.cyclos.dao.accounts.external.ExternalTransferDAOImpl" />
+
+	<bean id="fileMappingDao" class="nl.strohalm.cyclos.dao.accounts.external.filemapping.FileMappingDAOImpl" />    
+	<bean id="fieldMappingDao" class="nl.strohalm.cyclos.dao.accounts.external.filemapping.FieldMappingDAOImpl" />    
+
+    <bean id="customFieldDao" class="nl.strohalm.cyclos.dao.customizations.CustomFieldDAOImpl" />
+    <bean id="customFieldValueDao" class="nl.strohalm.cyclos.dao.customizations.CustomFieldValueDAOImpl" />
+    <bean id="customFieldPossibleValueDao" class="nl.strohalm.cyclos.dao.customizations.CustomFieldPossibleValueDAOImpl" />
+    <bean id="translationMessageDao" class="nl.strohalm.cyclos.dao.customizations.TranslationMessageDAOImpl" />
+    <bean id="customizedFileDao" class="nl.strohalm.cyclos.dao.customizations.CustomizedFileDAOImpl" />
+    <bean id="imageDao" class="nl.strohalm.cyclos.dao.customizations.ImageDAOImpl" />
+    <bean id="documentDao" class="nl.strohalm.cyclos.dao.customizations.DocumentDAOImpl" />
+    <bean id="documentPageDao" class="nl.strohalm.cyclos.dao.customizations.DocumentPageDAOImpl" />
+    <bean id="binaryFileDao" class="nl.strohalm.cyclos.dao.customizations.BinaryFileDAOImpl" />
+
+    <bean id="defaultBrokerCommissionDao" class="nl.strohalm.cyclos.dao.members.brokerings.DefaultBrokerCommissionDAOImpl" />
+    <bean id="brokerCommissionContractDao" class="nl.strohalm.cyclos.dao.members.brokerings.BrokerCommissionContractDAOImpl" />
+    <bean id="brokeringCommissionStatusDao" class="nl.strohalm.cyclos.dao.members.brokerings.BrokeringCommissionStatusDAOImpl" />
+    
+    <bean id="messageCategoryDao" class="nl.strohalm.cyclos.dao.members.MessageCategoryDAOImpl" />
+    <bean id="notificationPreferenceDao" class="nl.strohalm.cyclos.dao.members.NotificationPreferenceDAOImpl" />
+    <bean id="receiptPrinterSettingsDao" class="nl.strohalm.cyclos.dao.members.ReceiptPrinterSettingsDAOImpl" />
+    <bean id="adminNotificationPreferenceDao" class="nl.strohalm.cyclos.dao.members.AdminNotificationPreferenceDAOImpl" />
+    <bean id="sessionDao" class="nl.strohalm.cyclos.dao.access.SessionDAOImpl" />
+    <bean id="wrongCredentialAttemptsDao" class="nl.strohalm.cyclos.dao.access.WrongCredentialAttemptsDAOImpl" />
+    <bean id="wrongUsernameAttemptsDao" class="nl.strohalm.cyclos.dao.access.WrongUsernameAttemptsDAOImpl" />
+    <bean id="permissionDeniedTraceDao" class="nl.strohalm.cyclos.dao.access.PermissionDeniedTraceDAOImpl" />
+    <bean id="loginHistoryDao" class="nl.strohalm.cyclos.dao.access.LoginHistoryDAOImpl" />
+    <bean id="passwordHistoryLogDao" class="nl.strohalm.cyclos.dao.access.PasswordHistoryLogDAOImpl" />
+    <bean id="usernameChangeLogDao" class="nl.strohalm.cyclos.dao.access.UsernameChangeLogDAOImpl" />
+    <bean id="referenceHistoryDao" class="nl.strohalm.cyclos.dao.members.ReferenceHistoryDAOImpl" />
+    
+    <bean id="memberRecordTypeDao" class="nl.strohalm.cyclos.dao.members.MemberRecordTypeDAOImpl" />
+    <bean id="memberRecordDao" class="nl.strohalm.cyclos.dao.members.MemberRecordDAOImpl" />
+
+	<bean id="smsLogDao" class="nl.strohalm.cyclos.dao.sms.SmsLogDAOImpl" />    
+	<bean id="smsTypeDao" class="nl.strohalm.cyclos.dao.sms.SmsTypeDAOImpl" />
+	<bean id="memberSmsStatusDao" class="nl.strohalm.cyclos.dao.sms.MemberSmsStatusDAOImpl" />
+	<bean id="smsMailingDao" class="nl.strohalm.cyclos.dao.sms.SmsMailingDAOImpl" />    
+	    
+    <bean id="serviceClientDao" class="nl.strohalm.cyclos.dao.services.ServiceClientDAOImpl" />
+    
+    <bean id="memberImportDao" class="nl.strohalm.cyclos.dao.members.imports.MemberImportDAOImpl" />
+    <bean id="importedMemberDao" class="nl.strohalm.cyclos.dao.members.imports.ImportedMemberDAOImpl" />
+    <bean id="importedMemberRecordDao" class="nl.strohalm.cyclos.dao.members.imports.ImportedMemberRecordDAOImpl" />
+
+    <bean id="adImportDao" class="nl.strohalm.cyclos.dao.ads.imports.AdImportDAOImpl" />
+    <bean id="importedAdDao" class="nl.strohalm.cyclos.dao.ads.imports.ImportedAdDAOImpl" />
+    <bean id="importedAdCategoryDao" class="nl.strohalm.cyclos.dao.ads.imports.ImportedAdCategoryDAOImpl" />
+    
+    <bean id="cardDao" class="nl.strohalm.cyclos.dao.accounts.cards.CardDAOImpl" />
+    <bean id="cardTypeDao" class="nl.strohalm.cyclos.dao.accounts.cards.CardTypeDAOImpl" />
+    <bean id="cardLogDao" class="nl.strohalm.cyclos.dao.accounts.cards.CardLogDAOImpl" />
+    
+    <bean id="posDao" class="nl.strohalm.cyclos.dao.accounts.pos.PosDAOImpl" />
+    <bean id="memberPosDao" class="nl.strohalm.cyclos.dao.accounts.pos.MemberPosDAOImpl" />
+    <bean id="posLogDao" class="nl.strohalm.cyclos.dao.accounts.pos.PosLogDAOImpl" />
+    
+    <bean id="infoTextDao" class="nl.strohalm.cyclos.dao.infotexts.InfoTextDAOImpl" />
+
+</beans>

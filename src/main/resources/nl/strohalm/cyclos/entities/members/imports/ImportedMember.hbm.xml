@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class dynamic-insert="true" dynamic-update="true" name="nl.strohalm.cyclos.entities.members.imports.ImportedMember" table="imported_members">
+    	<id name="id" type="long">
+			<column name="id" sql-type="integer"/>
+            <generator class="native"/>
+        </id>
+       	<many-to-one name="import" class="nl.strohalm.cyclos.entities.members.imports.MemberImport">
+		    <column name="import_id" sql-type="integer" not-null="true"/>
+		</many-to-one>
+        <property name="status" column="status" length="50" not-null="true">
+            <type name="nl.strohalm.cyclos.utils.hibernate.StringValuedEnumType">
+                <param name="enumClassName">nl.strohalm.cyclos.entities.members.imports.ImportedMember$Status</param>
+            </type>
+		</property>
+		<property name="lineNumber" column="line_number" type="integer" />
+		<property name="errorArgument1" column="error_argument1" type="string" length="200" />
+		<property name="errorArgument2" column="error_argument2" type="string" length="200" />
+		<property name="name" column="name" type="string" length="100" />
+		<property name="salt" column="salt" type="string" length="32" />
+		<property name="username" column="username" type="string" length="64" />
+		<property name="password" column="password" type="string" length="64" />
+        <property name="email" length="100" column="email" type="string"/>
+    	<property name="creationDate" column="creation_date" type="calendar_date" />
+    	<property name="creditLimit" column="credit_limit" type="big_decimal" precision="15" scale="6" />
+    	<property name="upperCreditLimit" column="upper_credit_limit" type="big_decimal" precision="15" scale="6" />
+    	<property name="initialBalance" column="initial_balance" type="big_decimal" precision="15" scale="6" />
+		<bag name="customValues" cascade="delete" inverse="true">
+            <key> 
+            	<column name="imported_member_id" sql-type="integer"/>
+            </key>
+	        <one-to-many class="nl.strohalm.cyclos.entities.customization.fields.MemberCustomFieldValue"/>
+	    </bag>
+		<bag name="records" cascade="delete" inverse="true">
+            <key> 
+            	<column name="imported_member_id" sql-type="integer"/>
+            </key>
+	        <one-to-many class="nl.strohalm.cyclos.entities.members.imports.ImportedMemberRecord"/>
+	    </bag>
+	</class>
+
+</hibernate-mapping>

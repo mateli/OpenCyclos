@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class dynamic-insert="true" dynamic-update="true" name="nl.strohalm.cyclos.entities.members.printsettings.ReceiptPrinterSettings" table="print_settings">
+    
+		<id name="id" type="long">
+			<column name="id" sql-type="integer" />
+			<generator class="native" />
+		</id>
+		<many-to-one name="member" update="false" class="nl.strohalm.cyclos.entities.members.Member">
+			<column name="member" sql-type="integer" />
+		</many-to-one>
+		<property name="name" column="name" not-null="true" type="string" length="100" />
+		<property name="printerName" column="printer_name" not-null="true" type="string" length="100" />
+		<property name="beginOfDocCommand" column="begin_doc_cmd" type="string" length="100" />
+		<property name="endOfDocCommand" column="end_doc_cmd" type="string" length="100" />
+		<property name="paymentAdditionalMessage" column="payment_message" type="string" length="500" />
+
+	</class>
+</hibernate-mapping>

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+
+<!DOCTYPE tiles-definitions PUBLIC
+       "-//Apache Software Foundation//DTD Tiles Configuration 1.1//EN"
+       "http://jakarta.apache.org/struts/dtds/tiles-config_1_1.dtd">
+
+<tiles-definitions>
+
+	<definition name="admin/_notYetImplemented" extends=".adminLayout">
+		<put name="body" value="/pages/reports/statistics/forms/notYetImplemented.jsp"/>
+	</definition>
+	
+	<definition name="admin/_statistics" extends=".adminLayout">
+		<put name="body" value="/pages/reports/statistics/forms/statisticsChooseCategory.jsp"/>
+	</definition>
+	
+	<definition name="admin/_statisticsKeyDevelopments" extends=".adminLayout">
+		<put name="body" value="/pages/reports/statistics/selectStatisticsKeyDevelopments.jsp"/>
+	</definition>
+	
+	<definition name="admin/_statisticsKeyDevelopmentsPrintable" extends=".printLayout">
+		<put name="body" value="/pages/reports/statistics/printStatsResults.jsp"/>
+	</definition>
+	
+	<definition name="admin/_statisticsActivity" extends=".adminLayout">
+		<put name="body" value="/pages/reports/statistics/selectStatisticsActivity.jsp"/>
+	</definition>
+
+	<definition name="admin/_statisticsActivityPrintable" extends=".printLayout">
+		<put name="body" value="/pages/reports/statistics/printStatsResults.jsp"/>
+	</definition>
+	
+	<definition name="admin/_statisticsFinances" extends=".adminLayout">
+		<put name="body" value="/pages/reports/statistics/selectStatisticsFinances.jsp"/>
+	</definition>
+
+	<definition name="admin/_statisticsFinancesPrintable" extends=".printLayout">
+		<put name="body" value="/pages/reports/statistics/printStatsResults.jsp"/>
+	</definition>
+
+	<definition name="admin/_statisticsTaxes" extends=".adminLayout">
+		<put name="body" value="/pages/reports/statistics/selectStatisticsTaxes.jsp"/>
+	</definition>
+
+	<definition name="admin/_statisticsTaxesPrintable" extends=".printLayout">
+		<put name="body" value="/pages/reports/statistics/printStatsResults.jsp"/>
+	</definition>
+
+	<definition name="admin/_currentStateReportForm" extends=".adminLayout">
+		<put name="body" value="/pages/reports/currentStateReportForm.jsp"/>
+	</definition>
+	
+	<definition name="admin/_currentStateReportResult" extends=".adminLayout">
+		<put name="body" value="/pages/reports/currentStateReportResult.jsp"/>
+	</definition>
+	
+	<definition name="admin/_membersListReportForm" extends=".adminLayout">
+		<put name="body" value="/pages/reports/members/list/membersListReportForm.jsp"/>
+	</definition>
+	
+	<definition name="admin/_membersListReportResult" extends=".printLayout">
+		<put name="body" value="/pages/reports/members/list/membersListReportResult.jsp"/>
+	</definition>
+	
+	<definition name="admin/_membersTransactionsReportForm" extends=".adminLayout">
+		<put name="body" value="/pages/reports/members/transactions/membersTransactionsReportForm.jsp"/>
+	</definition>
+	
+	<definition name="admin/_membersSmsLogsReport" extends=".adminLayout">
+		<put name="body" value="/pages/reports/members/sms/smsLogsReport.jsp"/>
+	</definition>
+	
+	<definition name="admin/_membersSmsLogsReportPrint" extends=".printLayout">
+		<put name="body" value="/pages/reports/members/sms/smsLogsReportPrint.jsp"/>
+	</definition>
+	
+	<definition name="admin/_transactionsSummaryResult" extends=".printLayout">
+		<put name="body" value="/pages/reports/members/transactions/transactionsSummaryResult.jsp"/>
+	</definition>
+	
+	<definition name="admin/_simulations" extends=".adminLayout">
+		<put name="body" value="/pages/reports/simulations/simulationsChoose.jsp"/>
+	</definition>
+	
+	<definition name="admin/_dRateConfigSimulation" extends=".adminLayout">
+		<put name="body" value="/pages/reports/simulations/dRateConfigSimulation.jsp"/>
+	</definition>
+
+	<definition name="admin/_aRateConfigSimulation" extends=".adminLayout">
+		<put name="body" value="/pages/reports/simulations/aRateConfigSimulation.jsp"/>
+	</definition>
+
+</tiles-definitions>

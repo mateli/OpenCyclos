@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class dynamic-insert="true" dynamic-update="true" name="nl.strohalm.cyclos.entities.members.brokerings.BrokerCommissionContract" table="broker_commission_contracts">
+        <id name="id" type="long">
+		    <column name="id" sql-type="integer"/>
+            <generator class="native"/>
+        </id>
+		<many-to-one name="brokering" not-null="true" update="false" class="nl.strohalm.cyclos.entities.members.brokerings.Brokering">
+		    <column name="brokering_id" sql-type="integer"/>
+		</many-to-one>
+		<many-to-one name="brokerCommission" not-null="true" update="false" class="nl.strohalm.cyclos.entities.accounts.fees.transaction.BrokerCommission">
+		    <column name="broker_commission_id" sql-type="integer"/>
+		</many-to-one>
+		<property name="amount" type="amount">
+			<column name="amount_value" precision="15" scale="6" not-null="true"/>
+			<column name="amount_type" length="1" not-null="true"/>
+		</property>
+		<property name="period" type="periodDate">
+			<column name="start_date" not-null="true"/>
+			<column name="end_date"/>
+		</property>
+		<property name="status" column="status" length="1" not-null="true">
+            <type name="nl.strohalm.cyclos.utils.hibernate.StringValuedEnumType">
+                <param name="enumClassName">nl.strohalm.cyclos.entities.members.brokerings.BrokerCommissionContract$Status</param>
+            </type>
+		</property>
+		<many-to-one name="cancelledBy" class="nl.strohalm.cyclos.entities.members.Element">
+		    <column name="cancelled_by_id" sql-type="integer"/>
+		</many-to-one>
+		<property name="statusBeforeSuspension" column="status_before_suspension" length="1">
+            <type name="nl.strohalm.cyclos.utils.hibernate.StringValuedEnumType">
+                <param name="enumClassName">nl.strohalm.cyclos.entities.members.brokerings.BrokerCommissionContract$Status</param>
+            </type>
+		</property>
+	</class>
+</hibernate-mapping>

@@ -1,0 +1,85 @@
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.1//EN" "http://jakarta.apache.org/struts/dtds/struts-config_1_1.dtd">
+<struts-config>
+	<form-beans>
+        <form-bean name="addContactForm" type="nl.strohalm.cyclos.controls.members.contacts.AddContactForm" />
+        <form-bean name="contactForm" type="nl.strohalm.cyclos.controls.members.contacts.ContactForm" />
+	</form-beans>
+	
+	<action-mappings type="org.apache.struts.config.SecureActionConfig">
+
+		<action 
+			path="/member/contacts" 
+			type="nl.strohalm.cyclos.controls.members.contacts.ListContactsAction"
+            input="member/_contactList">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/member/addContact" 
+			type="nl.strohalm.cyclos.controls.members.contacts.AddContactAction"
+            name="addContactForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="backToProfile" path="/do/member/profile" redirect="true"/>
+			<forward name="backToList" path="/do/member/contacts" redirect="true"/>
+		</action>
+
+		<action 
+			path="/member/editContact" 
+			type="nl.strohalm.cyclos.controls.members.contacts.EditContactAction"
+            name="contactForm"
+            scope="request"
+            input="member/_contactDetails">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/member/contacts" redirect="true"/>
+		</action>
+
+		<action 
+			path="/member/deleteContact" 
+			type="nl.strohalm.cyclos.controls.members.contacts.DeleteContactAction"
+            name="contactForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/member/contacts" redirect="true"/>
+		</action>
+
+
+		<action 
+			path="/operator/contacts" 
+			type="nl.strohalm.cyclos.controls.members.contacts.ListContactsAction"
+            input="operator/_contactList">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/operator/addContact" 
+			type="nl.strohalm.cyclos.controls.members.contacts.AddContactAction"
+            name="addContactForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="backToProfile" path="/do/operator/profile" redirect="true"/>
+			<forward name="backToList" path="/do/operator/contacts" redirect="true"/>
+		</action>
+
+		<action 
+			path="/operator/editContact" 
+			type="nl.strohalm.cyclos.controls.members.contacts.EditContactAction"
+            name="contactForm"
+            scope="request"
+            input="operator/_contactDetails">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/operator/contacts" redirect="true"/>
+		</action>
+
+		<action 
+			path="/operator/deleteContact" 
+			type="nl.strohalm.cyclos.controls.members.contacts.DeleteContactAction"
+            name="contactForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/operator/contacts" redirect="true"/>
+		</action>
+		
+	</action-mappings>
+
+</struts-config>

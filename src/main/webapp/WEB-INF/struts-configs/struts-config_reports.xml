@@ -1,0 +1,221 @@
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.1//EN" "http://jakarta.apache.org/struts/dtds/struts-config_1_1.dtd">
+<struts-config>
+	
+	<form-beans>
+        <form-bean name="statisticsKeyDevelopmentsForm" type="nl.strohalm.cyclos.controls.reports.statistics.StatisticsKeyDevelopmentsForm" />
+        <form-bean name="statisticsActivityForm" type="nl.strohalm.cyclos.controls.reports.statistics.StatisticsActivityForm" />
+        <form-bean name="statisticsFinancesForm" type="nl.strohalm.cyclos.controls.reports.statistics.StatisticsFinancesForm" />
+        <form-bean name="statisticsTaxesForm" type="nl.strohalm.cyclos.controls.reports.statistics.StatisticsTaxesForm" />
+        <form-bean name="currentStateReportForm" type="nl.strohalm.cyclos.controls.reports.CurrentStateReportForm" />
+        <form-bean name="membersListReportForm" type="nl.strohalm.cyclos.controls.reports.members.list.MembersListReportForm" />
+        <form-bean name="membersTransactionsReportForm" type="nl.strohalm.cyclos.controls.reports.members.transactions.MembersTransactionsReportForm" />
+        <form-bean name="membersSmsLogsReportForm" type="nl.strohalm.cyclos.controls.reports.members.sms.SmsLogsReportForm" />
+        <form-bean name="rateConfigSimulationForm" type="nl.strohalm.cyclos.controls.reports.simulations.RateConfigSimulationForm" />
+	</form-beans>
+	
+	<action-mappings type="org.apache.struts.config.SecureActionConfig">
+
+		<action 
+			path="/admin/reportsCurrentState"
+			type="nl.strohalm.cyclos.controls.reports.CurrentStateReportAction"
+			input="admin/_currentStateReportForm"
+			name="currentStateReportForm"
+			scope="session">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="admin/_currentStateReportResult"/>
+		</action>
+
+		<action 
+			path="/admin/reportsDevelopments" 
+			type="org.apache.struts.actions.ForwardAction"
+            parameter="admin/_notYetImplemented">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/admin/membersListReport" 
+			type="nl.strohalm.cyclos.controls.reports.members.list.MembersListReportAction"
+			input="admin/_membersListReportForm"
+			name="membersListReportForm"
+			scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="admin/_membersListReportResult"/>
+		</action>
+		
+		<action 
+			path="/admin/membersListReportCsv" 
+			type="nl.strohalm.cyclos.controls.reports.members.list.ExportMembersListReportToCsvAction"
+			input="admin/_membersListReportForm"
+			name="membersListReportForm"
+			scope="request">
+			<set-property property="secure" value="true" />
+		</action>
+		
+		<action 
+			path="/admin/membersTransactionsReport" 
+			type="nl.strohalm.cyclos.controls.reports.members.transactions.MembersTransactionsReportAction"
+			input="admin/_membersTransactionsReportForm"
+			name="membersTransactionsReportForm"
+			scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="admin/_transactionsSummaryResult"/>
+		</action>
+		
+		<action 
+			path="/admin/membersTransactionsReportsCsv" 
+			type="nl.strohalm.cyclos.controls.reports.members.transactions.ExportMembersTransactionsReportToCsvAction"
+			input="admin/_membersTransactionsReportForm"
+			name="membersTransactionsReportForm"
+			scope="request">
+			<set-property property="secure" value="true" />
+		</action>
+		
+		<action 
+			path="/admin/membersTransactionsDetailsCsv" 
+			type="nl.strohalm.cyclos.controls.reports.members.transactions.ExportMembersTransactionsDetailsToCsvAction"
+			input="admin/_membersTransactionsReportForm"
+			name="membersTransactionsReportForm"
+			scope="request">
+			<set-property property="secure" value="true" />
+		</action>
+		
+		<action 
+			path="/admin/membersSmsLogsReport" 
+			type="nl.strohalm.cyclos.controls.reports.members.sms.SmsLogsReportAction"
+			input="admin/_membersSmsLogsReport"
+			name="membersSmsLogsReportForm"
+			scope="session">
+			<set-property property="secure" value="true" />
+		</action>
+		
+		<action 
+			path="/admin/membersSmsLogsReportCsv" 
+			type="nl.strohalm.cyclos.controls.reports.members.sms.SmsLogsReportCsvAction"
+			input="admin/_membersSmsLogsReport"
+			name="membersSmsLogsReportForm"
+			scope="session">
+			<set-property property="secure" value="true" />
+		</action>
+		
+		<action 
+			path="/admin/membersSmsLogsReportPrint" 
+			type="nl.strohalm.cyclos.controls.reports.members.sms.SmsLogsReportPrintAction"
+			input="admin/_membersSmsLogsReportPrint"
+			name="membersSmsLogsReportForm"
+			scope="session">
+			<set-property property="secure" value="true" />
+		</action>
+		
+		<action 
+			path="/admin/statistics" 
+			type="nl.strohalm.cyclos.controls.reports.statistics.StatisticsSelectAction"
+            input="admin/_statistics">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/admin/statisticsKeyDevelopments" 
+			type="nl.strohalm.cyclos.controls.reports.statistics.StatisticsKeyDevelopmentsAction"
+			name="statisticsKeyDevelopmentsForm"
+            input="admin/_statisticsKeyDevelopments">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/admin/statisticsKeyDevelopmentsPrintable" 
+			type="nl.strohalm.cyclos.controls.reports.statistics.StatisticsKeyDevelopmentsAction"
+			name="statisticsKeyDevelopmentsForm"
+            input="admin/_statisticsKeyDevelopmentsPrintable">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/admin/statisticsActivity" 
+			type="nl.strohalm.cyclos.controls.reports.statistics.StatisticsActivityAction"
+			name="statisticsActivityForm"
+            input="admin/_statisticsActivity">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/admin/statisticsActivityPrintable" 
+			type="nl.strohalm.cyclos.controls.reports.statistics.StatisticsActivityAction"
+			name="statisticsActivityForm"
+            input="admin/_statisticsActivityPrintable">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/admin/statisticsFinances" 
+			type="nl.strohalm.cyclos.controls.reports.statistics.StatisticsFinancesAction"
+			name="statisticsFinancesForm"
+            input="admin/_statisticsFinances">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/admin/statisticsFinancesPrintable" 
+			type="nl.strohalm.cyclos.controls.reports.statistics.StatisticsFinancesAction"
+			name="statisticsFinancesForm"
+            input="admin/_statisticsFinancesPrintable">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/admin/statisticsTaxes" 
+			type="nl.strohalm.cyclos.controls.reports.statistics.StatisticsTaxesAction"
+			name="statisticsTaxesForm"
+            input="admin/_statisticsTaxes">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/admin/statisticsTaxesPrintable" 
+			type="nl.strohalm.cyclos.controls.reports.statistics.StatisticsTaxesAction"
+			name="statisticsTaxesForm"
+            input="admin/_statisticsTaxesPrintable">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/admin/statisticsBalances" 
+			type="org.apache.struts.actions.ForwardAction"
+            parameter="admin/_notYetImplemented">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/admin/statisticsMiscellaneous" 
+			type="org.apache.struts.actions.ForwardAction"
+            parameter="admin/_notYetImplemented">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/admin/simulations" 
+			type="nl.strohalm.cyclos.controls.reports.simulations.SimulationsSelectAction"
+            input="admin/_simulations">
+			<set-property property="secure" value="true" />
+		</action>
+		
+		<action 
+			path="/admin/dRateConfigSimulation" 
+			type="nl.strohalm.cyclos.controls.reports.simulations.DRateConfigSimulationAction"
+			name="rateConfigSimulationForm"
+			scope="request"
+            input="admin/_dRateConfigSimulation">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/admin/aRateConfigSimulation" 
+			type="nl.strohalm.cyclos.controls.reports.simulations.ARateConfigSimulationAction"
+			name="rateConfigSimulationForm"
+			scope="request"
+            input="admin/_aRateConfigSimulation">
+			<set-property property="secure" value="true" />
+		</action>
+
+	</action-mappings>
+
+</struts-config>

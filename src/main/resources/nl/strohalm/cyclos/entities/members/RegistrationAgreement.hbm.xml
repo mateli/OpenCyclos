@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+
+	<class dynamic-insert="true" dynamic-update="true" name="nl.strohalm.cyclos.entities.members.RegistrationAgreement" table="registration_agreements">
+    	<cache usage="read-write"/>
+		<id name="id" type="long">
+		    <column name="id" sql-type="integer"/>
+			<generator class="native"/>
+		</id>
+        <property name="name" column="name" not-null="true" length="50" />
+		<property name="contents" column="contents" not-null="true" type="text"/>
+	</class>
+	
+</hibernate-mapping>

@@ -1,0 +1,83 @@
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.1//EN" "http://jakarta.apache.org/struts/dtds/struts-config_1_1.dtd">
+<struts-config>
+	<form-beans>
+        <form-bean name="listCustomizedFilesForm" type="nl.strohalm.cyclos.controls.customization.files.ListCustomizedFilesForm" />
+        <form-bean name="editCustomizedFileForm" type="nl.strohalm.cyclos.controls.customization.files.EditCustomizedFileForm" />
+        <form-bean name="stopCustomizingFileForm" type="nl.strohalm.cyclos.controls.customization.files.StopCustomizingFileForm" />
+        <form-bean name="getDirectoryContentsAjaxForm" type="nl.strohalm.cyclos.controls.customization.files.GetDirectoryContentsAjaxForm" />
+        <form-bean name="getFileContentsAjaxForm" type="nl.strohalm.cyclos.controls.customization.files.GetFileContentsAjaxForm" />
+	</form-beans>
+	
+	<action-mappings type="org.apache.struts.config.SecureActionConfig">
+		
+		<action 
+	    	path="/admin/showCustomizedFile" 
+	    	type="org.apache.struts.actions.ForwardAction"
+			parameter="admin/_showCustomizedFile">
+	    	<set-property property="secure" value="true" />
+	   	</action>
+		
+		<action 
+			path="/admin/listCustomizedFiles" 
+			type="nl.strohalm.cyclos.controls.customization.files.ListCustomizedFilesAction"
+            name="listCustomizedFilesForm"
+            scope="session"
+            input="admin/_listCustomizedFiles">
+			<set-property property="secure" value="true" />
+		</action>
+		
+		<action 
+			path="/admin/editCustomizedFile" 
+			type="nl.strohalm.cyclos.controls.customization.files.EditCustomizedFileAction"
+            name="editCustomizedFileForm"
+            scope="request"
+            input="admin/_editCustomizedFile">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/editCustomizedFile" redirect="true" />
+		</action>
+		
+		<action 
+			path="/admin/stopCustomizingFile" 
+			type="nl.strohalm.cyclos.controls.customization.files.StopCustomizingFileAction"
+            name="stopCustomizingFileForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/listCustomizedFiles" redirect="true" />
+		</action>
+		
+		<action 
+			path="/admin/getDirectoryContentsAjax" 
+			type="nl.strohalm.cyclos.controls.customization.files.GetDirectoryContentsAjaxAction"
+            name="getDirectoryContentsAjaxForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+		</action>
+		
+		<action 
+			path="/admin/getFileContentsAjax" 
+			type="nl.strohalm.cyclos.controls.customization.files.GetFileContentsAjaxAction"
+            name="getFileContentsAjaxForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+		</action>
+
+
+		
+		<action 
+			path="/member/getFileContentsAjax" 
+			type="nl.strohalm.cyclos.controls.customization.files.GetFileContentsAjaxAction"
+            name="getFileContentsAjaxForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+	    	path="/member/showCustomizedFile" 
+	    	type="org.apache.struts.actions.ForwardAction"
+			parameter="member/_showCustomizedFile">
+	    	<set-property property="secure" value="true" />
+	   	</action>
+
+	</action-mappings>
+
+</struts-config>

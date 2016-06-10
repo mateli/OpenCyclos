@@ -1,0 +1,38 @@
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.1//EN" "http://jakarta.apache.org/struts/dtds/struts-config_1_1.dtd">
+<struts-config>
+	<form-beans>
+        <form-bean name="editChannelForm" type="nl.strohalm.cyclos.controls.channels.EditChannelForm" />
+        <form-bean name="removeChannelForm" type="nl.strohalm.cyclos.controls.channels.RemoveChannelForm" />
+	</form-beans>
+	
+	<action-mappings type="org.apache.struts.config.SecureActionConfig">
+
+		<action 
+			path="/admin/listChannels" 
+			type="nl.strohalm.cyclos.controls.channels.ListChannelsAction"
+            input="admin/_listChannels">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/admin/editChannel" 
+			type="nl.strohalm.cyclos.controls.channels.EditChannelAction"
+            name="editChannelForm"
+            scope="request"
+            input="admin/_editChannel">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/editChannel" redirect="true" />
+		</action>
+
+		<action 
+			path="/admin/removeChannel" 
+			type="nl.strohalm.cyclos.controls.channels.RemoveChannelAction"
+            name="removeChannelForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/listChannels" redirect="true" />
+		</action>
+
+	</action-mappings>
+
+</struts-config>

@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+
+	<class dynamic-insert="true" dynamic-update="true" name="nl.strohalm.cyclos.entities.members.preferences.NotificationPreference" table="notification_preferences">
+		<id name="id" type="long">
+			<column name="id" sql-type="integer" />
+			<generator class="native" />
+		</id>
+		<many-to-one name="member" update="false" class="nl.strohalm.cyclos.entities.members.Member">
+			<column name="member" sql-type="integer" index="ix_np_member_type" />
+		</many-to-one>
+		<property name="type" update="false">
+			<column name="type" length="3" not-null="true" index="ix_np_member_type" />
+			<type name="nl.strohalm.cyclos.utils.hibernate.StringValuedEnumType">
+				<param name="enumClassName">nl.strohalm.cyclos.entities.members.messages.Message$Type</param>
+			</type>
+		</property>
+		<property name="message" column="is_message" not-null="true" type="boolean" />
+		<property name="email" column="is_email" not-null="true" type="boolean" />
+		<property name="sms" column="is_sms" not-null="true" type="boolean" />
+	</class>
+
+</hibernate-mapping>

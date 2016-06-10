@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+
+ <!DOCTYPE tiles-definitions PUBLIC
+       "-//Apache Software Foundation//DTD Tiles Configuration 1.1//EN"
+       "http://jakarta.apache.org/struts/dtds/tiles-config_1_1.dtd">
+
+<tiles-definitions>
+
+	<definition name="member/_payment" extends=".memberLayout">
+		<put name="body" value="/pages/payments/payment.jsp"/>
+	</definition>
+
+	<definition name="member/_selfPayment" extends=".memberLayout">
+		<put name="body" value="/pages/payments/selfPayment.jsp"/>
+	</definition>
+
+	<definition name="member/_confirmPayment" extends=".memberLayout">
+		<put name="body" value="/pages/payments/confirmPayment.jsp"/>
+	</definition>
+	
+	<definition name="member/_successfulPayment" extends=".memberLayout">
+		<put name="body" value="/pages/payments/successfulPayment.jsp"/>
+	</definition>
+	
+	<definition name="member/_simulateConversion" extends=".memberLayout">
+		<put name="body" value="/pages/payments/conversionSimulation/conversionSimulation.jsp"/>
+	</definition>
+
+
+
+	<definition name="admin/_payment" extends=".adminLayout">
+		<put name="body" value="/pages/payments/payment.jsp"/>
+	</definition>
+	
+	<definition name="admin/_selfPayment" extends=".adminLayout">
+		<put name="body" value="/pages/payments/selfPayment.jsp"/>
+	</definition>
+	
+	<definition name="admin/_confirmPayment" extends=".adminLayout">
+		<put name="body" value="/pages/payments/confirmPayment.jsp"/>
+	</definition>
+	
+	<definition name="admin/_successfulPayment" extends=".adminLayout">
+		<put name="body" value="/pages/payments/successfulPayment.jsp"/>
+	</definition>
+
+	<definition name="admin/_simulateConversion" extends=".adminLayout">
+		<put name="body" value="/pages/payments/conversionSimulation/conversionSimulation.jsp"/>
+	</definition>
+
+
+	<definition name="operator/_payment" extends=".operatorLayout">
+		<put name="body" value="/pages/payments/payment.jsp"/>
+	</definition>
+	
+	<definition name="operator/_selfPayment" extends=".operatorLayout">
+		<put name="body" value="/pages/payments/selfPayment.jsp"/>
+	</definition>
+	
+	<definition name="operator/_confirmPayment" extends=".operatorLayout">
+		<put name="body" value="/pages/payments/confirmPayment.jsp"/>
+	</definition>
+	
+	<definition name="operator/_successfulPayment" extends=".operatorLayout">
+		<put name="body" value="/pages/payments/successfulPayment.jsp"/>
+	</definition>
+
+	<definition name="operator/_simulateConversion" extends=".operatorLayout">
+		<put name="body" value="/pages/payments/conversionSimulation/conversionSimulation.jsp"/>
+	</definition>
+
+</tiles-definitions>

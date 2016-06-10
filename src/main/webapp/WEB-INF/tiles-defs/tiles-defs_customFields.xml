@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+
+ <!DOCTYPE tiles-definitions PUBLIC
+       "-//Apache Software Foundation//DTD Tiles Configuration 1.1//EN"
+       "http://jakarta.apache.org/struts/dtds/tiles-config_1_1.dtd">
+
+<tiles-definitions>
+
+	<definition name="admin/_listCustomFields" extends=".adminLayout">
+		<put name="body" value="/pages/customization/fields/listCustomFields.jsp"/>
+	</definition>
+
+	<definition name="admin/_editCustomField" extends=".adminLayout">
+		<put name="body" value="/pages/customization/fields/editCustomField.jsp"/>
+	</definition>
+
+	<definition name="admin/_setCustomFieldOrder" extends=".adminLayout">
+		<put name="body" value="/pages/customization/fields/setCustomFieldOrder.jsp"/>
+	</definition>
+	
+	
+	<definition name="member/_listCustomFields" extends=".memberLayout">
+		<put name="body" value="/pages/customization/fields/listCustomFields.jsp"/>
+	</definition>
+
+	<definition name="member/_editCustomField" extends=".memberLayout">
+		<put name="body" value="/pages/customization/fields/editCustomField.jsp"/>
+	</definition>
+
+	<definition name="member/_setCustomFieldOrder" extends=".memberLayout">
+		<put name="body" value="/pages/customization/fields/setCustomFieldOrder.jsp"/>
+	</definition>
+
+</tiles-definitions>

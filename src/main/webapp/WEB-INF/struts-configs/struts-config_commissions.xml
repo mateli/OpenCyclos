@@ -1,0 +1,156 @@
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.1//EN" "http://jakarta.apache.org/struts/dtds/struts-config_1_1.dtd">
+<struts-config>
+
+	<form-beans>
+		<form-bean name="manageBrokerCommissionsForm" type="nl.strohalm.cyclos.controls.members.brokering.ManageBrokerCommissionsForm" />
+		<form-bean name="stopBrokerCommissionForm" type="nl.strohalm.cyclos.controls.members.brokering.StopBrokerCommissionForm" />
+		<form-bean name="suspendBrokerCommissionForm" type="nl.strohalm.cyclos.controls.members.brokering.SuspendBrokerCommissionForm" />
+		<form-bean name="unsuspendBrokerCommissionForm" type="nl.strohalm.cyclos.controls.members.brokering.UnsuspendBrokerCommissionForm" />
+		<form-bean name="listBrokerCommissionContractsForm" type="nl.strohalm.cyclos.controls.members.brokering.ListBrokerCommissionContractsForm" />
+		<form-bean name="searchBrokerCommissionContractsForm" type="nl.strohalm.cyclos.controls.members.brokering.SearchBrokerCommissionContractsForm" />
+		<form-bean name="editBrokerCommissionContractForm" type="nl.strohalm.cyclos.controls.members.brokering.EditBrokerCommissionContractForm" />		
+		<form-bean name="acceptBrokerCommissionContractForm" type="nl.strohalm.cyclos.controls.members.brokering.AcceptBrokerCommissionContractForm" />
+		<form-bean name="cancelBrokerCommissionContractForm" type="nl.strohalm.cyclos.controls.members.brokering.CancelBrokerCommissionContractForm" />
+		<form-bean name="denyBrokerCommissionContractForm" type="nl.strohalm.cyclos.controls.members.brokering.DenyBrokerCommissionContractForm" />
+		<form-bean name="removeBrokerCommissionContractForm" type="nl.strohalm.cyclos.controls.members.brokering.RemoveBrokerCommissionContractForm" />
+		<form-bean name="defaultBrokerCommissionsForm" type="nl.strohalm.cyclos.controls.members.brokering.DefaultBrokerCommissionsForm" />
+	</form-beans>
+	
+	<action-mappings type="org.apache.struts.config.SecureActionConfig">
+	
+		<action 
+			path="/admin/manageBrokerCommissions"
+			type="nl.strohalm.cyclos.controls.members.brokering.ManageBrokerCommissionsAction"
+			input="admin/_manageBrokerCommissions"
+			name="manageBrokerCommissionsForm"
+			scope="session">
+			<set-property property="secure" value="true"/>
+	    	<forward name="success" path="/do/admin/manageBrokerCommissions" redirect="true" />
+		</action>
+		
+		<action 
+			path="/admin/stopBrokerCommission"
+			type="nl.strohalm.cyclos.controls.members.brokering.StopBrokerCommissionAction"
+			name="stopBrokerCommissionForm"
+			scope="request">
+			<set-property property="secure" value="true"/>
+	    	<forward name="success" path="/do/admin/manageBrokerCommissions" redirect="true" />
+		</action>
+		
+		<action 
+			path="/admin/suspendBrokerCommission"
+			type="nl.strohalm.cyclos.controls.members.brokering.SuspendBrokerCommissionAction"
+			name="suspendBrokerCommissionForm"
+			scope="request">
+			<set-property property="secure" value="true"/>
+	    	<forward name="success" path="/do/admin/manageBrokerCommissions" redirect="true" />
+		</action>
+		
+		<action 
+			path="/admin/unsuspendBrokerCommission"
+			type="nl.strohalm.cyclos.controls.members.brokering.UnsuspendBrokerCommissionAction"
+			name="unsuspendBrokerCommissionForm"
+			scope="request">
+			<set-property property="secure" value="true"/>
+	    	<forward name="success" path="/do/admin/manageBrokerCommissions" redirect="true" />
+		</action>
+		
+		<action 
+			path="/admin/editBrokerCommissionContract"
+			type="nl.strohalm.cyclos.controls.members.brokering.EditBrokerCommissionContractAction"
+			input="admin/_editBrokerCommissionContract"
+			name="editBrokerCommissionContractForm"
+			scope="request">
+			<set-property property="secure" value="true"/>
+		</action>
+		
+		<action 
+			path="/admin/cancelBrokerCommissionContract"
+			type="nl.strohalm.cyclos.controls.members.brokering.CancelBrokerCommissionContractAction"
+			name="cancelBrokerCommissionContractForm"
+			scope="request">
+			<set-property property="secure" value="true"/>
+	    	<forward name="success" path="/do/admin/editBrokerCommissionContract" redirect="true" />
+		</action>
+	
+		<action 
+			path="/member/listBrokerCommissionContracts"
+			type="nl.strohalm.cyclos.controls.members.brokering.ListBrokerCommissionContractsAction"
+			input="member/_listBrokerCommissionContracts"
+			name="listBrokerCommissionContractsForm"
+			scope="request">
+			<set-property property="secure" value="true"/>
+	    	<forward name="success" path="/do/member/listBrokerCommissionContracts" redirect="true" />
+		</action>
+		
+		<action 
+			path="/member/searchBrokerCommissionContracts"
+			type="nl.strohalm.cyclos.controls.members.brokering.SearchBrokerCommissionContractsAction"
+			input="member/_searchBrokerCommissionContracts"
+			name="searchBrokerCommissionContractsForm"
+			scope="session">
+			<set-property property="secure" value="true"/>
+	    	<forward name="success" path="/do/member/searchBrokerCommissionContracts" redirect="true" />
+		</action>
+		
+		
+		<action 
+			path="/member/editBrokerCommissionContract"
+			type="nl.strohalm.cyclos.controls.members.brokering.EditBrokerCommissionContractAction"
+			input="member/_editBrokerCommissionContract"
+			name="editBrokerCommissionContractForm"
+			scope="request">
+			<set-property property="secure" value="true"/>
+	    	<forward name="success" path="/do/member/editBrokerCommissionContract" redirect="true" />
+		</action>
+		
+		<action 
+			path="/member/acceptBrokerCommissionContract"
+			type="nl.strohalm.cyclos.controls.members.brokering.AcceptBrokerCommissionContractAction"
+			name="acceptBrokerCommissionContractForm"
+			scope="request">
+			<set-property property="secure" value="true"/>
+	    	<forward name="success" path="/do/member/editBrokerCommissionContract" redirect="true" />
+		</action>
+		
+		<action 
+			path="/member/cancelBrokerCommissionContract"
+			type="nl.strohalm.cyclos.controls.members.brokering.CancelBrokerCommissionContractAction"
+			name="cancelBrokerCommissionContractForm"
+			scope="request">
+			<set-property property="secure" value="true"/>
+	    	<forward name="success" path="/do/member/editBrokerCommissionContract" redirect="true" />
+		</action>
+		
+		<action 
+			path="/member/denyBrokerCommissionContract"
+			type="nl.strohalm.cyclos.controls.members.brokering.DenyBrokerCommissionContractAction"
+			name="denyBrokerCommissionContractForm"
+			scope="request">
+			<set-property property="secure" value="true"/>
+	    	<forward name="success" path="/do/member/editBrokerCommissionContract" redirect="true" />
+		</action>
+		
+		<action 
+			path="/member/removeBrokerCommissionContract"
+			type="nl.strohalm.cyclos.controls.members.brokering.RemoveBrokerCommissionContractAction"
+			name="removeBrokerCommissionContractForm"
+			scope="request">
+			<set-property property="secure" value="true"/>
+			<forward name="searchContracts" path="/do/member/searchBrokerCommissionContracts" redirect="true" />
+			<forward name="listContracts" path="/do/member/listBrokerCommissionContracts" redirect="true" />
+		</action>
+		
+		<action 
+			path="/member/defaultBrokerCommissions"
+			type="nl.strohalm.cyclos.controls.members.brokering.DefaultBrokerCommissionsAction"
+			input="member/_defaultBrokerCommissions"
+			name="defaultBrokerCommissionsForm"
+			scope="request">
+			<set-property property="secure" value="true"/>
+	    	<forward name="success" path="/do/member/defaultBrokerCommissions" redirect="true" />
+		</action>
+
+	</action-mappings>
+	
+</struts-config>

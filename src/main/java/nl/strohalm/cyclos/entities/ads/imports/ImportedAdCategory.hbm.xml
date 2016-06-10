@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+
+	<class dynamic-insert="true" dynamic-update="true" name="nl.strohalm.cyclos.entities.ads.imports.ImportedAdCategory" table="imported_ad_categories">
+    	<id name="id" type="long">
+			<column name="id" sql-type="integer"/>
+            <generator class="native"/>
+        </id>
+       	<many-to-one name="adImport" class="nl.strohalm.cyclos.entities.ads.imports.AdImport">
+		    <column name="ad_import_id" sql-type="integer" not-null="true"/>
+		</many-to-one>
+		<many-to-one name="existingParent" class="nl.strohalm.cyclos.entities.ads.AdCategory">
+		    <column name="existing_parent_id" sql-type="integer"/>
+		</many-to-one>
+		<many-to-one name="importedParent" class="nl.strohalm.cyclos.entities.ads.imports.ImportedAdCategory">
+		    <column name="imported_parent_id" sql-type="integer"/>
+		</many-to-one>
+		<property name="name" column="name" type="string" length="100"/>	
+	</class>
+
+</hibernate-mapping>

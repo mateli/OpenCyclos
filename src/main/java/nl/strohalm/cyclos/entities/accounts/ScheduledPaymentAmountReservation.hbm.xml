@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+
+    <subclass name="nl.strohalm.cyclos.entities.accounts.ScheduledPaymentAmountReservation" extends="nl.strohalm.cyclos.entities.accounts.AmountReservation" discriminator-value="S">
+		<many-to-one name="scheduledPayment" update="false" class="nl.strohalm.cyclos.entities.accounts.transactions.ScheduledPayment">
+		    <column name="scheduled_payment_id" sql-type="integer"/>
+		</many-to-one>
+    </subclass>
+    
+</hibernate-mapping>

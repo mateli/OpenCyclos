@@ -1,0 +1,79 @@
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.1//EN" "http://jakarta.apache.org/struts/dtds/struts-config_1_1.dtd">
+<struts-config>
+	<form-beans>
+        <form-bean name="searchLoanGroupsForm" type="nl.strohalm.cyclos.controls.loangroups.SearchLoanGroupsForm" />
+        <form-bean name="editLoanGroupForm" type="nl.strohalm.cyclos.controls.loangroups.EditLoanGroupForm" />
+        <form-bean name="removeLoanGroupForm" type="nl.strohalm.cyclos.controls.loangroups.RemoveLoanGroupForm" />
+        <form-bean name="loanGroupMembershipForm" type="nl.strohalm.cyclos.controls.loangroups.LoanGroupMembershipForm" />
+	</form-beans>
+	
+	<action-mappings type="org.apache.struts.config.SecureActionConfig">
+		
+		<action 
+			path="/admin/viewLoanGroup" 
+			type="nl.strohalm.cyclos.controls.loangroups.ViewLoanGroupAction"
+            name="editLoanGroupForm"
+            scope="request"
+            input="admin/_viewLoanGroup">
+			<set-property property="secure" value="true" />
+		</action>
+		
+		<action 
+			path="/admin/searchLoanGroups" 
+			type="nl.strohalm.cyclos.controls.loangroups.SearchLoanGroupsAction"
+            name="searchLoanGroupsForm"
+            scope="session"
+            input="admin/_searchLoanGroups">
+			<set-property property="secure" value="true" />
+		</action>
+		
+		<action 
+			path="/admin/editLoanGroup" 
+			type="nl.strohalm.cyclos.controls.loangroups.EditLoanGroupAction"
+            name="editLoanGroupForm"
+            scope="request"
+            input="admin/_editLoanGroup">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/searchLoanGroups" redirect="true"/>
+			<forward name="view" path="/do/admin/viewLoanGroup" redirect="true"/>
+		</action>
+		
+		<action 
+			path="/admin/removeLoanGroup" 
+			type="nl.strohalm.cyclos.controls.loangroups.RemoveLoanGroupAction"
+            name="removeLoanGroupForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/searchLoanGroups" redirect="true"/>
+		</action>
+		
+		<action 
+			path="/admin/addMemberToLoanGroup" 
+			type="nl.strohalm.cyclos.controls.loangroups.AddMemberToLoanGroupAction"
+            name="loanGroupMembershipForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/editLoanGroup" redirect="true"/>
+		</action>
+		
+		<action 
+			path="/admin/removeMemberFromLoanGroup" 
+			type="nl.strohalm.cyclos.controls.loangroups.RemoveMemberFromLoanGroupAction"
+            name="loanGroupMembershipForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/editLoanGroup" redirect="true"/>
+		</action>
+		
+		<action 
+			path="/member/viewLoanGroup" 
+			type="nl.strohalm.cyclos.controls.loangroups.ViewLoanGroupAction"
+            name="editLoanGroupForm"
+            scope="request"
+            input="member/_viewLoanGroup">
+			<set-property property="secure" value="true" />
+		</action>
+
+	</action-mappings>
+
+</struts-config>

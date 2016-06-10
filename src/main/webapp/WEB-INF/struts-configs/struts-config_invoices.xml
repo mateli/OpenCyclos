@@ -1,0 +1,211 @@
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.1//EN" "http://jakarta.apache.org/struts/dtds/struts-config_1_1.dtd">
+<struts-config>
+	<form-beans>
+        <form-bean name="searchInvoicesForm" type="nl.strohalm.cyclos.controls.invoices.SearchInvoicesForm" />
+        <form-bean name="sendInvoiceForm" type="nl.strohalm.cyclos.controls.invoices.SendInvoiceForm" />
+        <form-bean name="invoiceDetailsForm" type="nl.strohalm.cyclos.controls.invoices.InvoiceDetailsForm" />
+        <form-bean name="acceptInvoiceForm" type="nl.strohalm.cyclos.controls.invoices.AcceptInvoiceForm" />
+	</form-beans>
+	
+	<action-mappings type="org.apache.struts.config.SecureActionConfig">
+
+		<!-- Member Actions -->
+		
+		<action 
+			path="/member/printInvoice" 
+			type="nl.strohalm.cyclos.controls.invoices.PrintInvoiceAction"
+            name="invoiceDetailsForm"
+            scope="request"
+            input="_printInvoice">
+			<set-property property="secure" value="true" />
+		</action>
+		
+		<action 
+			path="/member/searchInvoices" 
+			type="nl.strohalm.cyclos.controls.invoices.SearchInvoicesAction"
+            name="searchInvoicesForm"
+            scope="session"
+            input="member/_searchInvoices">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/member/sendInvoice" 
+			type="nl.strohalm.cyclos.controls.invoices.SendInvoiceAction"
+            name="sendInvoiceForm"
+            scope="request"
+            input="member/_sendInvoice">
+			<set-property property="secure" value="true" />
+			<forward name="newInvoice" path="/do/member/sendInvoice" />
+			<forward name="profile" path="/do/member/profile" />
+		</action>
+
+		<action 
+			path="/member/invoiceDetails" 
+			type="nl.strohalm.cyclos.controls.invoices.InvoiceDetailsAction"
+            name="invoiceDetailsForm"
+            scope="request"
+            input="member/_invoiceDetails">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/member/acceptInvoice" 
+			type="nl.strohalm.cyclos.controls.invoices.AcceptInvoiceAction"
+            name="acceptInvoiceForm"
+            scope="request"
+            input="member/_acceptInvoice">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/member/invoiceDetails" redirect="true" />
+		</action>
+
+		<action 
+			path="/member/cancelInvoice" 
+			type="nl.strohalm.cyclos.controls.invoices.CancelInvoiceAction"
+            name="invoiceDetailsForm">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/member/invoiceDetails" redirect="true" />
+		</action>
+
+		<action 
+			path="/member/denyInvoice" 
+			type="nl.strohalm.cyclos.controls.invoices.DenyInvoiceAction"
+            name="invoiceDetailsForm">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/member/invoiceDetails" redirect="true" />
+		</action>
+
+
+		<!-- Admin Actions -->
+		<action 
+			path="/admin/printInvoice" 
+			type="nl.strohalm.cyclos.controls.invoices.PrintInvoiceAction"
+            name="invoiceDetailsForm"
+            scope="request"
+            input="_printInvoice">
+			<set-property property="secure" value="true" />
+		</action>
+		
+		<action 
+			path="/admin/searchInvoices" 
+			type="nl.strohalm.cyclos.controls.invoices.SearchInvoicesAction"
+            name="searchInvoicesForm"
+            scope="session"
+            input="admin/_searchInvoices">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/admin/sendInvoice" 
+			type="nl.strohalm.cyclos.controls.invoices.SendInvoiceAction"
+            name="sendInvoiceForm"
+            scope="request"
+            input="admin/_sendInvoice">
+			<set-property property="secure" value="true" />
+			<forward name="newInvoice" path="/do/admin/sendInvoice" />
+			<forward name="profile" path="/do/admin/profile" />
+		</action>
+
+		<action 
+			path="/admin/invoiceDetails" 
+			type="nl.strohalm.cyclos.controls.invoices.InvoiceDetailsAction"
+            name="invoiceDetailsForm"
+            scope="request"
+            input="admin/_invoiceDetails">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/admin/acceptInvoice" 
+			type="nl.strohalm.cyclos.controls.invoices.AcceptInvoiceAction"
+            name="acceptInvoiceForm"
+            scope="request"
+            input="admin/_acceptInvoice">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/invoiceDetails" redirect="true" />
+		</action>
+
+		<action 
+			path="/admin/cancelInvoice" 
+			type="nl.strohalm.cyclos.controls.invoices.CancelInvoiceAction"
+            name="invoiceDetailsForm">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/invoiceDetails" redirect="true" />
+		</action>
+
+		<action 
+			path="/admin/denyInvoice" 
+			type="nl.strohalm.cyclos.controls.invoices.DenyInvoiceAction"
+            name="invoiceDetailsForm">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/invoiceDetails" redirect="true" />
+		</action>
+		
+		<!-- Operator Actions -->
+		<action 
+			path="/operator/searchInvoices" 
+			type="nl.strohalm.cyclos.controls.invoices.SearchInvoicesAction"
+            name="searchInvoicesForm"
+            scope="session"
+            input="operator/_searchInvoices">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/operator/sendInvoice" 
+			type="nl.strohalm.cyclos.controls.invoices.SendInvoiceAction"
+            name="sendInvoiceForm"
+            scope="request"
+            input="operator/_sendInvoice">
+			<set-property property="secure" value="true" />
+			<forward name="newInvoice" path="/do/operator/sendInvoice" />
+			<forward name="profile" path="/do/operator/profile" />
+		</action>
+
+		<action 
+			path="/operator/invoiceDetails" 
+			type="nl.strohalm.cyclos.controls.invoices.InvoiceDetailsAction"
+            name="invoiceDetailsForm"
+            scope="request"
+            input="operator/_invoiceDetails">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/operator/acceptInvoice" 
+			type="nl.strohalm.cyclos.controls.invoices.AcceptInvoiceAction"
+            name="acceptInvoiceForm"
+            scope="request"
+            input="operator/_acceptInvoice">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/operator/invoiceDetails" redirect="true" />
+		</action>
+
+		<action 
+			path="/operator/cancelInvoice" 
+			type="nl.strohalm.cyclos.controls.invoices.CancelInvoiceAction"
+            name="invoiceDetailsForm">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/operator/invoiceDetails" redirect="true" />
+		</action>
+
+		<action 
+			path="/operator/denyInvoice" 
+			type="nl.strohalm.cyclos.controls.invoices.DenyInvoiceAction"
+            name="invoiceDetailsForm">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/operator/invoiceDetails" redirect="true" />
+		</action>
+		
+		<action 
+			path="/operator/printInvoice" 
+			type="nl.strohalm.cyclos.controls.invoices.PrintInvoiceAction"
+            name="invoiceDetailsForm"
+            scope="request"
+            input="_printInvoice">
+			<set-property property="secure" value="true" />
+		</action>
+		
+	</action-mappings>
+
+</struts-config>

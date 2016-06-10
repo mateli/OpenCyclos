@@ -1,0 +1,84 @@
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.1//EN" "http://jakarta.apache.org/struts/dtds/struts-config_1_1.dtd">
+<struts-config>
+	<form-beans>
+        <form-bean name="removeImageForm" type="nl.strohalm.cyclos.controls.image.RemoveImageForm" />
+        <form-bean name="imageDetailsForm" type="nl.strohalm.cyclos.controls.image.ImageDetailsForm" />
+	</form-beans>
+	
+	<action-mappings type="org.apache.struts.config.SecureActionConfig">
+
+	    <action 
+	    	path="/admin/showImage" 
+	    	type="nl.strohalm.cyclos.controls.image.ShowImageAction"
+			input="_showImage">
+	    	<set-property property="secure" value="true" />
+	   	</action>
+	   	
+	   	<action 
+	    	path="/admin/imageDetails" 
+	    	type="nl.strohalm.cyclos.controls.image.ImageDetailsAction"
+	    	name="imageDetailsForm"
+	    	scope="request"
+	    	input="_imageDetails">
+	    	<set-property property="secure" value="true" />
+	   	</action>
+	   	
+	   	<action 
+	    	path="/admin/removeImage" 
+	    	type="nl.strohalm.cyclos.controls.image.RemoveImageAction"
+	    	name="removeImageForm"
+	    	scope="request">
+	    	<set-property property="secure" value="true" />
+	   	</action>
+	   	
+	   	<action 
+	    	path="/member/imageDetails" 
+	    	type="nl.strohalm.cyclos.controls.image.ImageDetailsAction"
+	    	name="imageDetailsForm"
+	    	scope="request"
+	    	input="_imageDetails">
+	    	<set-property property="secure" value="true" />
+	   	</action>
+	   	
+	   	<action 
+	    	path="/member/showImage" 
+	    	type="nl.strohalm.cyclos.controls.image.ShowImageAction"
+			input="_showImage">
+	    	<set-property property="secure" value="true" />
+	   	</action>
+	   	
+	   	<action 
+	    	path="/member/removeImage" 
+	    	type="nl.strohalm.cyclos.controls.image.RemoveImageAction"
+	    	name="removeImageForm"
+	    	scope="request">
+	    	<set-property property="secure" value="true" />
+	   	</action>
+	   	
+	   	<action 
+	    	path="/operator/showImage" 
+	    	type="nl.strohalm.cyclos.controls.image.ShowImageAction"
+			input="_showImage">
+	    	<set-property property="secure" value="true" />
+	   	</action>
+	   	
+	   	<action 
+	    	path="/operator/removeImage" 
+	    	type="nl.strohalm.cyclos.controls.image.RemoveImageAction"
+	    	name="removeImageForm"
+	    	scope="request">
+	    	<set-property property="secure" value="true" />
+	   	</action>
+
+	   	<action 
+	    	path="/operator/imageDetails" 
+	    	type="nl.strohalm.cyclos.controls.image.ImageDetailsAction"
+	    	name="imageDetailsForm"
+	    	scope="request"
+	    	input="_imageDetails">
+	    	<set-property property="secure" value="true" />
+	   	</action>
+		
+	</action-mappings>
+
+</struts-config>

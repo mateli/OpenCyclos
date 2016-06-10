@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+
+	<subclass dynamic-insert="true" dynamic-update="true" name="nl.strohalm.cyclos.entities.customization.documents.DynamicDocument" extends="nl.strohalm.cyclos.entities.customization.documents.Document" discriminator-value="D">
+		<many-to-one name="documentPage" cascade="delete" class="nl.strohalm.cyclos.entities.customization.documents.DocumentPage">
+		    <column name="document_page_id" sql-type="integer"/>
+		</many-to-one>
+		<many-to-one name="formPage" cascade="delete" class="nl.strohalm.cyclos.entities.customization.documents.DocumentPage">
+		    <column name="form_page_id" sql-type="integer"/>
+		</many-to-one>
+	</subclass>
+
+</hibernate-mapping>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+
+ <!DOCTYPE tiles-definitions PUBLIC
+       "-//Apache Software Foundation//DTD Tiles Configuration 1.1//EN"
+       "http://jakarta.apache.org/struts/dtds/tiles-config_1_1.dtd">
+
+<tiles-definitions>
+
+	<definition name="_printLoans" extends=".printLayout">
+		<put name="body" value="/pages/loans/printLoans.jsp"/>
+	</definition>
+
+	<definition name="_printLoanPayments" extends=".printLayout">
+		<put name="body" value="/pages/loans/printLoanPayments.jsp"/>
+	</definition>
+
+	<definition name="_printLoanDetails" extends=".printLayout">
+		<put name="body" value="/pages/loans/printLoanDetails.jsp"/>
+	</definition>
+
+	<definition name="member/_searchLoans" extends=".memberLayout">
+		<put name="body" value="/pages/loans/searchLoans.jsp"/>
+	</definition>
+
+	<definition name="member/_loanDetails" extends=".memberLayout">
+		<put name="body" value="/pages/loans/loanDetails.jsp"/>
+	</definition>
+
+	<definition name="admin/_searchLoans" extends=".adminLayout">
+		<put name="body" value="/pages/loans/searchLoans.jsp"/>
+	</definition>
+
+	<definition name="admin/_searchLoanPayments" extends=".adminLayout">
+		<put name="body" value="/pages/loans/searchLoanPayments.jsp"/>
+	</definition>
+
+	<definition name="admin/_loanDetails" extends=".adminLayout">
+		<put name="body" value="/pages/loans/loanDetails.jsp"/>
+	</definition>
+
+	<definition name="admin/_grantLoan" extends=".adminLayout">
+		<put name="body" value="/pages/loans/grantLoan.jsp"/>
+	</definition>
+
+	<definition name="admin/_confirmLoan" extends=".adminLayout">
+		<put name="body" value="/pages/loans/confirmLoan.jsp"/>
+	</definition>
+
+	<definition name="operator/_searchLoans" extends=".operatorLayout">
+		<put name="body" value="/pages/loans/searchLoans.jsp"/>
+	</definition>
+
+	<definition name="operator/_loanDetails" extends=".operatorLayout">
+		<put name="body" value="/pages/loans/loanDetails.jsp"/>
+	</definition>
+
+</tiles-definitions>

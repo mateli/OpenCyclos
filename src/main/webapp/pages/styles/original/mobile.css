@@ -1,0 +1,7 @@
+body,td,input,textarea {font-size:medium;font-family:sans-serif;color:navy}
+a{color:blue}
+input,textarea,select{border:#7392CC 1px solid}
+.title{font-weight:bold;font-size:larger;margin-bottom:3pt;}
+.label{font-weight:bold}
+.debit{color:red}
+.credit{}

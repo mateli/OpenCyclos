@@ -1,0 +1,150 @@
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.1//EN" "http://jakarta.apache.org/struts/dtds/struts-config_1_1.dtd">
+<struts-config>
+	<form-beans>
+        <form-bean name="editReferenceForm" type="nl.strohalm.cyclos.controls.members.references.EditReferenceForm" />
+        <form-bean name="memberReferencesForm" type="nl.strohalm.cyclos.controls.members.references.MemberReferencesForm" />
+        <form-bean name="myReferencesForm" type="nl.strohalm.cyclos.controls.members.references.MemberReferencesForm" />
+        <form-bean name="removeReferenceForm" type="nl.strohalm.cyclos.controls.members.references.RemoveReferenceForm" />
+        <form-bean name="searchPaymentsAwaitingFeedbackForm" type="nl.strohalm.cyclos.controls.members.references.SearchPaymentsAwaitingFeedbackForm" />
+	</form-beans>
+	
+	<action-mappings type="org.apache.struts.config.SecureActionConfig">
+
+		<action 
+			path="/member/references" 
+			type="nl.strohalm.cyclos.controls.members.references.MemberReferencesAction"
+            name="memberReferencesForm"
+            scope="session"
+            input="member/_memberReferences">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/member/generalReferenceDetails" 
+			type="nl.strohalm.cyclos.controls.members.references.EditGeneralReferenceAction"
+            name="editReferenceForm"
+            scope="request"
+            input="member/_generalReferenceDetails">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/member/generalReferenceDetails" redirect="true"/>
+		</action>
+
+		<action 
+			path="/member/transactionFeedbackDetails" 
+			type="nl.strohalm.cyclos.controls.members.references.EditTransactionFeedbackAction"
+            name="editReferenceForm"
+            scope="request"
+            input="member/_transactionFeedbackDetails">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/member/transactionFeedbackDetails" redirect="true"/>
+		</action>
+
+		<action 
+			path="/member/removeReference" 
+			type="nl.strohalm.cyclos.controls.members.references.RemoveReferenceAction"
+            name="removeReferenceForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/member/references" redirect="true"/>
+		</action>
+
+		<action 
+			path="/member/searchPaymentsAwaitingFeedback" 
+			type="nl.strohalm.cyclos.controls.members.references.SearchPaymentsAwaitingFeedbackAction"
+            name="searchPaymentsAwaitingFeedbackForm"
+            scope="session"
+            input="member/_searchPaymentsAwaitingFeedback">
+			<set-property property="secure" value="true" />
+		</action>
+
+
+		<action 
+			path="/admin/references" 
+			type="nl.strohalm.cyclos.controls.members.references.MemberReferencesAction"
+            name="memberReferencesForm"
+            scope="session"
+            input="admin/_memberReferences">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/admin/generalReferenceDetails" 
+			type="nl.strohalm.cyclos.controls.members.references.EditGeneralReferenceAction"
+            name="editReferenceForm"
+            scope="request"
+            input="admin/_generalReferenceDetails">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/generalReferenceDetails" redirect="true"/>
+		</action>
+
+		<action 
+			path="/admin/transactionFeedbackDetails" 
+			type="nl.strohalm.cyclos.controls.members.references.EditTransactionFeedbackAction"
+            name="editReferenceForm"
+            scope="request"
+            input="admin/_transactionFeedbackDetails">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/transactionFeedbackDetails" redirect="true"/>
+		</action>
+
+		<action 
+			path="/admin/removeReference" 
+			type="nl.strohalm.cyclos.controls.members.references.RemoveReferenceAction"
+            name="removeReferenceForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/references" redirect="true"/>
+		</action>
+
+
+
+		<action 
+			path="/operator/references" 
+			type="nl.strohalm.cyclos.controls.members.references.MemberReferencesAction"
+            name="memberReferencesForm"
+            scope="session"
+            input="operator/_memberReferences">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/operator/generalReferenceDetails" 
+			type="nl.strohalm.cyclos.controls.members.references.EditGeneralReferenceAction"
+            name="editReferenceForm"
+            scope="request"
+            input="operator/_generalReferenceDetails">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/operator/generalReferenceDetails" redirect="true"/>
+		</action>
+
+		<action 
+			path="/operator/transactionFeedbackDetails" 
+			type="nl.strohalm.cyclos.controls.members.references.EditTransactionFeedbackAction"
+            name="editReferenceForm"
+            scope="request"
+            input="operator/_transactionFeedbackDetails">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/operator/transactionFeedbackDetails" redirect="true"/>
+		</action>
+
+		<action 
+			path="/operator/removeReference" 
+			type="nl.strohalm.cyclos.controls.members.references.RemoveReferenceAction"
+            name="removeReferenceForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/operator/references" redirect="true"/>
+		</action>
+
+		<action 
+			path="/operator/searchPaymentsAwaitingFeedback" 
+			type="nl.strohalm.cyclos.controls.members.references.SearchPaymentsAwaitingFeedbackAction"
+            name="searchPaymentsAwaitingFeedbackForm"
+            scope="session"
+            input="operator/_searchPaymentsAwaitingFeedback">
+			<set-property property="secure" value="true" />
+		</action>
+		
+	</action-mappings>
+
+</struts-config>

@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class dynamic-insert="true" dynamic-update="true" name="nl.strohalm.cyclos.entities.accounts.loans.LoanPayment" table="loan_payments">
+		<id name="id" type="long">
+		    <column name="id" sql-type="integer"/>
+			<generator class="native"/>
+		</id>
+		<many-to-one name="loan" class="nl.strohalm.cyclos.entities.accounts.loans.Loan">
+		    <column name="loan_id" not-null="true" sql-type="integer"/>
+		</many-to-one>
+		<property name="index" column="payment_index" not-null="true"/>
+		<property name="expirationDate" column="expiration_date" type="calendar_date" not-null="true"/>
+		<property name="amount" column="amount" type="big_decimal" precision="15" scale="6" not-null="true"/>
+		<property name="repaidAmount" column="repaid_amount" type="big_decimal" precision="15" scale="6" not-null="true" />
+		<property name="status" column="status" not-null="true" length="1">
+            <type name="nl.strohalm.cyclos.utils.hibernate.StringValuedEnumType">
+                <param name="enumClassName">nl.strohalm.cyclos.entities.accounts.loans.LoanPayment$Status</param>
+            </type>
+		</property>
+		<property name="repaymentDate" column="repayment_date" type="calendar"/>
+		<many-to-one name="externalTransfer" class="nl.strohalm.cyclos.entities.accounts.external.ExternalTransfer">
+		    <column name="external_transfer_id" sql-type="integer"/>
+		</many-to-one>
+        <bag name="transfers" inverse="true">
+			<key column="loan_payment_id"/>
+			<one-to-many class="nl.strohalm.cyclos.entities.accounts.transactions.Transfer"/>
+		</bag>
+	</class>
+</hibernate-mapping>

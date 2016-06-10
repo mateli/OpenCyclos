@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+
+	<class dynamic-insert="true" dynamic-update="true" name="nl.strohalm.cyclos.entities.members.PendingMember" table="pending_members">
+		<id name="id" type="long">
+		    <column name="id" sql-type="integer"/>
+			<generator class="native"/>
+		</id>
+
+        <property name="creationDate" column="creation_date" type="calendar" not-null="true" />
+        <many-to-one name="memberGroup" class="nl.strohalm.cyclos.entities.groups.MemberGroup">
+            <column name="group_id" sql-type="integer" not-null="true"/>
+    	</many-to-one>
+        <property name="name" column="name" length="100" type="string" not-null="true" />
+        <property name="salt" column="salt" length="32" type="string" />
+        <property name="username" column="username" length="64" type="string" />
+        <property name="password" length="64" column="password" type="string"/>
+        <property name="forceChangePassword" column="force_change_password"  type="boolean" not-null="true"/>
+        <property name="email" column="email" length="100" type="string" not-null="true" />
+        <property name="pin" length="64" column="pin" type="string"/>        
+        <property name="validationKey" column="validation_key" type="string" length="64" not-null="true" />
+        <property name="hideEmail" type="boolean">
+        	<column name="hide_email" not-null="true" default="false" />
+        </property>
+        <property name="lastEmailDate" column="last_email_date" type="calendar" />
+        <many-to-one name="broker" class="nl.strohalm.cyclos.entities.members.Member">
+            <column name="broker_id" sql-type="integer"/>
+    	</many-to-one>
+        <many-to-one name="registrationAgreement" class="nl.strohalm.cyclos.entities.members.RegistrationAgreement">
+            <column name="registration_agreement_id" sql-type="integer"/>
+    	</many-to-one>
+        <property name="registrationAgreementDate" column="registration_agreement_date" type="calendar" />
+        <many-to-one name="member" class="nl.strohalm.cyclos.entities.members.Member">
+            <column name="member_id" sql-type="integer"/>
+    	</many-to-one>
+        <property name="remoteAddress" column="remote_address" length="100" type="string" />
+
+		<bag name="customValues" cascade="delete" inverse="true">
+            <key> 
+            	<column name="pending_member_id" sql-type="integer"/>
+            </key>
+	        <one-to-many class="nl.strohalm.cyclos.entities.customization.fields.MemberCustomFieldValue"/>
+	    </bag>
+    </class>
+    
+</hibernate-mapping>

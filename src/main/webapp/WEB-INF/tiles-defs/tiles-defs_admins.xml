@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+
+ <!DOCTYPE tiles-definitions PUBLIC
+       "-//Apache Software Foundation//DTD Tiles Configuration 1.1//EN"
+       "http://jakarta.apache.org/struts/dtds/tiles-config_1_1.dtd">
+
+<tiles-definitions>
+
+	<definition name="admin/_searchAdmins" extends=".adminLayout">
+		<put name="body" value="/pages/admins/searchAdmins.jsp"/>
+	</definition>
+
+	<definition name="admin/_createAdmin" extends=".adminLayout">
+		<put name="body" value="/pages/admins/createAdmin.jsp"/>
+	</definition>
+
+	<definition name="admin/_adminProfile" extends=".adminLayout">
+		<put name="body" value="/pages/admins/adminProfile.jsp"/>
+	</definition>
+
+	<definition name="admin/_changeAdminGroup" extends=".adminLayout">
+		<put name="body" value="/pages/admins/changeAdminGroup.jsp"/>
+	</definition>
+	
+	<definition name="admin/_mailpreferences" extends=".adminLayout">
+		<put name="body" value="/pages/admins/preferences/mailPreferences.jsp"/>
+	</definition>
+	
+</tiles-definitions>

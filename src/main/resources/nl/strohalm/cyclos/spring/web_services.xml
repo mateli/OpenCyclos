@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans default-autowire="byName"
+       xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:jaxws="http://cxf.apache.org/jaxws"
+       xsi:schemaLocation="
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd">
+
+	<!-- CXF configuration -->
+	<import resource="classpath:META-INF/cxf/cxf.xml"/>
+	<import resource="classpath:META-INF/cxf/cxf-servlet.xml"/>
+
+	<!-- SOAP interceptors -->    
+	<bean id="authInterceptor" class="nl.strohalm.cyclos.webservices.interceptor.AuthInterceptor" />
+	<bean id="traceInterceptor" class="nl.strohalm.cyclos.webservices.interceptor.TraceInterceptor" />
+	<bean id="faultInterceptor" class="nl.strohalm.cyclos.webservices.interceptor.CustomFaultInterceptor" />
+	<bean id="posInterceptor" class="nl.strohalm.cyclos.webservices.interceptor.PosInterceptor" />
+	<bean id="cleanupInterceptor" class="nl.strohalm.cyclos.webservices.interceptor.CleanupInterceptor" />
+	
+	<!-- Web services beans -->
+	<bean id="memberWebServiceImpl" class="nl.strohalm.cyclos.webservices.members.MemberWebServiceImpl" />
+	<jaxws:endpoint id="memberWebService" address="/members" implementor="#memberWebServiceImpl">
+		<jaxws:inInterceptors>
+			<ref bean="authInterceptor" />
+		</jaxws:inInterceptors>
+		<jaxws:outInterceptors>
+			<ref bean="traceInterceptor" />
+			<ref bean="cleanupInterceptor" />
+		</jaxws:outInterceptors>
+		<jaxws:outFaultInterceptors>
+			<ref bean="faultInterceptor" />
+			<ref bean="cleanupInterceptor" />
+		</jaxws:outFaultInterceptors>
+	</jaxws:endpoint>
+	    
+	<bean id="adWebServiceImpl" class="nl.strohalm.cyclos.webservices.ads.AdWebServiceImpl" />
+	<jaxws:endpoint id="adWebService" address="/ads" implementor="#adWebServiceImpl">
+		<jaxws:inInterceptors>
+			<ref bean="authInterceptor" />
+		</jaxws:inInterceptors>
+		<jaxws:outInterceptors>
+			<ref bean="traceInterceptor" />
+			<ref bean="cleanupInterceptor" />
+		</jaxws:outInterceptors>
+		<jaxws:outFaultInterceptors>
+			<ref bean="faultInterceptor" />
+			<ref bean="cleanupInterceptor" />
+		</jaxws:outFaultInterceptors>
+	</jaxws:endpoint>
+	    
+	<bean id="fieldWebServiceImpl" class="nl.strohalm.cyclos.webservices.fields.FieldWebServiceImpl" />
+	<jaxws:endpoint id="fieldWebService" address="/fields" implementor="#fieldWebServiceImpl">
+		<jaxws:inInterceptors>
+			<ref bean="authInterceptor" />
+		</jaxws:inInterceptors>
+		<jaxws:outInterceptors>
+			<ref bean="traceInterceptor" />
+			<ref bean="cleanupInterceptor" />
+		</jaxws:outInterceptors>
+		<jaxws:outFaultInterceptors>
+			<ref bean="faultInterceptor" />
+			<ref bean="cleanupInterceptor" />
+		</jaxws:outFaultInterceptors>
+	</jaxws:endpoint>
+	    
+	<bean id="webshopWebServiceImpl" class="nl.strohalm.cyclos.webservices.webshop.WebShopWebServiceImpl" />
+	<jaxws:endpoint id="webshopWebService" address="/webshop" implementor="#webshopWebServiceImpl">
+		<jaxws:inInterceptors>
+			<ref bean="authInterceptor" />
+		</jaxws:inInterceptors>
+		<jaxws:outInterceptors>
+			<ref bean="traceInterceptor" />
+			<ref bean="cleanupInterceptor" />
+		</jaxws:outInterceptors>
+		<jaxws:outFaultInterceptors>
+			<ref bean="faultInterceptor" />
+			<ref bean="cleanupInterceptor" />
+		</jaxws:outFaultInterceptors>
+	</jaxws:endpoint>
+
+	<bean id="accessWebServiceImpl" class="nl.strohalm.cyclos.webservices.access.AccessWebServiceImpl" />
+	<jaxws:endpoint id="accessWebService" address="/access" implementor="#accessWebServiceImpl">
+		<jaxws:inInterceptors>
+			<ref bean="authInterceptor" />
+		</jaxws:inInterceptors>
+		<jaxws:outInterceptors>
+			<ref bean="traceInterceptor" />
+			<ref bean="cleanupInterceptor" />
+		</jaxws:outInterceptors>
+		<jaxws:outFaultInterceptors>
+			<ref bean="faultInterceptor" />
+			<ref bean="cleanupInterceptor" />
+		</jaxws:outFaultInterceptors>
+	</jaxws:endpoint>
+
+	<bean id="accountWebServiceImpl" class="nl.strohalm.cyclos.webservices.accounts.AccountWebServiceImpl" />
+	<jaxws:endpoint id="accountWebService" address="/account" implementor="#accountWebServiceImpl">
+		<jaxws:inInterceptors>
+			<ref bean="authInterceptor" />
+		</jaxws:inInterceptors>
+		<jaxws:outInterceptors>
+			<ref bean="traceInterceptor" />
+			<ref bean="cleanupInterceptor" />
+		</jaxws:outInterceptors>
+		<jaxws:outFaultInterceptors>
+			<ref bean="faultInterceptor" />
+			<ref bean="cleanupInterceptor" />
+		</jaxws:outFaultInterceptors>
+	</jaxws:endpoint>
+
+	<bean id="paymentWebServiceImpl" class="nl.strohalm.cyclos.webservices.payments.PaymentWebServiceImpl" />
+	<jaxws:endpoint id="paymentWebService" address="/payment" implementor="#paymentWebServiceImpl">
+		<jaxws:inInterceptors>
+			<ref bean="authInterceptor" />
+		</jaxws:inInterceptors>
+		<jaxws:outInterceptors>
+			<ref bean="traceInterceptor" />
+			<ref bean="cleanupInterceptor" />
+		</jaxws:outInterceptors>
+		<jaxws:outFaultInterceptors>
+			<ref bean="faultInterceptor" />
+			<ref bean="cleanupInterceptor" />
+		</jaxws:outFaultInterceptors>
+	</jaxws:endpoint>
+
+	<bean id="smsWebServiceImpl" class="nl.strohalm.cyclos.webservices.sms.SmsWebServiceImpl" />
+	<jaxws:endpoint id="smsWebService" address="/sms" implementor="#smsWebServiceImpl">
+		<jaxws:inInterceptors>
+			<ref bean="authInterceptor" />
+		</jaxws:inInterceptors>
+		<jaxws:outInterceptors>
+			<ref bean="traceInterceptor" />
+			<ref bean="cleanupInterceptor" />
+		</jaxws:outInterceptors>
+		<jaxws:outFaultInterceptors>
+			<ref bean="faultInterceptor" />
+			<ref bean="cleanupInterceptor" />
+		</jaxws:outFaultInterceptors>
+	</jaxws:endpoint>
+
+	<bean id="infoTextWebServiceImpl" class="nl.strohalm.cyclos.webservices.infotexts.InfoTextWebServiceImpl" />
+	<jaxws:endpoint id="infoTextWebService" address="/infoTexts" implementor="#infoTextWebServiceImpl">
+		<jaxws:inInterceptors>
+			<ref bean="authInterceptor" />
+		</jaxws:inInterceptors>
+		<jaxws:outInterceptors>
+			<ref bean="traceInterceptor" />
+			<ref bean="cleanupInterceptor" />
+		</jaxws:outInterceptors>
+		<jaxws:outFaultInterceptors>
+			<ref bean="faultInterceptor" />
+			<ref bean="cleanupInterceptor" />			
+		</jaxws:outFaultInterceptors>
+	</jaxws:endpoint>
+
+	<bean id="posWebServiceImpl" class="nl.strohalm.cyclos.webservices.pos.PosWebServiceImpl" />
+	<jaxws:endpoint id="posWebService" address="/pos" implementor="#posWebServiceImpl">
+		<jaxws:inInterceptors>
+			<ref bean="posInterceptor" />
+		</jaxws:inInterceptors>
+		<jaxws:outInterceptors>
+			<ref bean="traceInterceptor" />
+			<ref bean="cleanupInterceptor" />
+		</jaxws:outInterceptors>
+		<jaxws:outFaultInterceptors>
+			<ref bean="faultInterceptor" />
+			<ref bean="cleanupInterceptor" />			
+		</jaxws:outFaultInterceptors>
+	</jaxws:endpoint>
+</beans>

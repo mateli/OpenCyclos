@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+
+	<class dynamic-insert="true" dynamic-update="true" name="nl.strohalm.cyclos.entities.customization.translationMessages.TranslationMessage" table="translation_messages">
+		<id name="id" type="long">
+		    <column name="id" sql-type="integer"/>
+			<generator class="native"/>
+		</id>
+		<property name="key" update="false" unique="true" column="msg_key" type="string" length="100" not-null="true"/>
+		<property name="value" column="value" type="text"/>
+	</class>
+
+</hibernate-mapping>

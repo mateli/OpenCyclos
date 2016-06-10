@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+
+	<subclass dynamic-insert="true" dynamic-update="true" name="nl.strohalm.cyclos.entities.members.Operator" extends="nl.strohalm.cyclos.entities.members.Element" discriminator-value="O">
+        <many-to-one name="member" class="nl.strohalm.cyclos.entities.members.Member" update="false">
+            <column name="member_id" sql-type="integer"/>
+    	</many-to-one>
+
+		<bag name="customValues" cascade="delete" inverse="true">
+            <key> 
+            	<column name="operator_id" sql-type="integer"/>
+            </key>
+	        <one-to-many class="nl.strohalm.cyclos.entities.customization.fields.OperatorCustomFieldValue"/>
+	    </bag>
+    </subclass>
+    
+</hibernate-mapping>

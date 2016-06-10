@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+
+ <!DOCTYPE tiles-definitions PUBLIC
+       "-//Apache Software Foundation//DTD Tiles Configuration 1.1//EN"
+       "http://jakarta.apache.org/struts/dtds/tiles-config_1_1.dtd">
+
+<tiles-definitions>
+
+	<!-- ADMIN'S OPTION -->
+	<definition name="admin/_listGuaranteeTypes" extends=".adminLayout">
+		<put name="body" value="/pages/accounts/guarantees/types/listGuaranteeTypes.jsp"/>
+	</definition>
+
+	<definition name="admin/_editGuaranteeType" extends=".adminLayout">
+		<put name="body" value="/pages/accounts/guarantees/types/editGuaranteeType.jsp"/>
+	</definition>
+	
+	<definition name="admin/_registerGuarantee" extends=".adminLayout">
+		<put name="body" value="/pages/accounts/guarantees/guarantees/registerGuarantee.jsp"/>
+	</definition>
+	
+	<definition name="admin/_searchGuarantees" extends=".adminLayout">
+		<put name="body" value="/pages/accounts/guarantees/guarantees/searchGuarantees.jsp"/>
+	</definition>	
+	
+	<definition name="admin/_searchPaymentObligations" extends=".adminLayout">
+		<put name="body" value="/pages/accounts/guarantees/paymentobligations/searchPaymentObligations.jsp"/>
+	</definition>
+	
+	<definition name="admin/_searchCertifications" extends=".adminLayout">
+		<put name="body" value="/pages/accounts/guarantees/certifications/searchCertifications.jsp"/>
+	</definition>
+	
+	<definition name="admin/_editCertification" extends=".adminLayout">
+		<put name="body" value="/pages/accounts/guarantees/certifications/editCertification.jsp"/>
+	</definition>
+
+	<definition name="admin/_guaranteeDetails" extends=".adminLayout">
+		<put name="body" value="/pages/accounts/guarantees/guarantees/guaranteeDetails.jsp"/>
+	</definition>
+
+	<definition name="admin/_editPaymentObligation" extends=".adminLayout">
+		<put name="body" value="/pages/accounts/guarantees/paymentobligations/editPaymentObligation.jsp"/>
+	</definition>
+	
+	<definition name="admin/_authorizeGuarantee" extends=".adminLayout">
+		<put name="body" value="/pages/accounts/guarantees/guarantees/authorizeGuarantee.jsp"/>
+	</definition>	
+
+	<!-- MEMBER'S OPTION -->
+	<definition name="member/_searchCertifications" extends=".memberLayout">
+		<put name="body" value="/pages/accounts/guarantees/certifications/searchCertifications.jsp"/>
+	</definition>
+	
+	<definition name="member/_editCertification" extends=".memberLayout">
+		<put name="body" value="/pages/accounts/guarantees/certifications/editCertification.jsp"/>
+	</definition>
+
+	<definition name="member/_editPaymentObligation" extends=".memberLayout">
+		<put name="body" value="/pages/accounts/guarantees/paymentobligations/editPaymentObligation.jsp"/>
+	</definition>
+
+	<definition name="member/_searchGuarantees" extends=".memberLayout">
+		<put name="body" value="/pages/accounts/guarantees/guarantees/searchGuarantees.jsp"/>
+	</definition>
+	
+	<definition name="member/_searchPaymentObligations" extends=".memberLayout">
+		<put name="body" value="/pages/accounts/guarantees/paymentobligations/searchPaymentObligations.jsp"/>
+	</definition>
+	
+	<definition name="member/_registerGuarantee" extends=".memberLayout">
+		<put name="body" value="/pages/accounts/guarantees/guarantees/registerGuarantee.jsp"/>
+	</definition>
+
+	<definition name="member/_guaranteeDetails" extends=".memberLayout">
+		<put name="body" value="/pages/accounts/guarantees/guarantees/guaranteeDetails.jsp"/>
+	</definition>
+	
+	<definition name="member/_acceptPaymentObligationPack" extends=".memberLayout">
+		<put name="body" value="/pages/accounts/guarantees/paymentobligations/acceptPaymentObligationPack.jsp"/>
+	</definition>
+
+	<definition name="member/_acceptPaymentObligation" extends=".memberLayout">
+		<put name="body" value="/pages/accounts/guarantees/paymentobligations/editPaymentObligation.jsp"/>
+	</definition>
+	
+	<definition name="member/_authorizeGuarantee" extends=".memberLayout">
+		<put name="body" value="/pages/accounts/guarantees/guarantees/authorizeGuarantee.jsp"/>
+	</definition>	
+	
+	<!-- OPERATOR'S OPTION -->
+	<definition name="operator/_searchCertifications" extends=".operatorLayout">
+		<put name="body" value="/pages/accounts/guarantees/certifications/searchCertifications.jsp"/>
+	</definition>
+	
+	<definition name="operator/_editCertification" extends=".operatorLayout">
+		<put name="body" value="/pages/accounts/guarantees/certifications/editCertification.jsp"/>
+	</definition>
+
+	<definition name="operator/_editPaymentObligation" extends=".operatorLayout">
+		<put name="body" value="/pages/accounts/guarantees/paymentobligations/editPaymentObligation.jsp"/>
+	</definition>
+
+	<definition name="operator/_searchGuarantees" extends=".operatorLayout">
+		<put name="body" value="/pages/accounts/guarantees/guarantees/searchGuarantees.jsp"/>
+	</definition>
+	
+	<definition name="operator/_searchPaymentObligations" extends=".operatorLayout">
+		<put name="body" value="/pages/accounts/guarantees/paymentobligations/searchPaymentObligations.jsp"/>
+	</definition>
+	
+	<definition name="operator/_registerGuarantee" extends=".operatorLayout">
+		<put name="body" value="/pages/accounts/guarantees/guarantees/registerGuarantee.jsp"/>
+	</definition>
+
+	<definition name="operator/_guaranteeDetails" extends=".operatorLayout">
+		<put name="body" value="/pages/accounts/guarantees/guarantees/guaranteeDetails.jsp"/>
+	</definition>
+	
+	<definition name="operator/_acceptPaymentObligationPack" extends=".operatorLayout">
+		<put name="body" value="/pages/accounts/guarantees/paymentobligations/acceptPaymentObligationPack.jsp"/>
+	</definition>
+
+	<definition name="operator/_acceptPaymentObligation" extends=".operatorLayout">
+		<put name="body" value="/pages/accounts/guarantees/paymentobligations/editPaymentObligation.jsp"/>
+	</definition>
+	
+	<definition name="operator/_authorizeGuarantee" extends=".operatorLayout">
+		<put name="body" value="/pages/accounts/guarantees/guarantees/authorizeGuarantee.jsp"/>
+	</definition>	
+</tiles-definitions>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+
+ <!DOCTYPE tiles-definitions PUBLIC
+       "-//Apache Software Foundation//DTD Tiles Configuration 1.1//EN"
+       "http://jakarta.apache.org/struts/dtds/tiles-config_1_1.dtd">
+
+<tiles-definitions>
+
+	<definition name="admin/_editLocalSettings" extends=".adminLayout">
+		<put name="body" value="/pages/settings/editLocalSettings.jsp"/>
+	</definition>
+
+	<definition name="admin/_editLogSettings" extends=".adminLayout">
+		<put name="body" value="/pages/settings/editLogSettings.jsp"/>
+	</definition>
+
+	<definition name="admin/_editAlertSettings" extends=".adminLayout">
+		<put name="body" value="/pages/settings/editAlertSettings.jsp"/>
+	</definition>
+
+	<definition name="admin/_editAccessSettings" extends=".adminLayout">
+		<put name="body" value="/pages/settings/editAccessSettings.jsp"/>
+	</definition>
+
+	<definition name="admin/_editMailSettings" extends=".adminLayout">
+		<put name="body" value="/pages/settings/editMailSettings.jsp"/>
+	</definition>
+
+	<definition name="admin/_editMailTranslation" extends=".adminLayout">
+		<put name="body" value="/pages/settings/editMailTranslation.jsp"/>
+	</definition>
+
+	<definition name="admin/_listMessageSettings" extends=".adminLayout">
+		<put name="body" value="/pages/settings/listMessageSettings.jsp"/>
+	</definition>
+
+	<definition name="admin/_editMessageSetting" extends=".adminLayout">
+		<put name="body" value="/pages/settings/editMessageSetting.jsp"/>
+	</definition>
+	
+	<definition name="admin/_manageSettings" extends=".adminLayout">
+		<put name="body" value="/pages/settings/manageSettings.jsp"/>
+	</definition>
+
+</tiles-definitions>

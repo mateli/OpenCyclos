@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+
+    <class dynamic-insert="true" dynamic-update="true" name="nl.strohalm.cyclos.entities.accounts.transactions.ScheduledPayment" table="scheduled_payments">
+        <id name="id" type="long">
+		    <column name="id" sql-type="integer"/>
+            <generator class="native"/>
+        </id>
+		<many-to-one name="from" class="nl.strohalm.cyclos.entities.accounts.Account">
+			<column name="from_account_id" not-null="true" sql-type="integer" />
+		</many-to-one>
+		<many-to-one name="to" class="nl.strohalm.cyclos.entities.accounts.Account">
+		    <column name="to_account_id" not-null="true" sql-type="integer"/>
+		</many-to-one>
+		<many-to-one name="type" class="nl.strohalm.cyclos.entities.accounts.transactions.TransferType">
+		    <column name="type_id" not-null="true" sql-type="integer"/>
+		</many-to-one>
+		<property name="date" column="date" not-null="true" type="calendar"/>
+		<property name="amount" column="amount" type="big_decimal" precision="15" scale="6" not-null="true"/>
+        <property name="status" column="status" length="1" not-null="true">
+            <type name="nl.strohalm.cyclos.utils.hibernate.StringValuedEnumType">
+                <param name="enumClassName">nl.strohalm.cyclos.entities.accounts.transactions.Payment$Status</param>
+            </type>
+		</property>
+		<many-to-one name="by" class="nl.strohalm.cyclos.entities.members.Element">
+		    <column name="by_id" sql-type="integer"/>
+		</many-to-one>
+		<property name="processDate" column="process_date" type="calendar"/>
+		<property name="transactionFeedbackDeadline" column="feedback_deadline" type="calendar"/>
+		<property name="description" column="description" type="text"/>
+		<property name="reserveAmount" column="reserve_amount" type="boolean" not-null="true"/>
+		<property name="showToReceiver" column="show_to_receiver" type="boolean" not-null="true"/>
+		
+		<bag name="transfers" inverse="true" order-by="date, id">
+			<key column="scheduled_payment_id"/>
+			<one-to-many class="nl.strohalm.cyclos.entities.accounts.transactions.Transfer"/>	
+		</bag>
+		<bag name="customValues" cascade="delete" inverse="true">
+            <key> 
+            	<column name="scheduled_payment_id" sql-type="integer"/>
+            </key>
+	        <one-to-many class="nl.strohalm.cyclos.entities.customization.fields.PaymentCustomFieldValue"/>
+	    </bag>
+    </class>
+
+</hibernate-mapping>

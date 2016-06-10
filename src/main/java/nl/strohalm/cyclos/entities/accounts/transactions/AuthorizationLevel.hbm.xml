@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+
+    <class dynamic-insert="true" dynamic-update="true" name="nl.strohalm.cyclos.entities.accounts.transactions.AuthorizationLevel" table="authorization_levels">
+    	<cache usage="read-write"/>
+        <id name="id" type="long">
+		    <column name="id" sql-type="integer"/>
+            <generator class="native"/>
+        </id>
+		<property name="level" column="level" not-null="true" type="integer"/>
+		<property name="amount" column="amount" type="big_decimal" precision="15" scale="6" not-null="true"/>
+        <property name="authorizer" column="authorizer" length="1" not-null="true" update="false">
+            <type name="nl.strohalm.cyclos.utils.hibernate.StringValuedEnumType">
+                <param name="enumClassName">nl.strohalm.cyclos.entities.accounts.transactions.AuthorizationLevel$Authorizer</param>
+            </type>
+        </property>
+		<many-to-one name="transferType" class="nl.strohalm.cyclos.entities.accounts.transactions.TransferType">
+		    <column name="type_id" not-null="true" sql-type="integer"/>
+		</many-to-one>
+    	
+    	<bag name="adminGroups" table="admin_group_authorization_level">
+    		<cache usage="read-write"/>
+			<key>
+			    <column name="authorization_id" sql-type="integer"/>
+			</key>
+			<many-to-many class="nl.strohalm.cyclos.entities.groups.AdminGroup">
+			    <column name="group_id" sql-type="integer"/>	
+			</many-to-many>
+		</bag>
+
+    </class>
+
+</hibernate-mapping>

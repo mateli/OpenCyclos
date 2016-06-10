@@ -1,0 +1,49 @@
+<!--
+	This file is used when the Hazelcast-specific classes are enabled in 
+	cyclos.properties, and is used to configure the cluster parameters.  
+ -->
+<hazelcast>
+
+	<!-- 
+		What defines the group membership is the name and password.
+		If there are multiple clusters in the local network, 
+		distinct names and passwords should be used.
+	 -->
+	<group>
+        <name>cyclos</name>
+        <password>cyclos-password</password>
+    </group>
+    
+    <network>
+        <port auto-increment="true">5701</port>
+        <join>
+		    <!-- Multicast communication -->
+            <multicast enabled="true">
+                <multicast-group>224.2.2.3</multicast-group>
+                <multicast-port>54327</multicast-port>
+            </multicast>
+            
+            <!-- Full TCP/IP communication -->
+            <!-- 
+			<tcp-ip enabled="true">
+				<hostname>machine1</hostname>
+				<hostname>machine2</hostname>
+				<hostname>machine3:5799</hostname>
+				<interface>192.168.1.0-7</interface> 	
+				<interface>192.168.1.21</interface> 
+			</tcp-ip>
+             -->
+        </join>
+    </network>
+    
+    <!--
+        It is essential that those maps are backed up on every existing node.
+        So, in case most nodes die, the data will still be present.
+    -->
+    <map name="cyclos.initializationControl">
+        <backup-count>5</backup-count>
+    </map>
+    <map name="cyclos.scheduledTaskControl">
+        <backup-count>5</backup-count>
+    </map>
+</hazelcast>

@@ -1,0 +1,253 @@
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.1//EN" "http://jakarta.apache.org/struts/dtds/struts-config_1_1.dtd">
+<struts-config>
+	<form-beans>
+        <form-bean name="searchLoansForm" type="nl.strohalm.cyclos.controls.loans.SearchLoansForm" />
+        <form-bean name="searchLoanPaymentsForm" type="nl.strohalm.cyclos.controls.loans.SearchLoanPaymentsForm" />
+        <form-bean name="loanDetailsForm" type="nl.strohalm.cyclos.controls.loans.LoanDetailsForm" />
+        <form-bean name="grantLoanForm" type="nl.strohalm.cyclos.controls.loans.GrantLoanForm" />
+        <form-bean name="confirmLoanForm" type="nl.strohalm.cyclos.controls.loans.ConfirmLoanForm" />
+        <form-bean name="repayLoanForm" type="nl.strohalm.cyclos.controls.loans.RepayLoanForm" />
+        <form-bean name="discardLoanForm" type="nl.strohalm.cyclos.controls.loans.DiscardLoanForm" />
+        <form-bean name="calculateLoanPaymentsForm" type="nl.strohalm.cyclos.controls.loans.CalculateLoanPaymentsAjaxForm" />
+        <form-bean name="manageLoanExpiredStatusForm" type="nl.strohalm.cyclos.controls.loans.ManageExpiredStatusForm" />
+	</form-beans>
+	
+	<action-mappings type="org.apache.struts.config.SecureActionConfig">
+
+		<action 
+			path="/admin/exportLoansToCsv"
+			type="nl.strohalm.cyclos.controls.loans.ExportLoansToCsvAction"
+            name="searchLoansForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+		</action>
+		
+		<action 
+			path="/admin/exportLoanPaymentsToCsv"
+			type="nl.strohalm.cyclos.controls.loans.ExportLoanPaymentsToCsvAction"
+            name="searchLoanPaymentsForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+		</action>
+		
+		<action 
+			path="/admin/printLoans"
+			type="nl.strohalm.cyclos.controls.loans.PrintLoansAction"
+            name="searchLoansForm"
+            scope="request"
+            input="_printLoans">
+			<set-property property="secure" value="true" />
+		</action>
+		
+		<action 
+			path="/admin/printLoanPayments"
+			type="nl.strohalm.cyclos.controls.loans.PrintLoanPaymentsAction"
+            name="searchLoanPaymentsForm"
+            scope="request"
+            input="_printLoanPayments">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/admin/printLoanDetails"
+			type="nl.strohalm.cyclos.controls.loans.PrintLoanDetailsAction"
+            name="loanDetailsForm"
+            scope="request"
+            input="_printLoanDetails">
+			<set-property property="secure" value="true" />
+		</action>
+		
+		<action 
+			path="/admin/searchLoans" 
+			type="nl.strohalm.cyclos.controls.loans.SearchLoansAction"
+            name="searchLoansForm"
+            scope="session"
+            input="admin/_searchLoans">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/admin/searchLoanPayments" 
+			type="nl.strohalm.cyclos.controls.loans.SearchLoanPaymentsAction"
+            name="searchLoanPaymentsForm"
+            scope="session"
+            input="admin/_searchLoanPayments">
+			<set-property property="secure" value="true" />
+		</action>
+		
+		<action 
+			path="/admin/loanDetails" 
+			type="nl.strohalm.cyclos.controls.loans.LoanDetailsAction"
+            name="loanDetailsForm"
+            scope="request"
+            input="admin/_loanDetails">
+			<set-property property="secure" value="true" />
+		</action>
+		
+		<action 
+			path="/admin/grantLoan" 
+			type="nl.strohalm.cyclos.controls.loans.GrantLoanAction"
+            name="grantLoanForm"
+            scope="request"
+            input="admin/_grantLoan">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/confirmLoan" redirect="true" />
+		</action>
+		
+		<action 
+			path="/admin/confirmLoan" 
+			type="nl.strohalm.cyclos.controls.loans.ConfirmLoanAction"
+            name="confirmLoanForm"
+            scope="request"
+            input="admin/_confirmLoan">
+			<set-property property="secure" value="true" />
+			<forward name="member" path="/do/admin/profile" redirect="true" />
+			<forward name="loanGroup" path="/do/admin/editLoanGroup" redirect="true" />
+		</action>
+		
+		<action 
+			path="/admin/repayLoan" 
+			type="nl.strohalm.cyclos.controls.loans.RepayLoanAction"
+            name="repayLoanForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/loanDetails" redirect="true" />
+		</action>
+		
+		<action 
+			path="/admin/discardLoan" 
+			type="nl.strohalm.cyclos.controls.loans.DiscardLoanAction"
+            name="discardLoanForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/loanDetails" redirect="true" />
+		</action>
+
+		<action 
+			path="/admin/loanCalculatePayments" 
+			type="nl.strohalm.cyclos.controls.loans.CalculateLoanPaymentsAjaxAction"
+            name="calculateLoanPaymentsForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/admin/manageLoanExpiredStatus" 
+			type="nl.strohalm.cyclos.controls.loans.ManageExpiredStatusAction"
+            name="manageLoanExpiredStatusForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/loanDetails" redirect="true" />
+		</action>
+		
+		<action 
+			path="/member/exportLoansToCsv"
+			type="nl.strohalm.cyclos.controls.loans.ExportLoansToCsvAction"
+            name="searchLoansForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+		</action>
+		
+		<action 
+			path="/member/printLoans"
+			type="nl.strohalm.cyclos.controls.loans.PrintLoansAction"
+            name="searchLoansForm"
+            scope="request"
+            input="_printLoans">
+			<set-property property="secure" value="true" />
+		</action>
+				
+		<action 
+			path="/member/printLoanDetails"
+			type="nl.strohalm.cyclos.controls.loans.PrintLoanDetailsAction"
+            name="loanDetailsForm"
+            scope="request"
+            input="_printLoanDetails">
+			<set-property property="secure" value="true" />
+		</action>
+		
+		<action 
+			path="/member/searchLoans" 
+			type="nl.strohalm.cyclos.controls.loans.SearchLoansAction"
+            name="searchLoansForm"
+            scope="request"
+            input="member/_searchLoans">
+			<set-property property="secure" value="true" />
+		</action>
+		
+		<action 
+			path="/member/loanDetails" 
+			type="nl.strohalm.cyclos.controls.loans.LoanDetailsAction"
+            name="loanDetailsForm"
+            scope="request"
+            input="member/_loanDetails">
+			<set-property property="secure" value="true" />
+		</action>
+		
+		<action 
+			path="/member/repayLoan" 
+			type="nl.strohalm.cyclos.controls.loans.RepayLoanAction"
+            name="repayLoanForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/member/loanDetails" redirect="true" />
+		</action>
+		
+		<!-- operator actions -->
+		
+		<action 
+			path="/operator/exportLoansToCsv"
+			type="nl.strohalm.cyclos.controls.loans.ExportLoansToCsvAction"
+            name="searchLoansForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+		</action>
+		
+		<action 
+			path="/operator/printLoans"
+			type="nl.strohalm.cyclos.controls.loans.PrintLoansAction"
+            name="searchLoansForm"
+            scope="request"
+            input="_printLoans">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/operator/printLoanDetails"
+			type="nl.strohalm.cyclos.controls.loans.PrintLoanDetailsAction"
+            name="loanDetailsForm"
+            scope="request"
+            input="_printLoanDetails">
+			<set-property property="secure" value="true" />
+		</action>
+		
+		<action 
+			path="/operator/searchLoans" 
+			type="nl.strohalm.cyclos.controls.loans.SearchLoansAction"
+            name="searchLoansForm"
+            scope="request"
+            input="operator/_searchLoans">
+			<set-property property="secure" value="true" />
+		</action>
+		
+		<action 
+			path="/operator/loanDetails" 
+			type="nl.strohalm.cyclos.controls.loans.LoanDetailsAction"
+            name="loanDetailsForm"
+            scope="request"
+            input="operator/_loanDetails">
+			<set-property property="secure" value="true" />
+		</action>
+		
+		<action 
+			path="/operator/repayLoan" 
+			type="nl.strohalm.cyclos.controls.loans.RepayLoanAction"
+            name="repayLoanForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/operator/loanDetails" redirect="true" />
+		</action>
+
+	</action-mappings>
+
+</struts-config>

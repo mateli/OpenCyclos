@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+
+	<subclass dynamic-insert="true" dynamic-update="true" name="nl.strohalm.cyclos.entities.accounts.transactions.PaymentRequestTicket" discriminator-value="R" extends="nl.strohalm.cyclos.entities.accounts.transactions.Ticket">
+		<property name="traceData" column="trace_data" type="string" length="50" not-null="false"/>
+		<many-to-one name="fromChannel" class="nl.strohalm.cyclos.entities.access.Channel">
+		    <column name="from_channel_id" sql-type="integer"/>
+		</many-to-one>
+		<many-to-one name="toChannel" class="nl.strohalm.cyclos.entities.access.Channel">
+		    <column name="to_channel_id" sql-type="integer"/>
+		</many-to-one>
+	</subclass>
+	
+</hibernate-mapping>

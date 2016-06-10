@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+
+ <!DOCTYPE tiles-definitions PUBLIC
+       "-//Apache Software Foundation//DTD Tiles Configuration 1.1//EN"
+       "http://jakarta.apache.org/struts/dtds/tiles-config_1_1.dtd">
+
+<tiles-definitions>
+
+	<definition name="admin/_manageBrokerCommissions" extends=".adminLayout">
+		<put name="body" value="/pages/members/brokering/manageBrokerCommissions.jsp"/>
+	</definition>
+	
+	<definition name="admin/_editBrokerCommissionContract" extends=".adminLayout">
+		<put name="body" value="/pages/members/brokering/editBrokerCommissionContract.jsp"/>
+	</definition>
+
+	<definition name="member/_listBrokerCommissionContracts" extends=".memberLayout">
+		<put name="body" value="/pages/members/brokering/listBrokerCommissionContracts.jsp"/>
+	</definition>
+	
+	<definition name="member/_searchBrokerCommissionContracts" extends=".memberLayout">
+		<put name="body" value="/pages/members/brokering/searchBrokerCommissionContracts.jsp"/>
+	</definition>
+	
+	<definition name="member/_editBrokerCommissionContract" extends=".memberLayout">
+		<put name="body" value="/pages/members/brokering/editBrokerCommissionContract.jsp"/>
+	</definition>
+	
+	<definition name="member/_defaultBrokerCommissions" extends=".memberLayout">
+		<put name="body" value="/pages/members/brokering/defaultBrokerCommissions.jsp"/>
+	</definition>
+	
+</tiles-definitions>

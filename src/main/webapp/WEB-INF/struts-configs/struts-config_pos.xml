@@ -1,0 +1,112 @@
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.1//EN" "http://jakarta.apache.org/struts/dtds/struts-config_1_1.dtd">
+<struts-config>
+	
+	<form-beans>
+         <form-bean name="searchPosForm" type="nl.strohalm.cyclos.controls.accounts.pos.SearchPosForm" />
+         <form-bean name="editPosForm" type="nl.strohalm.cyclos.controls.accounts.pos.EditPosForm" />       
+	</form-beans>
+	
+	<action-mappings type="org.apache.struts.config.SecureActionConfig">
+
+	
+		<!-- admin -->		
+		<action 
+			path="/admin/searchPos" 
+			type="nl.strohalm.cyclos.controls.accounts.pos.SearchPosAction"
+            name="searchPosForm"
+            scope="session"
+            input="admin/_searchPos">
+			<set-property property="secure" value="true" />
+		</action>
+		
+		<action 
+			path="/admin/editPos" 
+			type="nl.strohalm.cyclos.controls.accounts.pos.EditPosAction"
+            name="editPosForm"
+            scope="request"
+            input="admin/_editPos">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/editPos" redirect="true"/>	
+		</action>
+		
+		<action 
+			path="/admin/memberPos" 
+			type="nl.strohalm.cyclos.controls.accounts.pos.MemberPosAction"
+            name="editPosForm"
+            scope="request"
+            input="admin/_memberPos">            
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/assignPos" redirect="true"/>			
+		</action>
+		
+		<action 
+			path="/admin/assignPos" 
+			type="nl.strohalm.cyclos.controls.accounts.pos.AssignPosAction"
+            name="editPosForm"
+            scope="request">
+            <set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/memberPos" redirect="true"/>			
+		</action>
+		
+		<action 
+			path="/admin/removePos" 
+			type="nl.strohalm.cyclos.controls.accounts.pos.RemovePosAction"
+            name="editPosForm"
+            scope="session">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/searchPos" redirect="true"/>
+		</action>
+		
+		
+		<!-- Broker -->
+		<action 
+			path="/member/searchPos" 
+			type="nl.strohalm.cyclos.controls.accounts.pos.SearchPosAction"
+            name="searchPosForm"
+            scope="session"
+            input="member/_searchPos">
+			<set-property property="secure" value="true" />
+		</action>
+		
+		<action 
+			path="/member/assignPos" 
+			type="nl.strohalm.cyclos.controls.accounts.pos.AssignPosAction"
+            name="editPosForm"
+            scope="request">
+            <set-property property="secure" value="true" />
+			<forward name="success" path="/do/member/memberPos" redirect="true"/>			
+		</action>
+		
+		<action 
+			path="/member/removePos" 
+			type="nl.strohalm.cyclos.controls.accounts.pos.RemovePosAction"
+            name="editPosForm"
+            scope="session">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/member/searchPos" redirect="true"/>
+		</action>
+		
+		<!-- Member -->
+				
+		<action 
+			path="/member/memberPos" 
+			type="nl.strohalm.cyclos.controls.accounts.pos.MemberPosAction"
+            name="editPosForm"
+            scope="request"
+            input="member/_memberPos">
+			<set-property property="secure" value="true" />			
+		</action>
+		
+		<action 
+			path="/member/editPos" 
+			type="nl.strohalm.cyclos.controls.accounts.pos.EditPosAction"
+            name="editPosForm"
+            scope="request"
+            input="member/_editPos">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/member/editPos" redirect="true"/>	
+		</action>
+	</action-mappings>
+
+</struts-config>
+

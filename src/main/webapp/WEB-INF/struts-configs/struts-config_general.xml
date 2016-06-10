@@ -1,0 +1,118 @@
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.1//EN" "http://jakarta.apache.org/struts/dtds/struts-config_1_1.dtd">
+<struts-config>
+	<form-beans>
+        <form-bean name="inviteForm" type="nl.strohalm.cyclos.controls.general.InviteForm" />
+        <form-bean name="redirectFromMessageForm" type="nl.strohalm.cyclos.controls.general.RedirectFromMessageForm" />
+        <form-bean name="redirectForm" type="nl.strohalm.cyclos.controls.general.RedirectForm" />
+	</form-beans>
+	
+	<global-forwards>
+		<forward name="error" path="/do/error" redirect="true"/>
+		<forward name="confirmation" path="/do/confirmation" redirect="true"/>
+		<forward name="back" path="/do/back" redirect="true"/>
+	</global-forwards>
+	
+	<action-mappings type="org.apache.struts.config.SecureActionConfig">
+
+	    <action 
+	    	path="/" 
+	    	type="nl.strohalm.cyclos.controls.general.IndexAction">
+	    	<set-property property="secure" value="true" />
+	    	<forward name="adminHome" path="/do/admin/home" redirect="true"/>
+	    	<forward name="memberHome" path="/do/member/home" redirect="true"/>
+	    	<forward name="operatorHome" path="/do/operator/home" redirect="true"/>
+	   	</action>
+	
+	    <action 
+	    	path="/back" 
+	    	type="nl.strohalm.cyclos.controls.general.BackAction">
+	    	<set-property property="secure" value="true" />
+	   	</action>
+	
+	    <action 
+	    	path="/error" 
+	    	type="org.apache.struts.actions.ForwardAction"
+	    	parameter="_error">
+	    	<set-property property="secure" value="true" />
+	   	</action>
+
+	    <action 
+	    	path="/confirmation" 
+	    	type="org.apache.struts.actions.ForwardAction"
+	    	parameter="_error">
+	    	<set-property property="secure" value="true" />
+	   	</action>
+
+	    <action 
+	    	path="/redirectFromMessage" 
+	    	type="nl.strohalm.cyclos.controls.general.RedirectFromMessageAction"
+	    	name="redirectFromMessageForm"
+	    	scope="request">
+	    	<set-property property="secure" value="true" />
+	   	</action>
+
+	    <action 
+	    	path="/redirect" 
+	    	type="nl.strohalm.cyclos.controls.general.RedirectAction"
+	    	name="redirectForm"
+	    	scope="request">
+	    	<set-property property="secure" value="true" />
+	   	</action>
+	   	
+	   	<action 
+	    	path="/help" 
+	    	type="nl.strohalm.cyclos.controls.general.HelpAction"
+	    	input="_help">
+	    	<set-property property="secure" value="true" />
+	   	</action>
+	   	
+	   	<action 
+	    	path="/admin/home" 
+	    	type="nl.strohalm.cyclos.controls.general.HomeAction"
+	    	input="admin/_home">
+	    	<set-property property="secure" value="true" />
+	   	</action>
+	   	
+	    <action 
+	    	path="/admin/invite" 
+	    	type="nl.strohalm.cyclos.controls.general.InviteAction"
+	    	name="inviteForm"
+	    	scope="request">
+	    	<set-property property="secure" value="true" />
+	    	<forward name="home" redirect="true" path="/do/admin/home"/>
+	   	</action>
+
+		<action 
+	    	path="/member/home" 
+	    	type="nl.strohalm.cyclos.controls.general.HomeAction"
+	    	input="member/_home">
+	    	<set-property property="secure" value="true" />
+	   	</action>
+	   	
+	    <action 
+	    	path="/member/invite" 
+	    	type="nl.strohalm.cyclos.controls.general.InviteAction"
+	    	name="inviteForm"
+	    	scope="request">
+	    	<set-property property="secure" value="true" />
+	    	<forward name="home" redirect="true" path="/do/member/home"/>
+	   	</action>
+
+	    <action 
+	    	path="/operator/invite" 
+	    	type="nl.strohalm.cyclos.controls.general.InviteAction"
+	    	name="inviteForm"
+	    	scope="request">
+	    	<set-property property="secure" value="true" />
+	    	<forward name="home" redirect="true" path="/do/operator/home"/>
+	   	</action>
+		
+		<action 
+	    	path="/operator/home" 
+	    	type="nl.strohalm.cyclos.controls.general.HomeAction"
+	    	input="operator/_home">
+	    	<set-property property="secure" value="true" />
+	   	</action>
+	</action-mappings>
+
+</struts-config>

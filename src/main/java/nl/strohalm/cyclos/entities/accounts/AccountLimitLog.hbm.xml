@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+
+    <class name="nl.strohalm.cyclos.entities.accounts.AccountLimitLog" table="account_limit_logs">
+		<id name="id" type="long">
+		    <column name="id" sql-type="bigint"/>
+			<generator class="native"/>
+		</id>
+		<many-to-one name="account" update="false" class="nl.strohalm.cyclos.entities.accounts.Account">
+		    <column name="account_id" index="ix_acctlimlog_account_date" sql-type="integer" not-null="true"/>
+		</many-to-one>
+        <property name="date" update="false" type="calendar">
+        	<column name="date" index="ix_acctlimlog_account_date" not-null="true" />
+        </property>
+		<many-to-one name="by" update="false" class="nl.strohalm.cyclos.entities.members.Administrator">
+		    <column name="by_id" sql-type="integer"/>
+		</many-to-one>
+        <property name="creditLimit" update="false" column="credit_limit" type="big_decimal" precision="15" scale="6"/>
+        <property name="upperCreditLimit" update="false" column="upper_credit_limit" type="big_decimal" precision="15" scale="6"/>
+    </class>
+
+</hibernate-mapping>

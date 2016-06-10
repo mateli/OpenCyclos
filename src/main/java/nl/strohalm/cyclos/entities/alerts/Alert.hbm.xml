@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+
+    <class dynamic-insert="true" dynamic-update="true" name="nl.strohalm.cyclos.entities.alerts.Alert" table="alerts" abstract="true">
+        <id name="id" type="long">
+		    <column name="id" sql-type="integer"/>
+            <generator class="native"/>
+        </id>
+        <discriminator column="subclass" type="string" length="1" />
+		<property name="removed" column="removed" type="boolean" not-null="true"/>
+		<property name="key" not-null="true" column="msg_key" type="string"/>
+		<property name="arg0" not-null="false" column="arg0" type="string"/>
+		<property name="arg1" not-null="false" column="arg1" type="string"/>
+		<property name="arg2" not-null="false" column="arg2" type="string"/>
+		<property name="arg3" not-null="false" column="arg3" type="string"/>
+		<property name="arg4" not-null="false" column="arg4" type="string"/>
+		<property name="date" not-null="true" column="date" type="calendar"/>
+    </class>
+    
+</hibernate-mapping>

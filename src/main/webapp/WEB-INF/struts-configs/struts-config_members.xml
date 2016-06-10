@@ -1,0 +1,543 @@
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.1//EN" "http://jakarta.apache.org/struts/dtds/struts-config_1_1.dtd">
+<struts-config>
+	<form-beans>
+        <form-bean name="createMemberForm" type="nl.strohalm.cyclos.controls.members.CreateMemberForm" />
+        <form-bean name="publicInitialGroupForm" type="nl.strohalm.cyclos.controls.members.PublicInitialGroupForm" />
+        <form-bean name="acceptRegistrationAgreementForm" type="nl.strohalm.cyclos.controls.members.AcceptRegistrationAgreementForm" />
+        
+        <form-bean name="searchMembersForm" type="nl.strohalm.cyclos.controls.members.SearchMembersForm" />
+        <form-bean name="memberProfileForm" type="nl.strohalm.cyclos.controls.members.MemberProfileForm" />
+        
+        <form-bean name="activitiesForm" type="nl.strohalm.cyclos.controls.members.activities.ActivitiesForm" />
+
+        <form-bean name="changeMemberGroupForm" type="nl.strohalm.cyclos.controls.members.ChangeMemberGroupForm" />
+        <form-bean name="removeMemberForm" type="nl.strohalm.cyclos.controls.members.RemoveMemberForm" />
+
+        <form-bean name="searchMembersAjaxForm" type="nl.strohalm.cyclos.controls.members.SearchMembersAjaxForm" />
+        
+        <form-bean name="searchAdminsAjaxForm" type="nl.strohalm.cyclos.controls.members.SearchAdminsAjaxForm" />
+        
+        <form-bean name="editCreditLimitForm" type="nl.strohalm.cyclos.controls.members.creditlimit.EditCreditLimitForm" />
+
+        <form-bean name="memberLoanGroupsForm" type="nl.strohalm.cyclos.controls.members.loangroups.MemberLoanGroupsForm" />
+        
+        <form-bean name="editAdInterestForm" type="nl.strohalm.cyclos.controls.members.adinterests.EditAdInterestForm" />
+        <form-bean name="removeAdInterestsForm" type="nl.strohalm.cyclos.controls.members.adinterests.RemoveAdInterestsForm" />
+        
+        <form-bean name="editRegistrationAgreementForm" type="nl.strohalm.cyclos.controls.members.agreements.EditRegistrationAgreementForm" />
+        <form-bean name="removeRegistrationAgreementForm" type="nl.strohalm.cyclos.controls.members.agreements.RemoveRegistrationAgreementForm" />
+        
+        <form-bean name="pendingMemberProfileForm" type="nl.strohalm.cyclos.controls.members.pending.PendingMemberProfileForm" />
+        <form-bean name="searchPendingMembersForm" type="nl.strohalm.cyclos.controls.members.pending.SearchPendingMembersForm" />
+        <form-bean name="removePendingMemberForm" type="nl.strohalm.cyclos.controls.members.pending.RemovePendingMemberForm" />
+
+        <form-bean name="resendEmailValidationForm" type="nl.strohalm.cyclos.controls.members.pending.ResendEmailValidationForm" />
+        <form-bean name="validateRegistrationForm" type="nl.strohalm.cyclos.controls.members.pending.ValidateRegistrationForm" />
+
+        <form-bean name="resendEmailChangeValidationForm" type="nl.strohalm.cyclos.controls.members.ResendEmailChangeValidationForm" />
+        <form-bean name="validateEmailChangeForm" type="nl.strohalm.cyclos.controls.members.ValidateEmailChangeForm" />
+        
+        <form-bean name="editReceiptPrinterSettingsForm" type="nl.strohalm.cyclos.controls.members.printsettings.EditReceiptPrinterSettingsForm" />
+        <form-bean name="removeReceiptPrinterSettingsForm" type="nl.strohalm.cyclos.controls.members.printsettings.RemoveReceiptPrinterSettingsForm" />
+        
+	</form-beans>
+	
+	<global-forwards>
+		<forward name="acceptRegistrationAgreement" path="/do/acceptRegistrationAgreement" redirect="true"/>
+	</global-forwards>
+	
+	<action-mappings type="org.apache.struts.config.SecureActionConfig">
+
+		<action 
+			path="/publicCreateMember" 
+			type="nl.strohalm.cyclos.controls.members.PublicInitialGroupAction"
+            name="publicInitialGroupForm"
+            input="_publicInitialGroup"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/doPublicCreateMember" redirect="true"/>
+		</action>
+       
+		<action 
+			path="/validateRegistration" 
+			type="nl.strohalm.cyclos.controls.members.pending.ValidateRegistrationAction"
+            name="validateRegistrationForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="acceptAgreement" path="/do/acceptRegistrationAgreement" redirect="true"/>
+		</action>
+       
+		<action 
+			path="/acceptRegistrationAgreement" 
+			type="nl.strohalm.cyclos.controls.members.AcceptRegistrationAgreementAction"
+            name="acceptRegistrationAgreementForm"
+            scope="request"
+            input="_acceptRegistrationAgreement">
+			<set-property property="secure" value="true" />
+			<forward name="validateRegistration" path="/do/validateRegistration" redirect="true"/>
+		</action>
+       
+		<action 
+			path="/doPublicCreateMember" 
+			type="nl.strohalm.cyclos.controls.members.PublicCreateMemberAction"
+            name="createMemberForm"
+            scope="request"
+            input="_publicCreateMember">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/admin/searchMembersAjax" 
+			type="nl.strohalm.cyclos.controls.members.SearchMembersAjaxAction"
+            name="searchMembersAjaxForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+		</action>
+		
+		<action 
+			path="/admin/searchAdminsAjax" 
+			type="nl.strohalm.cyclos.controls.members.SearchAdminsAjaxAction"
+            name="searchAdminsAjaxForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+		</action>
+		
+		<action 
+			path="/admin/createMember" 
+			type="nl.strohalm.cyclos.controls.members.CreateMemberAction"
+            name="createMemberForm"
+            scope="request"
+            input="admin/_createMember">
+			<set-property property="secure" value="true" />
+			<forward name="new" path="/do/admin/createMember" redirect="true"/>
+			<forward name="profile" path="/do/admin/profile" redirect="true"/>
+			<forward name="pendingMemberProfile" path="/do/admin/pendingMemberProfile" redirect="true"/>
+		</action>
+
+		<action 
+			path="/admin/searchMembers" 
+			type="nl.strohalm.cyclos.controls.members.SearchMembersAction"
+            name="searchMembersForm"
+            scope="session"
+            input="admin/_searchMembers">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/admin/printMembers" 
+			type="nl.strohalm.cyclos.controls.members.PrintMembersAction"
+            name="searchMembersForm"
+            scope="request"
+            input="_printMembers">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/admin/exportMembersToCsv" 
+			type="nl.strohalm.cyclos.controls.members.ExportMembersToCsvAction"
+            name="searchMembersForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/admin/profile" 
+			type="nl.strohalm.cyclos.controls.members.MemberProfileAction"
+            name="memberProfileForm"
+            scope="request"
+            input="admin/_editProfile">
+			<set-property property="secure" value="true" />
+			<forward name="view" path="admin/_viewProfile" redirect="false"/>
+			<forward name="success" path="/do/admin/profile" redirect="true"/>
+		</action>
+		
+		<action 
+			path="/admin/activities" 
+			type="nl.strohalm.cyclos.controls.members.activities.ActivitiesAction"
+            input="admin/_activities"
+            name="activitiesForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+		</action>		
+
+		<action 
+			path="/admin/changeMemberGroup" 
+			type="nl.strohalm.cyclos.controls.members.ChangeMemberGroupAction"
+            input="admin/_changeMemberGroup"
+            name="changeMemberGroupForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/changeMemberGroup" redirect="true"/>
+		</action>		
+		
+		<action 
+			path="/admin/removeMember" 
+			type="nl.strohalm.cyclos.controls.members.RemoveMemberAction"
+            name="removeMemberForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/searchMembers" redirect="true"/>
+		</action>		
+
+		<action 
+			path="/admin/editCreditLimit" 
+			type="nl.strohalm.cyclos.controls.members.creditlimit.EditCreditLimitAction"
+            name="editCreditLimitForm"
+            scope="request"
+            input="admin/_editCreditLimit">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/editCreditLimit" redirect="true"/>
+		</action>
+
+		<action 
+			path="/admin/memberLoanGroups"
+			type="nl.strohalm.cyclos.controls.members.loangroups.MemberLoanGroupsAction"
+            name="memberLoanGroupsForm"
+            scope="request"
+            input="admin/_memberLoanGroups">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/admin/listRegistrationAgreements"
+			type="nl.strohalm.cyclos.controls.members.agreements.ListRegistrationAgreementsAction"
+            input="admin/_listRegistrationAgreements">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/admin/editRegistrationAgreement"
+			type="nl.strohalm.cyclos.controls.members.agreements.EditRegistrationAgreementAction"
+            name="editRegistrationAgreementForm"
+            scope="request"
+            input="admin/_editRegistrationAgreement">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/listRegistrationAgreements" redirect="true"/>
+		</action>
+
+		<action 
+			path="/admin/removeRegistrationAgreement"
+			type="nl.strohalm.cyclos.controls.members.agreements.RemoveRegistrationAgreementAction"
+            name="removeRegistrationAgreementForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/listRegistrationAgreements" redirect="true"/>
+		</action>
+
+		<action 
+			path="/admin/pendingMemberProfile"
+			type="nl.strohalm.cyclos.controls.members.pending.PendingMemberProfileAction"
+            name="pendingMemberProfileForm"
+            scope="request"
+            input="admin/_pendingMemberProfile">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/pendingMemberProfile" redirect="true"/>
+		</action>
+
+		<action 
+			path="/admin/searchPendingMembers"
+			type="nl.strohalm.cyclos.controls.members.pending.SearchPendingMembersAction"
+            name="searchPendingMembersForm"
+            scope="session"
+            input="admin/_searchPendingMembers">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/admin/resendEmailValidation"
+			type="nl.strohalm.cyclos.controls.members.pending.ResendEmailValidationAction"
+            name="resendEmailValidationForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/pendingMemberProfile" redirect="true"/>
+		</action>
+
+		<action 
+			path="/admin/removePendingMember"
+			type="nl.strohalm.cyclos.controls.members.pending.RemovePendingMemberAction"
+            name="removePendingMemberForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/searchPendingMembers" redirect="true"/>
+		</action>
+
+		<action 
+			path="/admin/printPendingMembers" 
+			type="nl.strohalm.cyclos.controls.members.pending.PrintPendingMembersAction"
+            name="searchPendingMembersForm"
+            scope="request"
+            input="_printPendingMembers">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/admin/exportPendingMembersToCsv" 
+			type="nl.strohalm.cyclos.controls.members.pending.ExportPendingMembersToCsvAction"
+            name="searchPendingMembersForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/admin/resendEmailChangeValidation"
+			type="nl.strohalm.cyclos.controls.members.ResendEmailChangeValidationAction"
+            name="resendEmailChangeValidationForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/profile" redirect="true"/>
+		</action>
+
+		
+		<action 
+			path="/member/searchMembersAjax" 
+			type="nl.strohalm.cyclos.controls.members.SearchMembersAjaxAction"
+            name="searchMembersAjaxForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+		</action>
+		
+		<action 
+			path="/member/createMember" 
+			type="nl.strohalm.cyclos.controls.members.BrokerInitialGroupAction"
+            name="createMemberForm"
+            scope="request"
+            input="member/_publicInitialGroup">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/member/doCreateMember" redirect="true"/>
+		</action>
+
+		<action 
+			path="/member/doCreateMember" 
+			type="nl.strohalm.cyclos.controls.members.CreateMemberAction"
+            name="createMemberForm"
+            scope="request"
+            input="member/_createMember">
+			<set-property property="secure" value="true" />
+			<forward name="new" path="/do/member/doCreateMember" redirect="true"/>
+			<forward name="profile" path="/do/member/profile" redirect="true"/>
+			<forward name="pendingMemberProfile" path="/do/member/pendingMemberProfile" redirect="true"/>
+		</action>
+
+		<action 
+			path="/member/searchMembers" 
+			type="nl.strohalm.cyclos.controls.members.SearchMembersAction"
+            name="searchMembersForm"
+            scope="session"
+            input="member/_searchMembers">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/member/profile" 
+			type="nl.strohalm.cyclos.controls.members.MemberProfileAction"
+            name="memberProfileForm"
+            scope="request"
+            input="member/_editProfile">
+			<set-property property="secure" value="true" />
+			<forward name="view" path="member/_viewProfile" redirect="false"/>
+			<forward name="success" path="/do/member/profile" redirect="true"/>
+		</action>
+		
+		<action 
+			path="/member/activities" 
+			type="nl.strohalm.cyclos.controls.members.activities.ActivitiesAction"
+            input="member/_activities"
+            name="activitiesForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+		</action>		
+		
+		<action 
+			path="/member/memberLoanGroups" 
+			type="nl.strohalm.cyclos.controls.members.loangroups.MemberLoanGroupsAction"
+            name="memberLoanGroupsForm"
+            scope="request"
+            input="member/_memberLoanGroups">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/member/editAdInterest"
+			type="nl.strohalm.cyclos.controls.members.adinterests.EditAdInterestAction"
+			name="editAdInterestForm"
+            scope="request"
+            input="member/_editAdInterest">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/member/listAdInterests" redirect="true"/>
+		</action>
+
+		<action 
+			path="/member/listAdInterests"
+			type="nl.strohalm.cyclos.controls.members.adinterests.ListAdInterestsAction"
+            scope="request"
+            input="member/_listAdInterests">
+			<set-property property="secure" value="true" />
+		</action>
+		
+		<action 
+			path="/member/removeAdInterests"
+			type="nl.strohalm.cyclos.controls.members.adinterests.RemoveAdInterestsAction"
+			name="removeAdInterestsForm"
+            scope="request"
+            input="member/_listAdInterests">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/member/listAdInterests" redirect="true"/>
+		</action>
+
+
+		<action 
+			path="/member/pendingMemberProfile"
+			type="nl.strohalm.cyclos.controls.members.pending.PendingMemberProfileAction"
+            name="pendingMemberProfileForm"
+            scope="request"
+            input="member/_pendingMemberProfile">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/member/pendingMemberProfile" redirect="true"/>
+		</action>
+
+		<action 
+			path="/member/searchPendingMembers"
+			type="nl.strohalm.cyclos.controls.members.pending.SearchPendingMembersAction"
+            name="searchPendingMembersForm"
+            scope="session"
+            input="member/_searchPendingMembers">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/member/resendEmailValidation"
+			type="nl.strohalm.cyclos.controls.members.pending.ResendEmailValidationAction"
+            name="resendEmailValidationForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/member/pendingMemberProfile" redirect="true"/>
+		</action>
+
+		<action 
+			path="/member/removePendingMember"
+			type="nl.strohalm.cyclos.controls.members.pending.RemovePendingMemberAction"
+            name="removePendingMemberForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/member/searchPendingMembers" redirect="true"/>
+		</action>
+
+		<action 
+			path="/member/printPendingMembers" 
+			type="nl.strohalm.cyclos.controls.members.pending.PrintPendingMembersAction"
+            name="searchPendingMembersForm"
+            scope="request"
+            input="_printPendingMembers">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/member/exportPendingMembersToCsv" 
+			type="nl.strohalm.cyclos.controls.members.pending.ExportPendingMembersToCsvAction"
+            name="searchPendingMembersForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/member/listReceiptPrinterSettings" 
+			type="nl.strohalm.cyclos.controls.members.printsettings.ListReceiptPrinterSettingsAction"
+            input="member/_listReceiptPrinterSettings">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/member/editReceiptPrinterSettings" 
+			type="nl.strohalm.cyclos.controls.members.printsettings.EditReceiptPrinterSettingsAction"
+            name="editReceiptPrinterSettingsForm"
+            scope="request"
+            input="member/_editReceiptPrinterSettings">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/member/editReceiptPrinterSettings" redirect="true"/>
+		</action>
+
+		<action 
+			path="/member/removeReceiptPrinterSettings" 
+			type="nl.strohalm.cyclos.controls.members.printsettings.RemoveReceiptPrinterSettingsAction"
+            name="removeReceiptPrinterSettingsForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/member/listReceiptPrinterSettings" redirect="true"/>
+		</action>
+
+		<action 
+			path="/member/resendEmailChangeValidation"
+			type="nl.strohalm.cyclos.controls.members.ResendEmailChangeValidationAction"
+            name="resendEmailChangeValidationForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/member/profile" redirect="true"/>
+		</action>
+
+		<action 
+			path="/member/validateEmailChange"
+			type="nl.strohalm.cyclos.controls.members.ValidateEmailChangeAction"
+            name="validateEmailChangeForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/member/profile" redirect="true"/>
+		</action>
+
+		<!-- operator -->
+		<action 
+			path="/operator/searchMembersAjax" 
+			type="nl.strohalm.cyclos.controls.members.SearchMembersAjaxAction"
+            name="searchMembersAjaxForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+		</action>
+		
+		<action 
+			path="/operator/profile" 
+			type="nl.strohalm.cyclos.controls.members.MemberProfileAction"
+            name="memberProfileForm"
+            scope="request"
+            input="operator/_editProfile">
+			<set-property property="secure" value="true" />
+			<forward name="view" path="operator/_viewProfile" redirect="false"/>
+			<forward name="success" path="/do/operator/profile" redirect="true"/>
+		</action>
+		
+		<action 
+			path="/operator/activities" 
+			type="nl.strohalm.cyclos.controls.members.activities.ActivitiesAction"
+            input="operator/_activities"
+            name="activitiesForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+		</action>		
+	
+		<action 
+			path="/operator/searchMembers" 
+			type="nl.strohalm.cyclos.controls.members.SearchMembersAction"
+            name="searchMembersForm"
+            scope="session"
+            input="operator/_searchMembers">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/operator/listReceiptPrinterSettings" 
+			type="nl.strohalm.cyclos.controls.members.printsettings.ListReceiptPrinterSettingsAction"
+            input="operator/_listReceiptPrinterSettings">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/operator/editReceiptPrinterSettings" 
+			type="nl.strohalm.cyclos.controls.members.printsettings.EditReceiptPrinterSettingsAction"
+            name="editReceiptPrinterSettingsForm"
+            scope="request"
+            input="operator/_editReceiptPrinterSettings">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/operator/editReceiptPrinterSettings" redirect="true"/>
+		</action>
+		
+	</action-mappings>
+
+</struts-config>

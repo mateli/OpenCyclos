@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+
+	<subclass dynamic-insert="true" dynamic-update="true" name="nl.strohalm.cyclos.entities.customization.files.CustomizedFile" extends="nl.strohalm.cyclos.entities.customization.files.File" discriminator-value="c">
+		<property name="type" column="type" length="1">
+            <type name="nl.strohalm.cyclos.utils.hibernate.StringValuedEnumType">
+                <param name="enumClassName">nl.strohalm.cyclos.entities.customization.files.CustomizedFile$Type</param>
+            </type>
+		</property>
+        <many-to-one name="group" class="nl.strohalm.cyclos.entities.groups.Group">
+            <column name="group_id" sql-type="integer"/>
+    	</many-to-one>
+        <many-to-one name="groupFilter" class="nl.strohalm.cyclos.entities.groups.GroupFilter">
+            <column name="group_filter_id" sql-type="integer"/>
+    	</many-to-one>
+    	<property name="originalContents" column="original_contents" type="text" length="10000000"/>
+    	<property name="newContents" column="new_contents" type="text" length="10000000"/>
+	</subclass>
+
+</hibernate-mapping>

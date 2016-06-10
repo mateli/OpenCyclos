@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+	Bean definitions for the service security layer
+ -->
+<beans default-autowire="byName"
+       xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:task="http://www.springframework.org/schema/task"
+       xsi:schemaLocation="
+			http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+			http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd
+			http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.0.xsd"
+	  >
+	  
+	<bean id="securityPostProcessor" class="nl.strohalm.cyclos.spring.SecurityProxyPostProcessor" />
+	  
+	<!-- ******** BEGIN OF SECURITY SERVICES BEANS (Please follow the alphabetical order) ******** -->
+	<bean id="accessService" class="nl.strohalm.cyclos.services.access.AccessServiceSecurity" /> 
+	<bean id="accountFeeService" class="nl.strohalm.cyclos.services.accountfees.AccountFeeServiceSecurity" /> 
+	<bean id="accountService" class="nl.strohalm.cyclos.services.accounts.AccountServiceSecurity" />
+	<bean id="accountTypeService" class="nl.strohalm.cyclos.services.accounts.AccountTypeServiceSecurity" /> 
+	<bean id="adCategoryService" class="nl.strohalm.cyclos.services.ads.AdCategoryServiceSecurity" /> 
+	<bean id="adImportService" class="nl.strohalm.cyclos.services.ads.AdImportServiceSecurity" /> 
+	<bean id="adInterestService" class="nl.strohalm.cyclos.services.elements.AdInterestServiceSecurity" /> 
+	<bean id="adService" class="nl.strohalm.cyclos.services.ads.AdServiceSecurity" />
+	<bean id="alertService" class="nl.strohalm.cyclos.services.alerts.AlertServiceSecurity" /> 
+	<bean id="applicationService" class="nl.strohalm.cyclos.services.application.ApplicationServiceSecurity" /> 
+
+				<bean id="rateService" class="nl.strohalm.cyclos.services.accounts.rates.RateServiceSecurityMock" />
+			
+	<bean id="authorizationLevelService" class="nl.strohalm.cyclos.services.transfertypes.AuthorizationLevelServiceSecurity" /> 
+	<bean id="brokeringService" class="nl.strohalm.cyclos.services.elements.BrokeringServiceSecurity" /> 
+	<bean id="cardService" class="nl.strohalm.cyclos.services.accounts.cards.CardServiceSecurity" /> 
+	<bean id="cardTypeService" class="nl.strohalm.cyclos.services.accounts.cards.CardTypeServiceSecurity" /> 
+	<bean id="certificationService" class="nl.strohalm.cyclos.services.accounts.guarantees.CertificationServiceSecurity" /> 
+	<bean id="channelService" class="nl.strohalm.cyclos.services.access.ChannelServiceSecurity" /> 
+	<bean id="commissionService" class="nl.strohalm.cyclos.services.elements.CommissionServiceSecurity" /> 
+	<bean id="contactService" class="nl.strohalm.cyclos.services.elements.ContactServiceSecurity" /> 
+	<bean id="currencyService" class="nl.strohalm.cyclos.services.accounts.CurrencyServiceSecurity" /> 
+	<bean id="currentStateReportService" class="nl.strohalm.cyclos.services.reports.CurrentStateReportServiceSecurity" /> 
+	<bean id="adCustomFieldService" class="nl.strohalm.cyclos.services.customization.AdCustomFieldServiceSecurity" />
+	<bean id="adminCustomFieldService" class="nl.strohalm.cyclos.services.customization.AdminCustomFieldServiceSecurity" />
+	<bean id="loanGroupCustomFieldService" class="nl.strohalm.cyclos.services.customization.LoanGroupCustomFieldServiceSecurity" />
+	<bean id="memberCustomFieldService" class="nl.strohalm.cyclos.services.customization.MemberCustomFieldServiceSecurity" />
+	<bean id="memberRecordCustomFieldService" class="nl.strohalm.cyclos.services.customization.MemberRecordCustomFieldServiceSecurity" />
+	<bean id="operatorCustomFieldService" class="nl.strohalm.cyclos.services.customization.OperatorCustomFieldServiceSecurity" />
+	<bean id="paymentCustomFieldService" class="nl.strohalm.cyclos.services.customization.PaymentCustomFieldServiceSecurity" />
+	<bean id="customizedFileService" class="nl.strohalm.cyclos.services.customization.CustomizedFileServiceSecurity" /> 
+	<bean id="documentService" class="nl.strohalm.cyclos.services.customization.DocumentServiceSecurity" /> 
+	<bean id="elementService" class="nl.strohalm.cyclos.services.elements.ElementServiceSecurity" /> 
+	<bean id="errorLogService" class="nl.strohalm.cyclos.services.alerts.ErrorLogServiceSecurity" /> 
+	<bean id="externalAccountService" class="nl.strohalm.cyclos.services.accounts.external.ExternalAccountServiceSecurity" /> 
+	<bean id="externalTransferImportService" class="nl.strohalm.cyclos.services.accounts.external.ExternalTransferImportServiceSecurity" /> 
+	<bean id="externalTransferService" class="nl.strohalm.cyclos.services.accounts.external.ExternalTransferServiceSecurity" /> 
+	<bean id="externalTransferTypeService" class="nl.strohalm.cyclos.services.accounts.external.ExternalTransferTypeServiceSecurity" /> 
+	<bean id="fetchService" class="nl.strohalm.cyclos.services.fetch.FetchServiceSecurity" /> 
+	<bean id="fieldMappingService" class="nl.strohalm.cyclos.services.accounts.external.filemapping.FieldMappingServiceSecurity" /> 
+	<bean id="fileMappingService" class="nl.strohalm.cyclos.services.accounts.external.filemapping.FileMappingServiceSecurity" /> 
+	<bean id="groupFilterService" class="nl.strohalm.cyclos.services.groups.GroupFilterServiceSecurity" /> 
+	<bean id="groupService" class="nl.strohalm.cyclos.services.groups.GroupServiceSecurity" /> 
+	<bean id="guaranteeService" class="nl.strohalm.cyclos.services.accounts.guarantees.GuaranteeServiceSecurity" /> 
+	<bean id="guaranteeTypeService" class="nl.strohalm.cyclos.services.accounts.guarantees.GuaranteeTypeServiceSecurity" /> 
+	<bean id="imageService" class="nl.strohalm.cyclos.services.customization.ImageServiceSecurity" /> 
+	<bean id="infoTextService" class="nl.strohalm.cyclos.services.infotexts.InfoTextServiceSecurity" /> 
+	<bean id="invoiceService" class="nl.strohalm.cyclos.services.transactions.InvoiceServiceSecurity" /> 
+	<bean id="loanGroupService" class="nl.strohalm.cyclos.services.loangroups.LoanGroupServiceSecurity" /> 
+	<bean id="loanService" class="nl.strohalm.cyclos.services.transactions.LoanServiceSecurity" /> 
+	<bean id="memberImportService" class="nl.strohalm.cyclos.services.elements.MemberImportServiceSecurity" /> 
+	<bean id="memberPosService" class="nl.strohalm.cyclos.services.accounts.pos.MemberPosServiceSecurity" /> 
+	<bean id="memberRecordService" class="nl.strohalm.cyclos.services.elements.MemberRecordServiceSecurity" /> 
+	<bean id="memberRecordTypeService" class="nl.strohalm.cyclos.services.elements.MemberRecordTypeServiceSecurity" /> 
+	<bean id="memberService" class="nl.strohalm.cyclos.services.elements.MemberServiceSecurity" />
+	<bean id="messageCategoryService" class="nl.strohalm.cyclos.services.elements.MessageCategoryServiceSecurity" /> 
+	<bean id="messageService" class="nl.strohalm.cyclos.services.elements.MessageServiceSecurity" /> 
+	<bean id="paymentFilterService" class="nl.strohalm.cyclos.services.transfertypes.PaymentFilterServiceSecurity" /> 
+	<bean id="paymentObligationService" class="nl.strohalm.cyclos.services.accounts.guarantees.PaymentObligationServiceSecurity" /> 
+	<bean id="paymentService" class="nl.strohalm.cyclos.services.transactions.PaymentServiceSecurity" />
+	<bean id="permissionService" class="nl.strohalm.cyclos.services.permissions.PermissionServiceSecurity" /> 
+	<bean id="posService" class="nl.strohalm.cyclos.services.accounts.pos.PosServiceSecurity" /> 
+	<bean id="preferenceService" class="nl.strohalm.cyclos.services.preferences.PreferenceServiceSecurity" />
+	<bean id="receiptPrinterSettingsService" class="nl.strohalm.cyclos.services.preferences.ReceiptPrinterSettingsServiceSecurity" /> 
+	<bean id="referenceService" class="nl.strohalm.cyclos.services.elements.ReferenceServiceSecurity" /> 
+	<bean id="registrationAgreementService" class="nl.strohalm.cyclos.services.elements.RegistrationAgreementServiceSecurity" /> 
+	<bean id="remarkService" class="nl.strohalm.cyclos.services.elements.RemarkServiceSecurity" /> 
+	<bean id="scheduledPaymentService" class="nl.strohalm.cyclos.services.transactions.ScheduledPaymentServiceSecurity" /> 
+	<bean id="serviceClientService" class="nl.strohalm.cyclos.services.services.ServiceClientServiceSecurity" /> 
+	<bean id="settingsService" class="nl.strohalm.cyclos.services.settings.SettingsServiceSecurity" /> 
+	<bean id="smsLogService" class="nl.strohalm.cyclos.services.sms.SmsLogServiceSecurity" /> 
+	<bean id="smsMailingService" class="nl.strohalm.cyclos.services.sms.SmsMailingServiceSecurity" /> 
+	<bean id="statisticalActivityService" class="nl.strohalm.cyclos.services.stats.StatisticalActivityServiceSecurity" /> 
+	<bean id="statisticalFinancesService" class="nl.strohalm.cyclos.services.stats.StatisticalFinancesServiceSecurity" /> 
+	<bean id="statisticalKeyDevelopmentsService" class="nl.strohalm.cyclos.services.stats.StatisticalKeyDevelopmentsServiceSecurity" /> 
+	<bean id="statisticalTaxesService" class="nl.strohalm.cyclos.services.stats.StatisticalTaxesServiceSecurity" /> 
+	<bean id="ticketService" class="nl.strohalm.cyclos.services.transactions.TicketServiceSecurity" /> 
+	<bean id="transactionFeeService" class="nl.strohalm.cyclos.services.transfertypes.TransactionFeeServiceSecurity" /> 
+	<bean id="transferAuthorizationService" class="nl.strohalm.cyclos.services.transactions.TransferAuthorizationServiceSecurity" />
+	<bean id="transferTypeService" class="nl.strohalm.cyclos.services.transfertypes.TransferTypeServiceSecurity" /> 
+	<bean id="translationMessageService" class="nl.strohalm.cyclos.services.customization.TranslationMessageServiceSecurity" /> 
+	<!-- *************************** END OF SECURITY SERVICES BEANS *************************** -->
+</beans>	

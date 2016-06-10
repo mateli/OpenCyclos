@@ -1,0 +1,213 @@
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.1//EN" "http://jakarta.apache.org/struts/dtds/struts-config_1_1.dtd">
+<struts-config>
+
+	<form-beans>
+        <form-bean name="editExternalAccountForm" type="nl.strohalm.cyclos.controls.accounts.external.EditExternalAccountForm" />
+        <form-bean name="removeExternalAccountForm" type="nl.strohalm.cyclos.controls.accounts.external.RemoveExternalAccountForm" />
+        
+        <form-bean name="editExternalTransferTypeForm" type="nl.strohalm.cyclos.controls.accounts.external.EditExternalTransferTypeForm" />
+        <form-bean name="removeExternalTransferTypeForm" type="nl.strohalm.cyclos.controls.accounts.external.RemoveExternalTransferTypeForm" />
+        
+        <form-bean name="externalAccountHistoryForm" type="nl.strohalm.cyclos.controls.accounts.external.ExternalAccountHistoryForm" />
+        <form-bean name="editExternalTransferForm" type="nl.strohalm.cyclos.controls.accounts.external.externaltransfers.EditExternalTransferForm" />
+        <form-bean name="changeExternalTransferForm" type="nl.strohalm.cyclos.controls.accounts.external.externaltransfers.ChangeExternalTransferForm" />
+        
+        <form-bean name="fileMappingForm" type="nl.strohalm.cyclos.controls.accounts.external.filemappings.EditFileMappingForm" />
+        <form-bean name="resetFileMappingForm" type="nl.strohalm.cyclos.controls.accounts.external.filemappings.ResetFileMappingForm" />
+        <form-bean name="fieldMappingForm" type="nl.strohalm.cyclos.controls.accounts.external.filemappings.EditFieldMappingForm" />
+        <form-bean name="removeFieldMappingForm" type="nl.strohalm.cyclos.controls.accounts.external.filemappings.RemoveFieldMappingForm" />
+        <form-bean name="setFieldMappingsOrderForm" type="nl.strohalm.cyclos.controls.accounts.external.filemappings.SetFieldMappingsOrderForm" />
+        
+        <form-bean name="searchTransferImportsForm" type="nl.strohalm.cyclos.controls.accounts.external.transferimports.SearchTransferImportsForm" />
+        <form-bean name="newTransferImportForm" type="nl.strohalm.cyclos.controls.accounts.external.transferimports.NewTransferImportForm" />
+        <form-bean name="removeTransferImportForm" type="nl.strohalm.cyclos.controls.accounts.external.transferimports.RemoveTransferImportForm" />
+        <form-bean name="retrieveTransfersToProcessForm" type="nl.strohalm.cyclos.controls.accounts.external.process.RetrieveTransfersToProcessForm" />
+        <form-bean name="processExternalTransfersForm" type="nl.strohalm.cyclos.controls.accounts.external.process.ProcessExternalTransfersForm" />
+	</form-beans>
+	
+	<action-mappings type="org.apache.struts.config.SecureActionConfig">
+
+		<action 
+			path="/admin/listExternalAccounts" 
+			type="nl.strohalm.cyclos.controls.accounts.external.ListExternalAccountsAction"
+            input="admin/_listExternalAccounts">
+			<set-property property="secure" value="true" />
+		</action>
+		
+		<action 
+			path="/admin/overviewExternalAccounts" 
+			type="nl.strohalm.cyclos.controls.accounts.external.OverviewExternalAccountsAction"
+            input="admin/_overviewExternalAccounts">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/admin/editExternalAccount" 
+			type="nl.strohalm.cyclos.controls.accounts.external.EditExternalAccountAction"
+            name="editExternalAccountForm"
+            scope="request"
+            input="admin/_editExternalAccount">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/editExternalAccount" redirect="true"></forward>
+		</action>
+
+		<action 
+			path="/admin/removeExternalAccount" 
+			type="nl.strohalm.cyclos.controls.accounts.external.RemoveExternalAccountAction"
+            name="removeExternalAccountForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/listExternalAccounts" redirect="true"></forward>
+		</action>
+
+		<action 
+			path="/admin/listExternalTransferTypes" 
+			type="nl.strohalm.cyclos.controls.accounts.external.ListExternalTransferTypesAction"
+            input="admin/_listExternalTransferTypes">
+			<set-property property="secure" value="true" />
+		</action>
+		
+		<action 
+			path="/admin/editExternalTransferType" 
+			type="nl.strohalm.cyclos.controls.accounts.external.EditExternalTransferTypeAction"
+            name="editExternalTransferTypeForm"
+            scope="request"
+            input="admin/_editExternalTransferType">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/editExternalAccount" redirect="true"></forward>
+		</action>
+
+		<action 
+			path="/admin/removeExternalTransferType" 
+			type="nl.strohalm.cyclos.controls.accounts.external.RemoveExternalTransferTypeAction"
+            name="removeExternalTransferTypeForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/editExternalAccount" redirect="true"></forward>
+		</action>
+
+		<action 
+			path="/admin/externalAccountHistory" 
+			type="nl.strohalm.cyclos.controls.accounts.external.ExternalAccountHistoryAction"
+            name="externalAccountHistoryForm"
+            scope="session"
+            input="admin/_externalAccountHistory">
+			<set-property property="secure" value="true" />
+		</action>
+		
+		<action 
+			path="/admin/editExternalTransfer" 
+			type="nl.strohalm.cyclos.controls.accounts.external.externaltransfers.EditExternalTransferAction"
+            name="editExternalTransferForm"
+            scope="request"
+            input="admin/_editExternalTransfer">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/externalAccountHistory" redirect="true"></forward>
+		</action>
+		
+		<action 
+			path="/admin/changeExternalTransfer" 
+			type="nl.strohalm.cyclos.controls.accounts.external.externaltransfers.ChangeExternalTransferAction"
+            name="changeExternalTransferForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" redirect="true" path="/do/admin/externalAccountHistory" />
+		</action>
+
+		<action 
+			path="/admin/editFileMapping" 
+			type="nl.strohalm.cyclos.controls.accounts.external.filemappings.EditFileMappingAction"
+            name="fileMappingForm"
+            scope="request"
+            input="admin/_editFileMapping">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/editExternalAccount" redirect="true"></forward>
+		</action>
+		
+		<action 
+			path="/admin/resetFileMapping" 
+			type="nl.strohalm.cyclos.controls.accounts.external.filemappings.ResetFileMappingAction"
+            name="resetFileMappingForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/editExternalAccount" redirect="true"></forward>
+		</action>
+		
+		<action 
+			path="/admin/editFieldMapping"
+			type="nl.strohalm.cyclos.controls.accounts.external.filemappings.EditFieldMappingAction"
+            name="fieldMappingForm"
+            scope="request"
+            input="admin/_editFieldMapping">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/editExternalAccount" redirect="true"></forward>
+		</action>
+		
+		<action 
+			path="/admin/removeFieldMapping"
+			type="nl.strohalm.cyclos.controls.accounts.external.filemappings.RemoveFieldMappingAction"
+            name="removeFieldMappingForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/editExternalAccount" redirect="true"></forward>
+		</action>
+		
+		<action 
+			path="/admin/setFieldMappingsOrder"
+			type="nl.strohalm.cyclos.controls.accounts.external.filemappings.SetFieldMappingsOrderAction"
+            name="setFieldMappingsOrderForm"
+            scope="request"
+            input="admin/_setFieldMappingsOrder">
+			<set-property property="secure" value="true" />
+	    	<forward name="success" path="/do/admin/editExternalAccount" redirect="true" />
+		</action>
+
+		<action 
+			path="/admin/searchTransferImports" 
+			type="nl.strohalm.cyclos.controls.accounts.external.transferimports.SearchTransferImportsAction"
+            name="searchTransferImportsForm"
+            scope="session"
+            input="admin/_searchTransferImportsForm">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/admin/importNewTransactionFile" 
+			type="nl.strohalm.cyclos.controls.accounts.external.transferimports.NewTransferImportAction"
+            name="newTransferImportForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/searchTransferImports" redirect="true"></forward>
+		</action>
+
+		<action 
+			path="/admin/removeTransferImport" 
+			type="nl.strohalm.cyclos.controls.accounts.external.transferimports.RemoveTransferImportAction"
+            name="removeTransferImportForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/searchTransferImports" redirect="true"></forward>
+		</action>
+
+		<action 
+			path="/admin/retrieveTransfersToProcess" 
+			type="nl.strohalm.cyclos.controls.accounts.external.process.RetrieveTransfersToProcessAction"
+			name="retrieveTransfersToProcessForm"
+			scope="request"
+            input="admin/_processExternalTransfers">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/admin/processExternalTransfers" 
+			type="nl.strohalm.cyclos.controls.accounts.external.process.ProcessExternalTransfersAction"
+			name="processExternalTransfersForm"
+			scope="request"
+            input="admin/_processExternalTransfers">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/externalAccountHistory" redirect="true"></forward>
+		</action>
+
+	</action-mappings>
+
+</struts-config>

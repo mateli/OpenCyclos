@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+
+    <class dynamic-insert="true" dynamic-update="true" name="nl.strohalm.cyclos.entities.members.messages.MessageCategory" table="message_categories" >
+    	<cache usage="read-write"/>
+       	<id name="id" type="long">
+	    	<column name="id" sql-type="integer"/>
+           	<generator class="native"/>
+       	</id>
+       	<property name="name" column="name" type="string" not-null="true" length="200" />
+       	
+		<bag name="groups" table="can_view_message_categories" inverse="true">
+			<cache usage="read-write"/>
+			<key>
+			    <column name="category_id" sql-type="integer"/>
+			</key>
+			<many-to-many class="nl.strohalm.cyclos.entities.groups.SystemGroup">
+			    <column name="group_id" sql-type="integer"/>	
+			</many-to-many>
+		</bag>
+
+    </class>
+
+</hibernate-mapping>

@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+
+    <class dynamic-insert="true" dynamic-update="true" name="nl.strohalm.cyclos.entities.customization.fields.CustomFieldValue" table="custom_field_values">
+        <id name="id" type="long">
+		    <column name="id" sql-type="integer"/>
+            <generator class="native"/>
+        </id>
+        <discriminator column="subclass" length="10"/>
+        <many-to-one name="field" class="nl.strohalm.cyclos.entities.customization.fields.CustomField" not-null="true">
+            <column name="field_id" sql-type="integer"/>
+        </many-to-one>        	
+        <property name="stringValue" type="string">
+        	<column name="string_value" sql-type="varchar(4000)" index="ix_string_value" />
+        </property>
+        <many-to-one name="possibleValue" class="nl.strohalm.cyclos.entities.customization.fields.CustomFieldPossibleValue">
+            <column name="possible_value_id" sql-type="integer"/>
+        </many-to-one>        	
+        <many-to-one name="memberValue" class="nl.strohalm.cyclos.entities.members.Member">
+            <column name="member_value_id" sql-type="integer"/>
+        </many-to-one>        	
+	</class>
+	
+</hibernate-mapping>

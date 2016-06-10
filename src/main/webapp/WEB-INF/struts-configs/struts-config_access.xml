@@ -1,0 +1,372 @@
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.1//EN" "http://jakarta.apache.org/struts/dtds/struts-config_1_1.dtd">
+<struts-config>
+	<form-beans>
+        <form-bean name="loginForm" type="nl.strohalm.cyclos.controls.access.LoginForm" />
+        <form-bean name="changePasswordForm" type="nl.strohalm.cyclos.controls.access.ChangePasswordForm" />
+        <form-bean name="resetAndSendPasswordForm" type="nl.strohalm.cyclos.controls.access.ResetAndSendPasswordForm" />
+        <form-bean name="allowUserLoginForm" type="nl.strohalm.cyclos.controls.access.AllowUserLoginForm" />
+        <form-bean name="disconnectUserForm" type="nl.strohalm.cyclos.controls.access.DisconnectUserForm" />
+        <form-bean name="disconnectUserSessionForm" type="nl.strohalm.cyclos.controls.access.DisconnectUserSessionForm" />
+        <form-bean name="listConnectedUsersForm" type="nl.strohalm.cyclos.controls.access.ListConnectedUsersForm" />
+
+        <form-bean name="isUsedTransactionPasswordAjaxForm" type="nl.strohalm.cyclos.controls.access.transactionpassword.IsUsedTransactionPasswordAjaxForm" />        
+        <form-bean name="transactionPasswordForm" type="nl.strohalm.cyclos.controls.access.transactionpassword.TransactionPasswordForm" />
+        <form-bean name="managePasswordsForm" type="nl.strohalm.cyclos.controls.access.ManagePasswordsForm" />
+        <form-bean name="manageTransactionPasswordForm" type="nl.strohalm.cyclos.controls.access.transactionpassword.ManageTransactionPasswordForm" />
+        <form-bean name="manageExternalAccessForm" type="nl.strohalm.cyclos.controls.access.channels.ManageExternalAccessForm" />
+        <form-bean name="changePinForm" type="nl.strohalm.cyclos.controls.access.channels.ChangePinForm" />
+        <form-bean name="unblockPinForm" type="nl.strohalm.cyclos.controls.access.channels.UnblockPinForm" />
+		<form-bean name="selectChannelsForm" type="nl.strohalm.cyclos.controls.access.channels.SelectChannelsForm" />        
+	</form-beans>
+	
+	<global-forwards>
+		<forward name="login" redirect="true" path="/do/login" />
+	</global-forwards>
+	
+	<action-mappings type="org.apache.struts.config.SecureActionConfig">
+
+		<action 
+			path="/login" 
+			type="nl.strohalm.cyclos.controls.access.LoginAction"
+            name="loginForm"
+            scope="request"
+            input="_login">
+			<set-property property="secure" value="true" />
+			<forward name="memberHome" redirect="true" path="/do/member/home"/>
+			<forward name="adminHome" redirect="true" path="/do/admin/home"/>
+			<forward name="operatorHome" redirect="true" path="/do/operator/home"/>
+		</action>
+
+		<action 
+			path="/logout" 
+			type="nl.strohalm.cyclos.controls.access.LogoutAction">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/login" redirect="true" />
+		</action>
+
+		<action path="/transactionPassword"
+			type="nl.strohalm.cyclos.controls.access.transactionpassword.TransactionPasswordAction"
+			name="transactionPasswordForm" scope="request"
+			input="_transactionPassword">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/externalLogin" 
+			type="nl.strohalm.cyclos.controls.access.ExternalLoginAction"
+            name="loginForm"
+            scope="request"
+            input="/pages/access/externalLogin.jsp">
+			<set-property property="secure" value="true" />
+		</action>
+	   	
+	   	<!-- Admin -->
+	   	<action 
+			path="/admin/changeExpiredPassword" 
+			type="nl.strohalm.cyclos.controls.access.ChangeExpiredPasswordAction"
+            name="changePasswordForm"
+            scope="request"
+            input="_changeExpiredPassword">
+			<set-property property="secure" value="true" />
+		</action>
+		
+		<action 
+			path="/admin/listConnectedUsers" 
+			type="nl.strohalm.cyclos.controls.access.ListConnectedUsersAction"
+            name="listConnectedUsersForm"
+            scope="session"
+            input="admin/_listConnectedUsers">
+			<set-property property="secure" value="true" />
+		</action>
+	   	
+		<action 
+			path="/admin/disconnectUser" 
+			type="nl.strohalm.cyclos.controls.access.DisconnectUserAction"
+            name="disconnectUserForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="adminProfile" redirect="true" path="/do/admin/adminProfile" />
+			<forward name="memberProfile" redirect="true" path="/do/admin/profile" />
+		</action>
+	   	
+		<action 
+			path="/admin/disconnectUserSession" 
+			type="nl.strohalm.cyclos.controls.access.DisconnectUserSessionAction"
+            name="disconnectUserSessionForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" redirect="true" path="/do/admin/listConnectedUsers" />
+		</action>
+	   	
+		<action 
+			path="/admin/changePassword" 
+			type="nl.strohalm.cyclos.controls.access.ChangePasswordAction"
+            name="changePasswordForm"
+            scope="request"
+            input="admin/_changePassword">
+			<set-property property="secure" value="true" />
+			<forward name="success" redirect="true" path="/do/admin/changePassword"/>
+			<forward name="managePasswords" redirect="true" path="/do/admin/managePasswords"/>
+			<forward name="memberHome" redirect="true" path="/do/member/home"/>
+			<forward name="adminHome" redirect="true" path="/do/admin/home"/>
+			<forward name="operatorHome" redirect="true" path="/do/operator/home"/>
+		</action>
+	   	
+		<action 
+			path="/admin/resetAndSendPassword" 
+			type="nl.strohalm.cyclos.controls.access.ResetAndSendPasswordAction"
+            name="resetAndSendPasswordForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" redirect="true" path="/do/admin/managePasswords"/>
+		</action>
+	   	
+		<action 
+			path="/admin/allowUserLogin" 
+			type="nl.strohalm.cyclos.controls.access.AllowUserLoginAction"
+            name="allowUserLoginForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="memberProfile" redirect="true" path="/do/admin/profile"/>
+			<forward name="adminProfile" redirect="true" path="/do/admin/adminProfile"/>
+		</action>
+	   	
+		<action 
+			path="/admin/generateTransactionPassword" 
+			type="nl.strohalm.cyclos.controls.access.transactionpassword.GenerateTransactionPasswordAction">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/admin/manageTransactionPassword" 
+			type="nl.strohalm.cyclos.controls.access.transactionpassword.ManageTransactionPasswordAction"
+            name="manageTransactionPasswordForm"
+            scope="request"
+            input="admin/_manageTransactionPassword">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/managePasswords" redirect="true"/>
+		</action>
+
+		<action 
+			path="/admin/managePasswords" 
+			type="nl.strohalm.cyclos.controls.access.ManagePasswordsAction"
+            name="managePasswordsForm"
+            scope="request"
+            input="admin/_managePasswords">
+			<set-property property="secure" value="true" />
+		</action>
+		
+		<action 
+			path="/admin/manageExternalAccess" 
+			type="nl.strohalm.cyclos.controls.access.channels.ManageExternalAccessAction"
+            name="manageExternalAccessForm"
+            scope="request"
+            input="admin/_manageExternalAccess">
+			<set-property property="secure" value="true" />
+		</action>
+		
+		<action 
+			path="/admin/changePin" 
+			type="nl.strohalm.cyclos.controls.access.channels.ChangePinAction"
+            name="changePinForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/manageExternalAccess" redirect="true"/>
+		</action>
+		
+		<action 
+			path="/admin/unblockPin" 
+			type="nl.strohalm.cyclos.controls.access.channels.UnblockPinAction"
+            name="unblockPinForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/manageExternalAccess" redirect="true"/>
+		</action>
+		
+		<action 
+			path="/admin/selectChannels" 
+			type="nl.strohalm.cyclos.controls.access.channels.SelectChannelsAction"
+            name="selectChannelsForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/manageExternalAccess" redirect="true"/>
+		</action>
+		
+		<!-- Member -->
+		
+		<action 
+			path="/member/changeExpiredPassword" 
+			type="nl.strohalm.cyclos.controls.access.ChangeExpiredPasswordAction"
+            name="changePasswordForm"
+            scope="request"
+            input="_changeExpiredPassword">
+			<set-property property="secure" value="true" />
+		</action>
+		
+		<action 
+			path="/member/listConnectedUsers" 
+			type="nl.strohalm.cyclos.controls.access.ListConnectedUsersAction"
+            name="listConnectedUsersForm"
+            scope="session"
+            input="member/_listConnectedUsers">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/member/disconnectUser" 
+			type="nl.strohalm.cyclos.controls.access.DisconnectUserAction"
+            name="disconnectUserForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="operatorProfile" redirect="true" path="/do/member/operatorProfile" />
+			<forward name="success" redirect="true" path="/do/member/listConnectedUsers" />
+		</action>
+
+		<action 
+			path="/member/disconnectUserSession" 
+			type="nl.strohalm.cyclos.controls.access.DisconnectUserSessionAction"
+            name="disconnectUserSessionForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="operatorProfile" redirect="true" path="/do/member/operatorProfile" />
+			<forward name="success" redirect="true" path="/do/member/listConnectedUsers" />
+		</action>
+		
+		<action 
+			path="/member/allowUserLogin" 
+			type="nl.strohalm.cyclos.controls.access.AllowUserLoginAction"
+            name="allowUserLoginForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="operatorProfile" redirect="true" path="/do/member/operatorProfile"/>
+		</action>
+		
+		<action 
+			path="/member/changePassword" 
+			type="nl.strohalm.cyclos.controls.access.ChangePasswordAction"
+            name="changePasswordForm"
+            scope="request"
+            input="member/_changePassword">
+			<set-property property="secure" value="true" />
+			<forward name="success" redirect="true" path="/do/member/changePassword"/>
+			<forward name="managePasswords" redirect="true" path="/do/member/managePasswords"/>
+			<forward name="memberHome" redirect="true" path="/do/member/home"/>
+		</action>
+	   	
+		<action 
+			path="/member/resetAndSendPassword" 
+			type="nl.strohalm.cyclos.controls.access.ResetAndSendPasswordAction"
+            name="resetAndSendPasswordForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" redirect="true" path="/do/member/managePasswords"/>
+		</action>
+
+		<action 
+			path="/member/generateTransactionPassword" 
+			type="nl.strohalm.cyclos.controls.access.transactionpassword.GenerateTransactionPasswordAction">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/member/manageTransactionPassword" 
+			type="nl.strohalm.cyclos.controls.access.transactionpassword.ManageTransactionPasswordAction"
+            name="manageTransactionPasswordForm"
+            scope="request"
+            input="member/_manageTransactionPassword">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/member/managePasswords" redirect="true"/>
+		</action>
+
+		<action 
+			path="/member/managePasswords" 
+			type="nl.strohalm.cyclos.controls.access.ManagePasswordsAction"
+            name="managePasswordsForm"
+            scope="request"
+            input="member/_managePasswords">
+			<set-property property="secure" value="true" />
+		</action>
+		
+		<action 
+			path="/member/manageExternalAccess" 
+			type="nl.strohalm.cyclos.controls.access.channels.ManageExternalAccessAction"
+            name="manageExternalAccessForm"
+            scope="request"
+            input="member/_manageExternalAccess">
+			<set-property property="secure" value="true" />
+		</action>
+		
+		<action 
+			path="/member/changePin" 
+			type="nl.strohalm.cyclos.controls.access.channels.ChangePinAction"
+            name="changePinForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/member/manageExternalAccess" redirect="true"/>
+		</action>
+		
+		<action 
+			path="/member/unblockPin" 
+			type="nl.strohalm.cyclos.controls.access.channels.UnblockPinAction"
+            name="unblockPinForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/member/manageExternalAccess" redirect="true"/>
+		</action>
+		
+		<action 
+			path="/member/selectChannels" 
+			type="nl.strohalm.cyclos.controls.access.channels.SelectChannelsAction"
+            name="selectChannelsForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/member/manageExternalAccess" redirect="true"/>
+		</action>
+
+		<action 
+			path="/member/isUsedTransactionPassword" 
+			type="nl.strohalm.cyclos.controls.access.transactionpassword.IsUsedTransactionPasswordAjaxAction"
+            name="isUsedTransactionPasswordAjaxForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<!-- Operator -->
+		<action 
+			path="/operator/changePassword"
+			type="nl.strohalm.cyclos.controls.access.ChangePasswordAction"
+            name="changePasswordForm"
+            scope="request"
+            input="operator/_changePassword">
+			<set-property property="secure" value="true" />
+			<forward name="success" redirect="true" path="/do/operator/changePassword"/>
+			<forward name="managePasswords" redirect="true" path="/do/operator/managePasswords"/>
+			<forward name="operatorHome" redirect="true" path="/do/operator/home"/>
+		</action>
+		
+		<action 
+			path="/operator/generateTransactionPassword" 
+			type="nl.strohalm.cyclos.controls.access.transactionpassword.GenerateTransactionPasswordAction">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/operator/isUsedTransactionPassword" 
+			type="nl.strohalm.cyclos.controls.access.transactionpassword.IsUsedTransactionPasswordAjaxAction"
+            name="isUsedTransactionPasswordAjaxForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+		</action>
+		
+		<action 
+			path="/operator/changeExpiredPassword" 
+			type="nl.strohalm.cyclos.controls.access.ChangeExpiredPasswordAction"
+            name="changePasswordForm"
+            scope="request"
+            input="_changeExpiredPassword">
+			<set-property property="secure" value="true" />
+		</action>
+		
+	</action-mappings>
+
+</struts-config>

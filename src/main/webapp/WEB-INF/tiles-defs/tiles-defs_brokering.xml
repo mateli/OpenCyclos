@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+
+ <!DOCTYPE tiles-definitions PUBLIC
+       "-//Apache Software Foundation//DTD Tiles Configuration 1.1//EN"
+       "http://jakarta.apache.org/struts/dtds/tiles-config_1_1.dtd">
+
+<tiles-definitions>
+
+	<definition name="_printBrokerings" extends=".printLayout">
+		<put name="body" value="/pages/members/brokering/printBrokerings.jsp"/>
+	</definition>
+
+	<definition name="member/_listBrokerings" extends=".memberLayout">
+		<put name="body" value="/pages/members/brokering/listBrokerings.jsp"/>
+	</definition>
+
+	<definition name="admin/_listBrokerings" extends=".adminLayout">
+		<put name="body" value="/pages/members/brokering/listBrokerings.jsp"/>
+	</definition>
+
+	<definition name="admin/_changeBroker" extends=".adminLayout">
+		<put name="body" value="/pages/members/brokering/changeBroker.jsp"/>
+	</definition>
+
+</tiles-definitions>

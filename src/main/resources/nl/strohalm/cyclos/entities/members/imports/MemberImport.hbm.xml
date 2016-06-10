@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+
+	<class dynamic-insert="true" dynamic-update="true" name="nl.strohalm.cyclos.entities.members.imports.MemberImport" table="member_imports">
+    	<id name="id" type="long">
+			<column name="id" sql-type="integer"/>
+            <generator class="native"/>
+        </id>
+       	<many-to-one name="by" class="nl.strohalm.cyclos.entities.members.Administrator">
+		    <column name="by_id" sql-type="integer" not-null="true"/>
+		</many-to-one>
+		<property name="date" column="date" type="calendar" not-null="true" />
+        <many-to-one name="group" not-null="true" class="nl.strohalm.cyclos.entities.groups.MemberGroup">
+            <column name="group_id" not-null="true" sql-type="integer"/>
+    	</many-to-one>
+		<many-to-one name="accountType" class="nl.strohalm.cyclos.entities.accounts.MemberAccountType">
+		    <column name="account_type_id" sql-type="integer"/>
+		</many-to-one>
+    	<many-to-one name="initialCreditTransferType" class="nl.strohalm.cyclos.entities.accounts.transactions.TransferType">
+            <column name="initial_credit_transfer_type_id" sql-type="integer"/>
+    	</many-to-one>
+    	<many-to-one name="initialDebitTransferType" class="nl.strohalm.cyclos.entities.accounts.transactions.TransferType">
+            <column name="initial_debit_transfer_type_id" sql-type="integer"/>
+    	</many-to-one>
+		<bag name="members" cascade="delete" inverse="true">
+            <key> 
+            	<column name="import_id" sql-type="integer"/>
+            </key>
+	        <one-to-many class="nl.strohalm.cyclos.entities.members.imports.ImportedMember"/>
+	    </bag>
+	</class>
+
+</hibernate-mapping>

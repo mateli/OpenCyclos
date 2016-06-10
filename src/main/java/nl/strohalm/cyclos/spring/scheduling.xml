@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+	Bean definitions for scheduled task handling
+ -->
+<beans default-autowire="byName"
+       xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="
+			http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+			http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd"
+	   >
+	
+	<bean id="schedulingHandler" class="nl.strohalm.cyclos.scheduling.SchedulingHandler">
+		<property name="tasks">
+			<list>
+				<bean class="nl.strohalm.cyclos.scheduling.tasks.AccountFeeScheduledTask" />
+				<bean class="nl.strohalm.cyclos.scheduling.tasks.PaymentProcessingScheduledTask" />
+				<bean class="nl.strohalm.cyclos.scheduling.tasks.TicketExpirationScheduledTask" />
+				<bean class="nl.strohalm.cyclos.scheduling.tasks.InvoiceAlertScheduledTask" />
+				<bean class="nl.strohalm.cyclos.scheduling.tasks.InvoiceExpirationScheduledTask" />
+				<bean class="nl.strohalm.cyclos.scheduling.tasks.AdExpirationScheduledTask" />
+				<bean class="nl.strohalm.cyclos.scheduling.tasks.LoanExpirationScheduledTask" />
+				<bean class="nl.strohalm.cyclos.scheduling.tasks.BrokeringExpirationScheduledTask" />
+				<bean class="nl.strohalm.cyclos.scheduling.tasks.BrokerCommissionContractExpirationScheduledTask" />
+				<bean class="nl.strohalm.cyclos.scheduling.tasks.BrokeringCommissionStatusExpirationScheduledTask" />
+				<bean class="nl.strohalm.cyclos.scheduling.tasks.PurgeOldMessagesOnTrashScheduledTask" />
+				<bean class="nl.strohalm.cyclos.scheduling.tasks.PurgeOldMailValidationsScheduledTask" />
+				<bean class="nl.strohalm.cyclos.scheduling.tasks.PurgeOldImportsScheduledTask" />
+				<bean class="nl.strohalm.cyclos.scheduling.tasks.TransactionFeedackExpirationScheduledTask" />
+				<bean class="nl.strohalm.cyclos.scheduling.tasks.MemberGroupRegistrationExpirationScheduledTask" />
+				<bean class="nl.strohalm.cyclos.scheduling.tasks.CertificationScheduledTask" />
+				<bean class="nl.strohalm.cyclos.scheduling.tasks.GuaranteeScheduledTask" />
+				<bean class="nl.strohalm.cyclos.scheduling.tasks.PaymentObligationScheduledTask" />
+				<bean class="nl.strohalm.cyclos.scheduling.tasks.GuaranteeLoanScheduledTask" />
+				<bean class="nl.strohalm.cyclos.scheduling.tasks.CardScheduledTask" />
+				<bean class="nl.strohalm.cyclos.scheduling.tasks.PurgeAccessTracesScheduledTask" />
+				<bean class="nl.strohalm.cyclos.scheduling.tasks.PurgeExpiredSessionsScheduledTask" />
+				<bean class="nl.strohalm.cyclos.scheduling.tasks.CloseBalancesScheduledTask" />
+				<bean class="nl.strohalm.cyclos.scheduling.tasks.PurgeOldTraceNumbersScheduledTask" />
+				<bean class="nl.strohalm.cyclos.scheduling.tasks.PurgeOldIndexOperationsScheduledTask" />
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="pollingTasksHandler" class="nl.strohalm.cyclos.scheduling.PollingTasksHandler">
+		<property name="pollingTasks">
+			<list>
+				<bean class="nl.strohalm.cyclos.scheduling.polling.ChargeAccountFeePollingTask">
+					<property name="sleepSeconds" value="600" />
+				</bean>
+				<bean class="nl.strohalm.cyclos.scheduling.polling.AccountActivationPollingTask">
+					<property name="sleepSeconds" value="600" />
+				</bean>
+				<bean class="nl.strohalm.cyclos.scheduling.polling.AdInterestsNotificationPollingTask">
+					<property name="sleepSeconds" value="30" />
+				</bean>
+				<bean class="nl.strohalm.cyclos.scheduling.polling.BulkMessageSendingPollingTask">
+					<property name="sleepSeconds" value="60" />
+				</bean>
+				<bean class="nl.strohalm.cyclos.scheduling.polling.SmsMailingSendingPollingTask">
+					<property name="sleepSeconds" value="120" />
+				</bean>
+				<bean class="nl.strohalm.cyclos.scheduling.polling.ServiceClientIpResolvingPollingTask">
+					<property name="sleepSeconds" value="600" />
+				</bean>
+			</list>
+		</property>
+	</bean>
+
+</beans>

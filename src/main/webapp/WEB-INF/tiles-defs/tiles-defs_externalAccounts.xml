@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+
+ <!DOCTYPE tiles-definitions PUBLIC
+       "-//Apache Software Foundation//DTD Tiles Configuration 1.1//EN"
+       "http://jakarta.apache.org/struts/dtds/tiles-config_1_1.dtd">
+
+<tiles-definitions>
+
+	<definition name="admin/_listExternalAccounts" extends=".adminLayout">
+		<put name="body" value="/pages/accounts/external/listExternalAccounts.jsp"/>
+	</definition>
+	
+	<definition name="admin/_overviewExternalAccounts" extends=".adminLayout">
+		<put name="body" value="/pages/accounts/external/overviewExternalAccounts.jsp"/>
+	</definition>
+
+	<definition name="admin/_editExternalAccount" extends=".adminLayout">
+		<put name="body" value="/pages/accounts/external/editExternalAccount.jsp"/>
+	</definition>
+
+	<definition name="admin/_listExternalTransferTypes" page="/pages/accounts/external/listExternalTransferTypes.jsp"/>
+
+	<definition name="admin/_editExternalTransferType" extends=".adminLayout">
+		<put name="body" value="/pages/accounts/external/editExternalTransferType.jsp"/>
+	</definition>
+	
+	<definition name="admin/_externalAccountHistory" extends=".adminLayout">
+		<put name="body" value="/pages/accounts/external/externalAccountHistory.jsp"/>
+	</definition>
+	
+	<definition name="admin/_editExternalTransfer" extends=".adminLayout">
+		<put name="body" value="/pages/accounts/external/externalTransfers/editExternalTransfer.jsp"/>
+	</definition>
+	
+	<definition name="admin/_editFileMapping" page="/pages/accounts/external/fileMappings/editFileMapping.jsp"/>
+	
+	<definition name="admin/_editFieldMapping" extends=".adminLayout">
+		<put name="body" value="/pages/accounts/external/fileMappings/editFieldMapping.jsp"/>
+	</definition>
+	
+	<definition name="admin/_setFieldMappingsOrder" extends=".adminLayout">
+		<put name="body" value="/pages/accounts/external/fileMappings/setFieldMappingsOrder.jsp"/>
+	</definition>
+
+	<definition name="admin/_searchTransferImportsForm" extends=".adminLayout">
+		<put name="body" value="/pages/accounts/external/searchTransferImports.jsp"/>
+	</definition>
+
+	<definition name="admin/_processExternalTransfers" extends=".adminLayout">
+		<put name="body" value="/pages/accounts/external/processExternalTransfers.jsp"/>
+	</definition>
+	
+</tiles-definitions>

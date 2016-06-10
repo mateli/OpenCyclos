@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+
+    <subclass dynamic-insert="true" dynamic-update="true" name="nl.strohalm.cyclos.entities.members.remarks.GroupRemark" extends="nl.strohalm.cyclos.entities.members.remarks.Remark" discriminator-value="G">
+		<many-to-one name="oldGroup" class="nl.strohalm.cyclos.entities.groups.Group">
+		    <column name="old_group_id" sql-type="integer"/>
+		</many-to-one>
+		<many-to-one name="newGroup" class="nl.strohalm.cyclos.entities.groups.Group">
+		    <column name="new_group_id" sql-type="integer"/>
+		</many-to-one>
+    </subclass>
+
+</hibernate-mapping>

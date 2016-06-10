@@ -1,0 +1,194 @@
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.1//EN" "http://jakarta.apache.org/struts/dtds/struts-config_1_1.dtd">
+<struts-config>
+	<form-beans>
+        <form-bean name="editGroupForm" type="nl.strohalm.cyclos.controls.groups.EditGroupForm" />
+        <form-bean name="listGroupsForm" type="nl.strohalm.cyclos.controls.groups.ListGroupsForm" />
+        <form-bean name="removeGroupForm" type="nl.strohalm.cyclos.controls.groups.RemoveGroupForm" />
+        <form-bean name="editGroupAccountSettingsForm" type="nl.strohalm.cyclos.controls.groups.accounts.EditGroupAccountSettingsForm" />
+        <form-bean name="removeGroupAccountForm" type="nl.strohalm.cyclos.controls.groups.accounts.RemoveGroupAccountForm" />
+        <form-bean name="editGroupPermissionsForm" type="nl.strohalm.cyclos.controls.groups.permissions.EditGroupPermissionsForm" />
+        <form-bean name="searchGroupsAjaxForm" type="nl.strohalm.cyclos.controls.groups.SearchGroupsAjaxForm" />
+        
+        <form-bean name="editGroupCustomizedFileForm" type="nl.strohalm.cyclos.controls.groups.customizedFiles.EditGroupCustomizedFileForm" />
+        <form-bean name="stopCustomizingGroupFileForm" type="nl.strohalm.cyclos.controls.groups.customizedFiles.StopCustomizingGroupFileForm" />
+        <form-bean name="getAvailableFilesForGroupAjaxForm" type="nl.strohalm.cyclos.controls.groups.customizedFiles.GetAvailableFilesForGroupAjaxForm" />
+	</form-beans>
+	
+	<action-mappings type="org.apache.struts.config.SecureActionConfig">
+
+		<action 
+			path="/admin/listGroups" 
+			type="nl.strohalm.cyclos.controls.groups.ListGroupsAction"
+			name="listGroupsForm"
+			scope="session"
+            input="admin/_listGroups">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/admin/editGroup" 
+			type="nl.strohalm.cyclos.controls.groups.EditGroupAction"
+            name="editGroupForm"
+            scope="request"
+            input="admin/_editGroup">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/editGroup" redirect="true" />
+		</action>
+
+		<action 
+			path="/admin/editGroupAccountSettings" 
+			type="nl.strohalm.cyclos.controls.groups.accounts.EditGroupAccountSettingsAction"
+            name="editGroupAccountSettingsForm"
+            scope="request"
+            input="admin/_editGroupAccountSettings">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/editGroupAccountSettings" redirect="true" />
+		</action>
+
+		<action 
+			path="/admin/removeGroup" 
+			type="nl.strohalm.cyclos.controls.groups.RemoveGroupAction"
+            name="removeGroupForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/listGroups" redirect="true" />
+		</action>
+
+		<action 
+			path="/admin/removeGroupAccount" 
+			type="nl.strohalm.cyclos.controls.groups.accounts.RemoveGroupAccountAction"
+            name="removeGroupAccountForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/editGroup" redirect="true" />
+		</action>
+
+		<action 
+			path="/admin/editGroupPermissions" 
+			type="nl.strohalm.cyclos.controls.groups.permissions.EditGroupPermissionsAction"
+            name="editGroupPermissionsForm"
+            scope="request"
+            input="admin/_editGroupPermissions">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/editGroupPermissions" redirect="true" />
+		</action>
+
+		<action 
+			path="/admin/searchGroupsAjax"
+			type="nl.strohalm.cyclos.controls.groups.SearchGroupsAjaxAction"
+			name="searchGroupsAjaxForm"
+			scope="request">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/admin/getAvailableFilesForGroupAjax"
+			type="nl.strohalm.cyclos.controls.groups.customizedFiles.GetAvailableFilesForGroupAjaxAction"
+			name="getAvailableFilesForGroupAjaxForm"
+			scope="request">
+			<set-property property="secure" value="true" />
+		</action>
+		
+		<action 
+			path="/admin/editGroupCustomizedFile"
+			type="nl.strohalm.cyclos.controls.groups.customizedFiles.EditGroupCustomizedFileAction"
+			name="editGroupCustomizedFileForm"
+			scope="request"
+			input="admin/_editGroupCustomizedFile">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/editGroupCustomizedFile" redirect="true"/>
+		</action>
+		
+		<action 
+			path="/admin/stopCustomizingGroupFile"
+			type="nl.strohalm.cyclos.controls.groups.customizedFiles.StopCustomizingGroupFileAction"
+			name="stopCustomizingGroupFileForm"
+			scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/editGroup" redirect="true"/>
+		</action>
+
+
+		<action 
+			path="/member/searchGroupsAjax"
+			type="nl.strohalm.cyclos.controls.groups.SearchGroupsAjaxAction"
+			name="searchGroupsAjaxForm"
+			scope="request">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/member/listGroups" 
+			type="nl.strohalm.cyclos.controls.groups.ListGroupsAction"
+			name="listGroupsForm"
+            input="member/_listGroups">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/member/editGroup" 
+			type="nl.strohalm.cyclos.controls.groups.EditGroupAction"
+            name="editGroupForm"
+            scope="request"
+            input="member/_editGroup">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/member/editGroup" redirect="true" />
+		</action>
+		
+		<action 
+			path="/member/removeGroup" 
+			type="nl.strohalm.cyclos.controls.groups.RemoveGroupAction"
+            name="removeGroupForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/member/listGroups" redirect="true" />
+		</action>
+		
+		<action 
+			path="/member/editGroupPermissions" 
+			type="nl.strohalm.cyclos.controls.groups.permissions.EditOperatorGroupPermissionsAction"
+            name="editGroupPermissionsForm"
+            scope="request"
+            input="member/_editGroupPermissions">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/member/editGroupPermissions" redirect="true" />
+		</action>
+
+		<action 
+			path="/member/getAvailableFilesForGroupAjax"
+			type="nl.strohalm.cyclos.controls.groups.customizedFiles.GetAvailableFilesForGroupAjaxAction"
+			name="getAvailableFilesForGroupAjaxForm"
+			scope="request">
+			<set-property property="secure" value="true" />
+		</action>
+		
+		<action 
+			path="/member/editGroupCustomizedFile"
+			type="nl.strohalm.cyclos.controls.groups.customizedFiles.EditGroupCustomizedFileAction"
+			name="editGroupCustomizedFileForm"
+			scope="request"
+			input="member/_editGroupCustomizedFile">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/member/editGroupCustomizedFile" redirect="true"/>
+		</action>
+		
+		<action 
+			path="/member/stopCustomizingGroupFile"
+			type="nl.strohalm.cyclos.controls.groups.customizedFiles.StopCustomizingGroupFileAction"
+			name="stopCustomizingGroupFileForm"
+			scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/member/editGroup" redirect="true"/>
+		</action>
+		
+		<action 
+			path="/operator/searchGroupsAjax"
+			type="nl.strohalm.cyclos.controls.groups.SearchGroupsAjaxAction"
+			name="searchGroupsAjaxForm"
+			scope="request">
+			<set-property property="secure" value="true" />
+		</action>
+		
+	</action-mappings>
+
+</struts-config>

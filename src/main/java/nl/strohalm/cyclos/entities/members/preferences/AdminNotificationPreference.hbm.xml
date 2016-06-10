@@ -1,0 +1,86 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class dynamic-insert="true" dynamic-update="true" name="nl.strohalm.cyclos.entities.members.preferences.AdminNotificationPreference" table="admin_notification_preferences">
+        <id name="id" type="long">
+		    <column name="id" sql-type="integer"/>
+            <generator class="native"/>
+        </id>
+		<many-to-one name="admin" update="false" class="nl.strohalm.cyclos.entities.members.Administrator">
+		    <column name="admin_id" sql-type="integer"/>
+		</many-to-one>
+        
+        <property name="applicationErrors" type="boolean" column="application_errors" not-null="true" />
+        <property name="systemInvoices" type="boolean" column="system_invoices" not-null="true" />
+        
+	    <set name="transferTypes" table="admin_preferences_transfer_types">
+			<key>
+			    <column name="preference_id" sql-type="integer"/>
+			</key>
+			<many-to-many class="nl.strohalm.cyclos.entities.accounts.transactions.TransferType" >
+                <column name="transfer_type_id" sql-type="integer"/>
+			</many-to-many>
+		</set>
+        
+	    <set name="newPendingPayments" table="admin_preferences_new_pending_payments">
+			<key>
+			    <column name="preference_id" sql-type="integer"/>
+			</key>
+			<many-to-many class="nl.strohalm.cyclos.entities.accounts.transactions.TransferType" >
+                <column name="transfer_type_id" sql-type="integer"/>
+			</many-to-many>
+		</set>
+		
+		<set name="guaranteeTypes" table="admin_preferences_guarantee_types">
+			<key>
+			    <column name="preference_id" sql-type="integer"/>
+			</key>
+			<many-to-many class="nl.strohalm.cyclos.entities.accounts.guarantees.GuaranteeType" >
+                <column name="guarantee_type_id" sql-type="integer"/>
+			</many-to-many>
+		</set>
+        
+	    <set name="messageCategories" table="admin_preferences_message_categories">
+			<key>
+			    <column name="preference_id" sql-type="integer"/>
+			</key>
+			<many-to-many class="nl.strohalm.cyclos.entities.members.messages.MessageCategory" >
+                <column name="message_category_id" sql-type="integer"/>
+			</many-to-many>
+		</set>
+        
+	    <set name="newMembers" table="admin_preferences_new_members">
+			<key>
+			    <column name="preference_id" sql-type="integer"/>
+			</key>
+			<many-to-many class="nl.strohalm.cyclos.entities.groups.MemberGroup" >
+                <column name="group_id" sql-type="integer"/>
+			</many-to-many>
+		</set>
+        
+		<set name="systemAlerts" cascade="all" table="admin_preferences_system_alerts">
+            <key> 
+            	<column name="preference_id" sql-type="integer"/>
+            </key>
+            <element column="type" length="70" not-null="true">
+	            <type name="nl.strohalm.cyclos.utils.hibernate.StringValuedEnumType">
+	                <param name="enumClassName">nl.strohalm.cyclos.entities.alerts.SystemAlert$Alerts</param>
+	            </type>
+            </element>
+	    </set>
+        
+		<set name="memberAlerts" cascade="all" table="admin_preferences_member_alerts">
+            <key> 
+            	<column name="preference_id" sql-type="integer"/>
+            </key>
+            <element column="type" length="70" not-null="true">
+	            <type name="nl.strohalm.cyclos.utils.hibernate.StringValuedEnumType">
+	                <param name="enumClassName">nl.strohalm.cyclos.entities.alerts.MemberAlert$Alerts</param>
+	            </type>
+            </element>
+	    </set>
+	</class>
+</hibernate-mapping>

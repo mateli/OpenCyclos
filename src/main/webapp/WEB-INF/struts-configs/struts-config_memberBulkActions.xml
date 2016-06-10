@@ -1,0 +1,54 @@
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.1//EN" "http://jakarta.apache.org/struts/dtds/struts-config_1_1.dtd">
+<struts-config>
+	<form-beans>
+        <form-bean name="memberBulkActionsForm" type="nl.strohalm.cyclos.controls.members.bulk.MemberBulkActionsForm" />
+	</form-beans>
+	
+	<action-mappings type="org.apache.struts.config.SecureActionConfig">
+
+		<action 
+			path="/admin/memberBulkActions" 
+			type="nl.strohalm.cyclos.controls.members.bulk.MemberBulkActionsAction"
+            name="memberBulkActionsForm"
+            scope="session"
+            input="admin/_memberBulkActions">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/admin/memberBulkChangeGroup" 
+			type="nl.strohalm.cyclos.controls.members.bulk.MemberBulkChangeGroupAction"
+            name="memberBulkActionsForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/memberBulkActions" redirect="true"/>
+		</action>
+
+		<action 
+			path="/admin/memberBulkChangeBroker" 
+			type="nl.strohalm.cyclos.controls.members.bulk.MemberBulkChangeBrokerAction"
+            name="memberBulkActionsForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/memberBulkActions" redirect="true"/>
+		</action>
+		
+		<action 
+			path="/admin/memberBulkGenerateCard" 
+			type="nl.strohalm.cyclos.controls.members.bulk.MemberBulkGenerateCardAction"
+            name="memberBulkActionsForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/memberBulkActions" redirect="true"/>
+		</action>
+		<action 
+			path="/admin/memberBulkChangeChannels" 
+			type="nl.strohalm.cyclos.controls.members.bulk.MemberBulkChangeChannelsAction"
+            name="memberBulkActionsForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/memberBulkActions" redirect="true"/>
+		</action>
+	</action-mappings>
+
+</struts-config>

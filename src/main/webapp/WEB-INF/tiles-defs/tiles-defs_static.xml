@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+
+ <!DOCTYPE tiles-definitions PUBLIC
+       "-//Apache Software Foundation//DTD Tiles Configuration 1.1//EN"
+       "http://jakarta.apache.org/struts/dtds/tiles-config_1_1.dtd">
+
+<tiles-definitions>
+
+	<definition name="_printManual" extends=".printLayout">
+		<put name="body" value="/pages/general/printManual.jsp"/>
+	</definition>
+
+	<definition name="_printManualSection" extends=".printLayout">
+		<put name="body" value="/pages/general/printManualSection.jsp"/>
+	</definition>
+
+	<definition name="member/_about" extends=".memberLayout">
+		<put name="body" value="/pages/general/about.jsp"/>
+	</definition>
+
+	<definition name="member/_contactUs" extends=".memberLayout">
+		<put name="body" value="/pages/general/contactUs.jsp"/>
+	</definition>
+
+	<definition name="member/_manual" extends=".memberLayout">
+		<put name="body" value="/pages/general/manual.jsp"/>
+	</definition>
+
+	<definition name="member/_manualSection" extends=".memberLayout">
+		<put name="body" value="/pages/general/manualSection.jsp"/>
+	</definition>
+
+	<definition name="admin/_about" extends=".adminLayout">
+		<put name="body" value="/pages/general/about.jsp"/>
+	</definition>
+
+	<definition name="admin/_manual" extends=".adminLayout">
+		<put name="body" value="/pages/general/manual.jsp"/>
+	</definition>
+
+	<definition name="admin/_manualSection" extends=".adminLayout">
+		<put name="body" value="/pages/general/manualSection.jsp"/>
+	</definition>
+
+	<definition name="admin/_statsManual" extends=".adminLayout">
+		<put name="body" value="/pages/general/statisticsManual.jsp"/>
+	</definition>
+
+	<definition name="operator/_about" extends=".operatorLayout">
+		<put name="body" value="/pages/general/about.jsp"/>
+	</definition>
+
+	<definition name="operator/_contactUs" extends=".operatorLayout">
+		<put name="body" value="/pages/general/contactUs.jsp"/>
+	</definition>
+
+	<definition name="operator/_manual" extends=".operatorLayout">
+		<put name="body" value="/pages/general/manual.jsp"/>
+	</definition>
+
+	<definition name="operator/_manualSection" extends=".operatorLayout">
+		<put name="body" value="/pages/general/manualSection.jsp"/>
+	</definition>
+
+</tiles-definitions>

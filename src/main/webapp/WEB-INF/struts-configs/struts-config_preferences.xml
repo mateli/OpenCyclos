@@ -1,0 +1,31 @@
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.1//EN" "http://jakarta.apache.org/struts/dtds/struts-config_1_1.dtd">
+<struts-config>
+	<form-beans>
+        <form-bean name="notificationPreferencesForm" type="nl.strohalm.cyclos.controls.members.preferences.NotificationPreferenceForm" />
+	</form-beans>
+	
+	<action-mappings type="org.apache.struts.config.SecureActionConfig">
+	
+		<action 
+			path="/member/notificationPreferences"
+			type="nl.strohalm.cyclos.controls.members.preferences.NotificationPreferenceAction"
+			input="member/_notificationPreferences"
+			name="notificationPreferencesForm"
+			scope="request">
+			<set-property property="secure" value="true"/>
+	    	<forward name="success" path="/do/member/notificationPreferences" redirect="true" />
+		</action>
+		
+		<action 
+			path="/admin/notificationPreferences"
+			type="nl.strohalm.cyclos.controls.members.preferences.NotificationPreferenceAction"
+			input="admin/_notificationPreferences"
+			name="notificationPreferencesForm"
+			scope="request">
+			<set-property property="secure" value="true"/>
+	    	<forward name="success" path="/do/admin/notificationPreferences" redirect="true" />			
+		</action>
+		
+	</action-mappings>
+	
+</struts-config>

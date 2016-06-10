@@ -1,0 +1,120 @@
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.1//EN" "http://jakarta.apache.org/struts/dtds/struts-config_1_1.dtd">
+<struts-config>
+	<form-beans>
+        <form-bean name="editLocalSettingsForm" type="nl.strohalm.cyclos.controls.settings.EditLocalSettingsForm" />
+        <form-bean name="editLogSettingsForm" type="nl.strohalm.cyclos.controls.settings.EditLogSettingsForm" />
+        <form-bean name="editAlertSettingsForm" type="nl.strohalm.cyclos.controls.settings.EditAlertSettingsForm" />
+        <form-bean name="editAccessSettingsForm" type="nl.strohalm.cyclos.controls.settings.EditAccessSettingsForm" />
+        <form-bean name="editMailSettingsForm" type="nl.strohalm.cyclos.controls.settings.EditMailSettingsForm" />
+        <form-bean name="editMailTranslationForm" type="nl.strohalm.cyclos.controls.settings.EditMailTranslationForm" />
+        <form-bean name="editMessageSettingForm" type="nl.strohalm.cyclos.controls.settings.EditMessageSettingForm" />
+        <form-bean name="manageSettingsForm" type="nl.strohalm.cyclos.controls.settings.ManageSettingsForm" />
+	</form-beans>
+	
+	<action-mappings type="org.apache.struts.config.SecureActionConfig">
+
+		<action 
+			path="/admin/editLocalSettings" 
+			type="nl.strohalm.cyclos.controls.settings.EditLocalSettingsAction"
+            name="editLocalSettingsForm"
+            scope="request"
+            input="admin/_editLocalSettings">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/editLocalSettings" redirect="true"/>
+		</action>
+
+		<action 
+			path="/admin/editLogSettings" 
+			type="nl.strohalm.cyclos.controls.settings.EditLogSettingsAction"
+            name="editLogSettingsForm"
+            scope="request"
+            input="admin/_editLogSettings">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/editLogSettings" redirect="true"/>
+		</action>
+
+		<action 
+			path="/admin/editAlertSettings" 
+			type="nl.strohalm.cyclos.controls.settings.EditAlertSettingsAction"
+            name="editAlertSettingsForm"
+            scope="request"
+            input="admin/_editAlertSettings">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/editAlertSettings" redirect="true"/>
+		</action>
+
+		<action 
+			path="/admin/editAccessSettings" 
+			type="nl.strohalm.cyclos.controls.settings.EditAccessSettingsAction"
+            name="editAccessSettingsForm"
+            scope="request"
+            input="admin/_editAccessSettings">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/editAccessSettings" redirect="true"/>
+		</action>
+
+		<action 
+			path="/admin/editMailSettings" 
+			type="nl.strohalm.cyclos.controls.settings.EditMailSettingsAction"
+            name="editMailSettingsForm"
+            scope="request"
+            input="admin/_editMailSettings">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/editMailSettings" redirect="true"/>
+		</action>
+
+		<action 
+			path="/admin/editMailTranslation" 
+			type="nl.strohalm.cyclos.controls.settings.EditMailTranslationAction"
+            name="editMailTranslationForm"
+            scope="request"
+            input="admin/_editMailTranslation">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/editMailTranslation" redirect="true"/>
+		</action>
+		
+		<action 
+			path="/admin/editMessageSetting" 
+			type="nl.strohalm.cyclos.controls.settings.EditMessageSettingAction"
+            name="editMessageSettingForm"
+            scope="request"
+            input="admin/_editMessageSetting">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/editMessageSetting" redirect="true"/>
+		</action>
+		
+		<action 
+			path="/admin/listMessageSettings" 
+			type="nl.strohalm.cyclos.controls.settings.ListMessageSettingsAction"
+            input="admin/_listMessageSettings">
+			<set-property property="secure" value="true" />
+		</action>
+		
+		<action 
+			path="/admin/manageSettings" 
+			type="nl.strohalm.cyclos.controls.settings.ManageSettingsAction"
+			input="admin/_manageSettings">
+			<set-property property="secure" value="true" />
+		</action>
+		
+		<action 
+			path="/admin/exportSettings" 
+			type="nl.strohalm.cyclos.controls.settings.ExportSettingsAction"
+			name="manageSettingsForm"
+			scope="request">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/admin/importSettings" 
+			type="nl.strohalm.cyclos.controls.settings.ImportSettingsAction"
+			name="manageSettingsForm"
+			scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/manageSettings" redirect="true"/>
+			<forward name="manageTranslationMessages" path="/do/admin/manageTranslationMessages" redirect="true" />
+		</action>
+		
+	</action-mappings>
+
+</struts-config>

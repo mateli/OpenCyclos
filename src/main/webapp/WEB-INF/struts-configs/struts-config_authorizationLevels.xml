@@ -1,0 +1,31 @@
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.1//EN" "http://jakarta.apache.org/struts/dtds/struts-config_1_1.dtd">
+<struts-config>
+	
+	<form-beans>
+        <form-bean name="editAuthorizationLevelForm" type="nl.strohalm.cyclos.controls.accounts.authorizationlevels.EditAuthorizationLevelForm" />
+        <form-bean name="removeAuthorizationLevelForm" type="nl.strohalm.cyclos.controls.accounts.authorizationlevels.RemoveAuthorizationLevelForm" />
+	</form-beans>
+	
+	<action-mappings type="org.apache.struts.config.SecureActionConfig">
+
+		<action 
+			path="/admin/editAuthorizationLevel" 
+			type="nl.strohalm.cyclos.controls.accounts.authorizationlevels.EditAuthorizationLevelAction"
+            name="editAuthorizationLevelForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/editTransferType" redirect="true"></forward>
+		</action>
+		
+		<action 
+			path="/admin/removeAuthorizationLevel" 
+			type="nl.strohalm.cyclos.controls.accounts.authorizationlevels.RemoveAuthorizationLevelAction"
+            name="removeAuthorizationLevelForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/editTransferType" redirect="true" />
+		</action>
+
+	</action-mappings>
+
+</struts-config>

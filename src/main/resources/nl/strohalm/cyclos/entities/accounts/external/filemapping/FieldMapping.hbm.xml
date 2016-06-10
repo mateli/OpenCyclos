@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class dynamic-insert="true" dynamic-update="true" name="nl.strohalm.cyclos.entities.accounts.external.filemapping.FieldMapping" table="field_mappings">
+    	<cache usage="read-write"/>
+		<id name="id" type="long">
+		    <column name="id" sql-type="integer"/>
+			<generator class="native"/>
+		</id>
+
+        <property name="order" column="order_index" type="integer" not-null="true" />
+        <property name="name" column="name" type="string" length="50" not-null="true"/>
+        <property name="field" column="field" length="2" not-null="true">
+            <type name="nl.strohalm.cyclos.utils.hibernate.StringValuedEnumType">
+                <param name="enumClassName">nl.strohalm.cyclos.entities.accounts.external.filemapping.FieldMapping$Field</param>
+            </type>
+		</property>
+
+		<many-to-one name="fileMapping" class="nl.strohalm.cyclos.entities.accounts.external.filemapping.FileMapping">
+		    <column name="file_mapping_id" not-null="true" sql-type="integer"/>
+		</many-to-one>
+
+		<many-to-one name="memberField" class="nl.strohalm.cyclos.entities.customization.fields.MemberCustomField">
+		    <column name="member_field_id" sql-type="integer"/>
+		</many-to-one>
+
+	</class>
+</hibernate-mapping>

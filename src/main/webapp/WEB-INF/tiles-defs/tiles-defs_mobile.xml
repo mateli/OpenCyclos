@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+
+ <!DOCTYPE tiles-definitions PUBLIC
+       "-//Apache Software Foundation//DTD Tiles Configuration 1.1//EN"
+       "http://jakarta.apache.org/struts/dtds/tiles-config_1_1.dtd">
+
+<tiles-definitions>
+
+	<definition name="mobile/_login" extends=".mobileLayout">
+		<put name="body" value="/pages/mobile/login.jsp"/>
+	</definition>
+
+	<definition name="mobile/_error" extends=".mobileLayout">
+		<put name="body" value="/pages/mobile/error.jsp"/>
+	</definition>
+
+	<definition name="mobile/_home" extends=".mobileLayout">
+		<put name="body" value="/pages/mobile/home.jsp"/>
+	</definition>
+
+	<definition name="mobile/_viewPayments" extends=".mobileLayout">
+		<put name="body" value="/pages/mobile/viewPayments.jsp"/>
+	</definition>
+
+	<definition name="mobile/_doPayment" extends=".mobileLayout">
+		<put name="body" value="/pages/mobile/doPayment.jsp"/>
+	</definition>
+
+	<definition name="mobile/_confirmPayment" extends=".mobileLayout">
+		<put name="body" value="/pages/mobile/confirmPayment.jsp"/>
+	</definition>
+	
+	<definition name="mobile/_changeAccount" extends=".mobileLayout">
+		<put name="body" value="/pages/mobile/changeAccount.jsp"/>
+	</definition>
+
+
+
+	<definition name="wap/_login" extends=".wapLayout">
+		<put name="body" value="/pages/wap/login.jsp"/>
+	</definition>
+
+	<definition name="wap/_error" extends=".wapLayout">
+		<put name="body" value="/pages/wap/error.jsp"/>
+	</definition>
+
+	<definition name="wap/_home" extends=".wapLayout">
+		<put name="body" value="/pages/wap/home.jsp"/>
+	</definition>
+
+	<definition name="wap/_viewPayments" extends=".wapLayout">
+		<put name="body" value="/pages/wap/viewPayments.jsp"/>
+	</definition>
+
+	<definition name="wap/_doPayment" extends=".wapLayout">
+		<put name="body" value="/pages/wap/doPayment.jsp"/>
+	</definition>
+
+	<definition name="wap/_confirmPayment" extends=".wapLayout">
+		<put name="body" value="/pages/wap/confirmPayment.jsp"/>
+	</definition>
+	
+	<definition name="wap/_changeAccount" extends=".wapLayout">
+		<put name="body" value="/pages/wap/changeAccount.jsp"/>
+	</definition>
+	
+</tiles-definitions>

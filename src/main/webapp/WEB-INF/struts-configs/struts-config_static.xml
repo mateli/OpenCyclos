@@ -1,0 +1,83 @@
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.1//EN" "http://jakarta.apache.org/struts/dtds/struts-config_1_1.dtd">
+<struts-config>
+	
+	<action-mappings type="org.apache.struts.config.SecureActionConfig">
+
+		<action 
+			path="/print/manual" 
+			type="nl.strohalm.cyclos.controls.general.ManualAction"
+            input="_printManual">
+			<set-property property="secure" value="true" />
+			<forward name="section" path="_printManualSection" />
+		</action>
+
+		<action 
+			path="/admin/about" 
+			type="nl.strohalm.cyclos.controls.general.AboutAction"
+            input="admin/_about">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/admin/manual" 
+			type="nl.strohalm.cyclos.controls.general.ManualAction"
+            input="admin/_manual">
+			<set-property property="secure" value="true" />
+			<forward name="section" path="admin/_manualSection" />
+		</action>
+
+		<action 
+			path="/admin/statsManual" 
+			type="nl.strohalm.cyclos.controls.general.ManualAction"
+            input="admin/_statsManual">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/member/about" 
+			type="nl.strohalm.cyclos.controls.general.AboutAction"
+            input="member/_about">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/member/contactUs" 
+			type="nl.strohalm.cyclos.controls.general.ContactUsAction"
+            input="member/_contactUs">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/member/manual" 
+			type="nl.strohalm.cyclos.controls.general.ManualAction"
+            input="member/_manual">
+			<set-property property="secure" value="true" />
+			<forward name="section" path="member/_manualSection" />
+		</action>
+		
+		<!-- operator -->
+		<action 
+			path="/operator/about" 
+			type="nl.strohalm.cyclos.controls.general.AboutAction"
+            input="operator/_about">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/operator/contactUs" 
+			type="nl.strohalm.cyclos.controls.general.ContactUsAction"
+            input="operator/_contactUs">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/operator/manual" 
+			type="nl.strohalm.cyclos.controls.general.ManualAction"
+            input="operator/_manual">
+			<set-property property="secure" value="true" />
+			<forward name="section" path="operator/_manualSection" />
+		</action>
+
+	</action-mappings>
+
+</struts-config>

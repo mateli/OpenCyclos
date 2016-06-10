@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+
+ <!DOCTYPE tiles-definitions PUBLIC
+       "-//Apache Software Foundation//DTD Tiles Configuration 1.1//EN"
+       "http://jakarta.apache.org/struts/dtds/tiles-config_1_1.dtd">
+
+<tiles-definitions>
+
+	<definition name="admin/_listGroups" extends=".adminLayout">
+		<put name="body" value="/pages/groups/listGroups.jsp"/>
+	</definition>
+
+	<definition name="admin/_editGroup" extends=".adminLayout">
+		<put name="body" value="/pages/groups/editGroup.jsp"/>
+	</definition>
+
+	<definition name="admin/_editGroupAccountSettings" extends=".adminLayout">
+		<put name="body" value="/pages/groups/accountSettings/editGroupAccountSettings.jsp"/>
+	</definition>
+
+	<definition name="admin/_editGroupPermissions" extends=".adminLayout">
+		<put name="body" value="/pages/groups/permissions/editGroupPermissions.jsp"/>
+	</definition>
+
+	<definition name="admin/_editGroupCustomizedFile" extends=".adminLayout">
+		<put name="body" value="/pages/groups/customizedFiles/editGroupCustomizedFile.jsp"/>
+	</definition>
+	
+	
+	
+	<definition name="member/_listGroups" extends=".memberLayout">
+		<put name="body" value="/pages/groups/listGroups.jsp"/>
+	</definition>
+	
+	<definition name="member/_editGroup" extends=".memberLayout">
+		<put name="body" value="/pages/groups/editGroup.jsp"/>
+	</definition>
+	
+	<definition name="member/_editGroupPermissions" extends=".memberLayout">
+		<put name="body" value="/pages/groups/permissions/editOperatorGroupPermissions.jsp"/>
+	</definition>
+
+	<definition name="member/_editGroupCustomizedFile" extends=".memberLayout">
+		<put name="body" value="/pages/groups/customizedFiles/editGroupCustomizedFile.jsp"/>
+	</definition>
+
+</tiles-definitions>

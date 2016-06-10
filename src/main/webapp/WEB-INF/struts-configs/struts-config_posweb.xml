@@ -1,0 +1,118 @@
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.1//EN" "http://jakarta.apache.org/struts/dtds/struts-config_1_1.dtd">
+<struts-config>
+	<form-beans>
+        <form-bean name="poswebLoginForm" type="nl.strohalm.cyclos.controls.posweb.LoginForm" />
+        <form-bean name="poswebMakePaymentForm" type="nl.strohalm.cyclos.controls.posweb.MakePaymentForm" />
+        <form-bean name="poswebReceivePaymentForm" type="nl.strohalm.cyclos.controls.posweb.ReceivePaymentForm" />
+        <form-bean name="poswebSearchTransactionsForm" type="nl.strohalm.cyclos.controls.posweb.SearchTransactionsForm" />
+        <form-bean name="loadMemberAjaxForm" type="nl.strohalm.cyclos.controls.members.LoadMemberAjaxForm" />
+	</form-beans>
+		
+	<global-forwards>
+		<forward name="poswebAcceptRegistrationAgreement" path="/do/posweb/acceptRegistrationAgreement" redirect="true"/>
+		<forward name="poswebChangeExpiredPassword" path="/do/posweb/changeExpiredPassword" redirect="true"/>
+	</global-forwards>
+	
+	<action-mappings type="org.apache.struts.config.SecureActionConfig">
+
+		<action 
+			path="/posweb/login" 
+			type="nl.strohalm.cyclos.controls.posweb.LoginAction"
+            name="poswebLoginForm"
+            scope="request"
+            input="posweb/_login">
+			<set-property property="secure" value="true" />
+			<forward name="receivePayment" path="/do/posweb/receivePayment" redirect="true" />
+			<forward name="makePayment" path="/do/posweb/makePayment" redirect="true" />
+		</action>
+
+		<action 
+			path="/posweb/changeExpiredPassword" 
+			type="nl.strohalm.cyclos.controls.posweb.ChangeExpiredPasswordAction"
+            name="changePasswordForm"
+            scope="request"
+            input="posweb/_changeExpiredPassword">
+			<set-property property="secure" value="true" />
+			<forward name="success" redirect="true" path="/do/posweb/login"/>
+		</action>
+
+		<action 
+			path="/posweb/acceptRegistrationAgreement" 
+			type="nl.strohalm.cyclos.controls.posweb.AcceptRegistrationAgreementAction"
+            name="acceptRegistrationAgreementForm"
+            scope="request"
+            input="posweb/_acceptRegistrationAgreement">
+			<set-property property="secure" value="true" />
+			<forward name="login" redirect="true" path="/do/posweb/login"/>
+		</action>
+		
+		<action 
+			path="/posweb/logout" 
+			type="nl.strohalm.cyclos.controls.posweb.LogoutAction">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/posweb/makePayment" 
+			type="nl.strohalm.cyclos.controls.posweb.MakePaymentAction"
+            name="poswebMakePaymentForm"
+            scope="request"
+            input="posweb/_makePayment">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/posweb/makePayment" redirect="true" />
+		</action>
+
+		<action 
+			path="/posweb/receivePayment" 
+			type="nl.strohalm.cyclos.controls.posweb.ReceivePaymentAction"
+            name="poswebReceivePaymentForm"
+            scope="request"
+            input="posweb/_receivePayment">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/posweb/receivePayment" redirect="true" />
+		</action>
+
+		<action 
+			path="/posweb/searchTransactions" 
+			type="nl.strohalm.cyclos.controls.posweb.SearchTransactionsAction"
+            name="poswebSearchTransactionsForm"
+            scope="request"
+            input="posweb/_searchTransactions">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/posweb/transactionsReceipt" 
+			type="nl.strohalm.cyclos.controls.posweb.TransactionsReceiptAction"
+            name="poswebSearchTransactionsForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/posweb/printTransactions" 
+			type="nl.strohalm.cyclos.controls.posweb.PrintTransactionsAction"
+            name="poswebSearchTransactionsForm"
+            scope="request"
+            input="posweb/_printTransactions">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/posweb/printSettings" 
+			type="nl.strohalm.cyclos.controls.posweb.PrintSettingsAction"
+            input="posweb/_printSettings">
+			<set-property property="secure" value="true" />
+		</action>
+		
+		<action 
+			path="/posweb/loadMemberAjax" 
+			type="nl.strohalm.cyclos.controls.members.LoadMemberAjaxAction"
+            name="loadMemberAjaxForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+		</action>
+		
+	</action-mappings>
+
+</struts-config>

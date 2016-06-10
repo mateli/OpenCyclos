@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+
+ <!DOCTYPE tiles-definitions PUBLIC
+       "-//Apache Software Foundation//DTD Tiles Configuration 1.1//EN"
+       "http://jakarta.apache.org/struts/dtds/tiles-config_1_1.dtd">
+
+<tiles-definitions>
+
+	<definition name="_publicCreateMember" extends=".standaloneLayout">
+		<put name="body" value="/pages/members/createMember.jsp"/>
+	</definition>
+					  
+	<definition name="_publicInitialGroup" extends=".standaloneLayout">
+		<put name="body" value="/pages/members/initialGroup.jsp"/>
+	</definition>
+
+	<definition name="_printMembers" extends=".printLayout">
+		<put name="body" value="/pages/members/printMembers.jsp"/>
+	</definition>
+
+	<definition name="_printPendingMembers" extends=".printLayout">
+		<put name="body" value="/pages/members/pending/printPendingMembers.jsp"/>
+	</definition>
+
+	<definition name="_acceptRegistrationAgreement" extends=".standaloneLayout">
+		<put name="body" value="/pages/members/acceptRegistrationAgreement.jsp"/>
+	</definition>
+
+
+					  
+	<definition name="member/_publicInitialGroup" extends=".memberLayout">
+		<put name="body" value="/pages/members/initialGroup.jsp"/>
+	</definition>
+
+	<definition name="member/_searchMembers" extends=".memberLayout">
+		<put name="body" value="/pages/members/searchMembers.jsp"/>
+	</definition>
+
+	<definition name="member/_editProfile" extends=".memberLayout">
+		<put name="body" value="/pages/members/editProfile.jsp"/>
+	</definition>
+
+	<definition name="member/_viewProfile" extends=".memberLayout">
+		<put name="body" value="/pages/members/viewProfile.jsp"/>
+	</definition>
+
+	<definition name="member/_activities" extends=".memberLayout">
+		<put name="body" value="/pages/members/activities/activities.jsp"/>
+	</definition>
+
+	<definition name="member/_createMember" extends=".memberLayout">
+		<put name="body" value="/pages/members/createMember.jsp"/>
+	</definition>
+
+	<definition name="member/_sendPersonalMessage" extends=".adminLayout">
+		<put name="body" value="/pages/members/messages/sendPersonalMessage.jsp"/>
+	</definition>
+	
+	<definition name="member/_viewPersonalMessage" extends=".memberLayout">
+		<put name="body" value="/pages/members/messages/viewPersonalMessage.jsp"/>
+	</definition>
+
+	<definition name="member/_memberLoanGroups" extends=".memberLayout">
+		<put name="body" value="/pages/members/loanGroups/memberLoanGroups.jsp"/>
+	</definition>
+
+	<definition name="member/_editAdInterest" extends=".memberLayout">
+		<put name="body" value="/pages/members/adinterests/editAdInterest.jsp"/>
+	</definition>
+
+	<definition name="member/_listAdInterests" extends=".memberLayout">
+		<put name="body" value="/pages/members/adinterests/listAdInterests.jsp"/>
+	</definition>
+	
+	<definition name="member/_pendingMemberProfile" extends=".memberLayout">
+		<put name="body" value="/pages/members/pending/pendingMemberProfile.jsp"/>
+	</definition>
+	
+	<definition name="member/_searchPendingMembers" extends=".memberLayout">
+		<put name="body" value="/pages/members/pending/searchPendingMembers.jsp"/>
+	</definition>
+	
+	<definition name="member/_listReceiptPrinterSettings" extends=".memberLayout">
+		<put name="body" value="/pages/members/printSettings/listReceiptPrinterSettings.jsp"/>
+	</definition>
+	
+	<definition name="member/_editReceiptPrinterSettings" extends=".memberLayout">
+		<put name="body" value="/pages/members/printSettings/editReceiptPrinterSettings.jsp"/>
+	</definition>
+	
+
+	<definition name="admin/_searchMembers" extends=".adminLayout">
+		<put name="body" value="/pages/members/searchMembers.jsp"/>
+	</definition>
+
+	<definition name="admin/_createMember" extends=".adminLayout">
+		<put name="body" value="/pages/members/createMember.jsp"/>
+	</definition>
+
+	<definition name="admin/_editProfile" extends=".adminLayout">
+		<put name="body" value="/pages/members/editProfile.jsp"/>
+	</definition>
+
+	<definition name="admin/_viewProfile" extends=".adminLayout">
+		<put name="body" value="/pages/members/viewProfile.jsp"/>
+	</definition>
+
+	<definition name="admin/_activities" extends=".adminLayout">
+		<put name="body" value="/pages/members/activities/activities.jsp"/>
+	</definition>
+
+	<definition name="admin/_changeMemberGroup" extends=".adminLayout">
+		<put name="body" value="/pages/members/changeMemberGroup.jsp"/>
+	</definition>
+
+	<definition name="admin/_editCreditLimit" extends=".adminLayout">
+		<put name="body" value="/pages/members/creditLimit/editCreditLimit.jsp"/>
+	</definition>
+
+	<definition name="admin/_sendPersonalMessage" extends=".adminLayout">
+		<put name="body" value="/pages/members/messages/sendPersonalMessage.jsp"/>
+	</definition>
+
+	<definition name="admin/_memberLoanGroups" extends=".adminLayout">
+		<put name="body" value="/pages/members/loanGroups/memberLoanGroups.jsp"/>
+	</definition>
+
+	<definition name="admin/_listRegistrationAgreements" extends=".adminLayout">
+		<put name="body" value="/pages/members/agreements/listRegistrationAgreements.jsp"/>
+	</definition>
+
+	<definition name="admin/_editRegistrationAgreement" extends=".adminLayout">
+		<put name="body" value="/pages/members/agreements/editRegistrationAgreement.jsp"/>
+	</definition>
+	
+	<definition name="admin/_pendingMemberProfile" extends=".adminLayout">
+		<put name="body" value="/pages/members/pending/pendingMemberProfile.jsp"/>
+	</definition>
+	
+	<definition name="admin/_searchPendingMembers" extends=".adminLayout">
+		<put name="body" value="/pages/members/pending/searchPendingMembers.jsp"/>
+	</definition>
+	
+
+	<!-- operators -->
+	<definition name="operator/_viewProfile" extends=".operatorLayout">
+		<put name="body" value="/pages/members/viewProfile.jsp"/>
+	</definition>
+
+	<definition name="operator/_activities" extends=".operatorLayout">
+		<put name="body" value="/pages/members/activities/activities.jsp"/>
+	</definition>
+
+	<definition name="operator/_searchMembers" extends=".operatorLayout">
+		<put name="body" value="/pages/members/searchMembers.jsp"/>
+	</definition>
+	
+	<definition name="operator/_listReceiptPrinterSettings" extends=".operatorLayout">
+		<put name="body" value="/pages/members/printSettings/listReceiptPrinterSettings.jsp"/>
+	</definition>
+	
+	<definition name="operator/_editReceiptPrinterSettings" extends=".operatorLayout">
+		<put name="body" value="/pages/members/printSettings/editReceiptPrinterSettings.jsp"/>
+	</definition>
+
+</tiles-definitions>

@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+
+    <class dynamic-insert="true" dynamic-update="true" name="nl.strohalm.cyclos.entities.accounts.pos.PosLog" table="pos_logs">
+		
+		<id name="id" type="long">
+		    <column name="id" sql-type="integer"/>
+			<generator class="native"/>
+		</id>
+		
+	    <property name="date" column="date" type="calendar" not-null="true"/>
+        
+        <property name="posStatus" column="pos_status" length="1" not-null="true">
+            <type name="nl.strohalm.cyclos.utils.hibernate.StringValuedEnumType">
+                <param name="enumClassName">nl.strohalm.cyclos.entities.accounts.pos.Pos$Status</param>
+            </type>
+		</property>
+		<property name="memberPosStatus" column="member_pos_status" length="1">
+            <type name="nl.strohalm.cyclos.utils.hibernate.StringValuedEnumType">
+                <param name="enumClassName">nl.strohalm.cyclos.entities.accounts.pos.MemberPos$Status</param>
+            </type>
+		</property>
+		
+		<many-to-one name="by" class="nl.strohalm.cyclos.entities.members.Element">
+		    <column name="by_id" sql-type="integer" />
+		</many-to-one>
+		<many-to-one name="pos" class="nl.strohalm.cyclos.entities.accounts.pos.Pos">
+		    <column name="pos_id" sql-type="integer" not-null="true"/>
+		</many-to-one>
+		<many-to-one name="assignedTo" class="nl.strohalm.cyclos.entities.members.Member">
+		    <column name="assigned_to" sql-type="integer"/>
+		</many-to-one>
+				
+    </class>
+    
+</hibernate-mapping>

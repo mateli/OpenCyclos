@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+
+	<subclass dynamic-insert="true" dynamic-update="true" name="nl.strohalm.cyclos.entities.members.TransactionFeedback" extends="nl.strohalm.cyclos.entities.members.Reference" discriminator-value="T">
+		<property name="replyCommentsDate" column="reply_comments_date" type="calendar"/>
+		<property name="replyComments" column="reply_comments" type="text"/>
+		<property name="adminCommentsDate" column="admin_comments_date" type="calendar"/>
+		<property name="adminComments" column="admin_comments" type="text"/>
+
+		<many-to-one name="transfer" class="nl.strohalm.cyclos.entities.accounts.transactions.Transfer">
+		    <column name="transfer_id" sql-type="bigint"/>
+		</many-to-one>
+
+		<many-to-one name="scheduledPayment" class="nl.strohalm.cyclos.entities.accounts.transactions.ScheduledPayment">
+		    <column name="scheduled_payment_id" sql-type="integer"/>
+		</many-to-one>
+	</subclass>
+	
+</hibernate-mapping>

@@ -1,0 +1,42 @@
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.1//EN" "http://jakarta.apache.org/struts/dtds/struts-config_1_1.dtd">
+<struts-config>
+
+	<form-beans>
+        <form-bean name="editTransactionFeeForm" type="nl.strohalm.cyclos.controls.accounts.transactionfees.EditTransactionFeeForm" />
+        <form-bean name="listGeneratedTypesAjaxForm" type="nl.strohalm.cyclos.controls.accounts.transactionfees.ListGeneratedTypesAjaxForm" />
+        <form-bean name="removeTransactionFeeForm" type="nl.strohalm.cyclos.controls.accounts.transactionfees.RemoveTransactionFeeForm" />
+	</form-beans>
+	
+	<action-mappings type="org.apache.struts.config.SecureActionConfig">
+
+		<action 
+			path="/admin/editTransactionFee" 
+			type="nl.strohalm.cyclos.controls.accounts.transactionfees.EditTransactionFeeAction"
+            name="editTransactionFeeForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="inputSimpleTransactionFee" path="admin/_editSimpleTransactionFee" redirect="false" />
+			<forward name="inputBrokerCommission" path="admin/_editBrokerCommission" redirect="false" />
+			<forward name="success" path="/do/admin/editTransactionFee" redirect="true" />
+		</action>
+
+		<action 
+			path="/admin/listGeneratedTypesForTransactionFee" 
+			type="nl.strohalm.cyclos.controls.accounts.transactionfees.ListGeneratedTypesAjaxAction"
+            name="listGeneratedTypesAjaxForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/admin/removeTransactionFee" 
+			type="nl.strohalm.cyclos.controls.accounts.transactionfees.RemoveTransactionFeeAction"
+            name="removeTransactionFeeForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/editTransferType" redirect="true" />
+		</action>
+
+	</action-mappings>
+
+</struts-config>

@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class dynamic-insert="true" dynamic-update="true" name="nl.strohalm.cyclos.entities.access.Session" table="sessions">
+		<id name="id" type="long">
+		    <column name="id" sql-type="integer"/>
+			<generator class="native"/>
+		</id>
+        <property name="identifier" column="identifier" unique="true" not-null="true" />
+        <property name="creationDate" column="creation_date" type="calendar" not-null="true" />
+        <property name="expirationDate" column="expiration_date" type="calendar" not-null="true" />
+        <property name="posWeb" column="pos_web" />
+        <property name="remoteAddress" column="remote_addr" length="64" not-null="true" />
+		<many-to-one name="user" class="nl.strohalm.cyclos.entities.access.User" >
+			<column name="user_id" sql-type="integer" not-null="true"/>
+		</many-to-one>
+	</class>
+</hibernate-mapping>

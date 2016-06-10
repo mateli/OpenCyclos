@@ -1,0 +1,76 @@
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.1//EN" "http://jakarta.apache.org/struts/dtds/struts-config_1_1.dtd">
+<struts-config>
+	<form-beans>
+        <form-bean name="createOperatorForm" type="nl.strohalm.cyclos.controls.operators.CreateOperatorForm" />
+
+        <form-bean name="searchOperatorsForm" type="nl.strohalm.cyclos.controls.operators.SearchOperatorsForm" />
+        <form-bean name="operatorProfileForm" type="nl.strohalm.cyclos.controls.operators.OperatorProfileForm" />
+
+        <form-bean name="changeOperatorGroupForm" type="nl.strohalm.cyclos.controls.operators.ChangeOperatorGroupForm" />
+        <form-bean name="removeOperatorForm" type="nl.strohalm.cyclos.controls.operators.RemoveOperatorForm" />
+	</form-beans>
+	
+	<action-mappings type="org.apache.struts.config.SecureActionConfig">
+
+		<action 
+			path="/member/createOperator" 
+			type="nl.strohalm.cyclos.controls.operators.CreateOperatorAction"
+            name="createOperatorForm"
+            scope="request"
+            input="member/_createOperator">
+			<set-property property="secure" value="true" />
+			<forward name="new" path="/do/member/createOperator" redirect="true"/>
+			<forward name="profile" path="/do/member/operatorProfile" redirect="true"/>
+		</action>
+
+		<action 
+			path="/member/searchOperators" 
+			type="nl.strohalm.cyclos.controls.operators.SearchOperatorsAction"
+            name="searchOperatorsForm"
+            scope="session"
+            input="member/_searchOperators">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/member/operatorProfile" 
+			type="nl.strohalm.cyclos.controls.operators.OperatorProfileAction"
+            name="operatorProfileForm"
+            scope="request"
+            input="member/_operatorProfile">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/member/operatorProfile" redirect="true"/>
+		</action>
+		
+		<action 
+			path="/member/changeOperatorGroup" 
+			type="nl.strohalm.cyclos.controls.operators.ChangeOperatorGroupAction"
+            input="member/_changeOperatorGroup"
+            name="changeOperatorGroupForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/member/operatorProfile" redirect="true"/>
+		</action>		
+		
+		<action 
+			path="/member/removeOperator" 
+			type="nl.strohalm.cyclos.controls.operators.RemoveOperatorAction"
+            name="removeOperatorForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/member/searchOperators" redirect="true"/>
+		</action>		
+		
+		<action 
+			path="/operator/operatorProfile" 
+			type="nl.strohalm.cyclos.controls.operators.OperatorProfileAction"
+            name="operatorProfileForm"
+            scope="request"
+            input="operator/_operatorProfile">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/operator/operatorProfile" redirect="true"/>
+		</action>
+
+	</action-mappings>
+
+</struts-config>

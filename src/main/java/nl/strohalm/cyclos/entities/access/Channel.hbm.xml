@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class dynamic-insert="true" dynamic-update="true" name="nl.strohalm.cyclos.entities.access.Channel" table="channels">
+    	<cache usage="read-write"/>
+        <id name="id" type="long">
+		    <column name="id" sql-type="integer"/>
+            <generator class="native"/>
+        </id>
+        <property name="internalName" type="string">
+	        <column name="internal_name" not-null="true" unique="true" length="50" />
+        </property>
+        <property name="displayName" column="display_name" not-null="true" type="string" length="100" />
+        <property name="credentials" column="credentials" not-null="true" length="1">
+            <type name="nl.strohalm.cyclos.utils.hibernate.StringValuedEnumType">
+                <param name="enumClassName">nl.strohalm.cyclos.entities.access.Channel$Credentials</param>
+            </type>
+        </property>
+        <property name="paymentRequestWebServiceUrl" column="pmt_req_ws_url" type="string" length="200" />
+
+		<bag name="principals" table="channels_principals" inverse="true" cascade="delete">
+			<cache usage="read-write"/>
+			<key>
+			    <column name="channel_id" sql-type="integer"/>
+			</key>
+			<one-to-many class="nl.strohalm.cyclos.entities.access.ChannelPrincipal"/>
+		</bag>
+
+		<bag name="groups" table="groups_channels" inverse="true">
+			<cache usage="read-write"/>
+			<key>
+			    <column name="channel_id" sql-type="integer"/>
+			</key>
+			<many-to-many class="nl.strohalm.cyclos.entities.groups.MemberGroup">
+                <column name="group_id" sql-type="integer"/>
+			</many-to-many>
+		</bag>
+	</class>
+</hibernate-mapping>

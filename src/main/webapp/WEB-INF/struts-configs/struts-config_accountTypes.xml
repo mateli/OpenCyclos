@@ -1,0 +1,63 @@
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.1//EN" "http://jakarta.apache.org/struts/dtds/struts-config_1_1.dtd">
+<struts-config>
+	<form-beans>
+        <form-bean name="removeAccountTypeForm" type="nl.strohalm.cyclos.controls.accounts.accounttypes.RemoveAccountTypeForm" />
+        <form-bean name="editAccountTypeForm" type="nl.strohalm.cyclos.controls.accounts.accounttypes.EditAccountTypeForm" />
+        <form-bean name="searchAccountTypesAjaxForm" type="nl.strohalm.cyclos.controls.accounts.accounttypes.SearchAccountTypesAjaxForm" />
+	</form-beans>
+	
+	<action-mappings type="org.apache.struts.config.SecureActionConfig">
+
+		<action 
+			path="/admin/listAccountTypes" 
+			type="nl.strohalm.cyclos.controls.accounts.accounttypes.ListAccountTypesAction"
+            input="admin/_listAccountTypes">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/admin/removeAccountType" 
+			type="nl.strohalm.cyclos.controls.accounts.accounttypes.RemoveAccountTypeAction"
+            name="removeAccountTypeForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/listAccountTypes" redirect="true"></forward>
+		</action>
+
+		<action 
+			path="/admin/editAccountType" 
+			type="nl.strohalm.cyclos.controls.accounts.accounttypes.EditAccountTypeAction"
+            name="editAccountTypeForm"
+            scope="request"
+            input="admin/_editAccountType">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/editAccountType" redirect="true"></forward>
+		</action>
+
+		<action 
+			path="/admin/searchAccountTypesAjax" 
+			type="nl.strohalm.cyclos.controls.accounts.accounttypes.SearchAccountTypesAjaxAction"
+            name="searchAccountTypesAjaxForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+		</action>
+		
+		<action 
+			path="/member/searchAccountTypesAjax" 
+			type="nl.strohalm.cyclos.controls.accounts.accounttypes.SearchAccountTypesAjaxAction"
+            name="searchAccountTypesAjaxForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+		</action>
+		
+		<action 
+			path="/operator/searchAccountTypesAjax" 
+			type="nl.strohalm.cyclos.controls.accounts.accounttypes.SearchAccountTypesAjaxAction"
+            name="searchAccountTypesAjaxForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+		</action>
+		
+	</action-mappings>
+
+</struts-config>

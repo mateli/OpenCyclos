@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+
+ <!DOCTYPE tiles-definitions PUBLIC
+       "-//Apache Software Foundation//DTD Tiles Configuration 1.1//EN"
+       "http://jakarta.apache.org/struts/dtds/tiles-config_1_1.dtd">
+
+<tiles-definitions>
+
+	<definition name=".mainLayout" path="/pages/general/layout/layout.jsp">
+		<put name="menu" value="" />
+		<put name="body" value="" />
+	</definition>
+	
+	<definition name=".adminLayout" extends=".mainLayout">
+		<put name="menu" value="/pages/general/layout/menuAdmin.jsp" />
+	</definition>
+
+	<definition name=".memberLayout" extends=".mainLayout">
+		<put name="menu" value="/pages/general/layout/menuMember.jsp" />
+	</definition>
+
+	<definition name=".operatorLayout" extends=".mainLayout">
+		<put name="menu" value="/pages/general/layout/menuOperator.jsp" />
+	</definition>
+
+	<definition name=".helpLayout" path="/pages/general/layout/helpLayout.jsp">
+		<put name="body" value="" />
+	</definition>
+
+	<definition name=".imageLayout" path="/pages/general/layout/imageLayout.jsp">
+		<put name="body" value="" />
+	</definition>
+
+	<definition name=".printLayout" path="/pages/general/layout/printLayout.jsp">
+		<put name="body" value="" />
+	</definition>
+
+	<definition name=".standaloneLayout" path="/pages/general/layout/standaloneLayout.jsp">
+		<put name="body" value="" />
+	</definition>
+
+	<definition name=".poswebLayout" path="/pages/general/layout/poswebLayout.jsp">
+		<put name="body" value="" />
+	</definition>
+
+	<definition name=".emptyLayout" path="/pages/general/layout/emptyLayout.jsp">
+		<put name="body" value="" />
+	</definition>
+
+	<definition name=".webshopLayout" path="/pages/general/layout/webshopLayout.jsp">
+		<put name="body" value="" />
+	</definition>
+
+	<definition name=".mobileLayout" path="/pages/mobile/layout.jsp">
+		<put name="body" value="" />
+	</definition>
+
+	<definition name=".wapLayout" path="/pages/wap/layout.jsp">
+		<put name="body" value="" />
+	</definition>
+
+</tiles-definitions>

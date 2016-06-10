@@ -1,0 +1,57 @@
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.1//EN" "http://jakarta.apache.org/struts/dtds/struts-config_1_1.dtd">
+<struts-config>
+	<form-beans>
+        <form-bean name="searchTransferTypesAjaxForm" type="nl.strohalm.cyclos.controls.accounts.transfertypes.SearchTransferTypesAjaxForm" />
+        <form-bean name="editTransferTypeForm" type="nl.strohalm.cyclos.controls.accounts.transfertypes.EditTransferTypeForm" />
+        <form-bean name="removeTransferTypeForm" type="nl.strohalm.cyclos.controls.accounts.transfertypes.RemoveTransferTypeForm" />
+	</form-beans>
+	
+	<action-mappings type="org.apache.struts.config.SecureActionConfig">
+
+		<action 
+			path="/admin/searchTransferTypesAjax" 
+			type="nl.strohalm.cyclos.controls.accounts.transfertypes.SearchTransferTypesAjaxAction"
+            name="searchTransferTypesAjaxForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+		</action>
+		
+		<action 
+			path="/admin/editTransferType" 
+			type="nl.strohalm.cyclos.controls.accounts.transfertypes.EditTransferTypeAction"
+            name="editTransferTypeForm"
+            scope="request"
+            input="admin/_editTransferType">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/editTransferType" redirect="true" />
+		</action>
+		
+		<action 
+			path="/member/searchTransferTypesAjax" 
+			type="nl.strohalm.cyclos.controls.accounts.transfertypes.SearchTransferTypesAjaxAction"
+            name="searchTransferTypesAjaxForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+		</action>
+		
+		<action 
+			path="/operator/searchTransferTypesAjax" 
+			type="nl.strohalm.cyclos.controls.accounts.transfertypes.SearchTransferTypesAjaxAction"
+            name="searchTransferTypesAjaxForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+		</action>
+
+
+		<action 
+			path="/admin/removeTransferType" 
+			type="nl.strohalm.cyclos.controls.accounts.transfertypes.RemoveTransferTypeAction"
+            name="removeTransferTypeForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/editAccountType" redirect="true" />
+		</action>
+
+	</action-mappings>
+
+</struts-config>

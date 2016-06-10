@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+
+    <subclass dynamic-insert="true" dynamic-update="true" name="nl.strohalm.cyclos.entities.customization.fields.AdCustomFieldValue" extends="nl.strohalm.cyclos.entities.customization.fields.CustomFieldValue" discriminator-value="ad">
+		<many-to-one name="ad" class="nl.strohalm.cyclos.entities.ads.Ad">
+		    <column name="ad_id" sql-type="integer"/>
+		</many-to-one>
+	</subclass>
+	
+</hibernate-mapping>

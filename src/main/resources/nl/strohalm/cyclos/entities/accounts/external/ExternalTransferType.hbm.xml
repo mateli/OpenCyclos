@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class dynamic-insert="true" dynamic-update="true" name="nl.strohalm.cyclos.entities.accounts.external.ExternalTransferType" table="external_transfer_types">
+    	<cache usage="read-write"/>
+		<id name="id" type="long">
+		    <column name="id" sql-type="integer"/>
+			<generator class="native"/>
+		</id>
+		
+		<many-to-one name="account" class="nl.strohalm.cyclos.entities.accounts.external.ExternalAccount">
+		    <column name="account_id" not-null="true" sql-type="integer" unique-key="uk_account_code"/>
+		</many-to-one>
+        <property name="code" column="code" type="string" length="20" not-null="true" unique-key="uk_account_code" />
+        <property name="name" column="name" type="string" length="50" not-null="true" />
+        <property name="action" column="action" length="1" not-null="true">
+            <type name="nl.strohalm.cyclos.utils.hibernate.StringValuedEnumType">
+                <param name="enumClassName">nl.strohalm.cyclos.entities.accounts.external.ExternalTransferType$Action</param>
+            </type>
+		</property>
+		<many-to-one name="transferType" class="nl.strohalm.cyclos.entities.accounts.transactions.TransferType">
+		    <column name="transfer_type_id" sql-type="integer" />
+		</many-to-one>
+        <property name="description" column="description" type="text" />
+
+		<bag name="transfers" order-by="date desc" inverse="true" cascade="delete">
+        	<key>
+			    <column name="type_id" sql-type="integer"/>
+		    </key>
+       	    <one-to-many class="nl.strohalm.cyclos.entities.accounts.external.ExternalTransfer"/>
+		</bag>
+
+	</class>
+</hibernate-mapping>

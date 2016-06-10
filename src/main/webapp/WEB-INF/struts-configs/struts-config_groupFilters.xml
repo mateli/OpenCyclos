@@ -1,0 +1,70 @@
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.1//EN" "http://jakarta.apache.org/struts/dtds/struts-config_1_1.dtd">
+<struts-config>
+
+	<form-beans>
+        <form-bean name="editGroupFilterForm" type="nl.strohalm.cyclos.controls.groups.groupFilters.EditGroupFilterForm" />
+        <form-bean name="removeGroupFilterForm" type="nl.strohalm.cyclos.controls.groups.groupFilters.RemoveGroupFilterForm" />
+        
+        <form-bean name="editGroupFilterCustomizedFileForm" type="nl.strohalm.cyclos.controls.groups.groupFilters.customizedFiles.EditGroupFilterCustomizedFileForm" />
+        <form-bean name="stopCustomizingGroupFilterFileForm" type="nl.strohalm.cyclos.controls.groups.groupFilters.customizedFiles.StopCustomizingGroupFilterFileForm" />
+        <form-bean name="getAvailableFilesForGroupFilterAjaxForm" type="nl.strohalm.cyclos.controls.groups.groupFilters.customizedFiles.GetAvailableFilesForGroupFilterAjaxForm" />
+	</form-beans>
+	
+	<action-mappings type="org.apache.struts.config.SecureActionConfig">
+		<action 
+			path="/admin/editGroupFilter" 
+			type="nl.strohalm.cyclos.controls.groups.groupFilters.EditGroupFilterAction"
+            name="editGroupFilterForm"
+            scope="request"
+            input="admin/_editGroupFilter">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/editGroupFilter" redirect="true" />
+		</action>
+		
+		<action 
+			path="/admin/removeGroupFilter" 
+			type="nl.strohalm.cyclos.controls.groups.groupFilters.RemoveGroupFilterAction"
+            name="removeGroupFilterForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/listGroupFilters" redirect="true" />
+		</action>
+		
+		<action 
+			path="/admin/listGroupFilters" 
+			type="nl.strohalm.cyclos.controls.groups.groupFilters.ListGroupFiltersAction"
+            input="admin/_listGroupFilters">
+			<set-property property="secure" value="true" />
+		</action>
+		
+		
+		
+		<action 
+			path="/admin/getAvailableFilesForGroupFilterAjax"
+			type="nl.strohalm.cyclos.controls.groups.groupFilters.customizedFiles.GetAvailableFilesForGroupFilterAjaxAction"
+			name="getAvailableFilesForGroupFilterAjaxForm"
+			scope="request">
+			<set-property property="secure" value="true" />
+		</action>
+		
+		<action 
+			path="/admin/editGroupFilterCustomizedFile"
+			type="nl.strohalm.cyclos.controls.groups.groupFilters.customizedFiles.EditGroupFilterCustomizedFileAction"
+			name="editGroupFilterCustomizedFileForm"
+			scope="request"
+			input="admin/_editGroupFilterCustomizedFile">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/editGroupFilterCustomizedFile" redirect="true"/>
+		</action>
+		
+		<action 
+			path="/admin/stopCustomizingGroupFilterFile"
+			type="nl.strohalm.cyclos.controls.groups.groupFilters.customizedFiles.StopCustomizingGroupFilterFileAction"
+			name="stopCustomizingGroupFilterFileForm"
+			scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/editGroupFilter" redirect="true"/>
+		</action>		
+	</action-mappings>
+
+</struts-config>

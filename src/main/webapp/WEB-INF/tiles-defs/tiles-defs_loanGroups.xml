@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+
+ <!DOCTYPE tiles-definitions PUBLIC
+       "-//Apache Software Foundation//DTD Tiles Configuration 1.1//EN"
+       "http://jakarta.apache.org/struts/dtds/tiles-config_1_1.dtd">
+
+<tiles-definitions>
+
+	<definition name="member/_viewLoanGroup" extends=".memberLayout">
+		<put name="body" value="/pages/loanGroups/viewLoanGroup.jsp"/>
+	</definition>
+
+
+
+	<definition name="admin/_viewLoanGroup" extends=".adminLayout">
+		<put name="body" value="/pages/loanGroups/viewLoanGroup.jsp"/>
+	</definition>
+
+	<definition name="admin/_searchLoanGroups" extends=".adminLayout">
+		<put name="body" value="/pages/loanGroups/searchLoanGroups.jsp"/>
+	</definition>
+
+	<definition name="admin/_editLoanGroup" extends=".adminLayout">
+		<put name="body" value="/pages/loanGroups/editLoanGroup.jsp"/>
+	</definition>
+
+	<definition name="admin/_loanGroupMembers" extends=".adminLayout">
+		<put name="body" value="/pages/loanGroups/loanGroupMembers.jsp"/>
+	</definition>
+
+</tiles-definitions>

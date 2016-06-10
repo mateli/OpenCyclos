@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+
+    <class dynamic-insert="true" dynamic-update="true" name="nl.strohalm.cyclos.entities.ads.Ad" table="ads">
+        <id name="id" type="long">
+		    <column name="id" sql-type="integer"/>
+            <generator class="native"/>
+        </id>
+		<many-to-one name="category" class="nl.strohalm.cyclos.entities.ads.AdCategory">
+		    <column name="category_id" sql-type="integer"/>
+		</many-to-one>
+		<many-to-one name="owner" class="nl.strohalm.cyclos.entities.members.Member">
+		    <column name="owner_id" sql-type="integer" not-null="true"/>
+		</many-to-one>
+        <property name="permanent" column="permanent" type="boolean" not-null="true" />
+		<property name="externalPublication" column="external_publication" type="boolean" not-null="true"/>
+		<property name="title" column="title" type="string" length="100" not-null="true"/>
+        <property name="tradeType" column="trade_type" length="1" not-null="true">
+            <type name="nl.strohalm.cyclos.utils.hibernate.StringValuedEnumType">
+                <param name="enumClassName">nl.strohalm.cyclos.entities.ads.Ad$TradeType</param>
+            </type>
+		</property>
+        <many-to-one name="currency" class="nl.strohalm.cyclos.entities.accounts.Currency">
+            <column name="currency_id" sql-type="integer"/>
+    	</many-to-one>
+		<property name="price" column="price" type="big_decimal" precision="15" scale="6"/>
+		<property name="publicationPeriod" type="periodDate">
+			<column name="publication_start"/>
+			<column name="publication_end"/>
+		</property>
+		<property name="description" column="description" type="text"/>
+        <property name="deleteDate" column="delete_date" type="calendar_date"/>
+        <property name="creationDate" column="creation_date" type="calendar_date" update="false"/>
+        <property name="html" column="is_html" not-null="true" type="boolean"/>
+        <property name="membersNotified" column="members_notified" not-null="true" type="boolean"/>
+		<bag name="customValues" cascade="delete" inverse="true">
+            <key> 
+            	<column name="ad_id" sql-type="integer"/>
+            </key>
+	        <one-to-many class="nl.strohalm.cyclos.entities.customization.fields.AdCustomFieldValue"/>
+	    </bag>
+		<bag name="images" cascade="delete" inverse="true" order-by="order_number">
+            <key>
+                <column name="ad_id" sql-type="integer"/>
+            </key>
+	        <one-to-many class="nl.strohalm.cyclos.entities.customization.images.AdImage"/>
+	    </bag>
+    </class>
+
+</hibernate-mapping>

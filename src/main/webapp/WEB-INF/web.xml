@@ -1,0 +1,496 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<web-app  xmlns="http://java.sun.com/xml/ns/javaee"
+	      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	      xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+	      version="2.5">
+	      
+    <display-name>Cyclos</display-name>
+    
+    <distributable />
+     
+	<!-- Spring WebApplicationContext class to use -->
+	<context-param>
+		<param-name>contextClass</param-name>
+		<param-value>nl.strohalm.cyclos.spring.CustomWebApplicationContext</param-value>
+	</context-param> 
+
+	<!-- Spring xml configuration files -->
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>
+			classpath:/nl/strohalm/cyclos/spring/persistence.xml
+			classpath:/nl/strohalm/cyclos/spring/utility.xml
+        	classpath:/nl/strohalm/cyclos/spring/dao.xml
+        	classpath:/nl/strohalm/cyclos/spring/service.xml
+        	classpath:/nl/strohalm/cyclos/spring/security.xml
+        	classpath:/nl/strohalm/cyclos/spring/misc.xml
+			classpath:/nl/strohalm/cyclos/spring/web_beans.xml
+			classpath:/nl/strohalm/cyclos/spring/rest_security.xml
+		</param-value>		
+	</context-param>
+	<context-param>
+		<param-name>schedulingConfigLocation</param-name>
+		<param-value>
+        	classpath:/nl/strohalm/cyclos/spring/scheduling.xml
+		</param-value>		
+	</context-param>
+	<context-param>
+		<param-name>webServicesConfigLocation</param-name>
+		<param-value>
+			classpath:/nl/strohalm/cyclos/spring/web_services.xml
+		</param-value>		
+	</context-param>
+
+	<!-- Filter used to sanitize all user requests-->
+	<filter>
+		<filter-name>sanitizerFilter</filter-name>
+		<filter-class>nl.strohalm.cyclos.http.SanitizerFilter</filter-class>
+		<init-param>
+			<param-name>exclusionPattern</param-name>
+			<param-value>
+				(/(.*?)/changePassword)
+				(/(.*?)/editDynamicDocument)
+				(/(.*?)/editAd)
+				(/(.*?)/sendMessage)
+				(/(.*?)/pendingMemberProfile)
+				(/(.*?)/editMemberRecord)
+				(/(.*?)/flatMemberRecords)
+				(/(.*?)/payment)
+				(/(.*?)/selfPayment)
+				(/(.*?)/authorizeGuarantee)
+				(/(.*?)/profile)
+				(/(.*?)/operatorProfile)
+				(/(.*?)/sendInvoice)
+				(/admin/editRegistrationAgreement)
+				(/admin/editCustomizedFile)
+				(/admin/editGroupFilterCustomizedFile)
+				(/admin/editGroupCustomizedFile)
+				(/admin/createAdmin)
+				(/admin/createMember)
+				(/admin/registerGuarantee)
+				(/admin/adminProfile)
+				(/admin/editLoanGroup)
+				(/admin/grantLoan)
+				(/admin/editTranslationMessage)
+				(/admin/editMailTranslation)
+				(/admin/editMessageSetting)
+				(/member/doCreateMember)
+				(/member/createOperator)
+				(/member/editGroupCustomizedFile)
+				(/posweb/makePayment)
+				(/posweb/receivePayment)
+			    (/login)
+				(/doPublicCreateMember)
+				(/webshop/doPayment)
+				(/mobile/login)
+				(/wap/login)
+			</param-value>				
+		</init-param>
+	</filter>	
+	<filter-mapping>
+		<filter-name>sanitizerFilter</filter-name>
+		<url-pattern>/do/*</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+	</filter-mapping>	
+
+	<!-- Filter used to apply the character encoding defined on local settings to the request -->
+	<filter>
+		<filter-name>requestProcessingFilter</filter-name>
+		<filter-class>nl.strohalm.cyclos.http.RequestProcessingFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>requestProcessingFilter</filter-name>
+		<url-pattern>/do/*</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+	</filter-mapping>	
+
+	<!-- Filter used to ensure a logged user is valid -->
+	<filter>
+		<filter-name>loggedUserFilter</filter-name>
+		<filter-class>nl.strohalm.cyclos.http.LoggedUserFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>loggedUserFilter</filter-name>
+		<url-pattern>/do/*</url-pattern>
+		<url-pattern>*.jsp</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+	</filter-mapping>	
+
+	<!-- Filter used to manage database transactions for web services -->
+	<filter>
+		<filter-name>webServicesTransactionFilter</filter-name>
+		<filter-class>nl.strohalm.cyclos.http.WebServicesTransactionFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>webServicesTransactionFilter</filter-name>
+		<url-pattern>/services/*</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+	</filter-mapping>	
+
+	<!-- Filter used to manage database transactions in JSP files -->
+	<filter>
+		<filter-name>jspTransactionFilter</filter-name>
+		<filter-class>nl.strohalm.cyclos.http.JspTransactionFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>jspTransactionFilter</filter-name>
+		<url-pattern>*.jsp</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>FORWARD</dispatcher>
+		<dispatcher>INCLUDE</dispatcher>
+	</filter-mapping>	
+
+	<!-- Filter used to optionally disable the posweb -->
+	<filter>
+		<filter-name>posWebFilter</filter-name>
+		<filter-class>nl.strohalm.cyclos.http.PosWebFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>posWebFilter</filter-name>
+		<url-pattern>/posweb/*</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+	</filter-mapping>	
+	<filter-mapping>
+		<filter-name>posWebFilter</filter-name>
+		<url-pattern>/do/posweb/*</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+	</filter-mapping>	
+	
+	<!-- Spring ContextLoaderListener -->
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+
+	<!-- Listener to handle the application lifecycle -->
+	<listener>
+		<listener-class>nl.strohalm.cyclos.http.LifecycleListener</listener-class>
+	</listener>
+
+	<!-- Standard Action Servlet Configuration -->
+	<servlet>
+		<servlet-name>action</servlet-name>
+		<servlet-class>org.apache.struts.action.ActionServlet</servlet-class>
+		<init-param>
+			<param-name>config</param-name>
+			<param-value>
+				/WEB-INF/struts-configs/struts-config.xml,
+				/WEB-INF/struts-configs/struts-config_general.xml,
+				/WEB-INF/struts-configs/struts-config_static.xml,
+				/WEB-INF/struts-configs/struts-config_image.xml,
+				/WEB-INF/struts-configs/struts-config_access.xml,
+				/WEB-INF/struts-configs/struts-config_channels.xml,
+				/WEB-INF/struts-configs/struts-config_admins.xml,
+				/WEB-INF/struts-configs/struts-config_members.xml,
+				/WEB-INF/struts-configs/struts-config_memberImports.xml,
+				/WEB-INF/struts-configs/struts-config_memberBulkActions.xml,
+				/WEB-INF/struts-configs/struts-config_operators.xml,
+				/WEB-INF/struts-configs/struts-config_messages.xml,
+				/WEB-INF/struts-configs/struts-config_brokering.xml,
+				/WEB-INF/struts-configs/struts-config_contacts.xml,
+				/WEB-INF/struts-configs/struts-config_references.xml,
+				/WEB-INF/struts-configs/struts-config_groups.xml,
+				/WEB-INF/struts-configs/struts-config_groupFilters.xml,
+				/WEB-INF/struts-configs/struts-config_currencies.xml,
+				/WEB-INF/struts-configs/struts-config_accountTypes.xml,
+				/WEB-INF/struts-configs/struts-config_accounts.xml,
+				/WEB-INF/struts-configs/struts-config_accountFees.xml,
+				/WEB-INF/struts-configs/struts-config_transferTypes.xml,
+				/WEB-INF/struts-configs/struts-config_authorizationLevels.xml,
+				/WEB-INF/struts-configs/struts-config_transactionFees.xml,
+				/WEB-INF/struts-configs/struts-config_paymentFilters.xml,
+				/WEB-INF/struts-configs/struts-config_loans.xml,
+				/WEB-INF/struts-configs/struts-config_ads.xml,
+				/WEB-INF/struts-configs/struts-config_adImports.xml,
+				/WEB-INF/struts-configs/struts-config_payments.xml,
+				/WEB-INF/struts-configs/struts-config_paymentRequests.xml,
+				/WEB-INF/struts-configs/struts-config_paymentActions.xml,
+				/WEB-INF/struts-configs/struts-config_scheduledPayments.xml,
+				/WEB-INF/struts-configs/struts-config_webshop.xml,
+				/WEB-INF/struts-configs/struts-config_posweb.xml,
+				/WEB-INF/struts-configs/struts-config_invoices.xml,
+				/WEB-INF/struts-configs/struts-config_mobile.xml,
+				/WEB-INF/struts-configs/struts-config_alerts.xml,
+				/WEB-INF/struts-configs/struts-config_loanGroups.xml,
+				/WEB-INF/struts-configs/struts-config_translationMessages.xml,
+				/WEB-INF/struts-configs/struts-config_themes.xml,
+				/WEB-INF/struts-configs/struts-config_customizedFiles.xml,
+				/WEB-INF/struts-configs/struts-config_customImages.xml,
+				/WEB-INF/struts-configs/struts-config_customFields.xml,
+				/WEB-INF/struts-configs/struts-config_documents.xml,
+				/WEB-INF/struts-configs/struts-config_settings.xml,
+				/WEB-INF/struts-configs/struts-config_reports.xml,
+				/WEB-INF/struts-configs/struts-config_messageCategory.xml,
+				/WEB-INF/struts-configs/struts-config_preferences.xml,
+				/WEB-INF/struts-configs/struts-config_externalAccounts.xml,
+				/WEB-INF/struts-configs/struts-config_memberRecords.xml,
+				/WEB-INF/struts-configs/struts-config_commissions.xml,
+				/WEB-INF/struts-configs/struts-config_services.xml,
+				/WEB-INF/struts-configs/struts-config_adminTasks.xml,
+				/WEB-INF/struts-configs/struts-config_guarantees.xml,
+				/WEB-INF/struts-configs/struts-config_cards.xml,
+				/WEB-INF/struts-configs/struts-config_cardTypes.xml,
+				/WEB-INF/struts-configs/struts-config_pos.xml				
+			</param-value>
+		</init-param>
+		<init-param>
+			<param-name>chainConfig</param-name>
+			<param-value>org/apache/struts/tiles/chain-config.xml</param-value>
+		</init-param>
+		<init-param>
+			<param-name>debug</param-name>
+			<param-value>10</param-value>
+		</init-param>
+		<init-param>
+			<param-name>detail</param-name>
+			<param-value>10</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>action</servlet-name>
+		<url-pattern>/do/*</url-pattern>
+	</servlet-mapping>
+	
+	<!-- Servlet to show system images -->
+	<servlet>
+		<servlet-name>systemImage</servlet-name>
+		<servlet-class>nl.strohalm.cyclos.servlets.ImageByNameServlet</servlet-class>
+		<init-param>
+			<param-name>nature</param-name>
+			<param-value>SYSTEM</param-value>
+		</init-param>
+		<load-on-startup>2</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>systemImage</servlet-name>
+		<url-pattern>/systemImage</url-pattern>
+	</servlet-mapping>
+
+	<!-- Servlet to show custom images -->
+	<servlet>
+		<servlet-name>customImage</servlet-name>
+		<servlet-class>nl.strohalm.cyclos.servlets.ImageByNameServlet</servlet-class>
+		<init-param>
+			<param-name>nature</param-name>
+			<param-value>CUSTOM</param-value>
+		</init-param>
+		<load-on-startup>2</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>customImage</servlet-name>
+		<url-pattern>/customImage</url-pattern>
+	</servlet-mapping>
+
+	<!-- Servlet to show style images -->
+	<servlet>
+		<servlet-name>styleImage</servlet-name>
+		<servlet-class>nl.strohalm.cyclos.servlets.ImageByNameServlet</servlet-class>
+		<init-param>
+			<param-name>nature</param-name>
+			<param-value>STYLE</param-value>
+		</init-param>
+		<load-on-startup>2</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>styleImage</servlet-name>
+		<url-pattern>/styleImage</url-pattern>
+	</servlet-mapping>
+
+	<!-- Servlet to show full images -->
+	<servlet>
+		<servlet-name>image</servlet-name>
+		<servlet-class>nl.strohalm.cyclos.servlets.ImageByIdServlet</servlet-class>
+		<init-param>
+			<param-name>thumbnail</param-name>
+			<param-value>false</param-value>
+		</init-param>
+		<load-on-startup>2</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>image</servlet-name>
+		<url-pattern>/image</url-pattern>
+	</servlet-mapping>
+
+	<!-- Servlet to show thumbnails -->
+	<servlet>
+		<servlet-name>thumbnail</servlet-name>
+		<servlet-class>nl.strohalm.cyclos.servlets.ImageByIdServlet</servlet-class>
+		<init-param>
+			<param-name>thumbnail</param-name>
+			<param-value>true</param-value>
+		</init-param>
+		<load-on-startup>2</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>thumbnail</servlet-name>
+		<url-pattern>/thumbnail</url-pattern>
+	</servlet-mapping>
+	
+	<!-- Servlet to show a captcha image -->
+	<servlet>
+		<servlet-name>captchaServlet</servlet-name>
+		<servlet-class>nl.strohalm.cyclos.servlets.CaptchaServlet</servlet-class>
+		<load-on-startup>3</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>captchaServlet</servlet-name>
+		<url-pattern>/captcha</url-pattern>
+	</servlet-mapping>
+	
+	<!-- Servlet to map errors -->
+	<servlet>
+		<servlet-name>errorServlet</servlet-name>
+		<servlet-class>nl.strohalm.cyclos.servlets.ErrorServlet</servlet-class>
+		<load-on-startup>4</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>errorServlet</servlet-name>
+		<url-pattern>/error</url-pattern>
+	</servlet-mapping>
+	
+	<!-- Cewolf servlet, for chart generation -->
+	<servlet>
+		<servlet-name>CewolfServlet</servlet-name>
+		<servlet-class>de.laures.cewolf.CewolfRenderer</servlet-class>
+		<init-param> 
+			<param-name>overlibURL</param-name> 
+			<param-value>/pages/scripts/overlib.js</param-value> 
+		</init-param>
+	    <init-param>
+	        <param-name>storage</param-name>
+	        <param-value>de.laures.cewolf.storage.ClusterableSessionStorage</param-value>
+	    </init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>CewolfServlet</servlet-name>
+	 	<url-pattern>/cewolf/*</url-pattern>
+	</servlet-mapping>
+
+	<!-- CXF Web Services handler -->
+	<servlet>
+		<servlet-name>cxf</servlet-name>
+		<servlet-class>org.apache.cxf.transport.servlet.CXFServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>cxf</servlet-name>
+		<url-pattern>/services/*</url-pattern>
+	</servlet-mapping>
+
+	<!-- REST web services -->
+	<servlet>
+		<servlet-name>rest</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>
+				classpath:/nl/strohalm/cyclos/spring/rest_services.xml
+			</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>rest</servlet-name>
+		<url-pattern>/rest/*</url-pattern>
+	</servlet-mapping>
+	<filter>
+		<filter-name>restFilter</filter-name>
+		<filter-class>nl.strohalm.cyclos.http.RestFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>restFilter</filter-name>
+		<servlet-name>rest</servlet-name>
+	</filter-mapping>
+	<filter>
+		<filter-name>springSecurityFilterChain</filter-name>
+		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>springSecurityFilterChain</filter-name>
+		<servlet-name>rest</servlet-name>
+	</filter-mapping>
+
+	<!-- MIME mappings for WAP bitmaps -->
+	<mime-mapping>
+		<extension>wbmp</extension>
+		<mime-type>image/vnd.wap.wbmp</mime-type>
+	</mime-mapping>
+
+	<!-- The Usual Welcome File List -->
+	<welcome-file-list>
+		<welcome-file>index.jsp</welcome-file>
+		<welcome-file>index.html</welcome-file>
+	</welcome-file-list>
+	
+	<!-- Tag libraries -->
+	<jsp-config>
+		<!-- Cyclos custom tag library -->
+		<taglib>
+			<taglib-uri>http://devel.cyclos.org/tlibs/cyclos-core</taglib-uri>
+			<taglib-location>/WEB-INF/taglibs/cyclos-core.tld</taglib-location>
+		</taglib>
+	
+		<!-- Cewolf - Chart generation -->
+		<taglib>
+			<taglib-uri>http://cewolf.sourceforge.net/tags/cewolf</taglib-uri>
+			<taglib-location>/WEB-INF/taglibs/cewolf.tld</taglib-location>
+		</taglib>
+		
+		<!-- SSL Tags for Jakarta Struts -->
+		<taglib>
+			<taglib-uri>http://sslext.sf.net/tags/sslext</taglib-uri>
+			<taglib-location>/WEB-INF/taglibs/sslext.tld</taglib-location>
+		</taglib>
+	
+		<!-- Toggle tag -->
+		<taglib>
+			<taglib-uri>http://www.servletsuite.com/servlets/toggletag</taglib-uri>
+			<taglib-location>/WEB-INF/taglibs/toggle.tld</taglib-location>
+		</taglib>
+	
+		<!-- Jakarta Struts Taglibs -->
+		<taglib>
+			<taglib-uri>http://jakarta.apache.org/struts/tags/struts-html</taglib-uri>
+			<taglib-location>/WEB-INF/taglibs/struts-html.tld</taglib-location>
+		</taglib>
+		<taglib>
+			<taglib-uri>http://jakarta.apache.org/struts/tags/struts-bean</taglib-uri>
+			<taglib-location>/WEB-INF/taglibs/struts-bean.tld</taglib-location>
+		</taglib>
+		<taglib>
+			<taglib-uri>http://jakarta.apache.org/struts/tags/struts-tiles</taglib-uri>
+			<taglib-location>/WEB-INF/taglibs/struts-tiles.tld</taglib-location>
+		</taglib>
+
+		<!-- JSTL taglibs -->
+		<!-- 
+		<taglib>
+			<taglib-uri>http://java.sun.com/jsp/jstl/core</taglib-uri>
+			<taglib-location>/WEB-INF/taglibs/c.tld</taglib-location>
+		</taglib>
+		<taglib>
+			<taglib-uri>http://java.sun.com/jsp/jstl/fmt</taglib-uri>
+			<taglib-location>/WEB-INF/taglibs/fmt.tld</taglib-location>
+		</taglib>
+		<taglib>
+			<taglib-uri>http://java.sun.com/jsp/jstl/functions</taglib-uri>
+			<taglib-location>/WEB-INF/taglibs/fn.tld</taglib-location>
+		</taglib>
+		 -->
+		
+		<!-- Especify the default encoding for JSPs -->
+		<jsp-property-group>
+			<url-pattern>*.jsp</url-pattern>
+			<page-encoding>UTF-8</page-encoding>
+		</jsp-property-group>
+	</jsp-config>
+	<error-page>
+		<exception-type>java.lang.Exception</exception-type>
+		<location>/error</location>
+	</error-page>
+	<error-page>
+		<error-code>404</error-code>
+		<location>/error?statusCode=404</location>
+	</error-page>	
+</web-app>

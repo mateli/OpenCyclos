@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+
+    <subclass abstract="true" name="nl.strohalm.cyclos.entities.accounts.BaseTransferAmountReservation" extends="nl.strohalm.cyclos.entities.accounts.AmountReservation">
+		<many-to-one name="transfer" update="false" class="nl.strohalm.cyclos.entities.accounts.transactions.Transfer">
+		    <column name="transfer_id" sql-type="bigint"/>
+		</many-to-one>
+    </subclass>
+    
+</hibernate-mapping>

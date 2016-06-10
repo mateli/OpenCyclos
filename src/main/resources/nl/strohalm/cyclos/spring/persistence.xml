@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+	Bean definitions for persistence configuration
+ -->
+<beans default-autowire="byName"
+       xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="
+			http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+			http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd"
+	   >
+
+	<!-- The Hibernate session factory -->
+	<bean id="sessionFactory" class="nl.strohalm.cyclos.spring.CustomSessionFactoryBean">
+		<property name="mappingResources">
+			<list>
+				<value>/nl/strohalm/cyclos/dao/definitions.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/Application.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/IndexOperation.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/settings/Setting.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/access/Channel.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/access/ChannelPrincipal.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/customization/fields/CustomField.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/customization/fields/CustomFieldPossibleValue.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/customization/fields/CustomFieldValue.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/customization/fields/MemberCustomField.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/customization/fields/AdminCustomField.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/customization/fields/OperatorCustomField.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/customization/fields/AdCustomField.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/customization/fields/PaymentCustomField.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/customization/fields/LoanGroupCustomField.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/customization/fields/MemberCustomFieldValue.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/customization/fields/AdminCustomFieldValue.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/customization/fields/OperatorCustomFieldValue.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/customization/fields/AdCustomFieldValue.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/customization/fields/PaymentCustomFieldValue.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/customization/fields/LoanGroupCustomFieldValue.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/customization/fields/MemberRecordCustomField.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/customization/fields/MemberRecordCustomFieldValue.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/groups/Group.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/groups/SystemGroup.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/groups/AdminGroup.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/groups/MemberGroup.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/groups/BrokerGroup.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/groups/OperatorGroup.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/groups/GroupFilter.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/members/Element.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/members/Member.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/members/PendingMember.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/members/PendingEmailChange.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/members/Administrator.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/members/Operator.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/access/User.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/access/AdminUser.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/access/MemberUser.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/access/OperatorUser.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/access/WrongCredentialAttempt.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/access/WrongUsernameAttempt.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/access/PermissionDeniedTrace.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/access/Session.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/access/LoginHistoryLog.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/access/PasswordHistoryLog.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/access/UsernameChangeLog.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/members/Reference.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/members/GeneralReference.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/members/TransactionFeedback.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/members/ReferenceHistoryLog.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/members/Contact.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/members/RegistrationAgreement.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/members/RegistrationAgreementLog.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/members/brokerings/Brokering.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/members/brokerings/DefaultBrokerCommission.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/members/brokerings/BrokerCommissionContract.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/members/brokerings/BrokeringCommissionStatus.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/members/messages/Message.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/members/messages/MessageCategory.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/members/preferences/NotificationPreference.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/members/preferences/AdminNotificationPreference.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/members/printsettings/ReceiptPrinterSettings.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/accounts/Currency.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/accounts/RateParameters.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/accounts/InitializableRateParameters.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/accounts/ARateParameters.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/accounts/DRateParameters.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/accounts/IRateParameters.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/accounts/AccountType.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/accounts/MemberAccountType.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/accounts/SystemAccountType.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/accounts/Account.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/accounts/MemberAccount.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/accounts/SystemAccount.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/accounts/ClosedAccountBalance.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/accounts/AccountLimitLog.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/accounts/AmountReservation.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/accounts/BaseTransferAmountReservation.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/accounts/InstallmentAmountReservation.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/accounts/PendingAuthorizationAmountReservation.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/accounts/TransferAuthorizationAmountReservation.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/accounts/ScheduledPaymentAmountReservation.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/accounts/AccountLock.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/accounts/AccountRates.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/accounts/transactions/ScheduledPayment.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/accounts/transactions/Transfer.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/accounts/transactions/TransferType.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/accounts/transactions/AuthorizationLevel.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/accounts/transactions/TransferAuthorization.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/accounts/transactions/PaymentFilter.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/accounts/transactions/Invoice.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/accounts/transactions/InvoicePayment.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/accounts/transactions/TraceNumber.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/accounts/MemberGroupAccountSettings.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/accounts/external/ExternalAccount.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/accounts/external/ExternalTransfer.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/accounts/external/ExternalTransferImport.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/accounts/external/ExternalTransferType.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/accounts/external/filemapping/CSVFileMapping.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/accounts/external/filemapping/FieldMapping.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/accounts/external/filemapping/FileMapping.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/accounts/external/filemapping/FileMappingWithFields.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/accounts/external/filemapping/CustomFileMapping.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/members/remarks/Remark.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/members/remarks/GroupRemark.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/members/remarks/BrokerRemark.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/groups/GroupHistoryLog.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/ads/AdCategory.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/ads/Ad.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/ads/imports/AdImport.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/ads/imports/ImportedAd.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/ads/imports/ImportedAdCategory.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/ads/imports/ImportedAdCustomFieldValue.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/members/adInterests/AdInterest.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/accounts/fees/transaction/TransactionFee.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/accounts/fees/transaction/SimpleTransactionFee.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/accounts/fees/transaction/BrokerCommission.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/accounts/loans/Loan.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/accounts/loans/LoanGroup.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/accounts/loans/LoanPayment.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/accounts/fees/account/AccountFee.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/accounts/fees/account/AccountFeeLog.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/accounts/fees/account/MemberAccountFeeLog.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/accounts/fees/account/AccountFeeAmount.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/accounts/transactions/Ticket.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/accounts/transactions/WebShopTicket.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/accounts/transactions/PaymentRequestTicket.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/alerts/ErrorLogEntry.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/alerts/Alert.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/alerts/SystemAlert.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/alerts/MemberAlert.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/customization/files/File.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/customization/files/CustomizedFile.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/customization/documents/Document.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/customization/documents/DynamicDocument.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/customization/documents/StaticDocument.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/customization/documents/DocumentPage.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/customization/documents/MemberDocument.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/customization/binaryfiles/BinaryFile.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/customization/images/Image.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/customization/images/MemberImage.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/customization/images/AdImage.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/customization/images/SystemImage.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/customization/translationMessages/TranslationMessage.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/customization/images/CustomImage.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/customization/images/StyleImage.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/members/records/MemberRecordType.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/members/records/MemberRecord.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/sms/SmsLog.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/sms/SmsType.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/sms/MemberSmsStatus.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/sms/MemberSmsStatusLock.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/sms/SmsMailing.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/services/ServiceClient.hbm.xml</value>								
+				<value>/nl/strohalm/cyclos/entities/accounts/guarantees/GuaranteeType.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/accounts/guarantees/Certification.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/accounts/guarantees/CertificationLog.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/accounts/guarantees/Guarantee.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/accounts/guarantees/GuaranteeLog.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/accounts/guarantees/PaymentObligation.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/accounts/guarantees/PaymentObligationLog.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/members/imports/MemberImport.hbm.xml</value>				
+				<value>/nl/strohalm/cyclos/entities/members/imports/ImportedMember.hbm.xml</value>				
+				<value>/nl/strohalm/cyclos/entities/members/imports/ImportedMemberRecord.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/members/imports/ImportedMemberRecordCustomFieldValue.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/accounts/cards/Card.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/accounts/cards/CardType.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/accounts/cards/CardLog.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/accounts/pos/Pos.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/accounts/pos/MemberPos.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/accounts/pos/PosLog.hbm.xml</value>
+				<value>/nl/strohalm/cyclos/entities/infotexts/InfoText.hbm.xml</value>
+			</list>
+		</property>
+		
+		<property name="eventListeners">
+			<map>
+				<entry key="post-update">
+					<ref bean="writeDetectEventListener"/>
+				</entry>
+				<entry key="post-insert">
+					<ref bean="writeDetectEventListener"/>
+				</entry>
+				<entry key="post-delete">
+					<ref bean="writeDetectEventListener"/>
+				</entry>
+				<entry key="post-collection-recreate">
+					<ref bean="writeDetectEventListener"/>
+				</entry>
+				<entry key="post-collection-remove">
+					<ref bean="writeDetectEventListener"/>
+				</entry>
+				<entry key="post-collection-update">
+					<ref bean="writeDetectEventListener"/>
+				</entry>
+			</map>
+		</property>
+	</bean>
+	
+	<bean id="writeDetectEventListener" class="nl.strohalm.cyclos.utils.hibernate.WriteDetectEventListener" />
+	
+	<!-- The Hibernate configuration object -->
+	<util:property-path id="configuration" path="&amp;sessionFactory.configuration"/>
+
+	<!-- Declared hibernate properties on the Cyclos configuration file -->
+	<util:properties id="hibernateProperties" location="classpath:/cyclos.properties" />
+
+	<!-- Transaction related beans -->
+	<bean id="transactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager"/>
+	<bean id="transactionTemplate" class="org.springframework.transaction.support.TransactionTemplate"/>
+	
+    <!-- Hibernate specific helpers -->
+	<bean id="hibernateQueryHandler" class="nl.strohalm.cyclos.utils.hibernate.HibernateQueryHandler"/>
+	<bean id="hibernateCustomFieldHandler" class="nl.strohalm.cyclos.utils.hibernate.HibernateCustomFieldHandler"/>
+
+	<!-- Lucene specific helpers -->
+	<bean id="luceneQueryHandler" class="nl.strohalm.cyclos.utils.lucene.LuceneQueryHandler"/>
+	<bean id="indexHandler" class="nl.strohalm.cyclos.utils.lucene.IndexHandler">
+		<property name="documentMappers">
+			<map>
+				<entry key="nl.strohalm.cyclos.entities.members.Administrator">
+					<bean class="nl.strohalm.cyclos.dao.members.AdministratorDocumentMapper" />
+				</entry>
+				<entry key="nl.strohalm.cyclos.entities.members.Member">
+					<bean class="nl.strohalm.cyclos.dao.members.MemberDocumentMapper" />
+				</entry>
+				<entry key="nl.strohalm.cyclos.entities.members.Operator">
+					<bean class="nl.strohalm.cyclos.dao.members.OperatorDocumentMapper" />
+				</entry>
+				<entry key="nl.strohalm.cyclos.entities.ads.Ad">
+					<bean class="nl.strohalm.cyclos.dao.ads.AdDocumentMapper" />
+				</entry>
+				<entry key="nl.strohalm.cyclos.entities.members.records.MemberRecord">
+					<bean class="nl.strohalm.cyclos.dao.members.MemberRecordDocumentMapper" />
+				</entry>
+			</map>
+		</property>
+	</bean>
+	<bean id="indexOperationRunner" class="nl.strohalm.cyclos.utils.lucene.IndexOperationRunner" />
+	
+</beans>

@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+
+    <class dynamic-insert="true" dynamic-update="true" name="nl.strohalm.cyclos.entities.groups.GroupFilter" table="group_filters">
+    	<cache usage="read-write"/>
+        <id name="id" type="long">
+		    <column name="id" sql-type="integer"/>
+            <generator class="native"/>
+        </id>
+		<property name="name" column="name" type="string" not-null="true" length="100"/>
+        <property name="loginPageName" type="string">
+        	<column name="login_page_name" index="ix_login_page_name" length="20"/>
+        </property>
+        <property name="rootUrl" column="root_url" length="100" type="string"/>
+		<property name="containerUrl" type="string" column="container_url"  length="100" />
+		<property name="description" column="description" type="text"/>
+		<property name="showInProfile" column="show_in_profile" type="boolean" not-null="true"/>
+		
+		<bag name="groups" table="group_filters_groups">
+			<cache usage="read-write"/>
+			<key>
+			    <column name="group_filter_id" sql-type="integer"/>
+			</key>
+			<many-to-many class="nl.strohalm.cyclos.entities.groups.MemberGroup">
+                <column name="group_id" sql-type="integer"/>
+			</many-to-many>
+		</bag>
+
+		<bag name="viewableBy" table="group_filters_viewable_by">
+			<cache usage="read-write"/>
+			<key>
+			    <column name="group_filter_id" sql-type="integer"/>
+			</key>
+			<many-to-many class="nl.strohalm.cyclos.entities.groups.MemberGroup">
+                <column name="group_id" sql-type="integer"/>
+			</many-to-many>
+		</bag>
+
+		<bag name="customizedFiles" table="files" inverse="true" cascade="delete">
+			<cache usage="read-write"/>
+		    <key column="group_filter_id"/>
+			<one-to-many class="nl.strohalm.cyclos.entities.customization.files.CustomizedFile"/>
+		</bag>
+    </class>
+
+</hibernate-mapping>

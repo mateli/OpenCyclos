@@ -1,0 +1,37 @@
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.1//EN" "http://jakarta.apache.org/struts/dtds/struts-config_1_1.dtd">
+<struts-config>
+	<form-beans>
+        <form-bean name="indexesForm" type="nl.strohalm.cyclos.controls.admintasks.IndexesForm" />
+        <form-bean name="setSystemOnlineForm" type="nl.strohalm.cyclos.controls.admintasks.SetSystemOnlineForm" />
+	</form-beans>
+	
+	<action-mappings type="org.apache.struts.config.SecureActionConfig">
+
+		<action 
+			path="/admin/adminTasks" 
+			type="nl.strohalm.cyclos.controls.admintasks.AdministrativeTasksAction"
+            input="admin/_adminTasks">
+			<set-property property="secure" value="true" />
+		</action>
+	   	
+		<action 
+			path="/admin/rebuildIndexes" 
+			type="nl.strohalm.cyclos.controls.admintasks.RebuildIndexesAction"
+            name="indexesForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" redirect="true" path="/do/admin/adminTasks"/>
+		</action>
+	   	
+		<action 
+			path="/admin/setSystemOnline" 
+			type="nl.strohalm.cyclos.controls.admintasks.SetSystemOnlineAction"
+            name="setSystemOnlineForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" redirect="true" path="/do/admin/adminTasks"/>
+		</action>
+		
+	</action-mappings>
+
+</struts-config>

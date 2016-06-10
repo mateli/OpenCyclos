@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+
+ <!DOCTYPE tiles-definitions PUBLIC
+       "-//Apache Software Foundation//DTD Tiles Configuration 1.1//EN"
+       "http://jakarta.apache.org/struts/dtds/tiles-config_1_1.dtd">
+
+<tiles-definitions>
+
+
+	<definition name="_printCards" extends=".printLayout">
+		<put name="body" value="/pages/accounts/cards/printCards.jsp"/>
+	</definition>
+	<!-- Admin -->
+	
+	<definition name="admin/_cardDetails" extends=".adminLayout">
+		<put name="body" value="/pages/accounts/cards/cardDetails.jsp"/>
+	</definition>
+	
+	<definition name="admin/_searchCards" extends=".adminLayout">
+		<put name="body" value="/pages/accounts/cards/searchCards.jsp"/>
+	</definition>
+	
+	<!-- Member -->
+	
+	<definition name="member/_cardDetails" extends=".memberLayout">
+		<put name="body" value="/pages/accounts/cards/cardDetails.jsp"/>
+	</definition>
+	
+	<definition name="member/_searchCards" extends=".memberLayout">
+		<put name="body" value="/pages/accounts/cards/searchCards.jsp"/>
+	</definition>
+	
+</tiles-definitions>

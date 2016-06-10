@@ -1,0 +1,43 @@
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.1//EN" "http://jakarta.apache.org/struts/dtds/struts-config_1_1.dtd">
+<struts-config>
+
+	<form-beans>
+		<form-bean name="importMembersForm" type="nl.strohalm.cyclos.controls.members.imports.ImportMembersForm" />
+		<form-bean name="importedMembersSummaryForm" type="nl.strohalm.cyclos.controls.members.imports.ImportedMembersSummaryForm" />
+		<form-bean name="importedMembersDetailsForm" type="nl.strohalm.cyclos.controls.members.imports.ImportedMembersDetailsForm" />
+    </form-beans>
+	
+	<action-mappings type="org.apache.struts.config.SecureActionConfig">
+
+		<action 
+			path="/admin/importMembers" 
+			type="nl.strohalm.cyclos.controls.members.imports.ImportMembersAction"
+            name="importMembersForm"
+            scope="request"
+            input="admin/_importMembers">
+			<set-property property="secure" value="true" />
+	    	<forward name="success" path="/do/admin/importedMembersSummary" redirect="true" />
+		</action>
+
+		<action 
+			path="/admin/importedMembersSummary" 
+			type="nl.strohalm.cyclos.controls.members.imports.ImportedMembersSummaryAction"
+            name="importedMembersSummaryForm"
+            scope="request"
+            input="admin/_importedMembersSummary">
+			<set-property property="secure" value="true" />
+	    	<forward name="success" path="/do/admin/importMembers" redirect="true" />
+		</action>
+				
+		<action 
+			path="/admin/importedMembersDetails" 
+			type="nl.strohalm.cyclos.controls.members.imports.ImportedMembersDetailsAction"
+            name="importedMembersDetailsForm"
+            scope="request"
+            input="admin/_importedMembersDetails">
+			<set-property property="secure" value="true" />
+		</action>
+
+	</action-mappings>
+
+</struts-config>

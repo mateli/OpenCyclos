@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+
+ <!DOCTYPE tiles-definitions PUBLIC
+       "-//Apache Software Foundation//DTD Tiles Configuration 1.1//EN"
+       "http://jakarta.apache.org/struts/dtds/tiles-config_1_1.dtd">
+
+<tiles-definitions>
+
+	<definition name="_previewDynamicDocument" extends=".emptyLayout">
+		<put name="body" value="/pages/customization/documents/previewDynamicDocument.jsp"/>
+	</definition>
+	
+	<definition name="_viewDocument" extends=".printLayout">
+		<put name="body" value="/pages/customization/documents/viewDocument.jsp"/>
+	</definition>
+	
+	<definition name="admin/_listDocuments" extends=".adminLayout">
+		<put name="body" value="/pages/customization/documents/listDocuments.jsp"/>
+	</definition>
+
+	<definition name="admin/_selectDocument" extends=".adminLayout">
+		<put name="body" value="/pages/members/documents/selectDocument.jsp"/>
+	</definition>
+
+	<definition name="admin/_editDynamicDocument" extends=".adminLayout">
+		<put name="body" value="/pages/customization/documents/editDynamicDocument.jsp"/>
+	</definition>
+	
+	<definition name="admin/_editStaticDocument" extends=".adminLayout">
+		<put name="body" value="/pages/customization/documents/editStaticDocument.jsp"/>
+	</definition>
+	
+	<definition name="admin/_editMemberDocument" extends=".adminLayout">
+		<put name="body" value="/pages/customization/documents/editMemberDocument.jsp"/>
+	</definition>
+
+	<definition name="admin/_viewDocumentForm" extends=".adminLayout">
+		<put name="body" value="/pages/customization/documents/viewDocumentForm.jsp"/>
+	</definition>
+
+	<definition name="member/_selectDocument" extends=".memberLayout">
+		<put name="body" value="/pages/members/documents/selectDocument.jsp"/>
+	</definition>
+
+	<definition name="member/_viewDocumentForm" extends=".memberLayout">
+		<put name="body" value="/pages/customization/documents/viewDocumentForm.jsp"/>
+	</definition>
+	
+	<definition name="member/_editMemberDocument" extends=".memberLayout">
+		<put name="body" value="/pages/customization/documents/editMemberDocument.jsp"/>
+	</definition>
+	
+</tiles-definitions>

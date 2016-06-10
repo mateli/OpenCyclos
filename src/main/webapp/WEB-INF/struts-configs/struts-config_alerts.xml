@@ -1,0 +1,87 @@
+<!DOCTYPE struts-config PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 1.1//EN" "http://jakarta.apache.org/struts/dtds/struts-config_1_1.dtd">
+<struts-config>
+	<form-beans>
+        <form-bean name="searchAlertsForm" type="nl.strohalm.cyclos.controls.alerts.SearchAlertsForm" />
+        <form-bean name="removeAlertsForm" type="nl.strohalm.cyclos.controls.alerts.RemoveAlertsForm" />
+        
+        <form-bean name="searchErrorLogForm" type="nl.strohalm.cyclos.controls.alerts.SearchErrorLogForm" />
+        <form-bean name="viewErrorLogEntryForm" type="nl.strohalm.cyclos.controls.alerts.ViewErrorLogEntryForm" />
+        <form-bean name="removeErrorLogEntriesForm" type="nl.strohalm.cyclos.controls.alerts.RemoveErrorLogEntriesForm" />
+	</form-beans>
+	
+	<action-mappings type="org.apache.struts.config.SecureActionConfig">
+
+		<action 
+			path="/admin/searchAlerts" 
+			type="nl.strohalm.cyclos.controls.alerts.SearchAlertsAction"
+            name="searchAlertsForm"
+            scope="request"
+            input="admin/_searchAlerts">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/admin/systemAlerts" 
+			type="nl.strohalm.cyclos.controls.alerts.ListSystemAlertsAction"
+            input="admin/_listAlerts">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/admin/memberAlerts" 
+			type="nl.strohalm.cyclos.controls.alerts.ListMemberAlertsAction"
+            input="admin/_listAlerts">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/admin/removeAlerts" 
+			type="nl.strohalm.cyclos.controls.alerts.RemoveAlertsAction"
+            name="removeAlertsForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="toSystem" path="/do/admin/systemAlerts" redirect="true" />
+			<forward name="toMember" path="/do/admin/memberAlerts" redirect="true" />
+		</action>
+
+
+
+		<action 
+			path="/admin/viewErrorLog" 
+			type="nl.strohalm.cyclos.controls.alerts.ViewErrorLogAction"
+            name="searchErrorLogForm"
+            scope="session"
+            input="admin/_viewErrorLog">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/admin/searchErrorLog" 
+			type="nl.strohalm.cyclos.controls.alerts.SearchErrorLogAction"
+            name="searchErrorLogForm"
+            scope="session"
+            input="admin/_searchErrorLog">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/admin/viewErrorLogEntry" 
+			type="nl.strohalm.cyclos.controls.alerts.ViewErrorLogEntryAction"
+            name="viewErrorLogEntryForm"
+            scope="request"
+            input="admin/_viewErrorLogEntry">
+			<set-property property="secure" value="true" />
+		</action>
+
+		<action 
+			path="/admin/removeErrorLogEntries" 
+			type="nl.strohalm.cyclos.controls.alerts.RemoveErrorLogEntriesAction"
+            name="removeErrorLogEntriesForm"
+            scope="request">
+			<set-property property="secure" value="true" />
+			<forward name="success" path="/do/admin/viewErrorLog" redirect="true" />
+		</action>
+		
+	</action-mappings>
+
+</struts-config>

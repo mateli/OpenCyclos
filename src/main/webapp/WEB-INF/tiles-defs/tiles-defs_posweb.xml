@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+
+ <!DOCTYPE tiles-definitions PUBLIC
+       "-//Apache Software Foundation//DTD Tiles Configuration 1.1//EN"
+       "http://jakarta.apache.org/struts/dtds/tiles-config_1_1.dtd">
+
+<tiles-definitions>
+
+	<definition name="posweb/_login" page="/pages/posweb/login.jsp" />
+
+	<definition name="posweb/_changeExpiredPassword" extends=".poswebLayout">
+		<put name="body" value="/pages/access/changePassword.jsp"/>
+	</definition>
+
+	<definition name="posweb/_acceptRegistrationAgreement" extends=".poswebLayout">
+		<put name="body" value="/pages/members/acceptRegistrationAgreement.jsp"/>
+	</definition>
+
+	<definition name="posweb/_makePayment" extends=".poswebLayout">
+		<put name="body" value="/pages/posweb/makePayment.jsp"/>
+	</definition>
+
+	<definition name="posweb/_receivePayment" extends=".poswebLayout">
+		<put name="body" value="/pages/posweb/receivePayment.jsp"/>
+	</definition>
+
+	<definition name="posweb/_searchTransactions" extends=".poswebLayout">
+		<put name="body" value="/pages/posweb/searchTransactions.jsp"/>
+	</definition>
+
+	<definition name="posweb/_printTransactions" extends=".printLayout">
+		<put name="body" value="/pages/posweb/printTransactions.jsp"/>
+	</definition>
+
+	<definition name="posweb/_printSettings" extends=".poswebLayout">
+		<put name="body" value="/pages/posweb/printSettings.jsp"/>
+	</definition>
+
+</tiles-definitions>
