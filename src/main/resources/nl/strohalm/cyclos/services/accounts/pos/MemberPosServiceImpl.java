@@ -34,7 +34,7 @@ import nl.strohalm.cyclos.services.fetch.FetchServiceLocal;
 import nl.strohalm.cyclos.utils.RelationshipHelper;
 import nl.strohalm.cyclos.utils.notifications.MemberNotificationHandler;
 
-import com.mysql.jdbc.StringUtils;
+import com.mysql.cj.core.util.StringUtils;
 
 /**
  * 
