@@ -111,7 +111,7 @@ public class HazelcastTaskRunner extends TaskRunnerImpl implements InitializingB
     @Override
     protected void doHandleDatabaseInitialization(final Runnable runnable) {
         LockKey lockKey = new LockKey(KeyType.DB_INIT, StringUtils.EMPTY);
-        ILock lock = hazelcastInstance.getLock(lockKey);
+        ILock lock = hazelcastInstance.getLock(lockKey.toString());
         // Sleep until the lock is acquired
         lock.lock();
         try {
@@ -125,7 +125,7 @@ public class HazelcastTaskRunner extends TaskRunnerImpl implements InitializingB
     protected void doRunInitialization(final String beanName) {
         LockKey lockKey = new LockKey(KeyType.INITIALIZATION, beanName);
         // Try to get the initialization lock
-        ILock lock = hazelcastInstance.getLock(lockKey);
+        ILock lock = hazelcastInstance.getLock(lockKey.toString());
         if (lock.tryLock()) {
             // No one else is trying to run this initialization right now. Check if it was already ran by someone else
             if (!initializationControl.containsKey(beanName)) {
@@ -147,7 +147,7 @@ public class HazelcastTaskRunner extends TaskRunnerImpl implements InitializingB
     @Override
     protected boolean doRunPollingTask(final String key, final Callable<Boolean> task) {
         LockKey lockKey = new LockKey(KeyType.POLLING_TASK, key);
-        ILock lock = hazelcastInstance.getLock(lockKey);
+        ILock lock = hazelcastInstance.getLock(lockKey.toString());
         // Ensure multiple nodes can't run a polling task simultaneously
         if (lock.tryLock()) {
             try {
@@ -168,7 +168,7 @@ public class HazelcastTaskRunner extends TaskRunnerImpl implements InitializingB
     protected void doRunScheduledTask(final String taskName, final Calendar time) {
         // Scheduled tasks won't run twice for the same hour in the entire cluster.
         LockKey lockKey = new LockKey(KeyType.SCHEDULED_TASK, taskName);
-        ILock lock = hazelcastInstance.getLock(lockKey);
+        ILock lock = hazelcastInstance.getLock(lockKey.toString());
         if (lock.tryLock()) {
             // No other node is trying to execute this scheduled task
             try {

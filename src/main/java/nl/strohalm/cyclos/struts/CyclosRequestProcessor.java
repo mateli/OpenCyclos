@@ -63,8 +63,9 @@ import org.apache.struts.config.ModuleConfig;
 import org.hibernate.FlushMode;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.hibernate.connection.ConnectionProvider;
-import org.hibernate.engine.SessionFactoryImplementor;
+import org.hibernate.engine.jdbc.connections.spi.ConnectionProvider;
+import org.hibernate.engine.spi.SessionBuilderImplementor;
+import org.hibernate.engine.spi.SessionFactoryImplementor;
 import org.springframework.orm.hibernate3.SessionHolder;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 
@@ -168,7 +169,7 @@ public class CyclosRequestProcessor extends SecureTilesRequestProcessor {
     @Inject
     public void setSessionFactory(final SessionFactoryImplementor sessionFactory) {
         this.sessionFactory = sessionFactory;
-        connectionProvider = sessionFactory.getConnectionProvider();
+        //connectionProvider = sessionFactory.getConnectionProvider();
     }
 
     @Inject
@@ -554,7 +555,8 @@ public class CyclosRequestProcessor extends SecureTilesRequestProcessor {
         try {
             connection = connectionProvider.getConnection();
             TransactionSynchronizationManager.bindResource(connectionProvider, connection);
-            session = sessionFactory.openSession(connection);
+            SessionBuilderImplementor sb = sessionFactory.withOptions();
+            session = sb.connection(connection).openSession();
             holder = new SessionHolder(session);
             transaction = session.beginTransaction();
             holder.setTransaction(transaction);
@@ -566,7 +568,7 @@ public class CyclosRequestProcessor extends SecureTilesRequestProcessor {
             if (connection != null) {
                 try {
                     connectionProvider.closeConnection(connection);
-                } catch (final SQLException e1) {
+                } catch (final Exception e1) {
                     LOG.warn("Error closing connection", e1);
                 } finally {
                     TransactionSynchronizationManager.unbindResourceIfPossible(connectionProvider);

@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -45,6 +46,21 @@ import org.apache.commons.lang.exception.NestableRuntimeException;
  */
 @SuppressWarnings("deprecation")
 public class ResettableHttpServletResponse implements HttpServletResponse, Resettable {
+
+    @Override
+    public String getHeader(String string) {
+        return "";
+    }
+
+    @Override
+    public Collection<String> getHeaderNames() {
+        return new ArrayList<String>();
+    }
+
+    @Override
+    public Collection<String> getHeaders(String string) {
+        return new ArrayList<String>();
+    }
 
     private interface ResponseOperation {
         void apply();
@@ -228,7 +244,7 @@ public class ResettableHttpServletResponse implements HttpServletResponse, Reset
         return servletOutputStream;
     }
 
-    public Integer getStatus() {
+    public int getStatus() {
         return status;
     }
 

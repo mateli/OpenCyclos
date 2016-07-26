@@ -29,8 +29,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
-import org.hibernate.engine.jdbc.connections.spi.ConnectionProvider;
 import org.hibernate.engine.spi.SessionFactoryImplementor;
+import org.hibernate.jdbc.ReturningWork;
 import org.springframework.orm.hibernate3.HibernateCallback;
 
 /**
@@ -58,9 +58,16 @@ public class ApplicationDAOImpl extends BaseDAOImpl<Application> implements Appl
     @Override
     public void shutdownDBIfNeeded() {
         SessionFactoryImplementor sessionFactory = (SessionFactoryImplementor) getSessionFactory();
-        ConnectionProvider connectionProvider = sessionFactory.getConnectionProvider();
+                
+        Session session = sessionFactory.openSession();
         try {
-            Connection connection = connectionProvider.getConnection();
+        // Way2 - using doReturningWork method
+        Connection connection = session.doReturningWork(new ReturningWork<Connection>() {
+            @Override
+            public Connection execute(Connection conn) throws SQLException {
+                return conn;
+            }
+        });
             try {
                 String dbName = connection.getMetaData().getDatabaseProductName();
                 if (dbName.startsWith("HSQL")) {
@@ -68,7 +75,7 @@ public class ApplicationDAOImpl extends BaseDAOImpl<Application> implements Appl
                     LOG.info("Shutdown on HSQL Database was successful");
                 }
             } finally {
-                connectionProvider.closeConnection(connection);
+                connection.close();
             }
         } catch (SQLException e) {
             LOG.warn("Error shutting down database connection", e);

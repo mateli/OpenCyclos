@@ -29,16 +29,18 @@ import nl.strohalm.cyclos.utils.RangeConstraint;
 
 import org.apache.commons.lang.ObjectUtils;
 import org.hibernate.HibernateException;
+import org.hibernate.engine.spi.SharedSessionContractImplementor;
 import org.hibernate.usertype.UserType;
 
 /**
  * Hibernate user type to persist range constraints
+ *
  * @author luis
  */
 public class RangeConstraintType implements UserType, Serializable {
 
-    private static final long  serialVersionUID = -5905157731458253811L;
-    private static final int[] TYPES            = { Types.INTEGER, Types.INTEGER };
+    private static final long serialVersionUID = -5905157731458253811L;
+    private static final int[] TYPES = {Types.INTEGER, Types.INTEGER};
 
     public RangeConstraintType() {
         super();
@@ -68,13 +70,13 @@ public class RangeConstraintType implements UserType, Serializable {
         return false;
     }
 
-    public Object nullSafeGet(final ResultSet rs, final String[] names, final Object owner) throws HibernateException, SQLException {
+    public Object nullSafeGet(final ResultSet rs, final String[] names, SharedSessionContractImplementor ssci, final Object owner) throws HibernateException, SQLException {
         final int min = rs.getInt(names[0]);
         final int max = rs.getInt(names[1]);
         return RangeConstraint.between(min, max);
     }
 
-    public void nullSafeSet(final PreparedStatement ps, final Object object, final int index) throws HibernateException, SQLException {
+    public void nullSafeSet(final PreparedStatement ps, final Object object, final int index, SharedSessionContractImplementor ssci) throws HibernateException, SQLException {
         final RangeConstraint range = (RangeConstraint) object;
         if (range == null) {
             ps.setNull(index, Types.INTEGER);

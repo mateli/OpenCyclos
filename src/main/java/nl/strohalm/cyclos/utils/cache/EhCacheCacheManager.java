@@ -23,7 +23,7 @@ import net.sf.ehcache.Ehcache;
 
 import org.apache.commons.lang.reflect.FieldUtils;
 import org.hibernate.cache.RegionFactory;
-import org.hibernate.engine.SessionFactoryImplementor;
+import org.hibernate.engine.spi.SessionFactoryImplementor;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 
@@ -43,8 +43,8 @@ public class EhCacheCacheManager extends BaseCacheManager implements Initializin
         // Attempt to get the same EHCache cache manager from the session factory
         try {
             // Dirty little trick using reflection
-            RegionFactory regionFactory = sessionFactory.getSettings().getRegionFactory();
-            ehCacheManager = (net.sf.ehcache.CacheManager) FieldUtils.readField(regionFactory, "manager", true);
+            /*RegionFactory regionFactory = sessionFactory.getSessionFactoryOptions().
+            ehCacheManager = (net.sf.ehcache.CacheManager) FieldUtils.readField(regionFactory, "manager", true);*/
         } catch (Exception e) {
             // It was not possible. Fallback to the default cache manager
             ehCacheManager = new net.sf.ehcache.CacheManager();

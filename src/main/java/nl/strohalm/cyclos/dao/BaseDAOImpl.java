@@ -426,7 +426,7 @@ public abstract class BaseDAOImpl<E extends Entity> extends HibernateDaoSupport 
     @SuppressWarnings("unchecked")
     protected <T> List<T> list(final String hql, final Object namedParameters) {
         try {
-            return getHibernateTemplate().executeFind(new HibernateCallback<List<T>>() {
+            return (List<T>) getHibernateTemplate().executeFind(new HibernateCallback<List<T>>() {
                 @Override
                 public List<T> doInHibernate(final Session session) throws HibernateException, SQLException {
                     final Query query = session.createQuery(hql);

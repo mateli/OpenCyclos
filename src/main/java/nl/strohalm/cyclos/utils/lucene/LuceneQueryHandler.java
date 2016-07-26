@@ -84,7 +84,8 @@ public class LuceneQueryHandler {
 
     public <E extends Entity & Indexable> E toEntity(final IndexReader reader, final int docId, final Class<E> entityType, final Relationship... fetch) {
         try {
-            Document doc = reader.document(docId, IdFieldSelector.getInstance());
+            Document doc = reader.document(docId);//, IdFieldSelector.getInstance());
+            
             long id = Long.parseLong(doc.get("id"));
             E entity = EntityHelper.reference(entityType, id);
             entity = fetchDao.fetch(entity, fetch);
@@ -129,7 +130,7 @@ public class LuceneQueryHandler {
             throw new DaoException(e);
         } finally {
             try {
-                searcher.close();
+                //searcher.close();
             } catch (final Exception e) {
                 // Silently ignore
             }
@@ -194,7 +195,7 @@ public class LuceneQueryHandler {
         } finally {
             // Close resources
             try {
-                searcher.close();
+                //searcher.close();
             } catch (final Exception e) {
                 // Silently ignore
             }

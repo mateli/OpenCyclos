@@ -61,7 +61,7 @@ public class AdCategoryDAOImpl extends BaseDAOImpl<AdCategory> implements AdCate
     @Override
     @SuppressWarnings("unchecked")
     public Iterator<AdCategory> iterateAll() {
-        return getHibernateTemplate().iterate("from " + getEntityType().getName());
+        return (Iterator<AdCategory>) getHibernateTemplate().iterate("from " + getEntityType().getName());
     }
 
     @Override

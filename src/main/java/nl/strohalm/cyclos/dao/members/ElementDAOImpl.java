@@ -561,7 +561,7 @@ public class ElementDAOImpl extends IndexedDAOImpl<Element> implements ElementDA
 
     @SuppressWarnings("unchecked")
     public Iterator<Member> searchActiveMembers(final Collection<Group> toSearch) {
-        return getHibernateTemplate().iterate(" from " + Member.class.getName() + " m  where m.group in (?)  and exists (select 1 from " + Account.class.getName() + " a where a.member = m) ", toSearch);
+        return (Iterator<Member>) getHibernateTemplate().iterate(" from " + Member.class.getName() + " m  where m.group in (?)  and exists (select 1 from " + Account.class.getName() + " a where a.member = m) ", toSearch);
     }
 
     @Override

@@ -159,7 +159,7 @@ public class AdDAOImpl extends IndexedDAOImpl<Ad> implements AdDAO {
             throw new DaoException(e);
         } finally {
             try {
-                searcher.close();
+//                searcher.close();
             } catch (final Exception e) {
                 // Silently ignore
             }

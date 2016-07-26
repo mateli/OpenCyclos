@@ -202,7 +202,7 @@ public class HibernateQueryHandler {
             return;
         }
         final ClassMetadata metaData = getClassMetaData(source);
-        final Object[] values = metaData.getPropertyValues(source, EntityMode.POJO);
+        final Object[] values = metaData.getPropertyValues(source);
         // Skip the collections
         final Type[] types = metaData.getPropertyTypes();
         for (int i = 0; i < types.length; i++) {
@@ -211,7 +211,7 @@ public class HibernateQueryHandler {
                 values[i] = null;
             }
         }
-        metaData.setPropertyValues(dest, values, EntityMode.POJO);
+        metaData.setPropertyValues(dest, values);
     }
 
     /**
