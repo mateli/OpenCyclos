@@ -24,7 +24,7 @@ import java.net.InetSocketAddress;
 import java.net.URL;
 import java.util.Properties;
 
-import org.hibernate.util.StringHelper;
+import org.hibernate.annotations.common.util.StringHelper;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 
