@@ -66,7 +66,7 @@ public class MemberRecordDAOImpl extends IndexedDAOImpl<MemberRecord> implements
         Sort sort = null;
         if (keywords == null) {
             query = new MatchAllDocsQuery();
-            sort = new Sort(new SortField("date", SortField.STRING, true));
+            sort = new Sort(new SortField("date", SortField.Type.STRING, true));
         } else {
             try {
                 query = getQueryParser(analyzer).parse(keywords);
