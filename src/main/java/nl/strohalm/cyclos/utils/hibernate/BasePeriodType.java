@@ -31,42 +31,49 @@ import nl.strohalm.cyclos.utils.Period;
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.logging.Log;
 import org.hibernate.HibernateException;
-import org.hibernate.engine.SessionImplementor;
+import org.hibernate.engine.spi.SharedSessionContractImplementor;
 import org.hibernate.type.Type;
 import org.hibernate.usertype.CompositeUserType;
 
 public abstract class BasePeriodType implements CompositeUserType, Serializable {
 
-    private static final long     serialVersionUID = 7090490642092717202L;
-    private static final int      BEGIN            = 0;
-    private static final int      END              = 1;
-    private static final String[] NAMES            = { "begin", "end" };
+    private static final long serialVersionUID = 7090490642092717202L;
+    private static final int BEGIN = 0;
+    private static final int END = 1;
+    private static final String[] NAMES = {"begin", "end"};
 
     public BasePeriodType() {
     }
 
-    public Object assemble(final Serializable value, final SessionImplementor session, final Object owner) throws HibernateException {
+    @Override
+    public Object assemble(final Serializable value, final SharedSessionContractImplementor session, final Object owner) throws HibernateException {
         return value == null ? null : ((Period) value).clone();
     }
 
+    @Override
     public Object deepCopy(final Object value) throws HibernateException {
         return value == null ? null : ((Period) value).clone();
     }
 
-    public Serializable disassemble(final Object value, final SessionImplementor session) throws HibernateException {
+    @Override
+    public Serializable disassemble(final Object value, final SharedSessionContractImplementor session) throws HibernateException {
         return value == null ? null : ((Period) value).clone();
     }
 
+    @Override
     public boolean equals(final Object x, final Object y) throws HibernateException {
         return ObjectUtils.equals(x, y);
     }
 
+    @Override
     public String[] getPropertyNames() {
         return NAMES;
     }
 
+    @Override
     public abstract Type[] getPropertyTypes();
 
+    @Override
     public Object getPropertyValue(final Object component, final int property) throws HibernateException {
         final Period period = (Period) component;
         switch (property) {
@@ -86,7 +93,7 @@ public abstract class BasePeriodType implements CompositeUserType, Serializable 
         return true;
     }
 
-    public Object nullSafeGet(final ResultSet rs, final String[] names, final SessionImplementor session, final Object owner) throws HibernateException, SQLException {
+    public Object nullSafeGet(final ResultSet rs, final String[] names, final SharedSessionContractImplementor session, final Object owner) throws HibernateException, SQLException {
         final Timestamp begin = rs.getTimestamp(names[BEGIN]);
         final Timestamp end = rs.getTimestamp(names[END]);
         if (getLog().isDebugEnabled()) {
@@ -114,7 +121,8 @@ public abstract class BasePeriodType implements CompositeUserType, Serializable 
         return period;
     }
 
-    public void nullSafeSet(final PreparedStatement st, final Object value, final int index, final SessionImplementor session) throws HibernateException, SQLException {
+    @Override
+    public void nullSafeSet(final PreparedStatement st, final Object value, final int index, final SharedSessionContractImplementor session) throws HibernateException, SQLException {
         final Period period = (Period) value;
         Timestamp begin = null;
         Timestamp end = null;
@@ -132,14 +140,17 @@ public abstract class BasePeriodType implements CompositeUserType, Serializable 
         }
     }
 
-    public Object replace(final Object original, final Object target, final SessionImplementor session, final Object owner) throws HibernateException {
+    @Override
+    public Object replace(final Object original, final Object target, final SharedSessionContractImplementor session, final Object owner) throws HibernateException {
         return original == null ? null : ((Period) original).clone();
     }
 
+    @Override
     public Class<?> returnedClass() {
         return Period.class;
     }
 
+    @Override
     public void setPropertyValue(final Object component, final int property, final Object value) throws HibernateException {
         final Period period = (Period) component;
         switch (property) {
