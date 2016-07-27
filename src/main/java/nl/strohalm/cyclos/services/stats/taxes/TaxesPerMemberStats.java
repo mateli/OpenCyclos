@@ -41,7 +41,7 @@ import nl.strohalm.cyclos.utils.Period;
 public class TaxesPerMemberStats extends TransferVolumePerMemberStats {
 
     private final Period                      period;
-    private final Collection<? extends Group> groups;
+    private final Collection<Group> groups;
     private final TransferDAO                 transferDao;
     private final PaymentFilter               paymentFilter;
 

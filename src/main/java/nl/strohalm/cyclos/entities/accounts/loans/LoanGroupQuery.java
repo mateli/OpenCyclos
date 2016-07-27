@@ -33,14 +33,14 @@ public class LoanGroupQuery extends QueryParameters {
 
     private static final long                      serialVersionUID = 7532711515162377497L;
 
-    private Collection<? extends CustomFieldValue> customValues;
+    private Collection< CustomFieldValue> customValues;
     private String                                 description;
     private Member                                 member;
     private String                                 name;
     private Boolean                                noLoans;
     private boolean                                notOfMember;
 
-    public Collection<? extends CustomFieldValue> getCustomValues() {
+    public Collection< CustomFieldValue> getCustomValues() {
         return customValues;
     }
 
@@ -64,7 +64,7 @@ public class LoanGroupQuery extends QueryParameters {
         return notOfMember;
     }
 
-    public void setCustomValues(final Collection<? extends CustomFieldValue> customValues) {
+    public void setCustomValues(final Collection< CustomFieldValue> customValues) {
         this.customValues = customValues;
     }
 

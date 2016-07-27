@@ -48,9 +48,9 @@ public class TransferTypeQuery extends QueryParameters {
     private AccountOwner                      fromOwner;
     private AccountOwner                      toOwner;
     private AccountOwner                      fromOrToOwner;
-    private Collection<? extends AccountType> fromAccountTypes;
-    private Collection<? extends AccountType> toAccountTypes;
-    private Collection<? extends AccountType> fromOrToAccountTypes;
+    private Collection<AccountType> fromAccountTypes;
+    private Collection<AccountType> toAccountTypes;
+    private Collection<AccountType> fromOrToAccountTypes;
     private Collection<MemberGroup>           fromGroups;
     private Collection<MemberGroup>           toGroups;
     private Collection<MemberGroup>           fromOrToGroups;
@@ -103,7 +103,7 @@ public class TransferTypeQuery extends QueryParameters {
         return (fromAccountTypes == null || fromAccountTypes.isEmpty()) ? null : fromAccountTypes.iterator().next();
     }
 
-    public Collection<? extends AccountType> getFromAccountTypes() {
+    public Collection< AccountType> getFromAccountTypes() {
         return fromAccountTypes;
     }
 
@@ -123,7 +123,7 @@ public class TransferTypeQuery extends QueryParameters {
         return (fromOrToAccountTypes == null || fromOrToAccountTypes.isEmpty()) ? null : fromOrToAccountTypes.iterator().next();
     }
 
-    public Collection<? extends AccountType> getFromOrToAccountTypes() {
+    public Collection< AccountType> getFromOrToAccountTypes() {
         return fromOrToAccountTypes;
     }
 
@@ -159,7 +159,7 @@ public class TransferTypeQuery extends QueryParameters {
         return (toAccountTypes == null || toAccountTypes.isEmpty()) ? null : toAccountTypes.iterator().next();
     }
 
-    public Collection<? extends AccountType> getToAccountTypes() {
+    public Collection< AccountType> getToAccountTypes() {
         return toAccountTypes;
     }
 
@@ -243,7 +243,7 @@ public class TransferTypeQuery extends QueryParameters {
         }
     }
 
-    public void setFromAccountTypes(final Collection<? extends AccountType> fromAccountTypes) {
+    public void setFromAccountTypes(final Collection fromAccountTypes) {
         this.fromAccountTypes = fromAccountTypes;
     }
 
@@ -267,7 +267,7 @@ public class TransferTypeQuery extends QueryParameters {
         }
     }
 
-    public void setFromOrToAccountTypes(final Collection<? extends AccountType> fromOrToAccountTypes) {
+    public void setFromOrToAccountTypes(final Collection fromOrToAccountTypes) {
         this.fromOrToAccountTypes = fromOrToAccountTypes;
     }
 
@@ -315,7 +315,7 @@ public class TransferTypeQuery extends QueryParameters {
         }
     }
 
-    public void setToAccountTypes(final Collection<? extends AccountType> toAccountTypes) {
+    public void setToAccountTypes(final Collection toAccountTypes) {
         this.toAccountTypes = toAccountTypes;
     }
 

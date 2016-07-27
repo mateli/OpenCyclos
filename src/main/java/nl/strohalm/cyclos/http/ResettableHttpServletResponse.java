@@ -34,6 +34,7 @@ import java.util.Locale;
 import java.util.Set;
 
 import javax.servlet.ServletOutputStream;
+import javax.servlet.WriteListener;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 
@@ -60,6 +61,11 @@ public class ResettableHttpServletResponse implements HttpServletResponse, Reset
     @Override
     public Collection<String> getHeaders(String string) {
         return new ArrayList<String>();
+    }
+
+    @Override
+    public void setContentLengthLong(long l) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     private interface ResponseOperation {
@@ -238,6 +244,16 @@ public class ResettableHttpServletResponse implements HttpServletResponse, Reset
                 @Override
                 public void write(final int b) throws IOException {
                     outputStream.write(b);
+                }
+
+                @Override
+                public boolean isReady() {
+                    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                }
+
+                @Override
+                public void setWriteListener(WriteListener wl) {
+                    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
                 }
             };
         }

@@ -48,14 +48,14 @@ public class MessageCategory extends Entity implements Comparable<MessageCategor
     private static final long                 serialVersionUID = 6167371125895203030L;
 
     private String                            name;
-    private Collection<? extends SystemGroup> groups;
+    private Collection< SystemGroup> groups;
 
     @Override
     public int compareTo(final MessageCategory another) {
         return getName().compareTo(another.getName());
     }
 
-    public Collection<? extends SystemGroup> getGroups() {
+    public Collection< SystemGroup> getGroups() {
         return groups;
     }
 
@@ -63,7 +63,7 @@ public class MessageCategory extends Entity implements Comparable<MessageCategor
         return name;
     }
 
-    public void setGroups(final Collection<? extends SystemGroup> groups) {
+    public void setGroups(final Collection< SystemGroup> groups) {
         this.groups = groups;
     }
 

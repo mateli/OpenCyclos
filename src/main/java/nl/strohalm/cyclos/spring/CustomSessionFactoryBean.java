@@ -26,7 +26,8 @@ import org.hibernate.HibernateException;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.engine.spi.SessionFactoryImplementor;
-import org.springframework.orm.hibernate3.LocalSessionFactoryBean;
+import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
+
 
 
 /**
@@ -54,7 +55,7 @@ public class CustomSessionFactoryBean extends LocalSessionFactoryBean {
         this.taskRunner = taskRunner;
     }
 
-    @Override
+//    @Override
     protected SessionFactory newSessionFactory(final Configuration config) throws HibernateException {
         // Configure the database
         dataBaseConfiguration = new DataBaseConfiguration(config, taskRunner);
@@ -64,7 +65,7 @@ public class CustomSessionFactoryBean extends LocalSessionFactoryBean {
         SessionFactory sessionFactory = dataBaseConfiguration.getSessionFactory();
         if (sessionFactory == null) {
             // Probably the database tests were skipped... Build the session factory using the default mechanism
-            sessionFactory = super.newSessionFactory(config);
+         //   sessionFactory = super.newSessionFactory(config);
         }
 
         sessionFactoryImplementor = (SessionFactoryImplementor) sessionFactory;
@@ -72,7 +73,7 @@ public class CustomSessionFactoryBean extends LocalSessionFactoryBean {
         return sessionFactory;
     }
 
-    @Override
+    //@Override
     protected void postProcessConfiguration(final Configuration config) throws HibernateException {
         // Set classic functions to return, ie, Integer on count, not Long
         // New to Hibernate 3.2, and would affect a large number of classes

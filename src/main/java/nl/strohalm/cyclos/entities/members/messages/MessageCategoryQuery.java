@@ -31,13 +31,13 @@ public class MessageCategoryQuery extends QueryParameters {
 
     private Element                     fromElement;
     private Element                     toElement;
-    private Collection<? extends Group> groups;
+    private Collection< Group> groups;
 
     public Element getFromElement() {
         return fromElement;
     }
 
-    public Collection<? extends Group> getGroups() {
+    public Collection< Group> getGroups() {
         return groups;
     }
 
@@ -49,7 +49,7 @@ public class MessageCategoryQuery extends QueryParameters {
         this.fromElement = fromElement;
     }
 
-    public void setGroups(final Collection<? extends Group> groups) {
+    public void setGroups(final Collection< Group> groups) {
         this.groups = groups;
     }
 

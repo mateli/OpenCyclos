@@ -31,7 +31,7 @@ import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.engine.spi.SessionFactoryImplementor;
 import org.hibernate.jdbc.ReturningWork;
-import org.springframework.orm.hibernate3.HibernateCallback;
+import org.springframework.orm.hibernate5.HibernateCallback;
 
 /**
  * Implementation for application dao
@@ -49,7 +49,7 @@ public class ApplicationDAOImpl extends BaseDAOImpl<Application> implements Appl
     public Application read() {
         return getHibernateTemplate().execute(new HibernateCallback<Application>() {
             @Override
-            public Application doInHibernate(final Session session) throws HibernateException, SQLException {
+            public Application doInHibernate(final Session session) throws HibernateException{
                 return (Application) session.createCriteria(Application.class).uniqueResult();
             }
         });

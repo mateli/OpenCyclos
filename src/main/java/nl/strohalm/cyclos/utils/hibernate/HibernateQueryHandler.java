@@ -62,8 +62,8 @@ import org.hibernate.type.CollectionType;
 import org.hibernate.type.EntityType;
 import org.hibernate.type.MapType;
 import org.hibernate.type.Type;
-import org.springframework.orm.hibernate3.HibernateCallback;
-import org.springframework.orm.hibernate3.HibernateTemplate;
+import org.springframework.orm.hibernate5.HibernateCallback;
+import org.springframework.orm.hibernate5.HibernateTemplate;
 
 /**
  * Handler for entity queries using Hibernate
@@ -276,7 +276,7 @@ public class HibernateQueryHandler {
             // Reassociate the collection with the current session
             return getHibernateTemplate().execute(new HibernateCallback<Object>() {
                 @Override
-                public Object doInHibernate(final Session session) throws HibernateException, SQLException {
+                public Object doInHibernate(final Session session) throws HibernateException{
                     final PersistentCollection persistentCollection = ((PersistentCollection) object);
                     Entity owner = (Entity) persistentCollection.getOwner();
                     final String role = persistentCollection.getRole();

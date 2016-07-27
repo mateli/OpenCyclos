@@ -947,7 +947,7 @@ public class AccountServiceImpl implements AccountServiceLocal {
 
     @SuppressWarnings("unchecked")
     private Iterator<Member> resolveMembersForTransactionsReport(final MembersTransactionsReportParameters params) {
-        final Collection<MemberGroup> groups = params.getMemberGroups();
+        final Collection groups = params.getMemberGroups();
         final Period period = params.getPeriod();
         final MemberQuery query = new MemberQuery();
         query.setPageParameters(params.getPageParameters());

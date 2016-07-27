@@ -78,8 +78,8 @@ dependencies {
     // http://mvnrepository.com/artifact/org.apache.ws.xmlschema/xmlschema-core
     compile group: 'org.apache.ws.xmlschema', name: 'xmlschema-core', version: '2.2.1'
     // CXF
-    // http://mvnrepository.com/artifact/org.apache.cxf/cxf-bundle
-    compile group: 'org.apache.cxf', name: 'cxf-bundle', version: '2.7.18'
+// https://mvnrepository.com/artifact/org.apache.cxf/cxf-bundle-compatible
+compile group: 'org.apache.cxf', name: 'cxf-bundle-compatible', version: '3.1.6'
     // Log4j
     // http://mvnrepository.com/artifact/log4j/log4j
     //compile group: 'log4j', name: 'log4j', version: '1.2.13'
@@ -316,7 +316,7 @@ dependencies {
     // http://mvnrepository.com/artifact/wsdl4j/wsdl4j
     compile group: 'wsdl4j', name: 'wsdl4j', version: '1.6.3'
 
-    def tomcatVersion = '8.0.35'
+    def tomcatVersion = '8.0.36'
     tomcat "org.apache.tomcat.embed:tomcat-embed-core:${tomcatVersion}",
        "org.apache.tomcat.embed:tomcat-embed-logging-juli:${tomcatVersion}",
        "org.apache.tomcat.embed:tomcat-embed-jasper:${tomcatVersion}"
@@ -339,7 +339,7 @@ task distZip(dependsOn: 'war', type: Zip) {
 
 task downloadTomcat(type: Download) {
     //src 'http://www-us.apache.org/dist/tomcat/tomcat-7/v7.0.69/bin/apache-tomcat-7.0.69.zip'
-    src 'http://apache.mirrors.spacedump.net/tomcat/tomcat-8/v${tomcatVersion}/bin/apache-tomcat-${tomcatVersion}.zip'
+    src 'http://apache.mirrors.spacedump.net/tomcat/tomcat-8/v8.0.36/bin/apache-tomcat-8.0.36.zip'
     dest new File(buildDir, 'tomcat.zip')
 }
 

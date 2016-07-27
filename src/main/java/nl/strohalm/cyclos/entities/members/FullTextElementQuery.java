@@ -35,9 +35,9 @@ import org.apache.lucene.analysis.Analyzer;
 public abstract class FullTextElementQuery extends QueryParameters {
     private static final long                      serialVersionUID = 5541605137638733118L;
     private String                                 keywords;
-    private Collection<? extends Group>            groups;
+    private Collection< Group>            groups;
     private Boolean                                enabled;
-    private Collection<? extends CustomFieldValue> customValues;
+    private Collection< CustomFieldValue> customValues;
     private Collection<Element>                    excludeElements;
     private MemberResultDisplay                    nameDisplay;
     private Analyzer                               analyzer;
@@ -46,7 +46,7 @@ public abstract class FullTextElementQuery extends QueryParameters {
         return analyzer;
     }
 
-    public Collection<? extends CustomFieldValue> getCustomValues() {
+    public Collection< CustomFieldValue> getCustomValues() {
         return customValues;
     }
 
@@ -58,7 +58,7 @@ public abstract class FullTextElementQuery extends QueryParameters {
         return excludeElements;
     }
 
-    public Collection<? extends Group> getGroups() {
+    public Collection< Group> getGroups() {
         return groups;
     }
 
@@ -78,7 +78,7 @@ public abstract class FullTextElementQuery extends QueryParameters {
         this.analyzer = analyzer;
     }
 
-    public void setCustomValues(final Collection<? extends CustomFieldValue> customValues) {
+    public void setCustomValues(final Collection< CustomFieldValue> customValues) {
         this.customValues = customValues;
     }
 
@@ -90,7 +90,7 @@ public abstract class FullTextElementQuery extends QueryParameters {
         this.excludeElements = excludeElements;
     }
 
-    public void setGroups(final Collection<? extends Group> groups) {
+    public void setGroups(final Collection<Group> groups) {
         this.groups = groups;
     }
 

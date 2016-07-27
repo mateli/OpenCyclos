@@ -26,7 +26,7 @@ import nl.strohalm.cyclos.entities.Indexable;
 import org.apache.lucene.document.Document;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.springframework.orm.hibernate3.SessionFactoryUtils;
+import org.springframework.orm.hibernate5.SessionFactoryUtils;
 
 /**
  * Abstract implementation for document mappers

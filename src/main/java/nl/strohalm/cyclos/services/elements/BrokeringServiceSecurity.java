@@ -50,9 +50,9 @@ public class BrokeringServiceSecurity extends BaseServiceSecurity implements Bro
     @Override
     public BulkMemberActionResultVO bulkChangeMemberBroker(final FullTextMemberQuery query, final Member newBroker, final boolean suspendCommission, final String comments) {
         permissionService.permission(newBroker).admin(AdminMemberPermission.BULK_ACTIONS_CHANGE_BROKER).check();
-        Collection<MemberGroup> queryGroups = (Collection<MemberGroup>) query.getGroups();
+        Collection queryGroups = query.getGroups();
         queryGroups = fetchService.fetch(queryGroups);
-        Collection<MemberGroup> allowedGroups = PermissionHelper.checkSelection(permissionService.getManagedMemberGroups(), queryGroups);
+        Collection allowedGroups = PermissionHelper.checkSelection(permissionService.getManagedMemberGroups(), queryGroups);
         // drop the removed groups.
         for (Iterator<MemberGroup> it = allowedGroups.iterator(); it.hasNext();) {
             if (it.next().isRemoved()) {

@@ -151,11 +151,11 @@ public class TransferType extends Entity {
     private BigDecimal                           maxAmountPerDay;
     private BigDecimal                           minAmount;
     private LoanParameters                       loan;
-    private Collection<? extends TransactionFee> transactionFees;
-    private Collection<? extends TransactionFee> generatedByTransactionFees;
-    private Collection<? extends AccountFee>     generatedByAccountFees;
-    private Collection<? extends Group>          groups;
-    private Collection<? extends Group>          groupsAsMember;
+    private Collection< TransactionFee> transactionFees;
+    private Collection< TransactionFee> generatedByTransactionFees;
+    private Collection< AccountFee>     generatedByAccountFees;
+    private Collection< Group>          groups;
+    private Collection< Group>          groupsAsMember;
     private Collection<PaymentFilter>            paymentFilters;
     private boolean                              requiresAuthorization;
     private Collection<AuthorizationLevel>       authorizationLevels;
@@ -183,7 +183,7 @@ public class TransferType extends Entity {
      * @return a Collection with A-rated TransactionFees
      * @see #getRatedFees()
      */
-    public Collection<? extends TransactionFee> getARatedFees() {
+    public Collection< TransactionFee> getARatedFees() {
         final List<TransactionFee> result = new ArrayList<TransactionFee>(transactionFees.size());
         for (final TransactionFee fee : transactionFees) {
             if (fee.getChargeType() == ChargeType.A_RATE || fee.getChargeType() == ChargeType.MIXED_A_D_RATES) {
@@ -238,7 +238,7 @@ public class TransferType extends Entity {
      * @return a Collection with TransactionFees
      * @see #getRatedFees()
      */
-    public Collection<? extends TransactionFee> getDRatedFees() {
+    public Collection< TransactionFee> getDRatedFees() {
         final List<TransactionFee> result = new ArrayList<TransactionFee>(transactionFees.size());
         for (final TransactionFee fee : transactionFees) {
             if (fee.getChargeType() == ChargeType.D_RATE || fee.getChargeType() == ChargeType.MIXED_A_D_RATES) {
@@ -268,19 +268,19 @@ public class TransferType extends Entity {
         return from;
     }
 
-    public Collection<? extends AccountFee> getGeneratedByAccountFees() {
+    public Collection< AccountFee> getGeneratedByAccountFees() {
         return generatedByAccountFees;
     }
 
-    public Collection<? extends TransactionFee> getGeneratedByTransactionFees() {
+    public Collection< TransactionFee> getGeneratedByTransactionFees() {
         return generatedByTransactionFees;
     }
 
-    public Collection<? extends Group> getGroups() {
+    public Collection< Group> getGroups() {
         return groups;
     }
 
-    public Collection<? extends Group> getGroupsAsMember() {
+    public Collection< Group> getGroupsAsMember() {
         return groupsAsMember;
     }
 
@@ -314,7 +314,7 @@ public class TransferType extends Entity {
      * @return a Collection with TransactionFees using a-rate or d-rate
      * @see #getRatedFees()
      */
-    public Collection<? extends TransactionFee> getRatedFees() {
+    public Collection< TransactionFee> getRatedFees() {
         final List<TransactionFee> result = new ArrayList<TransactionFee>(transactionFees.size());
         for (final TransactionFee fee : transactionFees) {
             if (fee.getChargeType() == ChargeType.A_RATE || fee.getChargeType() == ChargeType.D_RATE || fee.getChargeType() == ChargeType.MIXED_A_D_RATES) {
@@ -328,7 +328,7 @@ public class TransferType extends Entity {
         return to;
     }
 
-    public Collection<? extends TransactionFee> getTransactionFees() {
+    public Collection< TransactionFee> getTransactionFees() {
         return transactionFees;
     }
 
@@ -509,19 +509,19 @@ public class TransferType extends Entity {
         this.from = from;
     }
 
-    public void setGeneratedByAccountFees(final Collection<? extends AccountFee> generatedByAccountFees) {
+    public void setGeneratedByAccountFees(final Collection< AccountFee> generatedByAccountFees) {
         this.generatedByAccountFees = generatedByAccountFees;
     }
 
-    public void setGeneratedByTransactionFees(final Collection<? extends TransactionFee> generatedByTransactionFees) {
+    public void setGeneratedByTransactionFees(final Collection< TransactionFee> generatedByTransactionFees) {
         this.generatedByTransactionFees = generatedByTransactionFees;
     }
 
-    public void setGroups(final Collection<? extends Group> groups) {
+    public void setGroups(final Collection< Group> groups) {
         this.groups = groups;
     }
 
-    public void setGroupsAsMember(final Collection<? extends Group> groupsAsMember) {
+    public void setGroupsAsMember(final Collection< Group> groupsAsMember) {
         this.groupsAsMember = groupsAsMember;
     }
 
@@ -576,7 +576,7 @@ public class TransferType extends Entity {
         this.to = to;
     }
 
-    public void setTransactionFees(final Collection<? extends TransactionFee> transactionFees) {
+    public void setTransactionFees(final Collection< TransactionFee> transactionFees) {
         this.transactionFees = transactionFees;
     }
 

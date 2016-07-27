@@ -113,7 +113,7 @@ public class MemberBulkGenerateCardAction extends BaseFormAction implements Loca
         final FullTextMemberQuery query = getDataBinder().readFromString(form.getQuery());
         final String comments = StringUtils.trimToNull((String) bean.get("comments"));
 
-        final Collection<MemberCustomFieldValue> customValues = (Collection<MemberCustomFieldValue>) query.getCustomValues();
+        final Collection customValues = query.getCustomValues();
         for (final Iterator it = customValues.iterator(); it.hasNext();) {
             final MemberCustomFieldValue fieldValue = (MemberCustomFieldValue) it.next();
             if (StringUtils.isEmpty(fieldValue.getValue())) {

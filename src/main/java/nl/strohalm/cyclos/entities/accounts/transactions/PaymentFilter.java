@@ -52,7 +52,7 @@ public class PaymentFilter extends Entity {
     private boolean                     showInAccountHistory;
     private boolean                     showInReports;
     private Collection<TransferType>    transferTypes;
-    private Collection<? extends Group> groups;
+    private Collection< Group> groups;
 
     public AccountType getAccountType() {
         return accountType;
@@ -62,7 +62,7 @@ public class PaymentFilter extends Entity {
         return description;
     }
 
-    public Collection<? extends Group> getGroups() {
+    public Collection< Group> getGroups() {
         return groups;
     }
 
@@ -90,7 +90,7 @@ public class PaymentFilter extends Entity {
         this.description = description;
     }
 
-    public void setGroups(final Collection<? extends Group> groups) {
+    public void setGroups(final Collection< Group> groups) {
         this.groups = groups;
     }
 

@@ -31,7 +31,7 @@ import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.connection.ConnectionProvider;
 import org.hibernate.engine.SessionFactoryImplementor;
-import org.springframework.orm.hibernate3.HibernateCallback;
+import org.springframework.orm.hibernate5.HibernateCallback;
 
 /**
  * Implementation for application dao
