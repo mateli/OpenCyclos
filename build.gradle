@@ -316,10 +316,9 @@ compile group: 'org.apache.cxf', name: 'cxf-bundle-compatible', version: '3.1.6'
     // http://mvnrepository.com/artifact/wsdl4j/wsdl4j
     compile group: 'wsdl4j', name: 'wsdl4j', version: '1.6.3'
 
-    def tomcatVersion = '8.0.36'
-    tomcat "org.apache.tomcat.embed:tomcat-embed-core:${tomcatVersion}",
-       "org.apache.tomcat.embed:tomcat-embed-logging-juli:${tomcatVersion}",
-       "org.apache.tomcat.embed:tomcat-embed-jasper:${tomcatVersion}"
+    tomcat "org.apache.tomcat.embed:tomcat-embed-core:8.0.36",
+       "org.apache.tomcat.embed:tomcat-embed-logging-juli:8.0.36",
+       "org.apache.tomcat.embed:tomcat-embed-jasper:8.0.36"
 
     // Xerces, not sure why this is required but it is
     //compile group: 'xerces', name: 'xercesImpl', version: '2.11.0'
@@ -348,19 +347,19 @@ task standalone(dependsOn: ['downloadTomcat', 'war'], type: Zip) {
 
     from (zipTree(downloadTomcat.dest)) {
         into ''
-        excludes.addAll(['apache-tomcat-${tomcatVersion}/webapps/ROOT/**/*', 'apache-tomcat-${tomcatVersion}/webapps/ROOT/*'])
+        excludes.addAll(['apache-tomcat-8.0.36/webapps/ROOT/**/*', 'apache-tomcat-8.0.36/webapps/ROOT/*'])
     }
 
     from (zipTree(buildDir.toString() + '/libs/' + war.baseName + '-' + version + '.war')) {
-        into 'apache-tomcat-${tomcatVersion}/webapps/ROOT'
+        into 'apache-tomcat-8.0.36/webapps/ROOT'
     }
     
     from ('setenv.bat') {
-        into 'apache-tomcat-${tomcatVersion}/bin'
+        into 'apache-tomcat-8.0.36/bin'
     }
     
     from ('setenv.sh') {
-        into 'apache-tomcat-${tomcatVersion}/bin'
+        into 'apache-tomcat-8.0.36/bin'
     }
 }
 
