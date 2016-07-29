@@ -231,6 +231,10 @@ public class HibernateQueryHandler {
      */
     public <E> List<E> executeQuery(final String cacheRegion, final ResultType resultType, final String hql, final Object namedParameters, final PageParameters pageParameters, final Relationship... fetch) {
 
+        if (1==1){ // todo enorrmann
+            return list(cacheRegion, hql, namedParameters, pageParameters, fetch);
+        }
+
         // Check the result type
         switch (resultType) {
             case LIST:
@@ -472,7 +476,7 @@ public class HibernateQueryHandler {
                 final Query query = session.createQuery(transformToCount(hql.toString()));
                 setQueryParameters(query, namedParameters);
                 setCacheRegion(query, cacheRegion);
-                return (Integer) query.uniqueResult();
+                return ((Long) query.uniqueResult()).intValue();
             }
         });
 
