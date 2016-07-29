@@ -213,8 +213,9 @@ compile group: 'org.apache.cxf', name: 'cxf-bundle-compatible', version: '3.1.6'
     providedCompile group: 'javax.servlet.jsp', name: 'javax.servlet.jsp-api', version: '2.3.1' // Not in the Cyclos lib directory, but required to be compiled.
     
     // Javassist
-    // http://mvnrepository.com/artifact/org.javassist/javassist
-    compile group: 'org.javassist', name: 'javassist', version: '3.20.0.GA'
+    // https://mvnrepository.com/artifact/org.javassist/javassist
+compile group: 'org.javassist', name: 'javassist', version: '3.20.0-GA'
+
     
     // JavaStat
     compile name: 'javastat' // Sorry, I couldn't find JavaStat on Maven Central or jCenter. I grabbed the jar from Cyclos' lib directory.
@@ -260,29 +261,29 @@ compile group: 'org.apache.cxf', name: 'cxf-bundle-compatible', version: '3.1.6'
     
     // Spring
     // http://mvnrepository.com/artifact/org.springframework/spring-aop
-    compile group: 'org.springframework', name: 'spring-aop', version: '4.2.6.RELEASE'
+    compile group: 'org.springframework', name: 'spring-aop', version: '4.3.2.RELEASE'
     // http://mvnrepository.com/artifact/org.springframework/spring-asm
     compile group: 'org.springframework', name: 'spring-asm', version: '3.1.4.RELEASE'
     // http://mvnrepository.com/artifact/org.springframework/spring-beans
-    compile group: 'org.springframework', name: 'spring-beans', version: '4.2.6.RELEASE'
+    compile group: 'org.springframework', name: 'spring-beans', version: '4.3.2.RELEASE'
     // http://mvnrepository.com/artifact/org.springframework/spring-context-support
-    compile group: 'org.springframework', name: 'spring-context-support', version: '4.2.6.RELEASE'
+    compile group: 'org.springframework', name: 'spring-context-support', version: '4.3.2.RELEASE'
     // http://mvnrepository.com/artifact/org.springframework/spring-context
-    compile group: 'org.springframework', name: 'spring-context', version: '4.2.6.RELEASE'
+    compile group: 'org.springframework', name: 'spring-context', version: '4.3.2.RELEASE'
     // http://mvnrepository.com/artifact/org.springframework/spring-core
-    compile group: 'org.springframework', name: 'spring-core', version: '4.2.6.RELEASE'
+    compile group: 'org.springframework', name: 'spring-core', version: '4.3.2.RELEASE'
     // http://mvnrepository.com/artifact/org.springframework/spring-expression
-    compile group: 'org.springframework', name: 'spring-expression', version: '4.2.6.RELEASE'
+    compile group: 'org.springframework', name: 'spring-expression', version: '4.3.2.RELEASE'
     // http://mvnrepository.com/artifact/org.springframework/spring-jdbc
-    compile group: 'org.springframework', name: 'spring-jdbc', version: '4.2.6.RELEASE'
+    compile group: 'org.springframework', name: 'spring-jdbc', version: '4.3.2.RELEASE'
     // http://mvnrepository.com/artifact/org.springframework/spring-orm
-    compile group: 'org.springframework', name: 'spring-orm', version: '4.2.6.RELEASE'
+    compile group: 'org.springframework', name: 'spring-orm', version: '4.3.2.RELEASE'
     // http://mvnrepository.com/artifact/org.springframework/spring-tx
-    compile group: 'org.springframework', name: 'spring-tx', version: '4.2.6.RELEASE'
+    compile group: 'org.springframework', name: 'spring-tx', version: '4.3.2.RELEASE'
     // http://mvnrepository.com/artifact/org.springframework/spring-web
-    compile group: 'org.springframework', name: 'spring-web', version: '4.2.6.RELEASE'
+    compile group: 'org.springframework', name: 'spring-web', version: '4.3.2.RELEASE'
     // http://mvnrepository.com/artifact/org.springframework/spring-webmvc
-    compile group: 'org.springframework', name: 'spring-webmvc', version: '4.2.6.RELEASE'
+    compile group: 'org.springframework', name: 'spring-webmvc', version: '4.3.2.RELEASE'
     // http://mvnrepository.com/artifact/org.springframework.security/spring-security-config
     compile group: 'org.springframework.security', name: 'spring-security-config', version: '4.1.0.RELEASE'
     // http://mvnrepository.com/artifact/org.springframework.security/spring-security-core
