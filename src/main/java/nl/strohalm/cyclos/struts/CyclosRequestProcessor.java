@@ -169,7 +169,7 @@ public class CyclosRequestProcessor extends SecureTilesRequestProcessor {
     @Inject
     public void setSessionFactory(final SessionFactoryImplementor sessionFactory) {
         this.sessionFactory = sessionFactory;
-        //connectionProvider = sessionFactory.getConnectionProvider();
+        this.connectionProvider = sessionFactory.getServiceRegistry().getService(ConnectionProvider.class);
     }
 
     @Inject
