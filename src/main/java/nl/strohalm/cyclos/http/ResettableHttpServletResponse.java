@@ -50,17 +50,17 @@ public class ResettableHttpServletResponse implements HttpServletResponse, Reset
 
     @Override
     public String getHeader(String string) {
-        return "";
-    }
-
-    @Override
-    public Collection<String> getHeaderNames() {
-        return new ArrayList<String>();
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public Collection<String> getHeaders(String string) {
-        return new ArrayList<String>();
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Collection<String> getHeaderNames() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
@@ -255,6 +255,7 @@ public class ResettableHttpServletResponse implements HttpServletResponse, Reset
                 public void setWriteListener(WriteListener wl) {
                     throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
                 }
+
             };
         }
         return servletOutputStream;
