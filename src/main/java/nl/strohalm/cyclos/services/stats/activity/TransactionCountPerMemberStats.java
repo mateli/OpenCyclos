@@ -71,7 +71,7 @@ public class TransactionCountPerMemberStats {
     private List<Number>                      transfersForTraders;
     private final Period                      period;
 
-    private final Collection<? extends Group> groups;
+    private final Collection<Group> groups;
 
     public TransactionCountPerMemberStats(final StatisticalActivityQuery queryParameters, final Period period, final TransferDAO transferDao, final ElementDAO elementDao) {
         this.period = period;

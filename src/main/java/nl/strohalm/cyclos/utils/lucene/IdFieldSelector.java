@@ -19,15 +19,15 @@
  */
 package nl.strohalm.cyclos.utils.lucene;
 
-import org.apache.lucene.document.FieldSelector;
-import org.apache.lucene.document.FieldSelectorResult;
+/*import org.apache.lucene.document.FieldSelector;
+import org.apache.lucene.document.FieldSelectorResult;*/
 
 /**
  * A {@link FieldSelector} which loads only the "id" field
  * 
  * @author luis
  */
-public class IdFieldSelector implements FieldSelector {
+public class IdFieldSelector {//implements FieldSelector {
 
     private static final long            serialVersionUID = 1377258602842067268L;
     private static final IdFieldSelector INSTANCE         = new IdFieldSelector();
@@ -39,12 +39,12 @@ public class IdFieldSelector implements FieldSelector {
     private IdFieldSelector() {
     }
 
-    @Override
+/*    @Override
     public FieldSelectorResult accept(final String field) {
         if ("id".equals(field)) {
             return FieldSelectorResult.LOAD_AND_BREAK;
         } else {
             return FieldSelectorResult.NO_LOAD;
         }
-    }
+    }*/
 }

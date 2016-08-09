@@ -31,7 +31,7 @@ import nl.strohalm.cyclos.utils.Period;
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.logging.Log;
 import org.hibernate.HibernateException;
-import org.hibernate.engine.SessionImplementor;
+import org.hibernate.engine.SharedSessionContractImplementor;
 import org.hibernate.type.Type;
 import org.hibernate.usertype.CompositeUserType;
 
@@ -45,7 +45,7 @@ public abstract class BasePeriodType implements CompositeUserType, Serializable 
     public BasePeriodType() {
     }
 
-    public Object assemble(final Serializable value, final SessionImplementor session, final Object owner) throws HibernateException {
+    public Object assemble(final Serializable value, final SharedSessionContractImplementor session, final Object owner) throws HibernateException {
         return value == null ? null : ((Period) value).clone();
     }
 
@@ -53,7 +53,7 @@ public abstract class BasePeriodType implements CompositeUserType, Serializable 
         return value == null ? null : ((Period) value).clone();
     }
 
-    public Serializable disassemble(final Object value, final SessionImplementor session) throws HibernateException {
+    public Serializable disassemble(final Object value, final SharedSessionContractImplementor session) throws HibernateException {
         return value == null ? null : ((Period) value).clone();
     }
 
@@ -86,7 +86,7 @@ public abstract class BasePeriodType implements CompositeUserType, Serializable 
         return true;
     }
 
-    public Object nullSafeGet(final ResultSet rs, final String[] names, final SessionImplementor session, final Object owner) throws HibernateException, SQLException {
+    public Object nullSafeGet(final ResultSet rs, final String[] names, final SharedSessionContractImplementor session, final Object owner) throws HibernateException, SQLException {
         final Timestamp begin = rs.getTimestamp(names[BEGIN]);
         final Timestamp end = rs.getTimestamp(names[END]);
         if (getLog().isDebugEnabled()) {
@@ -114,7 +114,7 @@ public abstract class BasePeriodType implements CompositeUserType, Serializable 
         return period;
     }
 
-    public void nullSafeSet(final PreparedStatement st, final Object value, final int index, final SessionImplementor session) throws HibernateException, SQLException {
+    public void nullSafeSet(final PreparedStatement st, final Object value, final int index, final SharedSessionContractImplementor session) throws HibernateException, SQLException {
         final Period period = (Period) value;
         Timestamp begin = null;
         Timestamp end = null;
@@ -132,7 +132,7 @@ public abstract class BasePeriodType implements CompositeUserType, Serializable 
         }
     }
 
-    public Object replace(final Object original, final Object target, final SessionImplementor session, final Object owner) throws HibernateException {
+    public Object replace(final Object original, final Object target, final SharedSessionContractImplementor session, final Object owner) throws HibernateException {
         return original == null ? null : ((Period) original).clone();
     }
 

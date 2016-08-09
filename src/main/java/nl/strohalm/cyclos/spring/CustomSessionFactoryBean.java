@@ -25,11 +25,10 @@ import nl.strohalm.cyclos.utils.tasks.TaskRunner;
 import org.hibernate.HibernateException;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
-import org.hibernate.dialect.function.ClassicAvgFunction;
-import org.hibernate.dialect.function.ClassicCountFunction;
-import org.hibernate.dialect.function.ClassicSumFunction;
-import org.hibernate.engine.SessionFactoryImplementor;
-import org.springframework.orm.hibernate3.LocalSessionFactoryBean;
+import org.hibernate.engine.spi.SessionFactoryImplementor;
+import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
+
+
 
 /**
  * Custom session factory bean used to setup Hibernate
@@ -56,7 +55,7 @@ public class CustomSessionFactoryBean extends LocalSessionFactoryBean {
         this.taskRunner = taskRunner;
     }
 
-    @Override
+//    @Override
     protected SessionFactory newSessionFactory(final Configuration config) throws HibernateException {
         // Configure the database
         dataBaseConfiguration = new DataBaseConfiguration(config, taskRunner);
@@ -66,7 +65,7 @@ public class CustomSessionFactoryBean extends LocalSessionFactoryBean {
         SessionFactory sessionFactory = dataBaseConfiguration.getSessionFactory();
         if (sessionFactory == null) {
             // Probably the database tests were skipped... Build the session factory using the default mechanism
-            sessionFactory = super.newSessionFactory(config);
+         //   sessionFactory = super.newSessionFactory(config);
         }
 
         sessionFactoryImplementor = (SessionFactoryImplementor) sessionFactory;
@@ -74,13 +73,13 @@ public class CustomSessionFactoryBean extends LocalSessionFactoryBean {
         return sessionFactory;
     }
 
-    @Override
+    //@Override
     protected void postProcessConfiguration(final Configuration config) throws HibernateException {
         // Set classic functions to return, ie, Integer on count, not Long
         // New to Hibernate 3.2, and would affect a large number of classes
-        config.addSqlFunction("count", new ClassicCountFunction());
+        /*config.addSqlFunction("count", new ClassicCountFunction());
         config.addSqlFunction("avg", new ClassicAvgFunction());
-        config.addSqlFunction("sum", new ClassicSumFunction());
+        config.addSqlFunction("sum", new ClassicSumFunction());*/
     }
 
 }

@@ -31,7 +31,7 @@ import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.HibernateException;
-import org.hibernate.engine.SessionImplementor;
+import org.hibernate.engine.SharedSessionContractImplementor;
 import org.hibernate.type.StandardBasicTypes;
 import org.hibernate.type.Type;
 import org.hibernate.usertype.CompositeUserType;
@@ -49,7 +49,7 @@ public class TimePeriodType implements CompositeUserType, Serializable {
     private static final int      FIELD            = 1;
     private static final String[] NAMES            = { "number", "field" };
 
-    public Object assemble(final Serializable value, final SessionImplementor session, final Object owner) throws HibernateException {
+    public Object assemble(final Serializable value, final SharedSessionContractImplementor session, final Object owner) throws HibernateException {
         return value == null ? null : ((TimePeriod) value).clone();
     }
 
@@ -57,7 +57,7 @@ public class TimePeriodType implements CompositeUserType, Serializable {
         return value == null ? null : ((TimePeriod) value).clone();
     }
 
-    public Serializable disassemble(final Object value, final SessionImplementor session) throws HibernateException {
+    public Serializable disassemble(final Object value, final SharedSessionContractImplementor session) throws HibernateException {
         return value == null ? null : ((TimePeriod) value).clone();
     }
 
@@ -92,7 +92,7 @@ public class TimePeriodType implements CompositeUserType, Serializable {
         return true;
     }
 
-    public Object nullSafeGet(final ResultSet rs, final String[] names, final SessionImplementor session, final Object owner) throws HibernateException, SQLException {
+    public Object nullSafeGet(final ResultSet rs, final String[] names, final SharedSessionContractImplementor session, final Object owner) throws HibernateException, SQLException {
         Integer number = rs.getInt(names[NUMBER]);
         if (rs.wasNull()) {
             number = null;
@@ -114,7 +114,7 @@ public class TimePeriodType implements CompositeUserType, Serializable {
         return timePeriod;
     }
 
-    public void nullSafeSet(final PreparedStatement st, final Object value, final int index, final SessionImplementor session) throws HibernateException, SQLException {
+    public void nullSafeSet(final PreparedStatement st, final Object value, final int index, final SharedSessionContractImplementor session) throws HibernateException, SQLException {
         final TimePeriod timePeriod = (TimePeriod) value;
         Integer number = null;
         TimePeriod.Field field = null;
@@ -133,7 +133,7 @@ public class TimePeriodType implements CompositeUserType, Serializable {
         }
     }
 
-    public Object replace(final Object original, final Object target, final SessionImplementor session, final Object owner) throws HibernateException {
+    public Object replace(final Object original, final Object target, final SharedSessionContractImplementor session, final Object owner) throws HibernateException {
         return original == null ? null : ((TimePeriod) original).clone();
     }
 

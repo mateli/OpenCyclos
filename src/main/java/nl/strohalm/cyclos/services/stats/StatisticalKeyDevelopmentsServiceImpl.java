@@ -62,7 +62,7 @@ public class StatisticalKeyDevelopmentsServiceImpl extends StatisticalServiceImp
         final byte precision = (byte) getLocalSettings().getPrecision().getValue();
         final Period periodMain = queryParameters.getPeriodMain();
         final Period periodComparedTo = queryParameters.getPeriodComparedTo();
-        final Collection<? extends Group> groups = queryParameters.getGroups();
+        final Collection<Group> groups = queryParameters.getGroups();
         final PaymentFilter paymentFilter = getInitializedPaymentFilter(queryParameters);
 
         // Data structure to build the table
@@ -269,7 +269,7 @@ public class StatisticalKeyDevelopmentsServiceImpl extends StatisticalServiceImp
     public StatisticalResultDTO getComparePeriodsNumberOfMembers(final StatisticalKeyDevelopmentsQuery queryParameters) {
         final Period periodMain = queryParameters.getPeriodMain();
         final Period periodComparedTo = queryParameters.getPeriodComparedTo();
-        final Collection<? extends Group> groups = queryParameters.getGroups();
+        final Collection<Group> groups = queryParameters.getGroups();
 
         // Number of members / main period
         final int periodMainMembersCount = getElementDao().getNumberOfMembersInGroupsInPeriod(groups, periodMain);
@@ -368,7 +368,7 @@ public class StatisticalKeyDevelopmentsServiceImpl extends StatisticalServiceImp
     public StatisticalResultDTO getSinglePeriodGrossProduct(final StatisticalKeyDevelopmentsQuery queryParameters) {
         final byte precision = (byte) getLocalSettings().getPrecision().getValue();
         final Period periodMain = queryParameters.getPeriodMain();
-        final Collection<? extends Group> groups = queryParameters.getGroups();
+        final Collection<Group> groups = queryParameters.getGroups();
         final PaymentFilter paymentFilter = getInitializedPaymentFilter(queryParameters);
         // Data structure to build the table
         final Number[][] tableCells = new Number[1][1];
@@ -515,7 +515,7 @@ public class StatisticalKeyDevelopmentsServiceImpl extends StatisticalServiceImp
 
     public StatisticalResultDTO getSinglePeriodNumberOfMembers(final StatisticalKeyDevelopmentsQuery queryParameters) {
         final Period periodMain = queryParameters.getPeriodMain();
-        final Collection<? extends Group> groups = queryParameters.getGroups();
+        final Collection<Group> groups = queryParameters.getGroups();
 
         // Number of members
         final int periodMainMembersCount = getElementDao().getNumberOfMembersInGroupsInPeriod(groups, periodMain);
@@ -685,7 +685,7 @@ public class StatisticalKeyDevelopmentsServiceImpl extends StatisticalServiceImp
         result.setColumnHeader(queryParameters.getPeriodMain().getName(), 0);
     }
 
-    private int getDisappearedMembersCount(final Period period, final Collection<? extends Group> groups) {
+    private int getDisappearedMembersCount(final Period period, final Collection<Group> groups) {
         final MemberQuery memberQuery = new MemberQuery();
         memberQuery.setDeactivationPeriod(period);
         memberQuery.setGroups(groups);
@@ -693,7 +693,7 @@ public class StatisticalKeyDevelopmentsServiceImpl extends StatisticalServiceImp
         return PageHelper.getTotalCount(getElementDao().searchHistoryRemoved(memberQuery));
     }
 
-    private int getNewMembersCount(final Period period, final Collection<? extends Group> groups) {
+    private int getNewMembersCount(final Period period, final Collection<Group> groups) {
         final MemberQuery memberQuery = new MemberQuery();
         memberQuery.setCreationPeriod(period);
         memberQuery.setGroups(groups);
@@ -701,7 +701,7 @@ public class StatisticalKeyDevelopmentsServiceImpl extends StatisticalServiceImp
         return PageHelper.getTotalCount(getElementDao().searchHistoryNew(memberQuery));
     }
 
-    private BigDecimal getSumOfTransactions(final Period period, final Collection<? extends Group> groups, final PaymentFilter paymentFilter) {
+    private BigDecimal getSumOfTransactions(final Period period, final Collection<Group> groups, final PaymentFilter paymentFilter) {
         final StatisticalDTO dto = new StatisticalDTO();
         dto.setPeriod(period);
         dto.setGroups(groups);
@@ -711,7 +711,7 @@ public class StatisticalKeyDevelopmentsServiceImpl extends StatisticalServiceImp
 
     private Number[][] getThroughTheTimeCalculation(final Period[] periods, final StatisticalKeyDevelopmentsQuery queryParameters, final int columns, final String[] rowHeaders) {
         final byte precision = (byte) getLocalSettings().getPrecision().getValue();
-        final Collection<? extends Group> groups = queryParameters.getGroups();
+        final Collection<Group> groups = queryParameters.getGroups();
         final PaymentFilter paymentFilter = getInitializedPaymentFilter(queryParameters);
         final Number[][] tableCells = new Number[periods.length][columns];
         final Period totalPeriod = new Period(periods[0].getBegin(), periods[periods.length - 1].getEnd());
@@ -791,7 +791,7 @@ public class StatisticalKeyDevelopmentsServiceImpl extends StatisticalServiceImp
             return transactionAmounts;
         }
         final Period periodMain = queryParameters.getPeriodMain();
-        final Collection<? extends Group> groups = queryParameters.getGroups();
+        final Collection<Group> groups = queryParameters.getGroups();
         final List<Number> amounts = getTransactionAmountsFromDatabase(periodMain, groups, paymentFilter);
         savedParameters = queryParameters;
         transactionAmounts = amounts;
@@ -804,7 +804,7 @@ public class StatisticalKeyDevelopmentsServiceImpl extends StatisticalServiceImp
             return transactionAmounts2;
         }
         final Period period = queryParameters.getPeriodComparedTo();
-        final Collection<? extends Group> groups = queryParameters.getGroups();
+        final Collection<Group> groups = queryParameters.getGroups();
         final List<Number> amounts = getTransactionAmountsFromDatabase(period, groups, paymentFilter);
         savedParameters = queryParameters;
         transactionAmounts2 = amounts;
@@ -815,7 +815,7 @@ public class StatisticalKeyDevelopmentsServiceImpl extends StatisticalServiceImp
      * gets the transactionAmounts from the database via TransferDao. Don't call directly; Call getTransactionAmounts because this checks if there are
      * cached lists to use, in stead of doing a very heavy database query.
      */
-    private List<Number> getTransactionAmountsFromDatabase(final Period period, final Collection<? extends Group> groups, final PaymentFilter paymentFilter) {
+    private List<Number> getTransactionAmountsFromDatabase(final Period period, final Collection<Group> groups, final PaymentFilter paymentFilter) {
         final StatisticalDTO dto = new StatisticalDTO();
         dto.setPeriod(period);
         dto.setGroups(groups);

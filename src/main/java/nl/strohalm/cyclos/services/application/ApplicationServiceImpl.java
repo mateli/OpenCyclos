@@ -244,7 +244,7 @@ public class ApplicationServiceImpl implements ApplicationServiceLocal, Applicat
         if (StringUtils.isNotBlank(minorVersion)) {
             suffix = " (" + minorVersion + ")";
         }
-        return getApplication().getVersion() + suffix;
+        return "test";//getApplication().getVersion() + suffix; // todo enorrmann
     }
 
     @Override

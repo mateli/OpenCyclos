@@ -159,7 +159,7 @@ public class AdDAOImpl extends IndexedDAOImpl<Ad> implements AdDAO {
             throw new DaoException(e);
         } finally {
             try {
-                searcher.close();
+//                searcher.close();
             } catch (final Exception e) {
                 // Silently ignore
             }
@@ -351,7 +351,7 @@ public class AdDAOImpl extends IndexedDAOImpl<Ad> implements AdDAO {
         if (keywords == null) {
             query = new MatchAllDocsQuery();
             // When not using keywords, return newer first
-            sort = new Sort(new SortField("baseDate", SortField.STRING, true));
+            sort = new Sort(new SortField("baseDate", SortField.Type.STRING, true));
         } else {
             try {
                 query = getQueryParser(analyzer).parse(keywords);

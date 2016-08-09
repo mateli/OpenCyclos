@@ -30,19 +30,19 @@ public class StatisticalDTO {
 
     private Period                      period;
     private PaymentFilter               paymentFilter;
-    private Collection<? extends Group> groups;
+    private Collection< Group> groups;
     private TransferType                transferType;
 
     public StatisticalDTO() {
     }
 
-    public StatisticalDTO(final Period period, final PaymentFilter paymentFilter, final Collection<? extends Group> groups) {
+    public StatisticalDTO(final Period period, final PaymentFilter paymentFilter, final Collection< Group> groups) {
         this.period = period;
         this.paymentFilter = paymentFilter;
         this.groups = groups;
     }
 
-    public Collection<? extends Group> getGroups() {
+    public Collection< Group> getGroups() {
         return groups;
     }
 
@@ -58,7 +58,7 @@ public class StatisticalDTO {
         return transferType;
     }
 
-    public void setGroups(final Collection<? extends Group> groups) {
+    public void setGroups(final Collection< Group> groups) {
         this.groups = groups;
     }
 

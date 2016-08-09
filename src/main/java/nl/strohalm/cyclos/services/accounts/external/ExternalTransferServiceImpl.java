@@ -256,7 +256,7 @@ public class ExternalTransferServiceImpl implements ExternalTransferServiceLocal
         // Try by custom fields
         if (member == null && MapUtils.isNotEmpty(fieldValues)) {
             final List<MemberCustomField> allMemberFields = memberCustomFieldService.list();
-            final Collection<MemberCustomFieldValue> values = customFieldHelper.buildValues(MemberCustomFieldValue.class, allMemberFields, fieldValues);
+            final Collection  values = customFieldHelper.buildValues(MemberCustomFieldValue.class, allMemberFields, fieldValues);
 
             final MemberQuery query = new MemberQuery();
             // Fetch a maximum of 2 members - we need a single one. If more than one found, none should be used

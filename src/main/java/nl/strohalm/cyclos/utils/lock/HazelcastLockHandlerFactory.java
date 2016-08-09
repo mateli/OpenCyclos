@@ -124,7 +124,7 @@ public class HazelcastLockHandlerFactory extends BaseLockHandlerFactory implemen
                 // Already own the lock
                 return;
             }
-            ILock lock = hazelcastInstance.getLock(key);
+            ILock lock = hazelcastInstance.getLock(key.toString());
             try {
                 if (lock.tryLock(timeoutSeconds, TimeUnit.SECONDS)) {
                     acquiredLocks.put(key, lock);

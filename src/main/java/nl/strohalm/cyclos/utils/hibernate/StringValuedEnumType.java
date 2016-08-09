@@ -29,22 +29,24 @@ import nl.strohalm.cyclos.utils.StringValuedEnum;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.HibernateException;
+import org.hibernate.engine.spi.SharedSessionContractImplementor;
 import org.hibernate.type.Type;
 
 /**
  * A Hibernate custom type to store enums with a string value
+ *
  * @author luis
  */
 public class StringValuedEnumType<EnumType> extends AbstractEnumType<EnumType> {
 
     private static final long serialVersionUID = 641293149816868313L;
-    private static final Log  LOG              = LogFactory.getLog(StringValuedEnumType.class);
+    private static final Log LOG = LogFactory.getLog(StringValuedEnumType.class);
 
     public static <T extends Enum<?>> Type getType(final Class<T> enumClass) {
         return getType(StringValuedEnumType.class, enumClass);
     }
 
-    public Object nullSafeGet(final ResultSet rs, final String[] names, final Object owner) throws HibernateException, SQLException {
+    public Object nullSafeGet(final ResultSet rs, final String[] names, SharedSessionContractImplementor ssci, final Object owner) throws HibernateException, SQLException {
         final String value = rs.getString(names[0]);
         if (!rs.wasNull()) {
             for (final EnumType item : getEnumValues()) {
@@ -62,7 +64,7 @@ public class StringValuedEnumType<EnumType> extends AbstractEnumType<EnumType> {
         return null;
     }
 
-    public void nullSafeSet(final PreparedStatement st, final Object value, final int index) throws HibernateException, SQLException {
+    public void nullSafeSet(final PreparedStatement st, final Object value, final int index, SharedSessionContractImplementor ssci) throws HibernateException, SQLException {
         if (value == null) {
             st.setNull(index, Types.VARCHAR);
         } else {
@@ -81,6 +83,6 @@ public class StringValuedEnumType<EnumType> extends AbstractEnumType<EnumType> {
     }
 
     public int[] sqlTypes() {
-        return new int[] { Types.VARCHAR };
+        return new int[]{Types.VARCHAR};
     }
 }

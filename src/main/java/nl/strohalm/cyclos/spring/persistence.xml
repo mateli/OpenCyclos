@@ -12,7 +12,7 @@
 	   >
 
 	<!-- The Hibernate session factory -->
-	<bean id="sessionFactory" class="nl.strohalm.cyclos.spring.CustomSessionFactoryBean">
+	<bean id="sessionFactory" class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
 		<property name="mappingResources">
 			<list>
 				<value>/nl/strohalm/cyclos/dao/definitions.hbm.xml</value>
@@ -190,7 +190,7 @@
 				<value>/nl/strohalm/cyclos/entities/infotexts/InfoText.hbm.xml</value>
 			</list>
 		</property>
-		
+		<!-- 
 		<property name="eventListeners">
 			<map>
 				<entry key="post-update">
@@ -213,6 +213,7 @@
 				</entry>
 			</map>
 		</property>
+                -->
 	</bean>
 	
 	<bean id="writeDetectEventListener" class="nl.strohalm.cyclos.utils.hibernate.WriteDetectEventListener" />
@@ -224,7 +225,7 @@
 	<util:properties id="hibernateProperties" location="classpath:/cyclos.properties" />
 
 	<!-- Transaction related beans -->
-	<bean id="transactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager"/>
+	<bean id="transactionManager" class="org.springframework.orm.hibernate5.HibernateTransactionManager"/>
 	<bean id="transactionTemplate" class="org.springframework.transaction.support.TransactionTemplate"/>
 	
     <!-- Hibernate specific helpers -->

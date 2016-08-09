@@ -78,8 +78,8 @@ dependencies {
     // http://mvnrepository.com/artifact/org.apache.ws.xmlschema/xmlschema-core
     compile group: 'org.apache.ws.xmlschema', name: 'xmlschema-core', version: '2.2.1'
     // CXF
-    // http://mvnrepository.com/artifact/org.apache.cxf/cxf-bundle
-    compile group: 'org.apache.cxf', name: 'cxf-bundle', version: '2.7.18'
+// https://mvnrepository.com/artifact/org.apache.cxf/cxf-bundle-compatible
+compile group: 'org.apache.cxf', name: 'cxf-bundle-compatible', version: '3.1.6'
     // Log4j
     // http://mvnrepository.com/artifact/log4j/log4j
     //compile group: 'log4j', name: 'log4j', version: '1.2.13'
@@ -213,8 +213,9 @@ dependencies {
     providedCompile group: 'javax.servlet.jsp', name: 'javax.servlet.jsp-api', version: '2.3.1' // Not in the Cyclos lib directory, but required to be compiled.
     
     // Javassist
-    // http://mvnrepository.com/artifact/org.javassist/javassist
-    compile group: 'org.javassist', name: 'javassist', version: '3.20.0.GA'
+    // https://mvnrepository.com/artifact/org.javassist/javassist
+compile group: 'org.javassist', name: 'javassist', version: '3.20.0-GA'
+
     
     // JavaStat
     compile name: 'javastat' // Sorry, I couldn't find JavaStat on Maven Central or jCenter. I grabbed the jar from Cyclos' lib directory.
@@ -234,9 +235,9 @@ dependencies {
     compile group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1'
     
     // Jstl
-    // http://mvnrepository.com/artifact/javax.servlet.jsp.jstl/jstl
-    compile group: 'javax.servlet.jsp.jstl', name: 'jstl', version: '1.2'
-    
+    // https://mvnrepository.com/artifact/javax.servlet.jsp.jstl/javax.servlet.jsp.jstl-api
+    compile group: 'javax.servlet.jsp.jstl', name: 'javax.servlet.jsp.jstl-api', version: '1.2.1'
+
     // JTidy
     // http://mvnrepository.com/artifact/net.sf.jtidy/jtidy
     compile group: 'net.sf.jtidy', name: 'jtidy', version: 'r938'
@@ -260,29 +261,29 @@ dependencies {
     
     // Spring
     // http://mvnrepository.com/artifact/org.springframework/spring-aop
-    compile group: 'org.springframework', name: 'spring-aop', version: '4.2.6.RELEASE'
+    compile group: 'org.springframework', name: 'spring-aop', version: '4.3.2.RELEASE'
     // http://mvnrepository.com/artifact/org.springframework/spring-asm
     compile group: 'org.springframework', name: 'spring-asm', version: '3.1.4.RELEASE'
     // http://mvnrepository.com/artifact/org.springframework/spring-beans
-    compile group: 'org.springframework', name: 'spring-beans', version: '4.2.6.RELEASE'
+    compile group: 'org.springframework', name: 'spring-beans', version: '4.3.2.RELEASE'
     // http://mvnrepository.com/artifact/org.springframework/spring-context-support
-    compile group: 'org.springframework', name: 'spring-context-support', version: '4.2.6.RELEASE'
+    compile group: 'org.springframework', name: 'spring-context-support', version: '4.3.2.RELEASE'
     // http://mvnrepository.com/artifact/org.springframework/spring-context
-    compile group: 'org.springframework', name: 'spring-context', version: '4.2.6.RELEASE'
+    compile group: 'org.springframework', name: 'spring-context', version: '4.3.2.RELEASE'
     // http://mvnrepository.com/artifact/org.springframework/spring-core
-    compile group: 'org.springframework', name: 'spring-core', version: '4.2.6.RELEASE'
+    compile group: 'org.springframework', name: 'spring-core', version: '4.3.2.RELEASE'
     // http://mvnrepository.com/artifact/org.springframework/spring-expression
-    compile group: 'org.springframework', name: 'spring-expression', version: '4.2.6.RELEASE'
+    compile group: 'org.springframework', name: 'spring-expression', version: '4.3.2.RELEASE'
     // http://mvnrepository.com/artifact/org.springframework/spring-jdbc
-    compile group: 'org.springframework', name: 'spring-jdbc', version: '4.2.6.RELEASE'
+    compile group: 'org.springframework', name: 'spring-jdbc', version: '4.3.2.RELEASE'
     // http://mvnrepository.com/artifact/org.springframework/spring-orm
-    compile group: 'org.springframework', name: 'spring-orm', version: '4.2.6.RELEASE'
+    compile group: 'org.springframework', name: 'spring-orm', version: '4.3.2.RELEASE'
     // http://mvnrepository.com/artifact/org.springframework/spring-tx
-    compile group: 'org.springframework', name: 'spring-tx', version: '4.2.6.RELEASE'
+    compile group: 'org.springframework', name: 'spring-tx', version: '4.3.2.RELEASE'
     // http://mvnrepository.com/artifact/org.springframework/spring-web
-    compile group: 'org.springframework', name: 'spring-web', version: '4.2.6.RELEASE'
+    compile group: 'org.springframework', name: 'spring-web', version: '4.3.2.RELEASE'
     // http://mvnrepository.com/artifact/org.springframework/spring-webmvc
-    compile group: 'org.springframework', name: 'spring-webmvc', version: '4.2.6.RELEASE'
+    compile group: 'org.springframework', name: 'spring-webmvc', version: '4.3.2.RELEASE'
     // http://mvnrepository.com/artifact/org.springframework.security/spring-security-config
     compile group: 'org.springframework.security', name: 'spring-security-config', version: '4.1.0.RELEASE'
     // http://mvnrepository.com/artifact/org.springframework.security/spring-security-core
@@ -316,10 +317,9 @@ dependencies {
     // http://mvnrepository.com/artifact/wsdl4j/wsdl4j
     compile group: 'wsdl4j', name: 'wsdl4j', version: '1.6.3'
 
-    def tomcatVersion = '8.0.35'
-    tomcat "org.apache.tomcat.embed:tomcat-embed-core:${tomcatVersion}",
-       "org.apache.tomcat.embed:tomcat-embed-logging-juli:${tomcatVersion}",
-       "org.apache.tomcat.embed:tomcat-embed-jasper:${tomcatVersion}"
+    tomcat "org.apache.tomcat.embed:tomcat-embed-core:8.0.36",
+       "org.apache.tomcat.embed:tomcat-embed-logging-juli:8.0.36",
+       "org.apache.tomcat.embed:tomcat-embed-jasper:8.0.36"
 
     // Xerces, not sure why this is required but it is
     //compile group: 'xerces', name: 'xercesImpl', version: '2.11.0'
@@ -339,7 +339,7 @@ task distZip(dependsOn: 'war', type: Zip) {
 
 task downloadTomcat(type: Download) {
     //src 'http://www-us.apache.org/dist/tomcat/tomcat-7/v7.0.69/bin/apache-tomcat-7.0.69.zip'
-    src 'http://apache.mirrors.spacedump.net/tomcat/tomcat-8/v${tomcatVersion}/bin/apache-tomcat-${tomcatVersion}.zip'
+    src 'http://apache.mirrors.spacedump.net/tomcat/tomcat-8/v8.0.36/bin/apache-tomcat-8.0.36.zip'
     dest new File(buildDir, 'tomcat.zip')
 }
 
@@ -348,19 +348,19 @@ task standalone(dependsOn: ['downloadTomcat', 'war'], type: Zip) {
 
     from (zipTree(downloadTomcat.dest)) {
         into ''
-        excludes.addAll(['apache-tomcat-${tomcatVersion}/webapps/ROOT/**/*', 'apache-tomcat-${tomcatVersion}/webapps/ROOT/*'])
+        excludes.addAll(['apache-tomcat-8.0.36/webapps/ROOT/**/*', 'apache-tomcat-8.0.36/webapps/ROOT/*'])
     }
 
     from (zipTree(buildDir.toString() + '/libs/' + war.baseName + '-' + version + '.war')) {
-        into 'apache-tomcat-${tomcatVersion}/webapps/ROOT'
+        into 'apache-tomcat-8.0.36/webapps/ROOT'
     }
     
     from ('setenv.bat') {
-        into 'apache-tomcat-${tomcatVersion}/bin'
+        into 'apache-tomcat-8.0.36/bin'
     }
     
     from ('setenv.sh') {
-        into 'apache-tomcat-${tomcatVersion}/bin'
+        into 'apache-tomcat-8.0.36/bin'
     }
 }
 

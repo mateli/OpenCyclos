@@ -38,10 +38,10 @@ public abstract class ElementQuery extends QueryParameters {
 
     // If it isn't not null indicates that we want the elements that can view this group
     private Long                                   viewableGroup;
-    private Collection<? extends CustomFieldValue> customValues;
+    private Collection< CustomFieldValue> customValues;
     private Boolean                                enabled;
     private boolean                                excludeRemoved;
-    private Collection<? extends Group>            groups;
+    private Collection< Group>            groups;
     private String                                 name;
     private String                                 username;
     private String                                 email;
@@ -54,7 +54,7 @@ public abstract class ElementQuery extends QueryParameters {
         return creationPeriod;
     }
 
-    public Collection<? extends CustomFieldValue> getCustomValues() {
+    public Collection< CustomFieldValue> getCustomValues() {
         return customValues;
     }
 
@@ -70,7 +70,7 @@ public abstract class ElementQuery extends QueryParameters {
         return excludeElements;
     }
 
-    public Collection<? extends Group> getGroups() {
+    public Collection< Group> getGroups() {
         return groups;
     }
 
@@ -102,7 +102,7 @@ public abstract class ElementQuery extends QueryParameters {
         this.creationPeriod = creationPeriod;
     }
 
-    public void setCustomValues(final Collection<? extends CustomFieldValue> customValues) {
+    public void setCustomValues(final Collection< CustomFieldValue> customValues) {
         this.customValues = customValues;
     }
 
@@ -122,7 +122,7 @@ public abstract class ElementQuery extends QueryParameters {
         this.excludeRemoved = excludeRemoved;
     }
 
-    public void setGroups(final Collection<? extends Group> groups) {
+    public void setGroups(final Collection groups) {
         this.groups = groups;
     }
 

@@ -34,7 +34,7 @@ import org.hibernate.LockMode;
 import org.hibernate.LockOptions;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.springframework.orm.hibernate3.SessionFactoryUtils;
+import org.springframework.orm.hibernate5.SessionFactoryUtils;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 import org.springframework.transaction.support.TransactionTemplate;
@@ -58,7 +58,8 @@ public class DirectLockHandlerFactory extends BaseLockHandlerFactory {
                 return;
             }
             Long[] ids = EntityHelper.toIds(accounts);
-            Session session = SessionFactoryUtils.getSession(sessionFactory, true);
+            //Session session = SessionFactoryUtils.getSession(sessionFactory, true);
+            Session session = sessionFactory.openSession();
             try {
                 session
                         .createQuery("select l.id from AccountLock l where l.id in (:ids)")
@@ -75,7 +76,8 @@ public class DirectLockHandlerFactory extends BaseLockHandlerFactory {
             if (member == null) {
                 return;
             }
-            final Session session = SessionFactoryUtils.getSession(sessionFactory, true);
+            //final Session session = SessionFactoryUtils.getSession(sessionFactory, true);
+            Session session = sessionFactory.openSession();
             try {
                 Long id = (Long) session
                         .createQuery("select m.id from MemberSmsStatusLock m where m.id = :id")
@@ -93,7 +95,8 @@ public class DirectLockHandlerFactory extends BaseLockHandlerFactory {
                                 protected void doInTransactionWithoutResult(final TransactionStatus status) {
                                     MemberSmsStatusLock lock = new MemberSmsStatusLock();
                                     lock.setId(member.getId());
-                                    Session session = SessionFactoryUtils.getSession(sessionFactory, true);
+                                    //Session session = SessionFactoryUtils.getSession(sessionFactory., true);
+                                    Session session = sessionFactory.openSession();
                                     session.save(lock);
                                 }
                             });

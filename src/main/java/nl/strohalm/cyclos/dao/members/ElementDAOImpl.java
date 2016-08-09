@@ -132,7 +132,7 @@ public class ElementDAOImpl extends IndexedDAOImpl<Element> implements ElementDA
         Sort sort = null;
         if (keywords == null) {
             query = new MatchAllDocsQuery();
-            sort = new Sort(new SortField("creationDate", SortField.STRING, true));
+            sort = new Sort(new SortField("creationDate", SortField.Type.STRING, true));
         } else {
             try {
                 query = keywords == null ? new MatchAllDocsQuery() : getQueryParser(analyzer).parse(keywords);
@@ -561,7 +561,7 @@ public class ElementDAOImpl extends IndexedDAOImpl<Element> implements ElementDA
 
     @SuppressWarnings("unchecked")
     public Iterator<Member> searchActiveMembers(final Collection<Group> toSearch) {
-        return getHibernateTemplate().iterate(" from " + Member.class.getName() + " m  where m.group in (?)  and exists (select 1 from " + Account.class.getName() + " a where a.member = m) ", toSearch);
+        return (Iterator<Member>) getHibernateTemplate().iterate(" from " + Member.class.getName() + " m  where m.group in (?)  and exists (select 1 from " + Account.class.getName() + " a where a.member = m) ", toSearch);
     }
 
     @Override
@@ -780,12 +780,12 @@ public class ElementDAOImpl extends IndexedDAOImpl<Element> implements ElementDA
             }
         }
         if (memberSortOrder == SortOrder.CHRONOLOGICAL) {
-            sort = new Sort(new SortField("creationDate", SortField.STRING, true));
+            sort = new Sort(new SortField("creationDate", SortField.Type.STRING, true));
         } else {
             if (elementQuery.getNameDisplay() == MemberResultDisplay.NAME) {
-                sort = new Sort(new SortField("nameForSort", SortField.STRING));
+                sort = new Sort(new SortField("nameForSort", SortField.Type.STRING));
             } else {
-                sort = new Sort(new SortField("usernameForSort", SortField.STRING));
+                sort = new Sort(new SortField("usernameForSort", SortField.Type.STRING));
             }
         }
         return sort;

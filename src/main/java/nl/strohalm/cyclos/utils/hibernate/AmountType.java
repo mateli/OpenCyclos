@@ -32,16 +32,18 @@ import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.HibernateException;
+import org.hibernate.engine.spi.SharedSessionContractImplementor;
 import org.hibernate.usertype.UserType;
 
 /**
  * Hibernate user type to persist amounts
+ *
  * @author luis
  */
 public class AmountType implements UserType, Serializable {
 
     private static final long serialVersionUID = 5484455100860932944L;
-    private static final Log  LOG              = LogFactory.getLog(AmountType.class);
+    private static final Log LOG = LogFactory.getLog(AmountType.class);
 
     public AmountType() {
         super();
@@ -71,7 +73,7 @@ public class AmountType implements UserType, Serializable {
         return true;
     }
 
-    public Object nullSafeGet(final ResultSet rs, final String[] names, final Object owner) throws HibernateException, SQLException {
+    public Object nullSafeGet(final ResultSet rs, final String[] names, SharedSessionContractImplementor ssci, final Object owner) throws HibernateException, SQLException {
         final Amount amount = new Amount();
         // If value or type are null, return null
         final BigDecimal value = rs.getBigDecimal(names[0]);
@@ -93,7 +95,7 @@ public class AmountType implements UserType, Serializable {
         return amount;
     }
 
-    public void nullSafeSet(final PreparedStatement ps, final Object object, final int index) throws HibernateException, SQLException {
+    public void nullSafeSet(final PreparedStatement ps, final Object object, final int index, SharedSessionContractImplementor ssci) throws HibernateException, SQLException {
         final Amount amount = (Amount) object;
         BigDecimal value = null;
         Amount.Type type = null;
@@ -128,7 +130,7 @@ public class AmountType implements UserType, Serializable {
     }
 
     public int[] sqlTypes() {
-        final int[] columns = { Types.NUMERIC, Types.CHAR };
+        final int[] columns = {Types.NUMERIC, Types.CHAR};
         return columns;
     }
 

@@ -19,30 +19,32 @@
  */
 package nl.strohalm.cyclos.webservices.rest;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonToken;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import java.io.EOFException;
 import java.io.IOException;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 
-import com.fasterxml.jackson.JsonParseException;
-import com.fasterxml.jackson.JsonParser;
-import com.fasterxml.jackson.JsonToken;
-import com.fasterxml.jackson.map.DeserializationConfig;
-import com.fasterxml.jackson.map.JsonMappingException;
-import com.fasterxml.jackson.map.ObjectMapper;
-import com.fasterxml.jackson.map.SerializationConfig;
-import com.fasterxml.jackson.map.annotate.JsonSerialize.Inclusion;
-import org.springframework.http.converter.json.MappingJacksonHttpMessageConverter;
+
 
 /**
  * Custom Jackson converter used to customize the {@link ObjectMapper}
  * @author luis
  */
-public class CustomJacksonMessageConverter extends MappingJacksonHttpMessageConverter {
+public class CustomJacksonMessageConverter extends MappingJackson2HttpMessageConverter{
 
     /**
      * Custom object mapper which handles empty input as null objects
      * @author luis
      */
     private static class CustomObjectMapper extends ObjectMapper {
+        
         @Override
         protected JsonToken _initForReading(final JsonParser jp) throws IOException, JsonParseException, JsonMappingException {
             try {
@@ -54,13 +56,13 @@ public class CustomJacksonMessageConverter extends MappingJacksonHttpMessageConv
     }
 
     public CustomJacksonMessageConverter() {
-        ObjectMapper objectMapper = new CustomObjectMapper()
-                .enable(DeserializationConfig.Feature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT)
-                .enable(DeserializationConfig.Feature.USE_BIG_DECIMAL_FOR_FLOATS)
-                .disable(SerializationConfig.Feature.WRITE_DATES_AS_TIMESTAMPS)
-                .disable(SerializationConfig.Feature.WRITE_NULL_MAP_VALUES);
-        objectMapper.setSerializationInclusion(Inclusion.NON_EMPTY);
-        setObjectMapper(objectMapper);
+        ObjectMapper customObjectMapper = new CustomObjectMapper()
+                .enable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT)
+                .enable(DeserializationFeature.USE_BIG_DECIMAL_FOR_FLOATS)
+                .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
+                .disable(SerializationFeature.WRITE_NULL_MAP_VALUES);
+        customObjectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        setObjectMapper(customObjectMapper);
     }
 
 }

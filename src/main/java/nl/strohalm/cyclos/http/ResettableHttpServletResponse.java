@@ -27,12 +27,14 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
 import javax.servlet.ServletOutputStream;
+import javax.servlet.WriteListener;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 
@@ -45,6 +47,26 @@ import org.apache.commons.lang.exception.NestableRuntimeException;
  */
 @SuppressWarnings("deprecation")
 public class ResettableHttpServletResponse implements HttpServletResponse, Resettable {
+
+    @Override
+    public String getHeader(String string) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Collection<String> getHeaders(String string) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Collection<String> getHeaderNames() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void setContentLengthLong(long l) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 
     private interface ResponseOperation {
         void apply();
@@ -223,12 +245,23 @@ public class ResettableHttpServletResponse implements HttpServletResponse, Reset
                 public void write(final int b) throws IOException {
                     outputStream.write(b);
                 }
+
+                @Override
+                public boolean isReady() {
+                    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                }
+
+                @Override
+                public void setWriteListener(WriteListener wl) {
+                    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                }
+
             };
         }
         return servletOutputStream;
     }
 
-    public Integer getStatus() {
+    public int getStatus() {
         return status;
     }
 

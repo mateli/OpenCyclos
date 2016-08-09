@@ -127,16 +127,16 @@ public class SearchMembersAction extends SearchElementsAction<FullTextMemberQuer
             }
             groupQuery.setManagedBy(adminGroup);
             groupQuery.setGroupFilters(memberQuery.getGroupFilters());
-            final List<MemberGroup> groups = (List<MemberGroup>) groupService.search(groupQuery);
+            final List groups = groupService.search(groupQuery);
             request.setAttribute("groups", groups);
             if (CollectionUtils.isEmpty(groups)) {
                 memberQuery.setGroups(groups);
             }
 
             if (permissionService.hasPermission(AdminMemberPermission.MEMBERS_REGISTER)) {
-                final Collection<MemberGroup> possibleNewGroups = new ArrayList<MemberGroup>();
-                for (final MemberGroup memberGroup : groups) {
-                    if (Group.Status.NORMAL.equals(memberGroup.getStatus())) {
+                final Collection possibleNewGroups = new ArrayList<MemberGroup>();
+                for (final Object memberGroup : groups) {
+                    if (Group.Status.NORMAL.equals(((MemberGroup)memberGroup).getStatus())) {
                         possibleNewGroups.add(memberGroup);
                     }
                 }

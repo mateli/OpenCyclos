@@ -157,7 +157,7 @@ public abstract class Group extends Entity implements Comparable<Group> {
         return description;
     }
 
-    public Collection<? extends Element> getElements() {
+    public Collection<Element> getElements() {
         return elements;
     }
 

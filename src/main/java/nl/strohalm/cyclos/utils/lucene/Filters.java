@@ -35,6 +35,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.index.AtomicReaderContext;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.queryparser.classic.ParseException;
@@ -48,12 +49,16 @@ import org.apache.lucene.search.Query;
 import org.apache.lucene.search.QueryWrapperFilter;
 import org.apache.lucene.search.TermRangeFilter;
 import org.apache.lucene.queries.TermsFilter;
+import org.apache.lucene.util.Bits;
+import org.apache.lucene.util.BytesRef;
 
 /**
  * A filter collection
+ *
  * @author luis
  */
 public class Filters extends Filter implements Cloneable {
+
     private static final long serialVersionUID = -5904251497348657910L;
 
     /**
@@ -108,7 +113,8 @@ public class Filters extends Filter implements Cloneable {
     }
 
     /**
-     * Returns a filter for a date range, optionally including the min and max values
+     * Returns a filter for a date range, optionally including the min and max
+     * values
      */
     public static TermRangeFilter range(final String field, final Calendar min, final Calendar max, final boolean includeMin, final boolean includeMax) {
         if (min == null && max == null) {
@@ -116,7 +122,7 @@ public class Filters extends Filter implements Cloneable {
         }
         final String minStr = min == null ? LuceneFormatter.MIN_DATE : LuceneFormatter.format(min);
         final String maxStr = max == null ? LuceneFormatter.MAX_DATE : LuceneFormatter.format(max);
-        return new TermRangeFilter(field, minStr, maxStr, includeMin, includeMax);
+        return new TermRangeFilter(field, new BytesRef(minStr), new BytesRef(maxStr), includeMin, includeMax);
     }
 
     /**
@@ -127,7 +133,8 @@ public class Filters extends Filter implements Cloneable {
     }
 
     /**
-     * Returns a filter for a number range, optionally including the min and max values
+     * Returns a filter for a number range, optionally including the min and max
+     * values
      */
     public static TermRangeFilter range(final String field, final Number min, final Number max, final boolean includeMin, final boolean includeMax) {
         if (min == null && max == null) {
@@ -135,24 +142,26 @@ public class Filters extends Filter implements Cloneable {
         }
         final String minStr = min == null ? LuceneFormatter.MIN_DECIMAL : LuceneFormatter.format(min);
         final String maxStr = max == null ? LuceneFormatter.MAX_DECIMAL : LuceneFormatter.format(max);
-        return new TermRangeFilter(field, minStr, maxStr, includeMin, includeMax);
+        return new TermRangeFilter(field, new BytesRef(minStr), new BytesRef(maxStr), includeMin, includeMax);
     }
 
     /**
-     * Returns a filter for a string range including the min and max values (both are required, or no filter will be applied
+     * Returns a filter for a string range including the min and max values
+     * (both are required, or no filter will be applied
      */
     public static TermRangeFilter range(final String field, final String min, final String max) {
         return range(field, min, max, true, true);
     }
 
     /**
-     * Returns a filter for a string range, optionally including the min and max values (both are required, or no filter will be applied
+     * Returns a filter for a string range, optionally including the min and max
+     * values (both are required, or no filter will be applied
      */
     public static TermRangeFilter range(final String field, final String min, final String max, final boolean includeMin, final boolean includeMax) {
         if (StringUtils.isEmpty(min) || StringUtils.isEmpty(max)) {
             return null;
         }
-        return new TermRangeFilter(field, min, max, includeMin, includeMax);
+        return new TermRangeFilter(field, new BytesRef(min), new BytesRef(max), includeMin, includeMax);
     }
 
     /**
@@ -167,7 +176,8 @@ public class Filters extends Filter implements Cloneable {
         for (final Object object : values) {
             final String term = object == null ? null : StringUtils.trimToNull("" + object);
             if (term != null) {
-                filter.addTerm(new Term(field, term));
+                /* todo addterm*/
+                //filter.addTerm(new Term(field, term));
                 count++;
             }
         }
@@ -193,7 +203,8 @@ public class Filters extends Filter implements Cloneable {
     }
 
     /**
-     * Normalizes the filters, returning null on empty array and removing null values
+     * Normalizes the filters, returning null on empty array and removing null
+     * values
      */
     private static Filter[] normalize(final Filter[] filters) {
         if (ArrayUtils.isEmpty(filters)) {
@@ -220,7 +231,8 @@ public class Filters extends Filter implements Cloneable {
     }
 
     /**
-     * Adds a query text for a given field. Internally uses a {@link QueryWrapperFilter}, parsing the query with the given analyzer
+     * Adds a query text for a given field. Internally uses a
+     * {@link QueryWrapperFilter}, parsing the query with the given analyzer
      */
     public void addFieldQuery(final Analyzer analyzer, final String field, final String query) {
         add(fieldQuery(analyzer, field, query));
@@ -275,7 +287,8 @@ public class Filters extends Filter implements Cloneable {
         for (final Object object : values) {
             final String term = CoercionHelper.coerce(String.class, object);
             if (StringUtils.isNotEmpty(term)) {
-                filter.addTerm(new Term(field, term));
+                /* todo addterm */
+                //filter.addTerm(new Term(field, term));
                 used = true;
             }
         }
@@ -300,20 +313,22 @@ public class Filters extends Filter implements Cloneable {
         return clone;
     }
 
+
+    /**
+     * Returns if this filter collection is valid (there's at least one filter
+     * on it)
+     */
+    public boolean isValid() {
+        return CollectionUtils.isNotEmpty(filters);
+    }
+
     @Override
-    public DocIdSet getDocIdSet(final IndexReader reader) throws IOException {
+    public DocIdSet getDocIdSet(AtomicReaderContext arc, Bits bits) throws IOException {
         if (!isValid()) {
             return null;
         }
         final Filter[] array = filters.toArray(new Filter[filters.size()]);
-        return and(array).getDocIdSet(reader);
-    }
-
-    /**
-     * Returns if this filter collection is valid (there's at least one filter on it)
-     */
-    public boolean isValid() {
-        return CollectionUtils.isNotEmpty(filters);
+        return and(array).getDocIdSet(arc, bits);
     }
 
 }

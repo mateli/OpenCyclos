@@ -43,8 +43,9 @@ public class CreateDataBase implements Runnable {
      */
     public void run() {
         Setup.out.println(bundle.getString("create-database.start"));
-        final SchemaExport schemaExport = new SchemaExport(configuration);
-        schemaExport.create(false, true);
+        /* todo  export schema*/
+        /*final SchemaExport schemaExport = new SchemaExport(configuration);
+        schemaExport.create(false, true);*/
         Setup.out.println(bundle.getString("create-database.end"));
     }
 

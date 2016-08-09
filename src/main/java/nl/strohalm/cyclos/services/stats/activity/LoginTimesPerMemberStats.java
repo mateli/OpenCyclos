@@ -35,7 +35,7 @@ public class LoginTimesPerMemberStats {
 
     private final LoginHistoryDAO             loginHistoryDao;
     private final Period                      period;
-    private final Collection<? extends Group> groups;
+    private final Collection<Group> groups;
 
     public LoginTimesPerMemberStats(final StatisticalActivityQuery queryParameters, final Period period, final LoginHistoryDAO loginHistoryDao) {
         this.loginHistoryDao = loginHistoryDao;

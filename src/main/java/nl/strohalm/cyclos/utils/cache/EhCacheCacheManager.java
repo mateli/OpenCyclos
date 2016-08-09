@@ -21,35 +21,27 @@ package nl.strohalm.cyclos.utils.cache;
 
 import net.sf.ehcache.Ehcache;
 
-import org.apache.commons.lang.reflect.FieldUtils;
-import org.hibernate.cache.RegionFactory;
-import org.hibernate.engine.SessionFactoryImplementor;
+import org.hibernate.engine.spi.SessionFactoryImplementor;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 
 /**
  * A cache manager which uses EhCache
- * 
+ *
  * @author luis
  */
 public class EhCacheCacheManager extends BaseCacheManager implements InitializingBean, DisposableBean {
 
     private net.sf.ehcache.CacheManager ehCacheManager;
-    private SessionFactoryImplementor   sessionFactory;
-    private boolean                     cleanUpEhCache;
+    private SessionFactoryImplementor sessionFactory;
+    private boolean cleanUpEhCache;
 
     @Override
     public void afterPropertiesSet() throws Exception {
         // Attempt to get the same EHCache cache manager from the session factory
-        try {
-            // Dirty little trick using reflection
-            RegionFactory regionFactory = sessionFactory.getSettings().getRegionFactory();
-            ehCacheManager = (net.sf.ehcache.CacheManager) FieldUtils.readField(regionFactory, "manager", true);
-        } catch (Exception e) {
-            // It was not possible. Fallback to the default cache manager
-            ehCacheManager = new net.sf.ehcache.CacheManager();
-            cleanUpEhCache = true;
-        }
+        // It was not possible. Fallback to the default cache manager
+        ehCacheManager = new net.sf.ehcache.CacheManager();
+        cleanUpEhCache = true;
     }
 
     @Override
