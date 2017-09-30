@@ -19,8 +19,6 @@
 				<value>/nl/strohalm/cyclos/entities/Application.hbm.xml</value>
 				<value>/nl/strohalm/cyclos/entities/IndexOperation.hbm.xml</value>
 				<value>/nl/strohalm/cyclos/entities/settings/Setting.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/access/Channel.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/access/ChannelPrincipal.hbm.xml</value>
 				<value>/nl/strohalm/cyclos/entities/customization/fields/CustomField.hbm.xml</value>
 				<value>/nl/strohalm/cyclos/entities/customization/fields/CustomFieldPossibleValue.hbm.xml</value>
 				<value>/nl/strohalm/cyclos/entities/customization/fields/CustomFieldValue.hbm.xml</value>
@@ -51,17 +49,6 @@
 				<value>/nl/strohalm/cyclos/entities/members/PendingEmailChange.hbm.xml</value>
 				<value>/nl/strohalm/cyclos/entities/members/Administrator.hbm.xml</value>
 				<value>/nl/strohalm/cyclos/entities/members/Operator.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/access/User.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/access/AdminUser.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/access/MemberUser.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/access/OperatorUser.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/access/WrongCredentialAttempt.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/access/WrongUsernameAttempt.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/access/PermissionDeniedTrace.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/access/Session.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/access/LoginHistoryLog.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/access/PasswordHistoryLog.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/access/UsernameChangeLog.hbm.xml</value>
 				<value>/nl/strohalm/cyclos/entities/members/Reference.hbm.xml</value>
 				<value>/nl/strohalm/cyclos/entities/members/GeneralReference.hbm.xml</value>
 				<value>/nl/strohalm/cyclos/entities/members/TransactionFeedback.hbm.xml</value>
@@ -110,15 +97,6 @@
 				<value>/nl/strohalm/cyclos/entities/accounts/transactions/InvoicePayment.hbm.xml</value>
 				<value>/nl/strohalm/cyclos/entities/accounts/transactions/TraceNumber.hbm.xml</value>
 				<value>/nl/strohalm/cyclos/entities/accounts/MemberGroupAccountSettings.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/accounts/external/ExternalAccount.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/accounts/external/ExternalTransfer.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/accounts/external/ExternalTransferImport.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/accounts/external/ExternalTransferType.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/accounts/external/filemapping/CSVFileMapping.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/accounts/external/filemapping/FieldMapping.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/accounts/external/filemapping/FileMapping.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/accounts/external/filemapping/FileMappingWithFields.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/accounts/external/filemapping/CustomFileMapping.hbm.xml</value>
 				<value>/nl/strohalm/cyclos/entities/members/remarks/Remark.hbm.xml</value>
 				<value>/nl/strohalm/cyclos/entities/members/remarks/GroupRemark.hbm.xml</value>
 				<value>/nl/strohalm/cyclos/entities/members/remarks/BrokerRemark.hbm.xml</value>
@@ -181,15 +159,13 @@
 				<value>/nl/strohalm/cyclos/entities/members/imports/ImportedMember.hbm.xml</value>				
 				<value>/nl/strohalm/cyclos/entities/members/imports/ImportedMemberRecord.hbm.xml</value>
 				<value>/nl/strohalm/cyclos/entities/members/imports/ImportedMemberRecordCustomFieldValue.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/accounts/cards/Card.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/accounts/cards/CardType.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/accounts/cards/CardLog.hbm.xml</value>
 				<value>/nl/strohalm/cyclos/entities/accounts/pos/Pos.hbm.xml</value>
 				<value>/nl/strohalm/cyclos/entities/accounts/pos/MemberPos.hbm.xml</value>
 				<value>/nl/strohalm/cyclos/entities/accounts/pos/PosLog.hbm.xml</value>
 				<value>/nl/strohalm/cyclos/entities/infotexts/InfoText.hbm.xml</value>
 			</list>
 		</property>
+		<property name="packagesToScan" value="nl.strohalm.cyclos.entities" />
 		<!-- 
 		<property name="eventListeners">
 			<map>

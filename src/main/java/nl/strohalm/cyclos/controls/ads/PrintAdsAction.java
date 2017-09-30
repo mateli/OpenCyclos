@@ -28,7 +28,7 @@ import nl.strohalm.cyclos.entities.ads.AbstractAdQuery;
 import nl.strohalm.cyclos.entities.ads.Ad;
 import nl.strohalm.cyclos.entities.ads.AdCategory;
 import nl.strohalm.cyclos.utils.RelationshipHelper;
-import nl.strohalm.cyclos.utils.TimePeriod;
+import nl.strohalm.cyclos.entities.utils.TimePeriod;
 
 /**
  * Action used to print advertisements

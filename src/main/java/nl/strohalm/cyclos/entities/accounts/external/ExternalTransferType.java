@@ -19,17 +19,28 @@
  */
 package nl.strohalm.cyclos.entities.accounts.external;
 
-import java.util.Collection;
-
 import nl.strohalm.cyclos.entities.Entity;
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.accounts.transactions.TransferType;
 import nl.strohalm.cyclos.utils.StringValuedEnum;
 
+import javax.persistence.Cacheable;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
+import javax.persistence.Table;
+import java.util.Collection;
+
 /**
  * Represents a type for an external transfer
  * @author luis
  */
+@Cacheable
+@Table(name = "external_transfer_types")
+@javax.persistence.Entity
 public class ExternalTransferType extends Entity {
 
     /**
@@ -64,15 +75,32 @@ public class ExternalTransferType extends Entity {
     }
 
     private static final long            serialVersionUID = 4958639810768991285L;
-    private ExternalAccount              account;
-    private String                       name;
-    private String                       description;
-    private String                       code;
-    private Action                       action;
-    private TransferType                 transferType;
-    private Collection<ExternalTransfer> transfers;
 
-    public ExternalAccount getAccount() {
+    @ManyToOne
+    @JoinColumn(name = "account_id", nullable = false) // unique-key="uk_account_code"
+	private ExternalAccount              account;
+
+    @Column(length = 50, nullable = false)
+    private String                       name;
+
+    @Column(columnDefinition = "text", length = Integer.MAX_VALUE)
+    private String                       description;
+
+    @Column(length = 20, nullable = false) // unique-key="uk_account_code"
+    private String                       code;
+
+    @Column(length = 1, nullable = false)
+	private Action                       action;
+
+    @ManyToOne
+    @JoinColumn(name = "transfer_type_id")
+	private TransferType                 transferType;
+
+    @OneToMany(mappedBy = "type", cascade = CascadeType.REMOVE)
+    @OrderBy("date desc")
+	private Collection<ExternalTransfer> transfers;
+
+	public ExternalAccount getAccount() {
         return account;
     }
 

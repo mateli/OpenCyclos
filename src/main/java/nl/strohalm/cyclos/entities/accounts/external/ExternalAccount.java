@@ -19,18 +19,30 @@
  */
 package nl.strohalm.cyclos.entities.accounts.external;
 
-import java.util.Collection;
-
 import nl.strohalm.cyclos.entities.Entity;
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.accounts.MemberAccountType;
 import nl.strohalm.cyclos.entities.accounts.SystemAccountType;
 import nl.strohalm.cyclos.entities.accounts.external.filemapping.FileMapping;
 
+import javax.persistence.Cacheable;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.OrderBy;
+import javax.persistence.Table;
+import java.util.Collection;
+
 /**
  * Represents an external account for payments that backs internal Cyclos payments
  * @author luis
  */
+@Cacheable
+@Table(name = "external_accounts")
+@javax.persistence.Entity
 public class ExternalAccount extends Entity {
 
     public static enum Relationships implements Relationship {
@@ -47,16 +59,36 @@ public class ExternalAccount extends Entity {
     }
 
     private static final long                  serialVersionUID = -3694123388080600042L;
-    private String                             name;
-    private String                             description;
-    private MemberAccountType                  memberAccountType;
-    private SystemAccountType                  systemAccountType;
-    private FileMapping                        fileMapping;
-    private Collection<ExternalTransfer>       transfers;
-    private Collection<ExternalTransferType>   types;
-    private Collection<ExternalTransferImport> imports;
 
-    public String getDescription() {
+    @Column(nullable = false, length = 50)
+    private String                             name;
+
+    @Column(columnDefinition = "text", length = Integer.MAX_VALUE)
+    private String                             description;
+
+    @ManyToOne
+    @JoinColumn(name = "member_account_id", nullable = false)
+	private MemberAccountType                  memberAccountType;
+
+    @ManyToOne
+    @JoinColumn(name = "system_account_id", nullable = false)
+	private SystemAccountType                  systemAccountType;
+
+    @OneToOne(mappedBy = "account")
+	private FileMapping                        fileMapping;
+
+    @OneToMany(mappedBy = "account", cascade = CascadeType.REMOVE)
+    @OrderBy("date desc")
+	private Collection<ExternalTransfer>       transfers;
+
+    @OneToMany(mappedBy = "account", cascade = CascadeType.REMOVE)
+	private Collection<ExternalTransferType>   types;
+
+    @OneToMany(mappedBy = "account", cascade = CascadeType.REMOVE)
+    @OrderBy("date desc")
+	private Collection<ExternalTransferImport> imports;
+
+	public String getDescription() {
         return description;
     }
 

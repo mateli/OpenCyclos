@@ -40,7 +40,7 @@ public enum Month implements IntValuedEnum {
         this.value = value;
     }
 
-    public int getValue() {
+    public Integer getValue() {
         return value;
     }
 

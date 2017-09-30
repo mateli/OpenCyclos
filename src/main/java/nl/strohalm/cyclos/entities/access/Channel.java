@@ -27,6 +27,15 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.persistence.Cacheable;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Enumerated;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
 import nl.strohalm.cyclos.entities.Entity;
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.customization.fields.MemberCustomField;
@@ -49,11 +58,15 @@ import org.apache.commons.lang.StringUtils;
  * Other channels may be registered at will.
  * @author luis
  */
+
+@Cacheable
+@Table(name = "channels")
+@javax.persistence.Entity
 public class Channel extends Entity implements Comparable<Channel> {
 
     /**
      * Which information is used to authenticate the user in a channel
-     * 
+     *
      * @author luis
      */
     public static enum Credentials implements StringValuedEnum {
@@ -87,7 +100,7 @@ public class Channel extends Entity implements Comparable<Channel> {
 
     /**
      * Which information is used to identify the user in a channel
-     * 
+     *
      * @author luis
      */
     public static enum Principal implements StringValuedEnum {
@@ -140,7 +153,8 @@ public class Channel extends Entity implements Comparable<Channel> {
         }
     }
 
-    public static final PrincipalType DEFAULT_PRINCIPAL_TYPE = new PrincipalType(Principal.USER);
+    @ManyToOne
+	public static final PrincipalType DEFAULT_PRINCIPAL_TYPE = new PrincipalType(Principal.USER);
 
     public static final String        WEB                    = "web";
     public static final String        WAP1                   = "wap1";
@@ -165,19 +179,30 @@ public class Channel extends Entity implements Comparable<Channel> {
         BUILTIN_CHANNELS = Collections.unmodifiableList(channels);
     }
 
-    /**
+	/**
      * Returns a list of built-in channels
      */
     public static List<String> listBuiltin() {
         return BUILTIN_CHANNELS;
     }
 
+    @Column(name = "internal_name", nullable = false, unique = true, length = 50)
     private String                       internalName;
+
+    @Column(name = "display_name")
     private String                       displayName;
+
+    @Column(length = 1)
     private Credentials                  credentials;
+
+    @Column(name = "pmt_req_ws_url", length = 200)
     private String                       paymentRequestWebServiceUrl;
-    private Collection<ChannelPrincipal> principals;
-    private Collection<MemberGroup>      groups;
+
+    @OneToMany(mappedBy = "channel", cascade = CascadeType.REMOVE)
+	private Collection<ChannelPrincipal> principals;
+
+    @ManyToMany(mappedBy = "channels")
+	private Collection<MemberGroup>      groups;
 
     public boolean allows(final PrincipalType principalType) {
         for (final PrincipalType type : getPrincipalTypes()) {

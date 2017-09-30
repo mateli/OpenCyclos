@@ -25,7 +25,7 @@ import nl.strohalm.cyclos.entities.accounts.AccountOwner;
 import nl.strohalm.cyclos.entities.accounts.MemberAccountType;
 import nl.strohalm.cyclos.utils.DataObject;
 import nl.strohalm.cyclos.utils.Period;
-import nl.strohalm.cyclos.utils.TimePeriod;
+import nl.strohalm.cyclos.entities.utils.TimePeriod;
 
 /**
  * Contain parameters for a transaction volume calculation

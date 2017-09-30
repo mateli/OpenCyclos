@@ -19,22 +19,37 @@
  */
 package nl.strohalm.cyclos.entities.accounts.cards;
 
-import java.util.Calendar;
-
 import nl.strohalm.cyclos.entities.Entity;
 import nl.strohalm.cyclos.entities.members.Element;
+
+import javax.persistence.Column;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import java.util.Calendar;
 
 /**
  * Represents a card log
  * @author jefferson
  */
+@Table(name = "card_logs")
+@javax.persistence.Entity
 public class CardLog extends Entity {
 
     private static final long serialVersionUID = 2551581873638833476L;
+
     private Calendar          date;
+
+    @Column(length = 1, nullable = false)
     private Card.Status       status;
-    private Card              card;
-    private Element           by;
+
+    @ManyToOne
+    @JoinColumn(nullable = false)
+	private Card              card;
+
+    @ManyToOne
+    @JoinColumn(nullable = false)
+	private Element           by;
 
     public Element getBy() {
         return by;

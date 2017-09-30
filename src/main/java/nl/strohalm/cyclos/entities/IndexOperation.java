@@ -19,8 +19,6 @@
  */
 package nl.strohalm.cyclos.entities;
 
-import java.util.Calendar;
-
 import nl.strohalm.cyclos.entities.ads.Ad;
 import nl.strohalm.cyclos.entities.members.Administrator;
 import nl.strohalm.cyclos.entities.members.Member;
@@ -29,11 +27,18 @@ import nl.strohalm.cyclos.entities.members.records.MemberRecord;
 import nl.strohalm.cyclos.utils.FormatObject;
 import nl.strohalm.cyclos.utils.StringValuedEnum;
 
+import javax.persistence.Column;
+import javax.persistence.Enumerated;
+import javax.persistence.Table;
+import java.util.Calendar;
+
 /**
  * Represents an operation which should be applied to the local lucene indexings
  * 
  * @author luis
  */
+@Table(name = "index_operations")
+@javax.persistence.Entity
 public class IndexOperation extends Entity {
 
     /**
@@ -96,12 +101,19 @@ public class IndexOperation extends Entity {
 
     private static final long serialVersionUID = -7460146693838037965L;
 
+    @Column(nullable = false) // index="ix_indexops_date"
     private Calendar          date;
-    private EntityType        entityType;
-    private OperationType     operationType;
+
+    @Column(name = "entity_type", length = 3, nullable = false)
+	private EntityType        entityType;
+
+    @Column(name = "entity_type", length = 3, nullable = false)
+	private OperationType     operationType;
+
+    @Column(name = "entity_id")
     private Long              entityId;
 
-    public Calendar getDate() {
+	public Calendar getDate() {
         return date;
     }
 

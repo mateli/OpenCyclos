@@ -19,18 +19,29 @@
  */
 package nl.strohalm.cyclos.entities.access;
 
-import java.util.Calendar;
-import java.util.Collection;
-
 import nl.strohalm.cyclos.entities.Entity;
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.members.Element;
 import nl.strohalm.cyclos.utils.StringValuedEnum;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.Inheritance;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+import java.util.Calendar;
+import java.util.Collection;
+
 /**
  * An user is the entity that contains login / password / transaction
  * @author luis
  */
+@Inheritance
+@DiscriminatorColumn(name = "subclass")
+@Table(name = "users")
+@javax.persistence.Entity
 public abstract class User extends Entity {
 
     public static enum Relationships implements Relationship {
@@ -67,18 +78,37 @@ public abstract class User extends Entity {
     }
 
     private static final long           serialVersionUID          = 545429548353183777L;
-    private Element                     element;
-    private String                      salt;
-    private String                      username;
-    private Calendar                    lastLogin;
-    private String                      password;
-    private Calendar                    passwordDate;
-    private Calendar                    passwordBlockedUntil;
-    private String                      transactionPassword;
-    private TransactionPasswordStatus   transactionPasswordStatus = TransactionPasswordStatus.NEVER_CREATED;
-    private Collection<LoginHistoryLog> loginHistory;
+    @OneToOne(mappedBy = "user")
+	private Element                     element;
 
-    public Element getElement() {
+    @Column(length = 32)
+    private String                      salt;
+
+    @Column(length = 64, unique = true, nullable = false) // index="ix_username"
+    private String                      username;
+
+    @Column(name = "last_login")
+    private Calendar                    lastLogin;
+
+    @Column(length = 64)
+    private String                      password;
+
+    @Column(name = "password_date")
+    private Calendar                    passwordDate;
+
+    @Column(name = "password_blocked_until")
+    private Calendar                    passwordBlockedUntil;
+
+    @Column(name = "transaction_password", length = 64)
+    private String                      transactionPassword;
+
+    @Column(name = "transaction_password_status", length = 1, nullable = false)
+	private TransactionPasswordStatus   transactionPasswordStatus = TransactionPasswordStatus.NEVER_CREATED;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+	private Collection<LoginHistoryLog> loginHistory;
+
+	public Element getElement() {
         return element;
     }
 

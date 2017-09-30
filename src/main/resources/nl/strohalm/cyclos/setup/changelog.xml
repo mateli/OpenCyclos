@@ -87,6 +87,42 @@
 
 <cyclos-changelog>
 
+	<version label="3.7.4">
+		<enhancements>
+			<item>JPA Migration</item>
+		</enhancements>
+
+		<bug-fixes>
+		</bug-fixes>
+
+		<statements database="mysql">
+			<!-- #1
+			SELECT CONCAT('alter table ', c.TABLE_NAME, ' drop foreign key ', CONSTRAINT_NAME, ';')
+			FROM information_schema.KEY_COLUMN_USAGE kcu
+			JOIN information_schema.COLUMNS c on c.TABLE_SCHEMA = kcu.TABLE_SCHEMA and c.TABLE_NAME = kcu.REFERENCED_TABLE_NAME and c.COLUMN_NAME = kcu.REFERENCED_COLUMN_NAME
+			WHERE REFERENCED_COLUMN_NAME = 'id' and data_type = 'bigint';
+			-->
+
+			<!-- #2
+			SELECT CONCAT('ALTER TABLE ', table_name, ' MODIFY COLUMN ', column_name, ' BIGINT;'), data_type
+			FROM information_schema.columns
+			WHERE table_schema='cyclos' AND (column_name = 'id' OR column_name LIKE '%_id') AND data_type = 'int'
+			ORDER BY table_name, column_name;
+			-->
+
+			<!-- #3
+			SELECT CONCAT('ALTER TABLE ', kcu.TABLE_NAME,
+			  ' ADD INDEX ', kcu.constraint_name, ' (', kcu.COLUMN_NAME, '), ',
+			  ' ADD CONSTRAINT ', kcu.constraint_name, ' FOREIGN KEY ', kcu.TABLE_NAME, '(', kcu.COLUMN_NAME, ') ',
+			'REFERENCES ', kcu.REFERENCED_TABLE_NAME, '(', kcu.REFERENCED_COLUMN_NAME, ');')
+			FROM
+			  INFORMATION_SCHEMA.KEY_COLUMN_USAGE kcu
+			  JOIN information_schema.COLUMNS c on c.TABLE_SCHEMA = kcu.TABLE_SCHEMA and c.TABLE_NAME = kcu.REFERENCED_TABLE_NAME and c.COLUMN_NAME = kcu.REFERENCED_COLUMN_NAME
+			WHERE REFERENCED_COLUMN_NAME = 'id' and data_type = 'bigint';
+			-->
+		</statements>
+	</version>
+
 	<version label="3.7.3">
 		<enhancements>
 			<item>Changed the hibernate.default_batch_fetch_size to 1 by default (previously, was 20). Now, Cyclos takes up much less memory, at minimum cost of performance.</item>

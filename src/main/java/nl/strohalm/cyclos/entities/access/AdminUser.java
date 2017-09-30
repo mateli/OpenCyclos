@@ -21,10 +21,15 @@ package nl.strohalm.cyclos.entities.access;
 
 import nl.strohalm.cyclos.entities.members.Administrator;
 
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
+
 /**
  * A user for administrators
  * @author luis
  */
+@Entity
+@DiscriminatorValue("A")
 public class AdminUser extends User {
 
     private static final long serialVersionUID = 8859775065273524059L;

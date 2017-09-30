@@ -19,15 +19,6 @@
  */
 package nl.strohalm.cyclos.services.access;
 
-import java.math.BigInteger;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Properties;
-import java.util.Random;
-import java.util.Set;
-
 import nl.strohalm.cyclos.access.AdminMemberPermission;
 import nl.strohalm.cyclos.access.AdminSystemPermission;
 import nl.strohalm.cyclos.access.BasicPermission;
@@ -76,6 +67,8 @@ import nl.strohalm.cyclos.entities.members.Operator;
 import nl.strohalm.cyclos.entities.services.ServiceClient;
 import nl.strohalm.cyclos.entities.settings.AccessSettings;
 import nl.strohalm.cyclos.entities.settings.LocalSettings;
+import nl.strohalm.cyclos.entities.utils.RangeConstraint;
+import nl.strohalm.cyclos.entities.utils.TimePeriod;
 import nl.strohalm.cyclos.exceptions.MailSendingException;
 import nl.strohalm.cyclos.exceptions.PermissionDeniedException;
 import nl.strohalm.cyclos.services.InitializingService;
@@ -104,10 +97,8 @@ import nl.strohalm.cyclos.utils.EntityHelper;
 import nl.strohalm.cyclos.utils.HashHandler;
 import nl.strohalm.cyclos.utils.MailHandler;
 import nl.strohalm.cyclos.utils.PropertyHelper;
-import nl.strohalm.cyclos.utils.RangeConstraint;
 import nl.strohalm.cyclos.utils.RelationshipHelper;
 import nl.strohalm.cyclos.utils.StringHelper;
-import nl.strohalm.cyclos.utils.TimePeriod;
 import nl.strohalm.cyclos.utils.TransactionHelper;
 import nl.strohalm.cyclos.utils.access.LoggedUser;
 import nl.strohalm.cyclos.utils.logging.LoggingHandler;
@@ -124,7 +115,6 @@ import nl.strohalm.cyclos.utils.validation.ValidationError;
 import nl.strohalm.cyclos.utils.validation.ValidationException;
 import nl.strohalm.cyclos.utils.validation.Validator;
 import nl.strohalm.cyclos.utils.validation.Validator.Property;
-
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.StringUtils;
@@ -133,6 +123,15 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionCallback;
 import org.springframework.transaction.support.TransactionCallbackWithoutResult;
+
+import java.math.BigInteger;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Properties;
+import java.util.Random;
+import java.util.Set;
 
 /**
  * Implementation class for access services Service.

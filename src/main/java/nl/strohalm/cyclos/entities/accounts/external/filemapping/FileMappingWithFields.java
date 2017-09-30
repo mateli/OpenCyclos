@@ -19,12 +19,6 @@
  */
 package nl.strohalm.cyclos.entities.accounts.external.filemapping;
 
-import java.math.BigDecimal;
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
-import java.util.Calendar;
-import java.util.Collection;
-
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.utils.StringValuedEnum;
 import nl.strohalm.cyclos.utils.conversion.BooleanConverter;
@@ -32,13 +26,25 @@ import nl.strohalm.cyclos.utils.conversion.CalendarConverter;
 import nl.strohalm.cyclos.utils.conversion.Converter;
 import nl.strohalm.cyclos.utils.conversion.FixedLengthNumberConverter;
 import nl.strohalm.cyclos.utils.conversion.NumberConverter;
-
 import org.apache.commons.lang.StringUtils;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Enumerated;
+import javax.persistence.MappedSuperclass;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.util.Calendar;
+import java.util.Collection;
 
 /**
  * A file mapping that has mapped fields
  * @author luis
  */
+@MappedSuperclass
 public abstract class FileMappingWithFields extends FileMapping {
 
     /**
@@ -79,14 +85,30 @@ public abstract class FileMappingWithFields extends FileMapping {
     public static final String       DEFAULT_DATE_FORMAT           = "yyyy-MM-dd";
 
     private static final long        serialVersionUID              = -6761459914402653154L;
-    private NumberFormat             numberFormat;
-    private String                   negativeAmountValue;
-    private Integer                  decimalPlaces;
-    private Character                decimalSeparator;
-    private String                   dateFormat;
-    private Collection<FieldMapping> fields;
 
-    /**
+    @Column(name = "number_format", length = 1)
+	private NumberFormat             numberFormat;
+
+    @Column(name = "negative_amount_value", length = 50)
+    private String                   negativeAmountValue;
+
+    @Column(name = "decimal_places")
+    private Integer                  decimalPlaces;
+
+    @Column(name = "decimal_separator", length = 1)
+    private Character                decimalSeparator;
+
+    @Column(name = "date_format", length = 20)
+    private String                   dateFormat;
+
+    @OneToMany(mappedBy = "fileMapping", cascade = CascadeType.REMOVE)
+    @OrderBy("order_index")
+	private Collection<FieldMapping> fields;
+
+    protected FileMappingWithFields() {
+	}
+
+	/**
      * Returns a converter for date
      */
     public Converter<Calendar> getDateConverter() {

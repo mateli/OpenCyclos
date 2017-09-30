@@ -19,16 +19,22 @@
  */
 package nl.strohalm.cyclos.entities.access;
 
-import java.util.Calendar;
-
 import nl.strohalm.cyclos.entities.Entity;
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.members.Element;
+
+import javax.persistence.Column;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import java.util.Calendar;
 
 /**
  * Logs an username changing
  * @author luis
  */
+@Table(name = "username_change_logs")
+@javax.persistence.Entity
 public class UsernameChangeLog extends Entity {
 
     public static enum Relationships implements Relationship {
@@ -45,13 +51,25 @@ public class UsernameChangeLog extends Entity {
     }
 
     private static final long serialVersionUID = 545429548353183777L;
+
+    @Column(nullable = false, updatable = false)
     private Calendar          date;
-    private Element           by;
-    private User              user;
+
+    @ManyToOne
+    @JoinColumn(nullable = false, updatable = false)
+	private Element           by;
+
+    @ManyToOne
+    @JoinColumn(nullable = false, updatable = false)
+	private User              user;
+
+    @Column(name = "previous_username", length = 64, updatable = false, nullable = false)
     private String            previousUsername;
+
+    @Column(name = "new_username", length = 64, updatable = false, nullable = false)
     private String            newUsername;
 
-    public Element getBy() {
+	public Element getBy() {
         return by;
     }
 

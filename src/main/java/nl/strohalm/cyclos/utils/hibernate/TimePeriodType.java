@@ -19,14 +19,7 @@
  */
 package nl.strohalm.cyclos.utils.hibernate;
 
-import java.io.Serializable;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Types;
-
-import nl.strohalm.cyclos.utils.TimePeriod;
-
+import nl.strohalm.cyclos.entities.utils.TimePeriod;
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -36,11 +29,18 @@ import org.hibernate.type.StandardBasicTypes;
 import org.hibernate.type.Type;
 import org.hibernate.usertype.CompositeUserType;
 
+import java.io.Serializable;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Types;
+
 /**
  * Hibernate user type to persist time periods
  *
  * @author luis
  */
+@Deprecated
 public class TimePeriodType implements CompositeUserType, Serializable {
 
     private static final long serialVersionUID = -9056395153634021069L;

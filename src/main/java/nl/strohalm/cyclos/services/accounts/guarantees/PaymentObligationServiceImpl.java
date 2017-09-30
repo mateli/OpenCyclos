@@ -41,7 +41,7 @@ import nl.strohalm.cyclos.services.accounts.guarantees.exceptions.PaymentObligat
 import nl.strohalm.cyclos.services.fetch.FetchServiceLocal;
 import nl.strohalm.cyclos.utils.DateHelper;
 import nl.strohalm.cyclos.utils.Period;
-import nl.strohalm.cyclos.utils.TimePeriod;
+import nl.strohalm.cyclos.entities.utils.TimePeriod;
 import nl.strohalm.cyclos.utils.access.LoggedUser;
 import nl.strohalm.cyclos.utils.notifications.MemberNotificationHandler;
 import nl.strohalm.cyclos.utils.query.QueryParameters.ResultType;

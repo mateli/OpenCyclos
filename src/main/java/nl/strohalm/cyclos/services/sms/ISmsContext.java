@@ -23,7 +23,7 @@ import java.math.BigDecimal;
 
 import nl.strohalm.cyclos.entities.members.Member;
 import nl.strohalm.cyclos.entities.sms.MemberSmsStatus;
-import nl.strohalm.cyclos.utils.TimePeriod;
+import nl.strohalm.cyclos.entities.utils.TimePeriod;
 
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;

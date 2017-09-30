@@ -73,7 +73,7 @@ import nl.strohalm.cyclos.utils.ActionHelper;
 import nl.strohalm.cyclos.utils.Amount;
 import nl.strohalm.cyclos.utils.RelationshipHelper;
 import nl.strohalm.cyclos.utils.RequestHelper;
-import nl.strohalm.cyclos.utils.TimePeriod.Field;
+import nl.strohalm.cyclos.entities.utils.TimePeriod.Field;
 import nl.strohalm.cyclos.utils.binding.BeanBinder;
 import nl.strohalm.cyclos.utils.binding.DataBinder;
 import nl.strohalm.cyclos.utils.binding.DataBinderHelper;

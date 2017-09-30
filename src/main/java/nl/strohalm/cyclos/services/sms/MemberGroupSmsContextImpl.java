@@ -24,7 +24,7 @@ import java.math.BigDecimal;
 
 import nl.strohalm.cyclos.entities.members.Member;
 import nl.strohalm.cyclos.entities.sms.MemberSmsStatus;
-import nl.strohalm.cyclos.utils.TimePeriod;
+import nl.strohalm.cyclos.entities.utils.TimePeriod;
 
 /**
  * This sms context implementation is the default used by Cyclos. <br>

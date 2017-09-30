@@ -44,7 +44,7 @@ import nl.strohalm.cyclos.services.transactions.PaymentServiceLocal;
 import nl.strohalm.cyclos.services.transactions.TransactionContext;
 import nl.strohalm.cyclos.services.transactions.TransferDTO;
 import nl.strohalm.cyclos.utils.RelationshipHelper;
-import nl.strohalm.cyclos.utils.TimePeriod;
+import nl.strohalm.cyclos.entities.utils.TimePeriod;
 import nl.strohalm.cyclos.utils.TransactionHelper;
 import nl.strohalm.cyclos.utils.transaction.CurrentTransactionData;
 import nl.strohalm.cyclos.utils.transaction.TransactionCommitListener;

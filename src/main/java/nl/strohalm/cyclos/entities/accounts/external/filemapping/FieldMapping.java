@@ -24,10 +24,20 @@ import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.customization.fields.MemberCustomField;
 import nl.strohalm.cyclos.utils.StringValuedEnum;
 
+import javax.persistence.Cacheable;
+import javax.persistence.Column;
+import javax.persistence.Enumerated;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
 /**
  * Maps a specific field inside a transactions file
  * @author luis
  */
+@Cacheable
+@Table(name = "field_mappings")
+@javax.persistence.Entity
 public class FieldMapping extends Entity {
 
     /**
@@ -93,13 +103,25 @@ public class FieldMapping extends Entity {
     }
 
     private static final long serialVersionUID = -8059629760396294846L;
-    private FileMapping       fileMapping;
-    private int               order;
-    private String            name;
-    private Field             field;
-    private MemberCustomField memberField;
 
-    public Field getField() {
+    @ManyToOne
+    @JoinColumn(name = "file_mapping_id", nullable = false)
+	private FileMapping       fileMapping;
+
+    @Column(name = "order_index", nullable = false)
+    private int               order;
+
+    @Column(name = "name", nullable = false, length = 50)
+    private String            name;
+
+    @Column(length = 2, nullable = false)
+	private Field             field;
+
+    @ManyToOne
+    @JoinColumn(name = "member_field_id")
+	private MemberCustomField memberField;
+
+	public Field getField() {
         return field;
     }
 

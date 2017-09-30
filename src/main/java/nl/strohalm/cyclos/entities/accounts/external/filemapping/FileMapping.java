@@ -25,10 +25,22 @@ import nl.strohalm.cyclos.entities.accounts.external.ExternalAccount;
 import nl.strohalm.cyclos.utils.CustomObjectHandler;
 import nl.strohalm.cyclos.utils.transactionimport.TransactionFileImport;
 
+import javax.persistence.Cacheable;
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.Inheritance;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+
 /**
  * Maps a file format to import transfers
  * @author luis
  */
+@Cacheable
+@Inheritance
+@DiscriminatorColumn(name = "subclass")
+@Table(name = "file_mappings")
+@javax.persistence.Entity
 public abstract class FileMapping extends Entity {
 
     /**
@@ -55,9 +67,14 @@ public abstract class FileMapping extends Entity {
 
     private static final long serialVersionUID = 2240788293712329995L;
 
-    private ExternalAccount   account;
+    @OneToOne()
+    @JoinColumn(nullable = false)
+	private ExternalAccount   account;
 
-    public ExternalAccount getAccount() {
+    protected FileMapping() {
+	}
+
+	public ExternalAccount getAccount() {
         return account;
     }
 

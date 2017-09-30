@@ -19,25 +19,42 @@
  */
 package nl.strohalm.cyclos.entities.access;
 
-import java.util.Calendar;
-
 import nl.strohalm.cyclos.entities.Entity;
 import nl.strohalm.cyclos.entities.accounts.cards.Card;
 import nl.strohalm.cyclos.entities.accounts.pos.MemberPos;
 import nl.strohalm.cyclos.utils.FormatObject;
+
+import javax.persistence.Column;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import java.util.Calendar;
 
 /**
  * Entity used to track the number of invalid credential usage attempts
  * 
  * @author luis
  */
+@Table(name = "wrong_credential_attempts")
+@javax.persistence.Entity
 public class WrongCredentialAttempt extends Entity {
 
     private static final long   serialVersionUID = -4758213362595274664L;
-    private User                user;
-    private Card                card;
-    private MemberPos           memberPos;
+
+    @ManyToOne
+	private User                user;
+
+    @ManyToOne
+	private Card                card;
+
+    @ManyToOne
+    @JoinColumn(name = "member_pos_id")
+	private MemberPos           memberPos;
+
+    @Column(name = "credential_type", length = 1)
     private Channel.Credentials credentialType;
+
+    @Column(nullable = false)
     private Calendar            date;
 
     public Card getCard() {

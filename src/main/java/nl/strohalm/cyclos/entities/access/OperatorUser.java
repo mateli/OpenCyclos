@@ -21,10 +21,14 @@ package nl.strohalm.cyclos.entities.access;
 
 import nl.strohalm.cyclos.entities.members.Operator;
 
+import javax.persistence.DiscriminatorValue;
+
 /**
  * A member's operator user
  * @author luis
  */
+@DiscriminatorValue("O")
+@javax.persistence.Entity
 public class OperatorUser extends User {
 
     private static final long serialVersionUID = -1985530143455538217L;

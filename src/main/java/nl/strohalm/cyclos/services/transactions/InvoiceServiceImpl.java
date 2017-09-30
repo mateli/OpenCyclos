@@ -81,7 +81,7 @@ import nl.strohalm.cyclos.utils.MessageResolver;
 import nl.strohalm.cyclos.utils.Period;
 import nl.strohalm.cyclos.utils.PropertyHelper;
 import nl.strohalm.cyclos.utils.RelationshipHelper;
-import nl.strohalm.cyclos.utils.TimePeriod;
+import nl.strohalm.cyclos.entities.utils.TimePeriod;
 import nl.strohalm.cyclos.utils.TransactionHelper;
 import nl.strohalm.cyclos.utils.Transactional;
 import nl.strohalm.cyclos.utils.access.LoggedUser;

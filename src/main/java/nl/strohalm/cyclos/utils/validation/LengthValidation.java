@@ -22,7 +22,7 @@ package nl.strohalm.cyclos.utils.validation;
 import java.util.Collection;
 import java.util.Map;
 
-import nl.strohalm.cyclos.utils.RangeConstraint;
+import nl.strohalm.cyclos.entities.utils.RangeConstraint;
 
 /**
  * Validates a length constraint

@@ -19,18 +19,6 @@
  */
 package nl.strohalm.cyclos.setup;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.ResourceBundle;
-
 import nl.strohalm.cyclos.entities.access.Channel;
 import nl.strohalm.cyclos.entities.accounts.AccountLock;
 import nl.strohalm.cyclos.entities.accounts.AccountType;
@@ -67,11 +55,22 @@ import nl.strohalm.cyclos.entities.groups.MemberGroup;
 import nl.strohalm.cyclos.entities.members.Reference.Level;
 import nl.strohalm.cyclos.entities.members.messages.MessageCategory;
 import nl.strohalm.cyclos.entities.members.records.MemberRecordType;
+import nl.strohalm.cyclos.entities.utils.TimePeriod;
 import nl.strohalm.cyclos.utils.Amount;
-import nl.strohalm.cyclos.utils.TimePeriod;
-
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.ResourceBundle;
 
 /**
  * Creates a set of default account related data, as well as other default data. These are the generated account types:
@@ -451,9 +450,8 @@ public class CreateInitialData implements Runnable {
     }
 
     private void createMemberAccountSettings() {
-        MemberGroupAccountSettings mgas = new MemberGroupAccountSettings();
         for (final MemberGroup group : enabledMemberGroups) {
-            mgas = new MemberGroupAccountSettings();
+            MemberGroupAccountSettings mgas = new MemberGroupAccountSettings();
             mgas.setAccountType(member);
             mgas.setDefault(true);
             mgas.setDefaultCreditLimit(BigDecimal.ZERO);

@@ -28,7 +28,7 @@ import nl.strohalm.cyclos.entities.settings.Setting;
 import nl.strohalm.cyclos.entities.settings.events.AccessSettingsChangeListener;
 import nl.strohalm.cyclos.entities.settings.events.AccessSettingsEvent;
 import nl.strohalm.cyclos.services.groups.GroupServiceLocal;
-import nl.strohalm.cyclos.utils.TimePeriod.Field;
+import nl.strohalm.cyclos.entities.utils.TimePeriod.Field;
 import nl.strohalm.cyclos.utils.conversion.CoercionConverter;
 import nl.strohalm.cyclos.utils.conversion.Converter;
 import nl.strohalm.cyclos.utils.validation.PropertyValidation;

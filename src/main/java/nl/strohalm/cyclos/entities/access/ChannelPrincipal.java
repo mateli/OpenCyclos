@@ -19,6 +19,12 @@
  */
 package nl.strohalm.cyclos.entities.access;
 
+import javax.persistence.Cacheable;
+import javax.persistence.Column;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
 import nl.strohalm.cyclos.entities.Entity;
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.access.Channel.Principal;
@@ -29,6 +35,9 @@ import nl.strohalm.cyclos.entities.customization.fields.MemberCustomField;
  * 
  * @author luis
  */
+@javax.persistence.Entity
+@Table(name = "channels_principals")
+@Cacheable
 public class ChannelPrincipal extends Entity {
 
     public static enum Relationships implements Relationship {
@@ -46,12 +55,22 @@ public class ChannelPrincipal extends Entity {
     }
 
     private static final long serialVersionUID = -7488098967445663138L;
-    private Channel           channel;
-    private Principal         principal;
-    private MemberCustomField customField;
+
+    @ManyToOne
+    @JoinColumn(name = "channel_id", nullable = false)
+	private Channel           channel;
+
+    @Column(length = 1, nullable = false)
+	private Principal         principal;
+
+    @ManyToOne
+    @JoinColumn(name = "custom_field_id")
+	private MemberCustomField customField;
+
+    @Column(name = "is_default", nullable = false)
     private boolean           isDefault;
 
-    public PrincipalType asPrincipalType() {
+	public PrincipalType asPrincipalType() {
         if (customField != null) {
             return new PrincipalType(customField);
         } else {

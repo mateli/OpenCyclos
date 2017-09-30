@@ -45,7 +45,7 @@ import nl.strohalm.cyclos.services.access.ChannelServiceLocal;
 import nl.strohalm.cyclos.services.customization.MemberCustomFieldServiceLocal;
 import nl.strohalm.cyclos.utils.FileUnits;
 import nl.strohalm.cyclos.utils.TextFormat;
-import nl.strohalm.cyclos.utils.TimePeriod.Field;
+import nl.strohalm.cyclos.entities.utils.TimePeriod.Field;
 import nl.strohalm.cyclos.utils.conversion.CoercionConverter;
 import nl.strohalm.cyclos.utils.conversion.Converter;
 import nl.strohalm.cyclos.utils.conversion.IdConverter;

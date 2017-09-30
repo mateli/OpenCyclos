@@ -19,24 +19,30 @@
  */
 package nl.strohalm.cyclos.entities;
 
-import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
-
 import nl.strohalm.cyclos.entities.settings.LocalSettings;
 import nl.strohalm.cyclos.utils.EntityHelper;
 import nl.strohalm.cyclos.utils.EntityVO;
-
 import org.springframework.beans.BeanWrapperImpl;
+
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.MappedSuperclass;
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Common class for all domain objects
  * @author luis
  */
+@MappedSuperclass
 public abstract class Entity implements Serializable, Cloneable {
 
     private static final long serialVersionUID = -7165508156631393668L;
-    private Long              id;
+    @Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long              id;
 
     /**
      * Clones this entity

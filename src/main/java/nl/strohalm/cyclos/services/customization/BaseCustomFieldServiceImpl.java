@@ -58,7 +58,7 @@ import nl.strohalm.cyclos.utils.CustomObjectHandler;
 import nl.strohalm.cyclos.utils.ElementVO;
 import nl.strohalm.cyclos.utils.Pair;
 import nl.strohalm.cyclos.utils.PropertyHelper;
-import nl.strohalm.cyclos.utils.RangeConstraint;
+import nl.strohalm.cyclos.entities.utils.RangeConstraint;
 import nl.strohalm.cyclos.utils.RelationshipHelper;
 import nl.strohalm.cyclos.utils.StringHelper;
 import nl.strohalm.cyclos.utils.access.LoggedUser;

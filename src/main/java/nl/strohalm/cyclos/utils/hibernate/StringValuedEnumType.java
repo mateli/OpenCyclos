@@ -37,6 +37,7 @@ import org.hibernate.type.Type;
  *
  * @author luis
  */
+@Deprecated
 public class StringValuedEnumType<EnumType> extends AbstractEnumType<EnumType> {
 
     private static final long serialVersionUID = 641293149816868313L;

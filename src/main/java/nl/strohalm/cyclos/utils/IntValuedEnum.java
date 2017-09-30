@@ -24,5 +24,5 @@ package nl.strohalm.cyclos.utils;
  * @author luis
  */
 public interface IntValuedEnum {
-    int getValue();
+    Integer getValue();
 }

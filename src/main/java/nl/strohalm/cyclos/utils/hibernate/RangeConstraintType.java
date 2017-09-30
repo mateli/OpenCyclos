@@ -19,24 +19,24 @@
  */
 package nl.strohalm.cyclos.utils.hibernate;
 
+import nl.strohalm.cyclos.entities.utils.RangeConstraint;
+import org.apache.commons.lang.ObjectUtils;
+import org.hibernate.HibernateException;
+import org.hibernate.engine.spi.SharedSessionContractImplementor;
+import org.hibernate.usertype.UserType;
+
 import java.io.Serializable;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 
-import nl.strohalm.cyclos.utils.RangeConstraint;
-
-import org.apache.commons.lang.ObjectUtils;
-import org.hibernate.HibernateException;
-import org.hibernate.engine.spi.SharedSessionContractImplementor;
-import org.hibernate.usertype.UserType;
-
 /**
  * Hibernate user type to persist range constraints
  *
  * @author luis
  */
+@Deprecated
 public class RangeConstraintType implements UserType, Serializable {
 
     private static final long serialVersionUID = -5905157731458253811L;
