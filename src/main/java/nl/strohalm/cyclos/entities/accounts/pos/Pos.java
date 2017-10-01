@@ -19,18 +19,26 @@
  */
 package nl.strohalm.cyclos.entities.accounts.pos;
 
-import java.util.Collection;
-import java.util.Map;
-
 import nl.strohalm.cyclos.entities.Entity;
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.settings.LocalSettings;
 import nl.strohalm.cyclos.utils.StringValuedEnum;
 
+import javax.persistence.Column;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
+import javax.persistence.Table;
+import java.util.Collection;
+import java.util.Map;
+
 /**
  * 
  * @author rodrigo
  */
+@Table(name = "pos")
+@javax.persistence.Entity
 public class Pos extends Entity {
 
     public static enum Relationships implements Relationship {
@@ -61,15 +69,26 @@ public class Pos extends Entity {
         }
     }
 
+    @Column(name = "pos_id", unique = true, nullable = false, length = 64)
     private String             posId;
+
+    @Column(name = "description", length = 100)
     private String             description;
-    private MemberPos          memberPos;
-    private Collection<PosLog> posLog;
-    private Status             status;
+
+    @ManyToOne
+    @JoinColumn(name = "member_pos_id")
+	private MemberPos          memberPos;
+
+    @OneToMany(mappedBy = "pos")
+    @OrderBy("date desc")
+	private Collection<PosLog> posLog;
+
+    @Column(name = "status", nullable = false, length = 1)
+	private Status             status;
 
     private static final long  serialVersionUID = -6054597340850484757L;
 
-    public String getDescription() {
+	public String getDescription() {
         return description;
     }
 

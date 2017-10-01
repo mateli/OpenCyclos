@@ -142,9 +142,6 @@
 				<value>/nl/strohalm/cyclos/entities/members/imports/ImportedMember.hbm.xml</value>				
 				<value>/nl/strohalm/cyclos/entities/members/imports/ImportedMemberRecord.hbm.xml</value>
 				<value>/nl/strohalm/cyclos/entities/members/imports/ImportedMemberRecordCustomFieldValue.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/accounts/pos/Pos.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/accounts/pos/MemberPos.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/accounts/pos/PosLog.hbm.xml</value>
 				<value>/nl/strohalm/cyclos/entities/infotexts/InfoText.hbm.xml</value>
 			</list>
 		</property>

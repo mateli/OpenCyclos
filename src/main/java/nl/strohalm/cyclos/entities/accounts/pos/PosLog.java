@@ -19,26 +19,46 @@
  */
 package nl.strohalm.cyclos.entities.accounts.pos;
 
-import java.util.Calendar;
-
 import nl.strohalm.cyclos.entities.Entity;
 import nl.strohalm.cyclos.entities.members.Element;
 import nl.strohalm.cyclos.entities.members.Member;
+
+import javax.persistence.Column;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import java.util.Calendar;
 
 /**
  * 
  * @author rodrigo
  */
+@Table(name = "pos_logs")
+@javax.persistence.Entity
 public class PosLog extends Entity {
 
     private static final long serialVersionUID = -6747020477752004538L;
 
-    private Pos               pos;
-    private Element           by;
+    @ManyToOne
+    @JoinColumn(name = "pos_id", nullable = false)
+	private Pos               pos;
+
+    @ManyToOne
+    @JoinColumn(name = "by_id")
+	private Element           by;
+
+    @Column(name = "date", nullable = false)
     private Calendar          date;
+
+    @Column(name = "pos_status", nullable = false, length = 1)
     private Pos.Status        posStatus;
+
+    @Column(name = "member_pos_status", length = 1)
     private MemberPos.Status  memberPosStatus;
-    private Member            assignedTo;
+
+    @ManyToOne
+    @JoinColumn(name = "assigned_to")
+	private Member            assignedTo;
 
     public Member getAssignedTo() {
         return assignedTo;

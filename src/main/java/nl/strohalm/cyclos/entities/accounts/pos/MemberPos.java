@@ -19,17 +19,24 @@
  */
 package nl.strohalm.cyclos.entities.accounts.pos;
 
-import java.util.Calendar;
-
 import nl.strohalm.cyclos.entities.Entity;
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.members.Member;
 import nl.strohalm.cyclos.utils.StringValuedEnum;
 
+import javax.persistence.Column;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+import java.util.Calendar;
+
 /**
  * 
  * @author rodrigo
  */
+@Table(name = "member_pos")
+@javax.persistence.Entity
 public class MemberPos extends Entity {
 
     public static enum Relationships implements Relationship {
@@ -62,18 +69,39 @@ public class MemberPos extends Entity {
 
     private static final long serialVersionUID = 7644873097426472662L;
 
+    @Column(name = "allow_make_payment", nullable = false)
     private boolean           allowMakePayment;
+
+    @Column(name = "date", nullable = false)
     private Calendar          date;
+
+    @Column(name = "max_scheduling_payments", nullable = false)
     private Integer           maxSchedulingPayments;
+
+    @Column(name = "number_of_copies", nullable = false)
     private Integer           numberOfCopies;
+
+    @Column(name = "result_page_size", nullable = false)
     private Integer           resultPageSize;
-    private Member            member;
-    private Pos               pos;
-    private Status            status;
+
+    @ManyToOne
+    @JoinColumn(name = "owner_id", nullable = false)
+	private Member            member;
+
+    @OneToOne(mappedBy = "memberPos")
+    @JoinColumn(nullable = false)
+	private Pos               pos;
+
+    @Column(name = "status", nullable = false, length = 1)
+	private Status            status;
+
+    @Column(name = "pos_name", length = 64)
     private String            posName;
+
+    @Column(name = "pos_pin", length = 64)
     private String            posPin;
 
-    public Calendar getDate() {
+	public Calendar getDate() {
         return date;
     }
 
