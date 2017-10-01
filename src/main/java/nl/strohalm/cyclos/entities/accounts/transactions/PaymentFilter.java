@@ -19,17 +19,26 @@
  */
 package nl.strohalm.cyclos.entities.accounts.transactions;
 
-import java.util.Collection;
-
 import nl.strohalm.cyclos.entities.Entity;
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.accounts.AccountType;
 import nl.strohalm.cyclos.entities.groups.Group;
 
+import javax.persistence.Cacheable;
+import javax.persistence.Column;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import java.util.Collection;
+
 /**
  * A payment filter groups transfer types for reports or account history
  * @author luis
  */
+@Cacheable
+@Table(name = "payment_filters")
+@javax.persistence.Entity
 public class PaymentFilter extends Entity {
 
     public static enum Relationships implements Relationship {
@@ -46,15 +55,30 @@ public class PaymentFilter extends Entity {
     }
 
     private static final long           serialVersionUID = -13720438518829957L;
-    private AccountType                 accountType;
-    private String                      name;
-    private String                      description;
-    private boolean                     showInAccountHistory;
-    private boolean                     showInReports;
-    private Collection<TransferType>    transferTypes;
-    private Collection< Group> groups;
 
-    public AccountType getAccountType() {
+    @ManyToOne
+    @JoinColumn(name = "account_type_id", nullable = false)
+	private AccountType                 accountType;
+
+    @Column(name = "name", nullable = false, length = 100)
+    private String                      name;
+
+    @Column(name = "description", columnDefinition = "text")
+    private String                      description;
+
+    @Column(name = "show_in_account_history", nullable = false)
+    private boolean                     showInAccountHistory;
+
+    @Column(name = "show_in_reports", nullable = false)
+    private boolean                     showInReports;
+
+    @ManyToMany(mappedBy = "paymentFilters")
+	private Collection<TransferType>    transferTypes;
+
+    @ManyToMany(mappedBy = "paymentFilters")
+	private Collection<Group> groups;
+
+	public AccountType getAccountType() {
         return accountType;
     }
 

@@ -19,11 +19,6 @@
  */
 package nl.strohalm.cyclos.entities.accounts.transactions;
 
-import java.math.BigDecimal;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Map;
-
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.accounts.Account;
 import nl.strohalm.cyclos.entities.accounts.AccountOwner;
@@ -33,16 +28,29 @@ import nl.strohalm.cyclos.entities.accounts.external.ExternalTransfer;
 import nl.strohalm.cyclos.entities.accounts.fees.account.AccountFeeLog;
 import nl.strohalm.cyclos.entities.accounts.fees.transaction.TransactionFee;
 import nl.strohalm.cyclos.entities.accounts.loans.LoanPayment;
+import nl.strohalm.cyclos.entities.customization.fields.PaymentCustomFieldValue;
 import nl.strohalm.cyclos.entities.members.Element;
 import nl.strohalm.cyclos.entities.members.brokerings.BrokerCommissionContract;
 import nl.strohalm.cyclos.entities.settings.LocalSettings;
-
 import org.apache.commons.lang.ObjectUtils;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import java.math.BigDecimal;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Map;
 
 /**
  * A unit transfer between two accounts. A transaction may be performed with several transfers (ex: additional fees)
  * @author luis
  */
+@Table(name = "transfers")
+@javax.persistence.Entity
 public class Transfer extends Payment implements Rated {
 
     public static enum Relationships implements Relationship {
@@ -66,30 +74,96 @@ public class Transfer extends Payment implements Rated {
     }
 
     private static final long                 serialVersionUID = -4749387454425166686L;
-    private AccountFeeLog                     accountFeeLog;
-    private Collection<Transfer>              children;
-    private Transfer                          chargedBackBy;
-    private String                            transactionNumber;
-    private String                            traceNumber;
-    private Long                              clientId;
-    private String                            traceData;
-    private LoanPayment                       loanPayment;
-    private Transfer                          parent;
-    private Transfer                          chargebackOf;
-    private TransactionFee                    transactionFee;
-    private Element                           receiver;
-    private ExternalTransfer                  externalTransfer;
-    private Collection<TransferAuthorization> authorizations;
-    private AuthorizationLevel                nextAuthorizationLevel;
-    private ScheduledPayment                  scheduledPayment;
-    private BrokerCommissionContract          brokerCommissionContract;
-    private Calendar                          expirationDate;
-    private Calendar                          emissionDate;
-    private BigDecimal                        iRate;
-    private transient Transfer                root;
 
-    public AccountFeeLog getAccountFeeLog() {
+    @ManyToOne
+    @JoinColumn(name = "account_fee_log_id")
+	private AccountFeeLog                     accountFeeLog;
+
+    @OneToMany
+    @JoinColumn(name = "parent_id")
+	private Collection<Transfer>              children;
+
+    @ManyToOne
+    @JoinColumn(name = "chargedback_by_id")
+	private Transfer                          chargedBackBy;
+
+    @Column(name = "transaction_number", length = 100)
+    private String                            transactionNumber;
+
+    @Column(name = "trace_number", length = 100)
+    private String                            traceNumber;
+
+    @Column(name = "client_id")
+	private Long                              clientId;
+
+    @Column(name = "trace_data", length = 50)
+    private String                            traceData;
+
+    @ManyToOne
+    @JoinColumn(name = "loan_payment_id")
+	private LoanPayment                       loanPayment;
+
+    @ManyToOne
+    @JoinColumn(name = "parent_id")
+	private Transfer                          parent;
+
+    @ManyToOne
+    @JoinColumn(name = "chargeback_of_id")
+	private Transfer                          chargebackOf;
+
+    @ManyToOne
+    @JoinColumn(name = "transaction_fee_id")
+	private TransactionFee                    transactionFee;
+
+    @ManyToOne
+    @JoinColumn(name = "receiver_id")
+	private Element                           receiver;
+
+    @ManyToOne
+    @JoinColumn(name = "external_transfer_id")
+	private ExternalTransfer                  externalTransfer;
+
+    @OneToMany(mappedBy = "transfer")
+	private Collection<TransferAuthorization> authorizations;
+
+    @ManyToOne
+    @JoinColumn(name = "next_authorization_level_id")
+	private AuthorizationLevel                nextAuthorizationLevel;
+
+    @ManyToOne
+    @JoinColumn(name="scheduled_payment_id")
+	private ScheduledPayment                  scheduledPayment;
+
+    @ManyToOne
+    @JoinColumn(name = "broker_commission_contract_id")
+	private BrokerCommissionContract          brokerCommissionContract;
+
+    @Column(name = "expiration_date")
+    private Calendar                          expirationDate;
+
+    @Column(name = "emission_date")
+    private Calendar                          emissionDate;
+
+    @Column(name = "i_rate", precision = 15, scale = 6)
+    private BigDecimal                        iRate;
+
+    @OneToMany(mappedBy = "transfer", cascade = CascadeType.REMOVE)
+    private Collection<PaymentCustomFieldValue> customValues;
+
+	private transient Transfer                root;
+
+	public AccountFeeLog getAccountFeeLog() {
         return accountFeeLog;
+    }
+
+    @Override
+    public Collection<PaymentCustomFieldValue> getCustomValues() {
+        return customValues;
+    }
+
+    @Override
+    public void setCustomValues(final Collection<PaymentCustomFieldValue> customValues) {
+        this.customValues = customValues;
     }
 
     /**

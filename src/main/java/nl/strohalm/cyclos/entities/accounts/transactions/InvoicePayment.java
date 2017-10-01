@@ -19,16 +19,22 @@
  */
 package nl.strohalm.cyclos.entities.accounts.transactions;
 
-import java.math.BigDecimal;
-import java.util.Calendar;
-
 import nl.strohalm.cyclos.entities.Entity;
 import nl.strohalm.cyclos.entities.Relationship;
+
+import javax.persistence.Column;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import java.math.BigDecimal;
+import java.util.Calendar;
 
 /**
  * Represents a scheduled payment for invoice
  * @author luis
  */
+@Table(name = "invoice_payments")
+@javax.persistence.Entity
 public class InvoicePayment extends Entity {
 
     public static enum Relationships implements Relationship {
@@ -45,12 +51,25 @@ public class InvoicePayment extends Entity {
     }
 
     private static final long serialVersionUID = -2871353808455047476L;
-    private Invoice           invoice;
-    private BigDecimal        amount;
-    private Calendar          date;
-    private Transfer          transfer;
 
-    public BigDecimal getAmount() {
+    @ManyToOne
+    @JoinColumn(name = "invoice_id")
+	private Invoice           invoice;
+
+    @Column(name = "amount", nullable = false, updatable = false, precision = 15, scale = 6)
+    private BigDecimal        amount;
+
+    @Column(name = "date", nullable = false, updatable = false)
+    private Calendar          date;
+
+    @ManyToOne
+    @JoinColumn(name = "transfer_id")
+	private Transfer          transfer;
+
+    protected InvoicePayment() {
+	}
+
+	public BigDecimal getAmount() {
         return amount;
     }
 

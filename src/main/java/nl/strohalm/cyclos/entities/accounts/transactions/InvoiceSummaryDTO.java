@@ -26,7 +26,7 @@ import java.util.Currency;
 import nl.strohalm.cyclos.entities.accounts.AccountOwner;
 import nl.strohalm.cyclos.entities.accounts.AccountType;
 import nl.strohalm.cyclos.utils.DataObject;
-import nl.strohalm.cyclos.utils.Period;
+import nl.strohalm.cyclos.entities.utils.Period;
 
 import org.apache.commons.collections.CollectionUtils;
 

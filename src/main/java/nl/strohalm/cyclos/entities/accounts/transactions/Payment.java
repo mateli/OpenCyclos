@@ -19,11 +19,6 @@
  */
 package nl.strohalm.cyclos.entities.accounts.transactions;
 
-import java.math.BigDecimal;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Map;
-
 import nl.strohalm.cyclos.entities.Entity;
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.accounts.Account;
@@ -38,10 +33,20 @@ import nl.strohalm.cyclos.utils.CustomFieldsContainer;
 import nl.strohalm.cyclos.utils.FormatObject;
 import nl.strohalm.cyclos.utils.StringValuedEnum;
 
+import javax.persistence.Column;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.MappedSuperclass;
+import java.math.BigDecimal;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Map;
+
 /**
  * Base class for payments
  * @author luis
  */
+@MappedSuperclass
 public abstract class Payment extends Entity implements CustomFieldsContainer<PaymentCustomField, PaymentCustomFieldValue> {
 
     public static enum Nature {
@@ -123,17 +128,39 @@ public abstract class Payment extends Entity implements CustomFieldsContainer<Pa
 
     private static final long                   serialVersionUID = -3197630501722484236L;
 
+    @Column(name = "date", nullable = false)
     private Calendar                            date;
+
+    @Column(name = "feedback_deadline")
     private Calendar                            transactionFeedbackDeadline;
+
+    @Column(name = "amount", nullable = false, precision = 15, scale = 6)
     private BigDecimal                          amount;
+
+    @Column(name = "description", columnDefinition = "text")
     private String                              description;
+
+    @ManyToOne
+    @JoinColumn(name = "from_account_id", nullable = false)
     private Account                             from;
+
+    @ManyToOne
+    @JoinColumn(name = "to_account_id", nullable = false)
     private Account                             to;
+
+    @ManyToOne
+    @JoinColumn(name = "type_id", nullable = false)
     private TransferType                        type;
+
+    @ManyToOne
+    @JoinColumn(name = "by_id")
     private Element                             by;
+
+    @Column(name = "process_date")
     private Calendar                            processDate;
+
+    @Column(name = "status", nullable = false, length = 1)
     private Status                              status           = Status.PROCESSED;
-    private Collection<PaymentCustomFieldValue> customValues;
 
     /**
      * Returns the amount as a positive number, even when it's negative (i.e. chargeback)
@@ -172,9 +199,7 @@ public abstract class Payment extends Entity implements CustomFieldsContainer<Pa
     }
 
     @Override
-    public Collection<PaymentCustomFieldValue> getCustomValues() {
-        return customValues;
-    }
+    public abstract Collection<PaymentCustomFieldValue> getCustomValues();
 
     public Calendar getDate() {
         return date;
@@ -235,9 +260,7 @@ public abstract class Payment extends Entity implements CustomFieldsContainer<Pa
     }
 
     @Override
-    public void setCustomValues(final Collection<PaymentCustomFieldValue> customValues) {
-        this.customValues = customValues;
-    }
+    public abstract void setCustomValues(final Collection<PaymentCustomFieldValue> customValues);
 
     public void setDate(final Calendar date) {
         this.date = date;

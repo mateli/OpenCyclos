@@ -22,10 +22,17 @@ package nl.strohalm.cyclos.entities.accounts.transactions;
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.access.Channel;
 
+import javax.persistence.Column;
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+
 /**
  * A ticket used to request payments from other channels
  * @author luis
  */
+@DiscriminatorValue("R")
+@javax.persistence.Entity
 public class PaymentRequestTicket extends Ticket {
 
     public static enum Relationships implements Relationship {
@@ -43,11 +50,19 @@ public class PaymentRequestTicket extends Ticket {
     }
 
     private static final long serialVersionUID = -7788824718013935541L;
-    private Channel           fromChannel;
-    private Channel           toChannel;
+
+    @ManyToOne
+    @JoinColumn(name = "from_channel_id")
+	private Channel           fromChannel;
+
+    @ManyToOne
+    @JoinColumn(name = "to_channel_id")
+	private Channel           toChannel;
+
+    @Column(name = "trace_data", length = 50, nullable = false)
     private String            traceData;
 
-    public Channel getFromChannel() {
+	public Channel getFromChannel() {
         return fromChannel;
     }
 

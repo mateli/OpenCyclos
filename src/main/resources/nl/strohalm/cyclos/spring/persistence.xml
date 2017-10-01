@@ -87,15 +87,6 @@
 				<value>/nl/strohalm/cyclos/entities/accounts/ScheduledPaymentAmountReservation.hbm.xml</value>
 				<value>/nl/strohalm/cyclos/entities/accounts/AccountLock.hbm.xml</value>
 				<value>/nl/strohalm/cyclos/entities/accounts/AccountRates.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/accounts/transactions/ScheduledPayment.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/accounts/transactions/Transfer.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/accounts/transactions/TransferType.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/accounts/transactions/AuthorizationLevel.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/accounts/transactions/TransferAuthorization.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/accounts/transactions/PaymentFilter.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/accounts/transactions/Invoice.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/accounts/transactions/InvoicePayment.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/accounts/transactions/TraceNumber.hbm.xml</value>
 				<value>/nl/strohalm/cyclos/entities/accounts/MemberGroupAccountSettings.hbm.xml</value>
 				<value>/nl/strohalm/cyclos/entities/members/remarks/Remark.hbm.xml</value>
 				<value>/nl/strohalm/cyclos/entities/members/remarks/GroupRemark.hbm.xml</value>
@@ -108,9 +99,6 @@
 				<value>/nl/strohalm/cyclos/entities/ads/imports/ImportedAdCategory.hbm.xml</value>
 				<value>/nl/strohalm/cyclos/entities/ads/imports/ImportedAdCustomFieldValue.hbm.xml</value>
 				<value>/nl/strohalm/cyclos/entities/members/adInterests/AdInterest.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/accounts/transactions/Ticket.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/accounts/transactions/WebShopTicket.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/accounts/transactions/PaymentRequestTicket.hbm.xml</value>
 				<value>/nl/strohalm/cyclos/entities/alerts/ErrorLogEntry.hbm.xml</value>
 				<value>/nl/strohalm/cyclos/entities/alerts/Alert.hbm.xml</value>
 				<value>/nl/strohalm/cyclos/entities/alerts/SystemAlert.hbm.xml</value>

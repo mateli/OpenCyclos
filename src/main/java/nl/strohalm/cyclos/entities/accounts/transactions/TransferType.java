@@ -19,13 +19,6 @@
  */
 package nl.strohalm.cyclos.entities.accounts.transactions;
 
-import java.io.Serializable;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.List;
-
 import nl.strohalm.cyclos.entities.Entity;
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.access.Channel;
@@ -39,21 +32,46 @@ import nl.strohalm.cyclos.entities.customization.fields.PaymentCustomField;
 import nl.strohalm.cyclos.entities.groups.Group;
 import nl.strohalm.cyclos.entities.members.Member;
 import nl.strohalm.cyclos.entities.members.Reference.Level;
+import nl.strohalm.cyclos.entities.utils.TimePeriod;
 import nl.strohalm.cyclos.utils.StringValuedEnum;
-import nl.strohalm.cyclos.utils.TimePeriod;
-
 import org.apache.commons.collections.CollectionUtils;
+import org.springframework.core.annotation.Order;
+
+import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
+import javax.persistence.Cacheable;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
+import javax.persistence.Embedded;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
+import javax.persistence.Table;
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * Every transfer has a type, which may contain fees and other relevant data
  * @author luis
  */
+@Cacheable
+@Table(name = "transfer_types")
+@javax.persistence.Entity
 public class TransferType extends Entity {
 
     /**
      * A transfer type context represents where it can be performed
      * @author luis
      */
+    @Embeddable
     public static class Context implements Serializable {
 
         private static final long serialVersionUID = -7966654322680432255L;
@@ -70,7 +88,10 @@ public class TransferType extends Entity {
             return context;
         }
 
+        @Column(name = "allowed_payment", nullable = false)
         private boolean payment     = false;
+
+        @Column(name = "allowed_self_payment", nullable = false)
         private boolean selfPayment = false;
 
         public Context() {
@@ -140,45 +161,148 @@ public class TransferType extends Entity {
 
     private static final long                    serialVersionUID               = -6248433842449336187L;
 
+    @Column(name = "name", nullable = false, length = 100)
     private String                               name;
+
+    @Column(name = "description", nullable = false, columnDefinition = "text")
     private String                               description;
+
+    @Column(name = "confirmation_message", columnDefinition = "text")
     private String                               confirmationMessage;
+
+    @Embedded
     private Context                              context                        = new Context();
+
+    @Column(name = "priority", nullable = false)
     private boolean                              priority;
+
+    @Column(name = "conciliable", nullable = false)
     private boolean                              conciliable;
+
+    @ManyToOne
+    @JoinColumn(name = "from_account_type_id", nullable = false)
     private AccountType                          from;
+
+    @ManyToOne
+    @JoinColumn(name = "to_account_type_id", nullable = false)
     private AccountType                          to;
+
+    @Column(name = "max_amount_per_day", precision = 15, scale = 6)
     private BigDecimal                           maxAmountPerDay;
+
+    @Column(name = "min_amount", precision = 15, scale = 6)
     private BigDecimal                           minAmount;
+
+    @Embedded
     private LoanParameters                       loan;
-    private Collection< TransactionFee> transactionFees;
-    private Collection< TransactionFee> generatedByTransactionFees;
-    private Collection< AccountFee>     generatedByAccountFees;
-    private Collection< Group>          groups;
-    private Collection< Group>          groupsAsMember;
+
+    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "originalTransferType")
+    @OrderBy("name")
+    private Collection<TransactionFee> transactionFees;
+
+    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "generatedTransferType")
+    private Collection<TransactionFee> generatedByTransactionFees;
+
+    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "transferType")
+    private Collection<AccountFee>     generatedByAccountFees;
+
+    @ManyToMany
+    @JoinTable(name = "groups_transfer_types",
+        joinColumns = @JoinColumn(name = "transfer_type_id"),
+        inverseJoinColumns = @JoinColumn(name = "group_id")
+    )
+    private Collection<Group>          groups;
+
+    @ManyToMany
+    @JoinTable(name = "groups_transfer_types_as_member",
+            joinColumns = @JoinColumn(name = "transfer_type_id"),
+            inverseJoinColumns = @JoinColumn(name = "group_id"))
+    private Collection<Group>          groupsAsMember;
+
+    @ManyToMany
+    @JoinTable(name = "transfer_types_payment_filters",
+            joinColumns = @JoinColumn(name = "transfer_type_id"),
+            inverseJoinColumns = @JoinColumn(name = "payment_filter_id"))
     private Collection<PaymentFilter>            paymentFilters;
+
+    @Column(name = "requires_authorization", nullable = false)
     private boolean                              requiresAuthorization;
+
+    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "transferType")
+    @OrderBy("level")
     private Collection<AuthorizationLevel>       authorizationLevels;
+
+    @Column(name = "allows_scheduled_payments", nullable = false)
     private boolean                              allowsScheduledPayments;
+
+    @Column(name = "requires_feedback", nullable = false)
     private boolean                              requiresFeedback;
+
+    @Column(name = "reserve_total_on_sched", nullable = false)
     private boolean                              reserveTotalAmountOnScheduling;
+
+    @Column(name = "allow_cancel_sched", nullable = false)
     private boolean                              allowCancelScheduledPayments;
+
+    @Column(name = "allow_block_sched", nullable = false)
     private boolean                              allowBlockScheduledPayments;
+
+    @Column(name = "show_sched_to_dest", nullable = false)
     private boolean                              showScheduledPaymentsToDestination;
+
+    @Column(name = "allow_sms_notification", nullable = false)
     private boolean                              allowSmsNotification;
+
+    @Column(name = "feedback_enabled_since")
     private Calendar                             feedbackEnabledSince;
+
+    @AttributeOverrides({
+            @AttributeOverride(name = "number", column=@Column(name="feedback_expiration_time_number")),
+            @AttributeOverride(name = "field", column=@Column(name="feedback_expiration_time_field"))
+    })
+    @Embedded
     private TimePeriod                           feedbackExpirationTime;
+
+    @AttributeOverrides({
+            @AttributeOverride(name = "number", column=@Column(name="feedback_reply_expiration_time_number")),
+            @AttributeOverride(name = "field", column=@Column(name="feedback_reply_expiration_time_field"))
+    })
+    @Embedded
     private TimePeriod                           feedbackReplyExpirationTime;
+
+    @Column(name = "default_feedback_comments", columnDefinition = "text")
     private String                               defaultFeedbackComments;
+
+    @Column(name = "default_feedback_level")
     private Level                                defaultFeedbackLevel;
+
+    @ManyToMany
+    @JoinTable(name = "transfer_types_channels",
+            joinColumns = @JoinColumn(name = "transfer_type_id"),
+            inverseJoinColumns = @JoinColumn(name = "channel_id"))
     private Collection<Channel>                  channels;
+
+    @ManyToOne
+    @JoinColumn(name = "fixed_destination_member_id")
     private Member                               fixedDestinationMember;
+
+    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "transferType")
+    @OrderBy("order_number")
     private Collection<PaymentCustomField>       customFields;
+
+    @ManyToMany
+    @JoinTable(name = "transfer_types_linked_custom_fields",
+            joinColumns = @JoinColumn(name = "transfer_type_id"),
+            inverseJoinColumns = @JoinColumn(name = "field_id"))
     private Collection<PaymentCustomField>       linkedCustomFields;
+
+    @Column(name = "transfer_listener_class", length = 200)
     private String                               transferListenerClass;
+
+    @Column(name = "tx_hierarchy_visibility", length = 1)
     private TransactionHierarchyVisibility       transactionHierarchyVisibility = TransactionHierarchyVisibility.MEMBER;
 
-    /**
+	/**
      * gets all the transaction fees based on a-rate, being the fees with ChargeType A_RATE or MIXED_A_D_RATES
      * @return a Collection with A-rated TransactionFees
      * @see #getRatedFees()
@@ -531,9 +655,10 @@ public class TransferType extends Entity {
 
     public void setLoan(final LoanParameters loan) {
         this.loan = loan;
-        if (loan != null) {
-            loan.setOriginalTransferType(this);
-        }
+        // Never used, not saved in database (no field in table)
+//        if (loan != null) {
+//            loan.setOriginalTransferType(this);
+//        }
     }
 
     public void setMaxAmountPerDay(final BigDecimal maxAmountPerDay) {

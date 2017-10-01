@@ -19,12 +19,6 @@
  */
 package nl.strohalm.cyclos.entities.accounts.transactions;
 
-import java.math.BigDecimal;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-
 import nl.strohalm.cyclos.entities.Entity;
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.accounts.AccountOwner;
@@ -40,10 +34,23 @@ import nl.strohalm.cyclos.utils.CustomFieldsContainer;
 import nl.strohalm.cyclos.utils.FormatObject;
 import nl.strohalm.cyclos.utils.StringValuedEnum;
 
+import javax.persistence.Column;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import java.math.BigDecimal;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+
 /**
  * An invoice sent to a member or to the system
  * @author luis
  */
+@Table(name = "invoices")
+@javax.persistence.Entity
 public class Invoice extends Entity implements CustomFieldsContainer<PaymentCustomField, PaymentCustomFieldValue> {
 
     public static enum Relationships implements Relationship {
@@ -74,23 +81,61 @@ public class Invoice extends Entity implements CustomFieldsContainer<PaymentCust
 
     private static final long                   serialVersionUID = -2221939158739233962L;
 
-    private AccountFeeLog                       accountFeeLog;
-    private Calendar                            date;
-    private String                              description;
-    private AccountType                         destinationAccountType;
-    private Member                              fromMember;
-    private Status                              status           = Status.OPEN;
-    private Member                              toMember;
-    private TransferType                        transferType;
-    private Transfer                            transfer;
-    private BigDecimal                          amount;
-    private Element                             sentBy;
-    private Element                             performedBy;
-    private List<InvoicePayment>                payments;
-    private ScheduledPayment                    scheduledPayment;
-    private Collection<PaymentCustomFieldValue> customValues;
+    @ManyToOne
+    @JoinColumn(name = "account_fee_log_id")
+	private AccountFeeLog                       accountFeeLog;
 
-    public AccountFeeLog getAccountFeeLog() {
+    @Column(name = "date", nullable = false, updatable = false)
+    private Calendar                            date;
+
+    @Column(name = "description", updatable = false, columnDefinition = "text")
+    private String                              description;
+
+    @ManyToOne
+    @JoinColumn(name = "dest_type_id")
+	private AccountType                         destinationAccountType;
+
+    @ManyToOne
+    @JoinColumn(name = "from_member_id")
+	private Member                              fromMember;
+
+    @Column(name = "status", nullable = false, length = 1)
+	private Status                              status           = Status.OPEN;
+
+    @ManyToOne
+    @JoinColumn(name = "to_member_id")
+	private Member                              toMember;
+
+    @ManyToOne
+    @JoinColumn(name = "transfer_type_id")
+	private TransferType                        transferType;
+
+    @ManyToOne
+    @JoinColumn(name = "transfer_id")
+	private Transfer                            transfer;
+
+    @Column(name = "amount", nullable = false, updatable = false, precision = 15, scale = 6)
+    private BigDecimal                          amount;
+
+    @ManyToOne
+    @JoinColumn(name = "sent_by_id")
+	private Element                             sentBy;
+
+    @ManyToOne
+    @JoinColumn(name = "performed_by_id")
+	private Element                             performedBy;
+
+    @OneToMany(mappedBy = "invoice")
+	private List<InvoicePayment>                payments;
+
+    @ManyToOne
+    @JoinColumn(name = "scheduled_payment_id")
+	private ScheduledPayment                    scheduledPayment;
+
+    @OneToMany(mappedBy = "invoice")
+	private Collection<PaymentCustomFieldValue> customValues;
+
+	public AccountFeeLog getAccountFeeLog() {
         return accountFeeLog;
     }
 
