@@ -48,7 +48,7 @@ import java.util.Collection;
  */
 @Cacheable
 @Inheritance
-@DiscriminatorColumn(name = "subclass")
+@DiscriminatorColumn(name = "subclass", length = 1)
 @Table(name = "transaction_fees")
 @javax.persistence.Entity
 public abstract class TransactionFee extends Entity {

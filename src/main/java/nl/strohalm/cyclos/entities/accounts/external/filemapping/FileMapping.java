@@ -38,7 +38,7 @@ import javax.persistence.Table;
  */
 @Cacheable
 @Inheritance
-@DiscriminatorColumn(name = "subclass")
+@DiscriminatorColumn(name = "subclass", length = 1)
 @Table(name = "file_mappings")
 @javax.persistence.Entity
 public abstract class FileMapping extends Entity {

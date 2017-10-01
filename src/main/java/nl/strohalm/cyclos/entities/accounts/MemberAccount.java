@@ -19,19 +19,25 @@
  */
 package nl.strohalm.cyclos.entities.accounts;
 
-import java.math.BigDecimal;
-import java.util.Calendar;
-
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.accounts.AccountType.Nature;
 import nl.strohalm.cyclos.entities.members.Member;
 import nl.strohalm.cyclos.utils.FormatObject;
 import nl.strohalm.cyclos.utils.StringValuedEnum;
 
+import javax.persistence.Column;
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import java.math.BigDecimal;
+import java.util.Calendar;
+
 /**
  * An account owned by a member
  * @author luis
  */
+@DiscriminatorValue("M")
+@javax.persistence.Entity
 public class MemberAccount extends Account {
     public static enum Action implements StringValuedEnum {
         ACTIVATE("A"), REMOVE("R");
@@ -78,9 +84,17 @@ public class MemberAccount extends Account {
 
     private static final long serialVersionUID = 2295911628180790052L;
 
-    private Member            member;
-    private Status            status           = Status.ACTIVE;
-    private Action            action;
+    @ManyToOne
+    @JoinColumn(name = "member_id", updatable = false)
+	private Member            member;
+
+    @Column(name = "member_status", length = 1)
+	private Status            status           = Status.ACTIVE;
+
+    @Column(name = "member_action", length = 1)
+	private Action            action;
+
+    @Column(name = "last_low_units_sent")
     private Calendar          lastLowUnitsSent;
 
     public MemberAccount() {

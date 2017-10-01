@@ -19,17 +19,25 @@
  */
 package nl.strohalm.cyclos.entities.accounts;
 
-import java.math.BigDecimal;
-
 import nl.strohalm.cyclos.entities.Entity;
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.accounts.transactions.TransferType;
 import nl.strohalm.cyclos.entities.groups.MemberGroup;
 
+import javax.persistence.Cacheable;
+import javax.persistence.Column;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import java.math.BigDecimal;
+
 /**
  * This is an associative class between MemberGroup and MemberAccountType. It represents those settings for a particular association
  * ofMemberAccountType and MemberGroup, i.e. initial credit, credit limit, etc.
  */
+@Cacheable
+@Table(name = "member_group_account_settings")
+@javax.persistence.Entity
 public class MemberGroupAccountSettings extends Entity {
 
     public static enum Relationships implements Relationship {
@@ -47,19 +55,43 @@ public class MemberGroupAccountSettings extends Entity {
 
     private static final long serialVersionUID   = -3433010484398168393L;
 
-    private MemberGroup       group;
-    private MemberAccountType accountType;
+    @ManyToOne
+    @JoinColumn(name = "group_id", nullable = false)
+	private MemberGroup       group;
+
+    @ManyToOne
+    @JoinColumn(name = "type_id", nullable = false)
+	private MemberAccountType accountType;
+
+    @Column(name = "default_credit_limit", nullable = false, precision = 15, scale = 6)
     private BigDecimal        defaultCreditLimit = BigDecimal.ZERO;
+
+    @Column(name = "default_upper_credit_limit", nullable = false, precision = 15, scale = 6)
     private BigDecimal        defaultUpperCreditLimit;
+
+    @Column(name = "initial_credit", precision = 15, scale = 6)
     private BigDecimal        initialCredit;
-    private TransferType      initialCreditTransferType;
+
+    @ManyToOne
+    @JoinColumn(name = "initial_credit_transfer_type_id")
+	private TransferType      initialCreditTransferType;
+
+    @Column(name = "default_type", nullable = false)
     private boolean           isDefault;
+
+    @Column(name = "transaction_password_required", nullable = false)
     private boolean           transactionPasswordRequired;
+
+    @Column(name = "hide_when_no_credit_limit", nullable = false)
     private boolean           hideWhenNoCreditLimit;
+
+    @Column(name = "low_units", precision = 15, scale = 6)
     private BigDecimal        lowUnits;
+
+    @Column(name = "low_units_message", columnDefinition = "text")
     private String            lowUnitsMessage;
 
-    public MemberAccountType getAccountType() {
+	public MemberAccountType getAccountType() {
         return accountType;
     }
 

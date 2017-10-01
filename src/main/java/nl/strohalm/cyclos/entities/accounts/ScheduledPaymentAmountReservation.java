@@ -21,15 +21,24 @@ package nl.strohalm.cyclos.entities.accounts;
 
 import nl.strohalm.cyclos.entities.accounts.transactions.ScheduledPayment;
 
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+
 /**
  * An amount reservation by a scheduled payment which reserves the whole amount
  * 
  * @author luis
  */
+@DiscriminatorValue("S")
+@javax.persistence.Entity
 public class ScheduledPaymentAmountReservation extends AmountReservation {
 
     private static final long serialVersionUID = 141681541648224471L;
-    private ScheduledPayment  scheduledPayment;
+
+    @ManyToOne
+    @JoinColumn(name = "scheduled_payment_id", updatable = false)
+	private ScheduledPayment  scheduledPayment;
 
     public ScheduledPayment getScheduledPayment() {
         return scheduledPayment;

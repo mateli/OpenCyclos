@@ -19,6 +19,8 @@
  */
 package nl.strohalm.cyclos.entities.accounts;
 
+import javax.persistence.Column;
+import javax.persistence.MappedSuperclass;
 import java.math.BigDecimal;
 import java.util.Calendar;
 
@@ -26,10 +28,15 @@ import java.util.Calendar;
  * Parent class for ARateParameters and DRateParameters classes. Common property is that they can be initialized at a certain init value.
  * @author rinke
  */
+@MappedSuperclass
 public abstract class InitializableRateParameters extends RateParameters {
 
     private static final long serialVersionUID = -1767176919948045138L;
+
+    @Column(name = "init_value", precision = 15, scale = 6, updatable = false)
     private BigDecimal        initValue;
+
+    @Column(name = "init_date", updatable = false)
     private Calendar          initDate;
 
     public Calendar getInitDate() {

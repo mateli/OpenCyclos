@@ -21,10 +21,14 @@ package nl.strohalm.cyclos.entities.accounts;
 
 import nl.strohalm.cyclos.entities.accounts.AccountType.Nature;
 
+import javax.persistence.DiscriminatorValue;
+
 /**
  * A system account. System accounts have no owners.
  * @author luis
  */
+@DiscriminatorValue("S")
+@javax.persistence.Entity
 public class SystemAccount extends Account {
     private static final long serialVersionUID = -5854800120045363818L;
 

@@ -21,15 +21,24 @@ package nl.strohalm.cyclos.entities.accounts;
 
 import nl.strohalm.cyclos.entities.accounts.transactions.TransferAuthorization;
 
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+
 /**
  * A returned amount reservation by a transfer authorization
  * 
  * @author luis
  */
+@DiscriminatorValue("A")
+@javax.persistence.Entity
 public class TransferAuthorizationAmountReservation extends BaseTransferAmountReservation {
 
     private static final long     serialVersionUID = -8676812249511574727L;
-    private TransferAuthorization transferAuthorization;
+
+    @ManyToOne
+    @JoinColumn(name = "transfer_authorization_id", updatable = false)
+	private TransferAuthorization transferAuthorization;
 
     public TransferAuthorization getTransferAuthorization() {
         return transferAuthorization;

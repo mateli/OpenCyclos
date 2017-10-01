@@ -21,15 +21,23 @@ package nl.strohalm.cyclos.entities.accounts;
 
 import nl.strohalm.cyclos.entities.accounts.transactions.Transfer;
 
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.MappedSuperclass;
+
 /**
  * Base class for reservations related to a transfer
  * 
  * @author luis
  */
+@MappedSuperclass
 public abstract class BaseTransferAmountReservation extends AmountReservation {
 
     private static final long serialVersionUID = -1302854556023303664L;
-    private Transfer          transfer;
+
+    @ManyToOne
+    @JoinColumn(name = "transfer_id", updatable = false)
+	private Transfer          transfer;
 
     public Transfer getTransfer() {
         return transfer;

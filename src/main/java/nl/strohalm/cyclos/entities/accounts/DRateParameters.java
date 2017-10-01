@@ -19,10 +19,12 @@
  */
 package nl.strohalm.cyclos.entities.accounts;
 
-import java.math.BigDecimal;
-
 import nl.strohalm.cyclos.utils.BigDecimalHelper;
 import nl.strohalm.cyclos.utils.FormatObject;
+
+import javax.persistence.Column;
+import javax.persistence.DiscriminatorValue;
+import java.math.BigDecimal;
 
 /**
  * The parameters needed for a currency when D-rate is enabled.
@@ -30,11 +32,19 @@ import nl.strohalm.cyclos.utils.FormatObject;
  * @author Rinke
  * 
  */
+@DiscriminatorValue("D")
+@javax.persistence.Entity
 public class DRateParameters extends InitializableRateParameters {
 
     private static final long serialVersionUID = -1758988593868498202L;
+
+    @Column(name = "interest", precision = 15, scale = 6, updatable = false)
     private BigDecimal        interest;
+
+    @Column(name = "base_malus", precision = 15, scale = 6, updatable = false)
     private BigDecimal        baseMalus;
+
+    @Column(name = "minimal_d", precision = 15, scale = 6, updatable = false)
     private BigDecimal        minimalD;
 
     public BigDecimal getBaseMalus() {

@@ -19,17 +19,24 @@
  */
 package nl.strohalm.cyclos.entities.accounts;
 
-import java.math.BigDecimal;
-import java.util.Collection;
-
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.accounts.external.ExternalAccount;
 import nl.strohalm.cyclos.entities.groups.AdminGroup;
+
+import javax.persistence.CascadeType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Transient;
+import java.math.BigDecimal;
+import java.util.Collection;
 
 /**
  * Type for system accounts
  * @author luis
  */
+@javax.persistence.Entity
 public class SystemAccountType extends AccountType {
 
     public static enum Relationships implements Relationship {
@@ -46,13 +53,24 @@ public class SystemAccountType extends AccountType {
     }
 
     private static final long           serialVersionUID = -3356210066125175997L;
-    private SystemAccount               account;
-    private BigDecimal                  creditLimit;
-    private BigDecimal                  upperCreditLimit;
-    private Collection<AdminGroup>      viewedByGroups;
-    private Collection<ExternalAccount> externalAccounts;
 
-    public SystemAccount getAccount() {
+    @ManyToOne
+    @JoinColumn(name = "system_account_id")
+	private SystemAccount               account;
+
+    @Transient
+    private BigDecimal                  creditLimit;
+
+    @Transient
+    private BigDecimal                  upperCreditLimit;
+
+    @ManyToMany(mappedBy = "viewInformationOf")
+	private Collection<AdminGroup>      viewedByGroups;
+
+    @OneToMany(mappedBy = "systemAccountType", cascade = CascadeType.REMOVE)
+	private Collection<ExternalAccount> externalAccounts;
+
+	public SystemAccount getAccount() {
         return account;
     }
 

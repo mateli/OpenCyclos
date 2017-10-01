@@ -43,7 +43,7 @@ import java.util.Map;
  * @author luis
  */
 @Inheritance
-@DiscriminatorColumn(name = "subclass")
+@DiscriminatorColumn(name = "subclass", length = 1)
 @Table(name = "tickets")
 @javax.persistence.Entity
 public abstract class Ticket extends Entity {

@@ -65,29 +65,6 @@
 				<value>/nl/strohalm/cyclos/entities/members/preferences/NotificationPreference.hbm.xml</value>
 				<value>/nl/strohalm/cyclos/entities/members/preferences/AdminNotificationPreference.hbm.xml</value>
 				<value>/nl/strohalm/cyclos/entities/members/printsettings/ReceiptPrinterSettings.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/accounts/Currency.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/accounts/RateParameters.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/accounts/InitializableRateParameters.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/accounts/ARateParameters.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/accounts/DRateParameters.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/accounts/IRateParameters.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/accounts/AccountType.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/accounts/MemberAccountType.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/accounts/SystemAccountType.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/accounts/Account.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/accounts/MemberAccount.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/accounts/SystemAccount.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/accounts/ClosedAccountBalance.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/accounts/AccountLimitLog.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/accounts/AmountReservation.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/accounts/BaseTransferAmountReservation.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/accounts/InstallmentAmountReservation.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/accounts/PendingAuthorizationAmountReservation.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/accounts/TransferAuthorizationAmountReservation.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/accounts/ScheduledPaymentAmountReservation.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/accounts/AccountLock.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/accounts/AccountRates.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/accounts/MemberGroupAccountSettings.hbm.xml</value>
 				<value>/nl/strohalm/cyclos/entities/members/remarks/Remark.hbm.xml</value>
 				<value>/nl/strohalm/cyclos/entities/members/remarks/GroupRemark.hbm.xml</value>
 				<value>/nl/strohalm/cyclos/entities/members/remarks/BrokerRemark.hbm.xml</value>

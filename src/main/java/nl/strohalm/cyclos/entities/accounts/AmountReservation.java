@@ -19,22 +19,39 @@
  */
 package nl.strohalm.cyclos.entities.accounts;
 
-import java.math.BigDecimal;
-import java.util.Calendar;
-
 import nl.strohalm.cyclos.entities.Entity;
 import nl.strohalm.cyclos.utils.FormatObject;
+
+import javax.persistence.Column;
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.Inheritance;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import java.math.BigDecimal;
+import java.util.Calendar;
 
 /**
  * Contains an amount reservation (if amount is positive) or reservation return (if negative) for an account
  * 
  * @author luis
  */
+@Inheritance
+@Table(name = "amount_reservations")
+@DiscriminatorColumn(name = "subclass", length = 1)
+@javax.persistence.Entity
 public abstract class AmountReservation extends Entity {
 
     private static final long serialVersionUID = -890389268867857491L;
-    private Account           account;
+
+    @ManyToOne
+    @JoinColumn(name = "account_id", nullable = false) // index="ix_amtres_account_date"
+	private Account           account;
+
+    @Column(name = "date", nullable = false, updatable = false) // index="ix_amtres_account_date"
     private Calendar          date;
+
+    @Column(name = "amount", updatable = false, precision = 15, scale = 6)
     private BigDecimal        amount;
 
     public Account getAccount() {

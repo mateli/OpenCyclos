@@ -19,10 +19,16 @@
  */
 package nl.strohalm.cyclos.entities.accounts;
 
-import java.math.BigDecimal;
-
 import nl.strohalm.cyclos.entities.Entity;
 import nl.strohalm.cyclos.entities.Relationship;
+
+import javax.persistence.Cacheable;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import java.math.BigDecimal;
 
 /**
  * An account type currency
@@ -30,6 +36,9 @@ import nl.strohalm.cyclos.entities.Relationship;
  * @author luis
  * @author rinke (rate stuff)
  */
+@Cacheable
+@Table(name = "currencies")
+@javax.persistence.Entity
 public class Currency extends Entity {
 
     public static enum Relationships implements Relationship {
@@ -49,15 +58,31 @@ public class Currency extends Entity {
 
     private static final long serialVersionUID = 5910755754107368364L;
 
+    @Column(name = "name", nullable = false, length = 100)
     private String            name;
-    private String            description;
-    private String            symbol;
-    private String            pattern          = "#amount#";
-    private DRateParameters   dRateParameters;
-    private ARateParameters   aRateParameters;
-    private IRateParameters   iRateParameters;
 
-    public ARateParameters getaRateParameters() {
+    @Column(name = "description", columnDefinition = "text")
+    private String            description;
+
+    @Column(name = "symbol", nullable = false, length = 20)
+    private String            symbol;
+
+    @Column(name = "pattern", nullable = false, length = 30)
+    private String            pattern          = "#amount#";
+
+    @ManyToOne(cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "d_rate_params_id")
+	private DRateParameters   dRateParameters;
+
+    @ManyToOne(cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "a_rate_params_id")
+	private ARateParameters   aRateParameters;
+
+    @ManyToOne(cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "i_rate_params_id")
+	private IRateParameters   iRateParameters;
+
+	public ARateParameters getaRateParameters() {
         return aRateParameters;
     }
 

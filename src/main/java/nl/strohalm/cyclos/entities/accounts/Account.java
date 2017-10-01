@@ -19,17 +19,29 @@
  */
 package nl.strohalm.cyclos.entities.accounts;
 
+import nl.strohalm.cyclos.entities.Entity;
+import nl.strohalm.cyclos.entities.Relationship;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.Inheritance;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Collection;
-
-import nl.strohalm.cyclos.entities.Entity;
-import nl.strohalm.cyclos.entities.Relationship;
 
 /**
  * A generic account
  * @author luis
  */
+@Inheritance
+@Table(name = "accounts")
+@DiscriminatorColumn(name = "subclass", length = 1)
+@javax.persistence.Entity
 public abstract class Account extends Entity {
 
     public static enum Relationships implements Relationship {
@@ -47,15 +59,33 @@ public abstract class Account extends Entity {
     }
 
     private static final long           serialVersionUID = 2606773131957831444L;
-    private Calendar                    creationDate;
-    private Calendar                    lastClosingDate;
-    private BigDecimal                  creditLimit;
-    private BigDecimal                  upperCreditLimit;
-    private AccountType                 type;
-    private String                      ownerName;
-    private Collection<AccountLimitLog> limitLogs;
 
-    public Calendar getCreationDate() {
+    @Column(name = "creation_date", nullable = false, updatable = false)
+    private Calendar                    creationDate;
+
+    @Column(name = "last_closing_date")
+    private Calendar                    lastClosingDate;
+
+    @Column(name = "credit_limit", precision = 15, scale = 6)
+    private BigDecimal                  creditLimit;
+
+    @Column(name = "upper_credit_limit", precision = 15, scale = 6)
+    private BigDecimal                  upperCreditLimit;
+
+    @ManyToOne
+    @JoinColumn(name = "type_id")
+	private AccountType                 type;
+
+    @Column(name = "owner_name", nullable = false)
+    private String                      ownerName;
+
+    @OneToMany(mappedBy = "account", cascade = CascadeType.REMOVE)
+	private Collection<AccountLimitLog> limitLogs;
+
+    protected Account() {
+	}
+
+	public Calendar getCreationDate() {
         return creationDate;
     }
 

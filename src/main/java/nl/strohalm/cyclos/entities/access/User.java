@@ -39,7 +39,7 @@ import java.util.Collection;
  * @author luis
  */
 @Inheritance
-@DiscriminatorColumn(name = "subclass")
+@DiscriminatorColumn(name = "subclass", length = 1)
 @Table(name = "users")
 @javax.persistence.Entity
 public abstract class User extends Entity {
