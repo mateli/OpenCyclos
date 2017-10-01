@@ -22,7 +22,7 @@ package nl.strohalm.cyclos.utils.validation;
 import java.util.Calendar;
 
 import nl.strohalm.cyclos.utils.DateHelper;
-import nl.strohalm.cyclos.utils.Period;
+import nl.strohalm.cyclos.entities.utils.Period;
 
 public class PeriodValidation implements PropertyValidation {
     /**

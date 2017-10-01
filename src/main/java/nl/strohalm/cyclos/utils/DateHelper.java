@@ -31,6 +31,7 @@ import java.util.Map;
 import nl.strohalm.cyclos.entities.reports.ThroughTimeRange;
 import nl.strohalm.cyclos.entities.settings.LocalSettings;
 
+import nl.strohalm.cyclos.entities.utils.Period;
 import nl.strohalm.cyclos.entities.utils.TimePeriod;
 import org.apache.commons.lang.time.DateUtils;
 

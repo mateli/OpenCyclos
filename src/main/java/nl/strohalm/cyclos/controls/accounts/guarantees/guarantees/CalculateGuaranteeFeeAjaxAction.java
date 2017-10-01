@@ -26,11 +26,11 @@ import java.util.Map;
 import nl.strohalm.cyclos.annotations.Inject;
 import nl.strohalm.cyclos.controls.ActionContext;
 import nl.strohalm.cyclos.controls.BaseAjaxAction;
+import nl.strohalm.cyclos.entities.accounts.guarantees.GuaranteeFee;
 import nl.strohalm.cyclos.entities.accounts.guarantees.GuaranteeType;
 import nl.strohalm.cyclos.entities.accounts.guarantees.GuaranteeType.FeeType;
 import nl.strohalm.cyclos.entities.settings.LocalSettings;
 import nl.strohalm.cyclos.services.accounts.guarantees.GuaranteeFeeCalculationDTO;
-import nl.strohalm.cyclos.services.accounts.guarantees.GuaranteeFeeVO;
 import nl.strohalm.cyclos.services.accounts.guarantees.GuaranteeService;
 import nl.strohalm.cyclos.services.accounts.guarantees.GuaranteeTypeService;
 import nl.strohalm.cyclos.utils.EntityHelper;
@@ -62,7 +62,7 @@ public class CalculateGuaranteeFeeAjaxAction extends BaseAjaxAction {
             binder.registerBinder("amount", PropertyBinder.instance(BigDecimal.class, "amount", localSettings.getNumberConverter()));
             binder.registerBinder("validity", DataBinderHelper.rawPeriodBinder(localSettings, "validity"));
 
-            final BeanBinder<GuaranteeFeeVO> creditFeeSpecBinder = BeanBinder.instance(GuaranteeFeeVO.class, property);
+            final BeanBinder<GuaranteeFee> creditFeeSpecBinder = BeanBinder.instance(GuaranteeFee.class, property);
             creditFeeSpecBinder.registerBinder("type", PropertyBinder.instance(FeeType.class, "type"));
             creditFeeSpecBinder.registerBinder("fee", PropertyBinder.instance(BigDecimal.class, "fee", localSettings.getNumberConverter()));
             binder.registerBinder("feeSpec", creditFeeSpecBinder);

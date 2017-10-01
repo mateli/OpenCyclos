@@ -35,7 +35,7 @@ import nl.strohalm.cyclos.entities.members.PaymentsAwaitingFeedbackQuery;
 import nl.strohalm.cyclos.entities.members.Reference;
 import nl.strohalm.cyclos.entities.members.Reference.Level;
 import nl.strohalm.cyclos.entities.members.ReferenceQuery;
-import nl.strohalm.cyclos.utils.Period;
+import nl.strohalm.cyclos.entities.utils.Period;
 
 /**
  * Data access object interface for contact

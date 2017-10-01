@@ -69,7 +69,7 @@ import nl.strohalm.cyclos.services.transactions.exceptions.AuthorizedPaymentInPa
 import nl.strohalm.cyclos.utils.Amount;
 import nl.strohalm.cyclos.utils.CacheCleaner;
 import nl.strohalm.cyclos.utils.DateHelper;
-import nl.strohalm.cyclos.utils.Period;
+import nl.strohalm.cyclos.entities.utils.Period;
 import nl.strohalm.cyclos.utils.RelationshipHelper;
 import nl.strohalm.cyclos.utils.TransactionHelper;
 import nl.strohalm.cyclos.utils.Transactional;

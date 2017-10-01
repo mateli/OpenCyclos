@@ -44,7 +44,7 @@ import nl.strohalm.cyclos.entities.members.ReferenceQuery;
 import nl.strohalm.cyclos.entities.members.TransactionFeedback;
 import nl.strohalm.cyclos.exceptions.PermissionDeniedException;
 import nl.strohalm.cyclos.services.BaseServiceSecurity;
-import nl.strohalm.cyclos.utils.Period;
+import nl.strohalm.cyclos.entities.utils.Period;
 import nl.strohalm.cyclos.utils.access.PermissionHelper;
 import nl.strohalm.cyclos.utils.validation.ValidationException;
 

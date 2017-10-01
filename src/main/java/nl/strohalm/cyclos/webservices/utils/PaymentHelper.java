@@ -59,7 +59,7 @@ import nl.strohalm.cyclos.services.transactions.exceptions.UpperCreditLimitReach
 import nl.strohalm.cyclos.services.transfertypes.TransferTypeServiceLocal;
 import nl.strohalm.cyclos.utils.CustomFieldHelper;
 import nl.strohalm.cyclos.utils.EntityHelper;
-import nl.strohalm.cyclos.utils.Period;
+import nl.strohalm.cyclos.entities.utils.Period;
 import nl.strohalm.cyclos.utils.query.QueryParameters.ResultType;
 import nl.strohalm.cyclos.utils.validation.ValidationException;
 import nl.strohalm.cyclos.webservices.WebServiceContext;

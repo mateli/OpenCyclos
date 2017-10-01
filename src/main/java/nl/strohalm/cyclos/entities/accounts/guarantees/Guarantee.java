@@ -19,12 +19,6 @@
  */
 package nl.strohalm.cyclos.entities.accounts.guarantees;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Map;
-
 import nl.strohalm.cyclos.entities.Entity;
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.accounts.loans.Loan;
@@ -33,12 +27,32 @@ import nl.strohalm.cyclos.entities.customization.fields.PaymentCustomFieldValue;
 import nl.strohalm.cyclos.entities.members.Element;
 import nl.strohalm.cyclos.entities.members.Member;
 import nl.strohalm.cyclos.entities.settings.LocalSettings;
-import nl.strohalm.cyclos.services.accounts.guarantees.GuaranteeFeeVO;
+import nl.strohalm.cyclos.entities.utils.Period;
 import nl.strohalm.cyclos.utils.CustomFieldsContainer;
-import nl.strohalm.cyclos.utils.Period;
 import nl.strohalm.cyclos.utils.StringValuedEnum;
 import nl.strohalm.cyclos.utils.guarantees.GuaranteesHelper;
+import org.springframework.core.annotation.Order;
 
+import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
+import javax.persistence.Cacheable;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Embedded;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
+import javax.persistence.Table;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Map;
+
+@Cacheable
+@Table(name = "guarantees")
+@javax.persistence.Entity
 public class Guarantee extends Entity implements CustomFieldsContainer<PaymentCustomField, PaymentCustomFieldValue> {
     public static enum Relationships implements Relationship {
         CERTIFICATION("certification"), GUARANTEE_TYPE("guaranteeType"), LOAN("loan"), PAYMENT_OBLIGATIONS("paymentObligations"), LOGS("logs"), BUYER("buyer"), SELLER("seller"), ISSUER("issuer"), CUSTOM_VALUES("customValues");
@@ -71,28 +85,75 @@ public class Guarantee extends Entity implements CustomFieldsContainer<PaymentCu
 
     private static final long                   serialVersionUID = 3906916142405683801L;
 
-    private Status                              status;
+    @Column(name = "status", nullable = false, length = 2)
+	private Status                              status;
+
+    @Column(name = "amount", nullable = false, precision = 15, scale = 6)
     private BigDecimal                          amount;
-    private GuaranteeFeeVO                      creditFeeSpec;
-    private GuaranteeFeeVO                      issueFeeSpec;
+
+    @AttributeOverrides({
+            @AttributeOverride(name = "fee", column=@Column(name="credit_fee")),
+            @AttributeOverride(name = "type", column=@Column(name="credit_fee_type"))
+    })
+    @Embedded
+	private GuaranteeFee creditFeeSpec;
+
+    @AttributeOverrides({
+            @AttributeOverride(name = "fee", column=@Column(name="issue_fee")),
+            @AttributeOverride(name = "type", column=@Column(name="issue_fee_type"))
+    })
+    @Embedded
+	private GuaranteeFee issueFeeSpec;
+
+    @AttributeOverrides({
+            @AttributeOverride(name = "begin", column=@Column(name="begin_date")),
+            @AttributeOverride(name = "end", column=@Column(name="end_date"))
+    })
+    @Embedded
     private Period                              validity;
+
+    @Column(name = "registration_date", nullable = false)
     private Calendar                            registrationDate;
-    private Certification                       certification;
-    private GuaranteeType                       guaranteeType;
-    private Loan                                loan;
-    private Collection<PaymentObligation>       paymentObligations;
-    private Collection<GuaranteeLog>            logs;
-    private Member                              buyer;
-    private Member                              seller;
+
+    @ManyToOne
+    @JoinColumn(name = "certification_id")
+	private Certification                       certification;
+
+    @ManyToOne
+    @JoinColumn(name = "guarantee_type_id", nullable = false)
+	private GuaranteeType                       guaranteeType;
+
+    @ManyToOne
+    @JoinColumn(name = "loan_id", unique = true)
+	private Loan                                loan;
+
+    @OneToMany(mappedBy = "guarantee")
+    @OrderBy("expiration_date asc")
+	private Collection<PaymentObligation>       paymentObligations;
+
+    @OneToMany(mappedBy = "guarantee", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("date desc")
+	private Collection<GuaranteeLog>            logs;
+
+    @ManyToOne
+    @JoinColumn(name = "buyer_id", nullable = false)
+	private Member                              buyer;
+
+    @ManyToOne
+    @JoinColumn(name = "seller_id")
+	private Member                              seller;
 
     /**
      * If the guarantee type's model is 'with payment obligation' this issuer must be equals to the issuer of the certification.
      */
-    private Member                              issuer;
+    @ManyToOne
+    @JoinColumn(name = "issuer_id", nullable = false)
+	private Member                              issuer;
 
-    private Collection<PaymentCustomFieldValue> customValues;
+    @OneToMany(mappedBy = "guarantee", cascade = CascadeType.REMOVE)
+	private Collection<PaymentCustomFieldValue> customValues;
 
-    /**
+	/**
      * Change the guarantee's status and adds a new guarantee log to it
      * @param status the new guarantee's status
      * @param by the author of the change
@@ -126,7 +187,7 @@ public class Guarantee extends Entity implements CustomFieldsContainer<PaymentCu
         return isNullFee(creditFeeSpec) ? null : GuaranteesHelper.calculateFee(validity, amount, creditFeeSpec);
     }
 
-    public GuaranteeFeeVO getCreditFeeSpec() {
+    public GuaranteeFee getCreditFeeSpec() {
         return creditFeeSpec;
     }
 
@@ -153,7 +214,7 @@ public class Guarantee extends Entity implements CustomFieldsContainer<PaymentCu
         return isNullFee(issueFeeSpec) ? null : GuaranteesHelper.calculateFee(validity, amount, issueFeeSpec);
     }
 
-    public GuaranteeFeeVO getIssueFeeSpec() {
+    public GuaranteeFee getIssueFeeSpec() {
         return issueFeeSpec;
     }
 
@@ -212,7 +273,7 @@ public class Guarantee extends Entity implements CustomFieldsContainer<PaymentCu
         this.certification = certification;
     }
 
-    public void setCreditFeeSpec(final GuaranteeFeeVO creditFeeSpec) {
+    public void setCreditFeeSpec(final GuaranteeFee creditFeeSpec) {
         this.creditFeeSpec = creditFeeSpec;
     }
 
@@ -225,7 +286,7 @@ public class Guarantee extends Entity implements CustomFieldsContainer<PaymentCu
         this.guaranteeType = guaranteeType;
     }
 
-    public void setIssueFeeSpec(final GuaranteeFeeVO issueFeeSpec) {
+    public void setIssueFeeSpec(final GuaranteeFee issueFeeSpec) {
         this.issueFeeSpec = issueFeeSpec;
     }
 
@@ -282,7 +343,7 @@ public class Guarantee extends Entity implements CustomFieldsContainer<PaymentCu
         }
     }
 
-    private boolean isNullFee(final GuaranteeFeeVO feeSpec) {
+    private boolean isNullFee(final GuaranteeFee feeSpec) {
         return feeSpec == null || feeSpec.getType() == null || feeSpec.getFee() == null;
     }
 

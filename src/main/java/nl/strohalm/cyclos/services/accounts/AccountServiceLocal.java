@@ -39,7 +39,7 @@ import nl.strohalm.cyclos.entities.accounts.transactions.TransferAuthorization;
 import nl.strohalm.cyclos.entities.groups.MemberGroup;
 import nl.strohalm.cyclos.entities.members.Member;
 import nl.strohalm.cyclos.services.transactions.TransactionSummaryVO;
-import nl.strohalm.cyclos.utils.Period;
+import nl.strohalm.cyclos.entities.utils.Period;
 
 /**
  * Local interface. It must be used only from other services.

@@ -19,23 +19,37 @@
  */
 package nl.strohalm.cyclos.entities.accounts.fees.account;
 
-import java.math.BigDecimal;
-import java.util.Calendar;
-import java.util.Collection;
-
 import nl.strohalm.cyclos.entities.Entity;
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.accounts.transactions.Invoice;
 import nl.strohalm.cyclos.entities.accounts.transactions.Transfer;
 import nl.strohalm.cyclos.entities.members.Member;
+import nl.strohalm.cyclos.entities.utils.Period;
 import nl.strohalm.cyclos.utils.Amount;
 import nl.strohalm.cyclos.utils.FormatObject;
-import nl.strohalm.cyclos.utils.Period;
+
+import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
+import javax.persistence.Cacheable;
+import javax.persistence.Column;
+import javax.persistence.Embedded;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import java.math.BigDecimal;
+import java.util.Calendar;
+import java.util.Collection;
 
 /**
  * An account fee log records an account fee execution (either manual or scheduled fees)
  * @author luis
  */
+@Cacheable
+@Table(name = "account_fee_logs")
+@javax.persistence.Entity
 public class AccountFeeLog extends Entity {
 
     public static enum Relationships implements Relationship {
@@ -54,19 +68,53 @@ public class AccountFeeLog extends Entity {
 
     private static final long    serialVersionUID = -1715437658356438694L;
 
-    private AccountFee           accountFee;
+    @ManyToOne
+    @JoinColumn(name = "account_fee_id", nullable = false)
+	private AccountFee           accountFee;
+
+    @Column(name = "date", nullable = false)
     private Calendar             date;
+
+    @Column(name = "finish_date")
     private Calendar             finishDate;
+
+    @Column(name = "free_base", precision = 15, scale = 6)
     private BigDecimal           freeBase;
-    private Period               period;
+
+    @AttributeOverrides({
+            @AttributeOverride(name = "begin", column=@Column(name="begin_date")),
+            @AttributeOverride(name = "end", column=@Column(name="end_date"))
+    })
+    @Embedded
+	private Period               period;
+
+    @Column(name = "amount", nullable = false, precision = 15, scale = 6)
     private BigDecimal           amount;
+
+    @Column(name = "total_members")
     private Integer              totalMembers;
+
+    @Column(name = "failed_members", nullable = false)
     private int                  failedMembers;
+
+    @Column(name = "recharging_failed", nullable = false)
     private boolean              rechargingFailed;
+
+    @Column(name = "recharge_attempt", nullable = false)
     private int                  rechargeAttempt;
-    private Collection<Transfer> transfers;
-    private Collection<Invoice>  invoices;
-    private Collection<Member>   pendingToCharge;
+
+    @OneToMany(mappedBy = "accountFeeLog")
+	private Collection<Transfer> transfers;
+
+    @OneToMany(mappedBy = "accountFeeLog")
+	private Collection<Invoice>  invoices;
+
+    @ManyToMany
+    @JoinTable(name = "members_pending_charge",
+            joinColumns = @JoinColumn(name="account_fee_log_id"),
+            inverseJoinColumns = @JoinColumn(name="member_id")
+    )
+	private Collection<Member>   pendingToCharge;
 
     public AccountFeeLog() {
     }

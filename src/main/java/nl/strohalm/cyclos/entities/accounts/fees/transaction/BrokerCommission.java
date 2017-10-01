@@ -19,16 +19,23 @@
  */
 package nl.strohalm.cyclos.entities.accounts.fees.transaction;
 
-import java.util.Collection;
-
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.groups.BrokerGroup;
 import nl.strohalm.cyclos.utils.StringValuedEnum;
+
+import javax.persistence.Column;
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import java.util.Collection;
 
 /**
  * A fee that represents a broker commission
  * @author luis
  */
+@DiscriminatorValue("B")
+@javax.persistence.Entity
 public class BrokerCommission extends TransactionFee {
 
     public static enum Relationships implements Relationship {
@@ -72,13 +79,26 @@ public class BrokerCommission extends TransactionFee {
 
     private static final long       serialVersionUID = 3069444935878230607L;
 
+    @Column(name = "when_count")
     private Integer                 count;
-    private When                    when;
-    private WhichBroker             whichBroker;
-    private boolean                 allBrokerGroups  = true;
-    private Collection<BrokerGroup> brokerGroups;
 
-    public Collection<BrokerGroup> getBrokerGroups() {
+    @Column(name = "when_apply", length = 1)
+	private When                    when;
+
+    @Column(name = "which_broker", length = 1)
+	private WhichBroker             whichBroker;
+
+    @Column(name = "all_broker_groups", nullable = false)
+    private boolean                 allBrokerGroups  = true;
+
+    @ManyToMany(targetEntity = BrokerGroup.class)
+    @JoinTable(name = "broker_groups_transaction_fees",
+            joinColumns = @JoinColumn(name="transaction_fee_id"),
+            inverseJoinColumns = @JoinColumn(name = "group_id")
+    )
+	private Collection<BrokerGroup> brokerGroups;
+
+	public Collection<BrokerGroup> getBrokerGroups() {
         return brokerGroups;
     }
 

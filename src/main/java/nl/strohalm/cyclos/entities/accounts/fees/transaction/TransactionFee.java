@@ -19,9 +19,6 @@
  */
 package nl.strohalm.cyclos.entities.accounts.fees.transaction;
 
-import java.math.BigDecimal;
-import java.util.Collection;
-
 import nl.strohalm.cyclos.entities.Entity;
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.accounts.transactions.Transfer;
@@ -31,11 +28,29 @@ import nl.strohalm.cyclos.entities.members.Member;
 import nl.strohalm.cyclos.utils.Amount;
 import nl.strohalm.cyclos.utils.StringValuedEnum;
 
+import javax.persistence.Cacheable;
+import javax.persistence.Column;
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.Inheritance;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import java.math.BigDecimal;
+import java.util.Collection;
+
 /**
  * A fee is applied on transfers
  * 
  * @author luis
  */
+@Cacheable
+@Inheritance
+@DiscriminatorColumn(name = "subclass")
+@Table(name = "transaction_fees")
+@javax.persistence.Entity
 public abstract class TransactionFee extends Entity {
 
     public static enum ChargeType implements StringValuedEnum {
@@ -132,27 +147,77 @@ public abstract class TransactionFee extends Entity {
     }
 
     private static final long       serialVersionUID = -3840663900697716307L;
-    private String                  name;
-    private String                  description;
-    private Subject                 payer;
-    private boolean                 enabled;
-    private TransferType            originalTransferType;
-    private TransferType            generatedTransferType;
-    private ChargeType              chargeType;
-    private BigDecimal              value;
-    private BigDecimal              maxFixedValue;
-    private BigDecimal              maxPercentageValue;
-    private BigDecimal              initialAmount;
-    private BigDecimal              finalAmount;
-    private boolean                 deductAmount;
-    private Collection<Transfer>    transfers;
-    private boolean                 fromAllGroups    = true;
-    private Collection<MemberGroup> fromGroups;
-    private boolean                 toAllGroups      = true;
-    private Collection<MemberGroup> toGroups;
-    private Member                  fromFixedMember;
 
-    public Amount getAmount() {
+    @Column(name = "name", nullable = false, length = 100)
+    private String                  name;
+
+    @Column(name = "description", columnDefinition = "text")
+    private String                  description;
+
+    @Column(name = "payer", nullable = false, length = 3)
+	private Subject                 payer;
+
+    @Column(name = "enabled", nullable = false)
+    private boolean                 enabled;
+
+    @ManyToOne
+    @JoinColumn(name = "original_type_id", nullable = false)
+	private TransferType            originalTransferType;
+
+    @ManyToOne
+    @JoinColumn(name = "generated_type_id", nullable = false)
+	private TransferType            generatedTransferType;
+
+    @Column(name = "amount_type", nullable = false, length = 1)
+	private ChargeType              chargeType;
+
+    @Column(name = "amount", precision = 15, scale = 6)
+    private BigDecimal              value;
+
+    @Column(name = "max_fixed_value", precision = 15, scale = 6)
+    private BigDecimal              maxFixedValue;
+
+    @Column(name = "max_percentage_value", precision = 15, scale = 6)
+    private BigDecimal              maxPercentageValue;
+
+    @Column(name = "initial_amount", precision = 15, scale = 6)
+    private BigDecimal              initialAmount;
+
+    @Column(name = "final_amount", precision = 15, scale = 6)
+    private BigDecimal              finalAmount;
+
+    @Column(name = "deduct_amount", nullable = false)
+    private boolean                 deductAmount;
+
+    @OneToMany(mappedBy = "transactionFee")
+	private Collection<Transfer>    transfers;
+
+    @Column(name = "from_all_groups", nullable = false)
+    private boolean                 fromAllGroups    = true;
+
+    @ManyToMany(targetEntity = MemberGroup.class)
+    @JoinTable(name = "groups_from_transaction_fees",
+            joinColumns = @JoinColumn(name = "transaction_fee_id"),
+            inverseJoinColumns = @JoinColumn(name = "group_id"))
+	private Collection<MemberGroup> fromGroups;
+
+    @Column(name = "to_all_groups", nullable = false)
+    private boolean                 toAllGroups      = true;
+
+    @ManyToMany
+    @JoinTable(name = "groups_to_transaction_fees",
+            joinColumns = @JoinColumn(name = "transaction_fee_id"),
+            inverseJoinColumns = @JoinColumn(name = "group_id"))
+	private Collection<MemberGroup> toGroups;
+
+    @ManyToOne
+    @JoinColumn(name = "from_member_id")
+	private Member                  fromFixedMember;
+
+    protected TransactionFee() {
+	}
+
+	public Amount getAmount() {
         if (chargeType == null || value == null) {
             return null;
         }

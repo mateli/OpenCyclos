@@ -24,7 +24,7 @@ import java.util.Collection;
 import nl.strohalm.cyclos.dao.accounts.transactions.TransferDAO;
 import nl.strohalm.cyclos.entities.accounts.SystemAccountType;
 import nl.strohalm.cyclos.entities.accounts.transactions.PaymentFilter;
-import nl.strohalm.cyclos.utils.Period;
+import nl.strohalm.cyclos.entities.utils.Period;
 
 /**
  * Takes care of the calculations for finance statistics for through time.

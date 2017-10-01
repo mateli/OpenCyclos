@@ -39,7 +39,7 @@ import nl.strohalm.cyclos.entities.reports.ThroughTimeRange;
 import nl.strohalm.cyclos.services.stats.StatisticalResultDTO.MultiGraph;
 import nl.strohalm.cyclos.services.stats.general.FilterUsed;
 import nl.strohalm.cyclos.services.stats.general.KeyDevelopmentsStatsPerMonthVO;
-import nl.strohalm.cyclos.utils.Period;
+import nl.strohalm.cyclos.entities.utils.Period;
 import nl.strohalm.cyclos.utils.query.PageHelper;
 import nl.strohalm.cyclos.utils.statistics.ListOperations;
 import nl.strohalm.cyclos.utils.statistics.Median;

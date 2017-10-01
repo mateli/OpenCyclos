@@ -29,6 +29,7 @@ import nl.strohalm.cyclos.annotations.Inject;
 import nl.strohalm.cyclos.controls.ActionContext;
 import nl.strohalm.cyclos.controls.BaseFormAction;
 import nl.strohalm.cyclos.entities.accounts.guarantees.Guarantee;
+import nl.strohalm.cyclos.entities.accounts.guarantees.GuaranteeFee;
 import nl.strohalm.cyclos.entities.accounts.guarantees.GuaranteeType;
 import nl.strohalm.cyclos.entities.accounts.guarantees.GuaranteeType.FeeType;
 import nl.strohalm.cyclos.entities.customization.fields.CustomFieldValue;
@@ -37,7 +38,6 @@ import nl.strohalm.cyclos.entities.customization.fields.PaymentCustomFieldValue;
 import nl.strohalm.cyclos.entities.groups.Group;
 import nl.strohalm.cyclos.entities.members.Member;
 import nl.strohalm.cyclos.entities.settings.LocalSettings;
-import nl.strohalm.cyclos.services.accounts.guarantees.GuaranteeFeeVO;
 import nl.strohalm.cyclos.services.accounts.guarantees.GuaranteeService;
 import nl.strohalm.cyclos.services.accounts.guarantees.GuaranteeTypeService;
 import nl.strohalm.cyclos.services.customization.PaymentCustomFieldService;
@@ -152,12 +152,12 @@ public class RegisterGuaranteeAction extends BaseFormAction {
             customValueBinder.registerBinder("value", PropertyBinder.instance(String.class, "value", HtmlConverter.instance()));
             binder.registerBinder("customValues", BeanCollectionBinder.instance(customValueBinder, "customValues"));
 
-            final BeanBinder<GuaranteeFeeVO> issueFeeBinder = BeanBinder.instance(GuaranteeFeeVO.class, "issueFeeSpec");
+            final BeanBinder<GuaranteeFee> issueFeeBinder = BeanBinder.instance(GuaranteeFee.class, "issueFeeSpec");
             issueFeeBinder.registerBinder("type", PropertyBinder.instance(FeeType.class, "type"));
             issueFeeBinder.registerBinder("fee", PropertyBinder.instance(BigDecimal.class, "fee", localSettings.getNumberConverter()));
             binder.registerBinder("issueFeeSpec", issueFeeBinder);
 
-            final BeanBinder<GuaranteeFeeVO> creditFeeBinder = BeanBinder.instance(GuaranteeFeeVO.class, "creditFeeSpec");
+            final BeanBinder<GuaranteeFee> creditFeeBinder = BeanBinder.instance(GuaranteeFee.class, "creditFeeSpec");
             creditFeeBinder.registerBinder("type", PropertyBinder.instance(FeeType.class, "type"));
             creditFeeBinder.registerBinder("fee", PropertyBinder.instance(BigDecimal.class, "fee", localSettings.getNumberConverter()));
             binder.registerBinder("creditFeeSpec", creditFeeBinder);

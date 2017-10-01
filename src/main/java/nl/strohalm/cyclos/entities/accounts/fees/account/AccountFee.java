@@ -19,28 +19,41 @@
  */
 package nl.strohalm.cyclos.entities.accounts.fees.account;
 
-import java.math.BigDecimal;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Map;
-
 import nl.strohalm.cyclos.entities.Entity;
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.accounts.MemberAccountType;
 import nl.strohalm.cyclos.entities.accounts.transactions.TransferType;
 import nl.strohalm.cyclos.entities.groups.MemberGroup;
 import nl.strohalm.cyclos.entities.settings.LocalSettings;
+import nl.strohalm.cyclos.entities.utils.TimePeriod;
 import nl.strohalm.cyclos.utils.Amount;
 import nl.strohalm.cyclos.utils.DateHelper;
-import nl.strohalm.cyclos.utils.Period;
+import nl.strohalm.cyclos.entities.utils.Period;
 import nl.strohalm.cyclos.utils.StringValuedEnum;
-import nl.strohalm.cyclos.utils.TimePeriod;
 import nl.strohalm.cyclos.utils.WeekDay;
+
+import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
+import javax.persistence.Cacheable;
+import javax.persistence.Column;
+import javax.persistence.Embedded;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import java.math.BigDecimal;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Map;
 
 /**
  * Taxes are charged over all accounts of a given type
  * @author luis
  */
+@Cacheable
+@Table(name = "account_fees")
+@javax.persistence.Entity
 public class AccountFee extends Entity {
 
     public enum ChargeMode implements StringValuedEnum {
@@ -138,26 +151,64 @@ public class AccountFee extends Entity {
 
     private static final long         serialVersionUID = -3296543930198792794L;
 
-    private MemberAccountType         accountType;
+    @ManyToOne
+    @JoinColumn(name = "account_type_id", nullable = false)
+	private MemberAccountType         accountType;
 
+    @Column(name = "name", nullable = false, length = 100)
     private String                    name;
-    private String                    description;
-    private ChargeMode                chargeMode;
-    private boolean                   enabled;
-    private Calendar                  enabledSince;
-    private RunMode                   runMode;
-    private TimePeriod                recurrence;
-    private Byte                      day;
-    private Byte                      hour;
-    private InvoiceMode               invoiceMode;
-    private PaymentDirection          paymentDirection;
-    private BigDecimal                amount;
-    private BigDecimal                freeBase;
-    private TransferType              transferType;
-    private Collection<MemberGroup>   groups;
-    private Collection<AccountFeeLog> logs;
 
-    public MemberAccountType getAccountType() {
+    @Column(name = "description", columnDefinition = "text")
+    private String                    description;
+
+    @Column(name = "charge_mode", nullable = false, updatable = false, length = 2)
+	private ChargeMode                chargeMode;
+
+    @Column(name = "enabled", nullable = false)
+    private boolean                   enabled;
+
+    @Column(name = "enabled_since")
+    private Calendar                  enabledSince;
+
+    @Column(name = "run_mode", nullable = false, updatable = false, length = 1)
+	private RunMode                   runMode;
+
+    @AttributeOverrides({
+            @AttributeOverride(name = "number", column=@Column(name="recurrence_number")),
+            @AttributeOverride(name = "field", column=@Column(name="recurrence_field"))
+    })
+    @Embedded
+	private TimePeriod                recurrence;
+
+    @Column(name = "day", length = 2)
+    private Byte                      day;
+
+    @Column(name = "hour", length = 2)
+    private Byte                      hour;
+
+    @Column(name = "invoice_mode", length = 1)
+	private InvoiceMode               invoiceMode;
+
+    @Column(name = "payment_direction", nullable = false, length = 1)
+	private PaymentDirection          paymentDirection;
+
+    @Column(name = "amount", nullable = false, precision = 15, scale = 6)
+    private BigDecimal                amount;
+
+    @Column(name = "free_base", precision = 15, scale = 6)
+    private BigDecimal                freeBase;
+
+    @ManyToOne
+    @JoinColumn(name = "transfer_type_id", nullable = false)
+	private TransferType              transferType;
+
+    @ManyToMany(mappedBy = "accountFees")
+	private Collection<MemberGroup>   groups;
+
+    @OneToMany(mappedBy = "accountFee")
+	private Collection<AccountFeeLog> logs;
+
+	public MemberAccountType getAccountType() {
         return accountType;
     }
 

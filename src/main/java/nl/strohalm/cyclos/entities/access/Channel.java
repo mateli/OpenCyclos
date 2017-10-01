@@ -19,6 +19,20 @@
  */
 package nl.strohalm.cyclos.entities.access;
 
+import nl.strohalm.cyclos.entities.Entity;
+import nl.strohalm.cyclos.entities.Relationship;
+import nl.strohalm.cyclos.entities.customization.fields.MemberCustomField;
+import nl.strohalm.cyclos.entities.groups.MemberGroup;
+import nl.strohalm.cyclos.utils.StringValuedEnum;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
+
+import javax.persistence.Cacheable;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -26,24 +40,6 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
-
-import javax.persistence.Cacheable;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Enumerated;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-
-import nl.strohalm.cyclos.entities.Entity;
-import nl.strohalm.cyclos.entities.Relationship;
-import nl.strohalm.cyclos.entities.customization.fields.MemberCustomField;
-import nl.strohalm.cyclos.entities.groups.MemberGroup;
-import nl.strohalm.cyclos.utils.StringValuedEnum;
-
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang.StringUtils;
 
 /**
  * A channel is an user interface to access cyclos functionality. There are some build-in channels, which cannot be removed, that represents the
@@ -153,7 +149,6 @@ public class Channel extends Entity implements Comparable<Channel> {
         }
     }
 
-    @ManyToOne
 	public static final PrincipalType DEFAULT_PRINCIPAL_TYPE = new PrincipalType(Principal.USER);
 
     public static final String        WEB                    = "web";

@@ -19,14 +19,14 @@
  */
 package nl.strohalm.cyclos.entities.accounts.cards;
 
-import java.math.BigInteger;
-import java.util.Collection;
-
 import nl.strohalm.cyclos.entities.customization.fields.MemberCustomField;
 import nl.strohalm.cyclos.entities.groups.MemberGroup;
 import nl.strohalm.cyclos.entities.members.Member;
-import nl.strohalm.cyclos.utils.Period;
+import nl.strohalm.cyclos.entities.utils.Period;
 import nl.strohalm.cyclos.utils.query.QueryParameters;
+
+import java.math.BigInteger;
+import java.util.Collection;
 
 /**
  * Query parameters for Cards

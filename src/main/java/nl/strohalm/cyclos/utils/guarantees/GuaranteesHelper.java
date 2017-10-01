@@ -21,13 +21,13 @@ package nl.strohalm.cyclos.utils.guarantees;
 
 import java.math.BigDecimal;
 
-import nl.strohalm.cyclos.services.accounts.guarantees.GuaranteeFeeVO;
+import nl.strohalm.cyclos.entities.accounts.guarantees.GuaranteeFee;
 import nl.strohalm.cyclos.utils.Amount;
 import nl.strohalm.cyclos.utils.DateHelper;
-import nl.strohalm.cyclos.utils.Period;
+import nl.strohalm.cyclos.entities.utils.Period;
 
 public class GuaranteesHelper {
-    public static BigDecimal calculateFee(final Period period, final BigDecimal amount, final GuaranteeFeeVO guaranteeFee) {
+    public static BigDecimal calculateFee(final Period period, final BigDecimal amount, final GuaranteeFee guaranteeFee) {
         Amount result = null;
         switch (guaranteeFee.getType()) {
             case FIXED:

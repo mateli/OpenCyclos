@@ -19,12 +19,6 @@
  */
 package nl.strohalm.cyclos.entities.accounts.guarantees;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Map;
-
 import nl.strohalm.cyclos.entities.Entity;
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.accounts.Currency;
@@ -33,6 +27,23 @@ import nl.strohalm.cyclos.entities.members.Member;
 import nl.strohalm.cyclos.entities.settings.LocalSettings;
 import nl.strohalm.cyclos.utils.StringValuedEnum;
 
+import javax.persistence.Cacheable;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
+import javax.persistence.Table;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Map;
+
+@Cacheable
+@Table(name = "payment_obligations")
+@javax.persistence.Entity
 public class PaymentObligation extends Entity {
 
     public static enum Relationships implements Relationship {
@@ -66,20 +77,48 @@ public class PaymentObligation extends Entity {
 
     private static final long                serialVersionUID = -3493507277972263881L;
 
-    private Status                           status;
+    @Column(name = "status", nullable = false, length = 2)
+	private Status                           status;
+
+    @Column(name = "description", columnDefinition = "text")
     private String                           description;
+
+    @Column(name = "amount", nullable = false, precision = 15, scale = 6)
     private BigDecimal                       amount;
+
+    @Column(name = "expiration_date", nullable = false)
     private Calendar                         expirationDate;
+
+    @Column(name = "max_publish_date", nullable = false)
     private Calendar                         maxPublishDate;
+
+    @Column(name = "registration_date", nullable = false)
     private Calendar                         registrationDate;
 
-    private Guarantee                        guarantee;
-    private Currency                         currency;
-    private Collection<PaymentObligationLog> logs;
-    private Member                           buyer;
-    private Member                           seller;
+    @ManyToOne
+    @JoinColumn(name = "guarantee_id")
+	private Guarantee                        guarantee;
 
-    /**
+    @ManyToOne
+    @JoinColumn(name = "currency_id", nullable = false)
+	private Currency                         currency;
+
+    @OneToMany(mappedBy = "paymentObligation", cascade = CascadeType.ALL)
+    @OrderBy("date desc")
+	private Collection<PaymentObligationLog> logs;
+
+    @ManyToOne
+    @JoinColumn(name = "buyer_id", nullable = false)
+	private Member                           buyer;
+
+    @ManyToOne
+    @JoinColumn(name = "seller_id", nullable = false)
+	private Member                           seller;
+
+    protected PaymentObligation() {
+	}
+
+	/**
      * Change the payment obligation's status and adds a new payment obligation log to it
      * @param status the new payment obligation's status
      * @param by the author of the change

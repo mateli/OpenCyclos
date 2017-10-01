@@ -17,33 +17,24 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 
  */
-package nl.strohalm.cyclos.services.accounts.guarantees;
+package nl.strohalm.cyclos.entities.accounts.guarantees;
 
-import java.math.BigDecimal;
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
 
-import nl.strohalm.cyclos.entities.accounts.guarantees.GuaranteeType.FeeType;
-import nl.strohalm.cyclos.utils.DataObject;
+@Embeddable
+public class GuaranteeTypeFee extends GuaranteeFee {
+    private static final long serialVersionUID = 4259992289841136740L;
 
-public class GuaranteeFeeVO extends DataObject {
+    @Column(name = "readonly", nullable = false)
+    private boolean           readonly;
 
-    private static final long serialVersionUID = -5216565293055600738L;
-
-    private FeeType           type;
-    private BigDecimal        fee;
-
-    public BigDecimal getFee() {
-        return fee;
+    public boolean isReadonly() {
+        return readonly;
     }
 
-    public FeeType getType() {
-        return type;
+    public void setReadonly(final boolean readonly) {
+        this.readonly = readonly;
     }
 
-    public void setFee(final BigDecimal fee) {
-        this.fee = fee;
-    }
-
-    public void setType(final FeeType feeType) {
-        type = feeType;
-    }
 }

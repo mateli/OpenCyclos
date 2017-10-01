@@ -34,7 +34,7 @@ import nl.strohalm.cyclos.entities.reports.StatisticalDTO;
 import nl.strohalm.cyclos.entities.reports.StatisticalNumber;
 import nl.strohalm.cyclos.services.stats.StatisticalService;
 import nl.strohalm.cyclos.utils.Pair;
-import nl.strohalm.cyclos.utils.Period;
+import nl.strohalm.cyclos.entities.utils.Period;
 import nl.strohalm.cyclos.utils.statistics.ListOperations;
 
 /**

@@ -44,6 +44,7 @@ import nl.strohalm.cyclos.entities.accounts.SystemAccountOwner;
 import nl.strohalm.cyclos.entities.accounts.guarantees.Certification;
 import nl.strohalm.cyclos.entities.accounts.guarantees.Guarantee;
 import nl.strohalm.cyclos.entities.accounts.guarantees.Guarantee.Status;
+import nl.strohalm.cyclos.entities.accounts.guarantees.GuaranteeFee;
 import nl.strohalm.cyclos.entities.accounts.guarantees.GuaranteeLog;
 import nl.strohalm.cyclos.entities.accounts.guarantees.GuaranteeQuery;
 import nl.strohalm.cyclos.entities.accounts.guarantees.GuaranteeType;
@@ -82,7 +83,7 @@ import nl.strohalm.cyclos.utils.CustomFieldsContainer;
 import nl.strohalm.cyclos.utils.DateHelper;
 import nl.strohalm.cyclos.utils.MessageProcessingHelper;
 import nl.strohalm.cyclos.utils.MessageResolver;
-import nl.strohalm.cyclos.utils.Period;
+import nl.strohalm.cyclos.entities.utils.Period;
 import nl.strohalm.cyclos.utils.RelationshipHelper;
 import nl.strohalm.cyclos.entities.utils.TimePeriod;
 import nl.strohalm.cyclos.utils.TransactionHelper;
@@ -482,8 +483,8 @@ public class GuaranteeServiceImpl implements GuaranteeServiceLocal, Initializing
         guarantee.setAmount(amount);
         guarantee.setValidity(new Period(null, lastExpirationdate));
         guarantee.setPaymentObligations(paymentObligations);
-        guarantee.setCreditFeeSpec((GuaranteeFeeVO) guaranteeType.getCreditFee().clone());
-        guarantee.setIssueFeeSpec((GuaranteeFeeVO) guaranteeType.getIssueFee().clone());
+        guarantee.setCreditFeeSpec((GuaranteeFee) guaranteeType.getCreditFee().clone());
+        guarantee.setIssueFeeSpec((GuaranteeFee) guaranteeType.getIssueFee().clone());
 
         guarantee = save(guarantee, false);
 
@@ -635,7 +636,7 @@ public class GuaranteeServiceImpl implements GuaranteeServiceLocal, Initializing
         NumberConverter<BigDecimal> numberConverter;
 
         final GuaranteeType guaranteeType = guarantee.getGuaranteeType();
-        final GuaranteeFeeVO feeSpec = isCreditFee ? guarantee.getCreditFeeSpec() : guarantee.getIssueFeeSpec();
+        final GuaranteeFee feeSpec = isCreditFee ? guarantee.getCreditFeeSpec() : guarantee.getIssueFeeSpec();
 
         if (feeSpec.getType() == FeeType.FIXED) {
             numberConverter = localSettings.getUnitsConverter(guaranteeType.getCurrency().getPattern());
@@ -857,10 +858,10 @@ public class GuaranteeServiceImpl implements GuaranteeServiceLocal, Initializing
         final GuaranteeType guaranteeType = fetchService.fetch(guarantee.getGuaranteeType());
 
         if (guaranteeType.getCreditFee().isReadonly()) {
-            guarantee.setCreditFeeSpec((GuaranteeFeeVO) guaranteeType.getCreditFee().clone());
+            guarantee.setCreditFeeSpec((GuaranteeFee) guaranteeType.getCreditFee().clone());
         }
         if (guaranteeType.getIssueFee().isReadonly()) {
-            guarantee.setIssueFeeSpec((GuaranteeFeeVO) guaranteeType.getIssueFee().clone());
+            guarantee.setIssueFeeSpec((GuaranteeFee) guaranteeType.getIssueFee().clone());
         }
     }
 

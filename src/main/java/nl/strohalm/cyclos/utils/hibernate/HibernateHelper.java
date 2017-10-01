@@ -19,6 +19,15 @@
  */
 package nl.strohalm.cyclos.utils.hibernate;
 
+import nl.strohalm.cyclos.entities.Entity;
+import nl.strohalm.cyclos.entities.Relationship;
+import nl.strohalm.cyclos.entities.utils.Period;
+import nl.strohalm.cyclos.utils.DateHelper;
+import nl.strohalm.cyclos.utils.PropertyHelper;
+import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
+
 import java.beans.PropertyDescriptor;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -27,16 +36,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-
-import nl.strohalm.cyclos.entities.Entity;
-import nl.strohalm.cyclos.entities.Relationship;
-import nl.strohalm.cyclos.utils.DateHelper;
-import nl.strohalm.cyclos.utils.Period;
-import nl.strohalm.cyclos.utils.PropertyHelper;
-
-import org.apache.commons.beanutils.PropertyUtils;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang.StringUtils;
 
 /**
  * Class with helper method to work with Hibernate

@@ -46,7 +46,7 @@ import nl.strohalm.cyclos.services.transactions.TransferDTO;
 import nl.strohalm.cyclos.services.transactions.exceptions.NotEnoughCreditsException;
 import nl.strohalm.cyclos.utils.Amount;
 import nl.strohalm.cyclos.utils.MessageProcessingHelper;
-import nl.strohalm.cyclos.utils.Period;
+import nl.strohalm.cyclos.entities.utils.Period;
 import nl.strohalm.cyclos.utils.TransactionHelper;
 import nl.strohalm.cyclos.utils.conversion.AmountConverter;
 import nl.strohalm.cyclos.utils.conversion.CalendarConverter;

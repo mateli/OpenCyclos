@@ -27,7 +27,7 @@ import java.util.Map;
 import nl.strohalm.cyclos.dao.BaseDAOImpl;
 import nl.strohalm.cyclos.entities.infotexts.InfoText;
 import nl.strohalm.cyclos.entities.infotexts.InfoTextQuery;
-import nl.strohalm.cyclos.utils.Period;
+import nl.strohalm.cyclos.entities.utils.Period;
 import nl.strohalm.cyclos.utils.hibernate.HibernateHelper;
 import nl.strohalm.cyclos.utils.hibernate.HibernateHelper.QueryParameter;
 

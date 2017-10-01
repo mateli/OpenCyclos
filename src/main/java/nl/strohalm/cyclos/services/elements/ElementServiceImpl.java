@@ -145,7 +145,7 @@ import nl.strohalm.cyclos.utils.MailHandler;
 import nl.strohalm.cyclos.utils.MessageProcessingHelper;
 import nl.strohalm.cyclos.utils.MessageResolver;
 import nl.strohalm.cyclos.utils.Pair;
-import nl.strohalm.cyclos.utils.Period;
+import nl.strohalm.cyclos.entities.utils.Period;
 import nl.strohalm.cyclos.utils.PropertyHelper;
 import nl.strohalm.cyclos.entities.utils.RangeConstraint;
 import nl.strohalm.cyclos.utils.RelationshipHelper;

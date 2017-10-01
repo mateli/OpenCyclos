@@ -28,7 +28,7 @@ import nl.strohalm.cyclos.entities.accounts.fees.transaction.TransactionFee;
 import nl.strohalm.cyclos.entities.reports.StatisticalNumber;
 import nl.strohalm.cyclos.entities.reports.StatisticalTaxesQuery;
 import nl.strohalm.cyclos.services.stats.taxes.TaxesPerMemberStats;
-import nl.strohalm.cyclos.utils.Period;
+import nl.strohalm.cyclos.entities.utils.Period;
 
 /**
  * implementation of the <code>StatisticalTaxesService</code>.<br>

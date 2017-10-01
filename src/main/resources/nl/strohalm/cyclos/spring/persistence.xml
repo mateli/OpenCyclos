@@ -108,16 +108,9 @@
 				<value>/nl/strohalm/cyclos/entities/ads/imports/ImportedAdCategory.hbm.xml</value>
 				<value>/nl/strohalm/cyclos/entities/ads/imports/ImportedAdCustomFieldValue.hbm.xml</value>
 				<value>/nl/strohalm/cyclos/entities/members/adInterests/AdInterest.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/accounts/fees/transaction/TransactionFee.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/accounts/fees/transaction/SimpleTransactionFee.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/accounts/fees/transaction/BrokerCommission.hbm.xml</value>
 				<value>/nl/strohalm/cyclos/entities/accounts/loans/Loan.hbm.xml</value>
 				<value>/nl/strohalm/cyclos/entities/accounts/loans/LoanGroup.hbm.xml</value>
 				<value>/nl/strohalm/cyclos/entities/accounts/loans/LoanPayment.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/accounts/fees/account/AccountFee.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/accounts/fees/account/AccountFeeLog.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/accounts/fees/account/MemberAccountFeeLog.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/accounts/fees/account/AccountFeeAmount.hbm.xml</value>
 				<value>/nl/strohalm/cyclos/entities/accounts/transactions/Ticket.hbm.xml</value>
 				<value>/nl/strohalm/cyclos/entities/accounts/transactions/WebShopTicket.hbm.xml</value>
 				<value>/nl/strohalm/cyclos/entities/accounts/transactions/PaymentRequestTicket.hbm.xml</value>
@@ -148,14 +141,7 @@
 				<value>/nl/strohalm/cyclos/entities/sms/MemberSmsStatusLock.hbm.xml</value>
 				<value>/nl/strohalm/cyclos/entities/sms/SmsMailing.hbm.xml</value>
 				<value>/nl/strohalm/cyclos/entities/services/ServiceClient.hbm.xml</value>								
-				<value>/nl/strohalm/cyclos/entities/accounts/guarantees/GuaranteeType.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/accounts/guarantees/Certification.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/accounts/guarantees/CertificationLog.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/accounts/guarantees/Guarantee.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/accounts/guarantees/GuaranteeLog.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/accounts/guarantees/PaymentObligation.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/accounts/guarantees/PaymentObligationLog.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/members/imports/MemberImport.hbm.xml</value>				
+				<value>/nl/strohalm/cyclos/entities/members/imports/MemberImport.hbm.xml</value>
 				<value>/nl/strohalm/cyclos/entities/members/imports/ImportedMember.hbm.xml</value>				
 				<value>/nl/strohalm/cyclos/entities/members/imports/ImportedMemberRecord.hbm.xml</value>
 				<value>/nl/strohalm/cyclos/entities/members/imports/ImportedMemberRecordCustomFieldValue.hbm.xml</value>

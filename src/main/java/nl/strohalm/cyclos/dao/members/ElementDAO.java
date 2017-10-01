@@ -44,7 +44,7 @@ import nl.strohalm.cyclos.entities.members.Member;
 import nl.strohalm.cyclos.entities.members.MemberQuery;
 import nl.strohalm.cyclos.entities.members.RegistrationAgreement;
 import nl.strohalm.cyclos.entities.members.RegistrationAgreementLog;
-import nl.strohalm.cyclos.utils.Period;
+import nl.strohalm.cyclos.entities.utils.Period;
 
 /**
  * Data access object interface for elements

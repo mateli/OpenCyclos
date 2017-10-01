@@ -65,7 +65,7 @@ import nl.strohalm.cyclos.services.elements.BrokerQuery;
 import nl.strohalm.cyclos.services.settings.SettingsServiceLocal;
 import nl.strohalm.cyclos.utils.EntityHelper;
 import nl.strohalm.cyclos.utils.JDBCWrapper;
-import nl.strohalm.cyclos.utils.Period;
+import nl.strohalm.cyclos.entities.utils.Period;
 import nl.strohalm.cyclos.utils.hibernate.HibernateCustomFieldHandler;
 import nl.strohalm.cyclos.utils.hibernate.HibernateHelper;
 import nl.strohalm.cyclos.utils.lucene.Filters;

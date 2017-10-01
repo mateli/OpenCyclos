@@ -29,7 +29,7 @@ import nl.strohalm.cyclos.entities.settings.LocalSettings;
 import nl.strohalm.cyclos.utils.Amount;
 import nl.strohalm.cyclos.utils.ClassHelper;
 import nl.strohalm.cyclos.utils.NamedPeriod;
-import nl.strohalm.cyclos.utils.Period;
+import nl.strohalm.cyclos.entities.utils.Period;
 import nl.strohalm.cyclos.entities.utils.RangeConstraint;
 import nl.strohalm.cyclos.entities.utils.TimePeriod;
 import nl.strohalm.cyclos.utils.conversion.IdConverter;

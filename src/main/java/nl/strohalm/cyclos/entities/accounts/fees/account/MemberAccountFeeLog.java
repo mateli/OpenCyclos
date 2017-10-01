@@ -19,20 +19,26 @@
  */
 package nl.strohalm.cyclos.entities.accounts.fees.account;
 
-import java.math.BigDecimal;
-import java.util.Calendar;
-
 import nl.strohalm.cyclos.entities.Entity;
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.accounts.transactions.Invoice;
 import nl.strohalm.cyclos.entities.accounts.transactions.Transfer;
 import nl.strohalm.cyclos.entities.members.Member;
 
+import javax.persistence.Column;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import java.math.BigDecimal;
+import java.util.Calendar;
+
 /**
  * Relates a member to an account fee log
  * 
  * @author luis
  */
+@Table(name = "member_account_fee_logs")
+@javax.persistence.Entity
 public class MemberAccountFeeLog extends Entity {
 
     public static enum Relationships implements Relationship {
@@ -54,16 +60,36 @@ public class MemberAccountFeeLog extends Entity {
     }
 
     private static final long serialVersionUID = -3632964253062346212L;
-    private Calendar          date;
-    private boolean           success;
-    private int               rechargeAttempt;
-    private Member            member;
-    private BigDecimal        amount;
-    private AccountFeeLog     accountFeeLog;
-    private Transfer          transfer;
-    private Invoice           invoice;
 
-    public AccountFeeLog getAccountFeeLog() {
+    @Column(name = "date", nullable = false)
+    private Calendar          date;
+
+    @Column(name = "success", nullable = false)
+    private boolean           success;
+
+    @Column(name = "recharge_attempt", nullable = false)
+    private int               rechargeAttempt;
+
+    @ManyToOne
+    @JoinColumn(name = "member_id", nullable = false)
+	private Member            member;
+
+    @Column(name = "amount", precision = 15, scale = 6)
+    private BigDecimal        amount;
+
+    @ManyToOne
+    @JoinColumn(name = "account_fee_log_id")
+	private AccountFeeLog     accountFeeLog;
+
+    @ManyToOne
+    @JoinColumn(name = "transfer_id")
+	private Transfer          transfer;
+
+    @ManyToOne
+    @JoinColumn(name = "invoice_id")
+	private Invoice           invoice;
+
+	public AccountFeeLog getAccountFeeLog() {
         return accountFeeLog;
     }
 

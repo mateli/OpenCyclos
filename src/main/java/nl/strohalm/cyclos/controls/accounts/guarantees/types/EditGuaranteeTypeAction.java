@@ -32,7 +32,7 @@ import nl.strohalm.cyclos.entities.accounts.transactions.TransferTypeQuery;
 import nl.strohalm.cyclos.entities.settings.LocalSettings;
 import nl.strohalm.cyclos.entities.utils.TimePeriod;
 import nl.strohalm.cyclos.services.accounts.CurrencyService;
-import nl.strohalm.cyclos.services.accounts.guarantees.GuaranteeTypeFeeVO;
+import nl.strohalm.cyclos.entities.accounts.guarantees.GuaranteeTypeFee;
 import nl.strohalm.cyclos.services.accounts.guarantees.GuaranteeTypeService;
 import nl.strohalm.cyclos.services.transactions.TransactionContext;
 import nl.strohalm.cyclos.services.transfertypes.TransferTypeService;
@@ -83,13 +83,13 @@ public class EditGuaranteeTypeAction extends BaseFormAction {
             binder.registerBinder("forwardTransferType", PropertyBinder.instance(TransferType.class, "forwardTransferType"));
             binder.registerBinder("loanTransferType", PropertyBinder.instance(TransferType.class, "loanTransferType"));
 
-            final BeanBinder<GuaranteeTypeFeeVO> issueFeeBinder = BeanBinder.instance(GuaranteeTypeFeeVO.class, "issueFee");
+            final BeanBinder<GuaranteeTypeFee> issueFeeBinder = BeanBinder.instance(GuaranteeTypeFee.class, "issueFee");
             issueFeeBinder.registerBinder("type", PropertyBinder.instance(FeeType.class, "type"));
             issueFeeBinder.registerBinder("fee", PropertyBinder.instance(BigDecimal.class, "fee", localSettings.getNumberConverter()));
             issueFeeBinder.registerBinder("readonly", PropertyBinder.instance(Boolean.TYPE, "readonly"));
             binder.registerBinder("issueFee", issueFeeBinder);
 
-            final BeanBinder<GuaranteeTypeFeeVO> creditFeeBinder = BeanBinder.instance(GuaranteeTypeFeeVO.class, "creditFee");
+            final BeanBinder<GuaranteeTypeFee> creditFeeBinder = BeanBinder.instance(GuaranteeTypeFee.class, "creditFee");
             creditFeeBinder.registerBinder("type", PropertyBinder.instance(FeeType.class, "type"));
             creditFeeBinder.registerBinder("fee", PropertyBinder.instance(BigDecimal.class, "fee", localSettings.getNumberConverter()));
             creditFeeBinder.registerBinder("readonly", PropertyBinder.instance(Boolean.TYPE, "readonly"));

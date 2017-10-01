@@ -35,7 +35,7 @@ import nl.strohalm.cyclos.entities.members.Reference.Level;
 import nl.strohalm.cyclos.entities.members.ReferenceHistoryLog;
 import nl.strohalm.cyclos.entities.members.ReferenceHistoryLogQuery;
 import nl.strohalm.cyclos.utils.DateHelper;
-import nl.strohalm.cyclos.utils.Period;
+import nl.strohalm.cyclos.entities.utils.Period;
 import nl.strohalm.cyclos.utils.hibernate.HibernateHelper;
 
 public class ReferenceHistoryDAOImpl extends BaseDAOImpl<ReferenceHistoryLog> implements ReferenceHistoryDAO {

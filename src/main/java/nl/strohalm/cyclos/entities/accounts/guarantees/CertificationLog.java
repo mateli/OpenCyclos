@@ -19,13 +19,21 @@
  */
 package nl.strohalm.cyclos.entities.accounts.guarantees;
 
-import java.util.Calendar;
-
 import nl.strohalm.cyclos.entities.Entity;
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.accounts.guarantees.Certification.Status;
 import nl.strohalm.cyclos.entities.members.Element;
 
+import javax.persistence.Cacheable;
+import javax.persistence.Column;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import java.util.Calendar;
+
+@Cacheable
+@Table(name = "certification_logs")
+@javax.persistence.Entity
 public class CertificationLog extends Entity {
     public static enum Relationships implements Relationship {
         CERTIFICATION("certification"), BY("by");
@@ -42,12 +50,24 @@ public class CertificationLog extends Entity {
 
     private static final long serialVersionUID = 6870868351540746726L;
 
+    @Column(name = "date", nullable = false)
     private Calendar          date;
-    private Status            status;
-    private Certification     certification;
-    private Element           by;
 
-    public Element getBy() {
+    @Column(name = "status", nullable = false, length = 2)
+	private Status            status;
+
+    @ManyToOne
+    @JoinColumn(name = "certification_id", nullable = false)
+	private Certification     certification;
+
+    @ManyToOne
+    @JoinColumn(name = "by_id")
+	private Element           by;
+
+    protected CertificationLog() {
+	}
+
+	public Element getBy() {
         return by;
     }
 

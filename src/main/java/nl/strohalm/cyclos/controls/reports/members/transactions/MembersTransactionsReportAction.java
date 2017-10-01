@@ -34,7 +34,7 @@ import nl.strohalm.cyclos.entities.members.MemberTransactionSummaryReportData;
 import nl.strohalm.cyclos.entities.settings.LocalSettings;
 import nl.strohalm.cyclos.utils.NamedPeriod;
 import nl.strohalm.cyclos.utils.Pair;
-import nl.strohalm.cyclos.utils.Period;
+import nl.strohalm.cyclos.entities.utils.Period;
 import nl.strohalm.cyclos.utils.RequestHelper;
 import nl.strohalm.cyclos.utils.SpringHelper;
 import nl.strohalm.cyclos.utils.binding.BeanBinder;

@@ -19,14 +19,6 @@
  */
 package nl.strohalm.cyclos.controls.accounts.details;
 
-import java.io.Serializable;
-import java.math.BigDecimal;
-import java.util.Calendar;
-import java.util.EnumSet;
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-
 import nl.strohalm.cyclos.access.AdminMemberPermission;
 import nl.strohalm.cyclos.access.AdminSystemPermission;
 import nl.strohalm.cyclos.access.BrokerPermission;
@@ -60,6 +52,8 @@ import nl.strohalm.cyclos.entities.members.Member;
 import nl.strohalm.cyclos.entities.members.OperatorQuery;
 import nl.strohalm.cyclos.entities.settings.LocalSettings;
 import nl.strohalm.cyclos.entities.settings.events.LocalSettingsEvent;
+import nl.strohalm.cyclos.entities.utils.Period;
+import nl.strohalm.cyclos.entities.utils.TimePeriod;
 import nl.strohalm.cyclos.services.accounts.AccountDTO;
 import nl.strohalm.cyclos.services.accounts.AccountService;
 import nl.strohalm.cyclos.services.accounts.AccountTypeService;
@@ -71,10 +65,8 @@ import nl.strohalm.cyclos.services.permissions.PermissionService;
 import nl.strohalm.cyclos.services.transactions.PaymentService;
 import nl.strohalm.cyclos.services.transfertypes.PaymentFilterService;
 import nl.strohalm.cyclos.utils.CustomFieldHelper;
-import nl.strohalm.cyclos.utils.Period;
 import nl.strohalm.cyclos.utils.PropertyHelper;
 import nl.strohalm.cyclos.utils.RequestHelper;
-import nl.strohalm.cyclos.entities.utils.TimePeriod;
 import nl.strohalm.cyclos.utils.TransformedIteratorList;
 import nl.strohalm.cyclos.utils.binding.BeanBinder;
 import nl.strohalm.cyclos.utils.binding.BeanCollectionBinder;
@@ -86,6 +78,13 @@ import nl.strohalm.cyclos.utils.conversion.AccountOwnerConverter;
 import nl.strohalm.cyclos.utils.conversion.ReferenceConverter;
 import nl.strohalm.cyclos.utils.conversion.Transformer;
 import nl.strohalm.cyclos.utils.query.QueryParameters;
+
+import javax.servlet.http.HttpServletRequest;
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.util.Calendar;
+import java.util.EnumSet;
+import java.util.List;
 
 /**
  * Action used to retrieve the account history

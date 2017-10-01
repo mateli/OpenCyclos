@@ -58,7 +58,7 @@ import nl.strohalm.cyclos.entities.reports.StatisticalDTO;
 import nl.strohalm.cyclos.services.stats.general.KeyDevelopmentsStatsPerMonthVO;
 import nl.strohalm.cyclos.utils.BigDecimalHelper;
 import nl.strohalm.cyclos.utils.Pair;
-import nl.strohalm.cyclos.utils.Period;
+import nl.strohalm.cyclos.entities.utils.Period;
 import nl.strohalm.cyclos.utils.hibernate.HibernateCustomFieldHandler;
 import nl.strohalm.cyclos.utils.hibernate.HibernateHelper;
 import nl.strohalm.cyclos.utils.query.PageParameters;

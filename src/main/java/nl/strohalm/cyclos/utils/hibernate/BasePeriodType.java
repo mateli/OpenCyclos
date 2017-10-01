@@ -26,7 +26,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.Calendar;
 
-import nl.strohalm.cyclos.utils.Period;
+import nl.strohalm.cyclos.entities.utils.Period;
 
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.logging.Log;

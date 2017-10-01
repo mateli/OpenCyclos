@@ -30,7 +30,7 @@ import nl.strohalm.cyclos.services.stats.finances.FinanceStatsComparePeriods;
 import nl.strohalm.cyclos.services.stats.finances.FinanceStatsSinglePeriod;
 import nl.strohalm.cyclos.services.stats.finances.FinanceStatsThroughTime;
 import nl.strohalm.cyclos.utils.NamedPeriod;
-import nl.strohalm.cyclos.utils.Period;
+import nl.strohalm.cyclos.entities.utils.Period;
 
 /**
  * implementation of the StatisticalFinancesService.<br>

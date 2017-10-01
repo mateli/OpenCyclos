@@ -40,7 +40,7 @@ import nl.strohalm.cyclos.services.accounts.AccountDateDTO;
 import nl.strohalm.cyclos.services.accounts.AccountService;
 import nl.strohalm.cyclos.services.ads.AdService;
 import nl.strohalm.cyclos.services.elements.ReferenceService;
-import nl.strohalm.cyclos.utils.Period;
+import nl.strohalm.cyclos.entities.utils.Period;
 
 public class MembersListReportVOIterator implements Iterator<MembersReportVO> {
 

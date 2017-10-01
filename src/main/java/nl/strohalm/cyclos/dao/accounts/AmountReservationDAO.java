@@ -25,7 +25,7 @@ import nl.strohalm.cyclos.dao.BaseDAO;
 import nl.strohalm.cyclos.dao.InsertableDAO;
 import nl.strohalm.cyclos.entities.accounts.Account;
 import nl.strohalm.cyclos.entities.accounts.AmountReservation;
-import nl.strohalm.cyclos.utils.Period;
+import nl.strohalm.cyclos.entities.utils.Period;
 
 /**
  * DAO interface for {@link AmountReservation}
