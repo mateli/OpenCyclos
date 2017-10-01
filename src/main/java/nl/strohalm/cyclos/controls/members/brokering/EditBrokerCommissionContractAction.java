@@ -36,7 +36,7 @@ import nl.strohalm.cyclos.services.elements.BrokeringService;
 import nl.strohalm.cyclos.services.elements.CommissionService;
 import nl.strohalm.cyclos.services.transfertypes.TransactionFeeService;
 import nl.strohalm.cyclos.utils.ActionHelper;
-import nl.strohalm.cyclos.utils.Amount;
+import nl.strohalm.cyclos.entities.utils.Amount;
 import nl.strohalm.cyclos.utils.RelationshipHelper;
 import nl.strohalm.cyclos.utils.RequestHelper;
 import nl.strohalm.cyclos.utils.binding.BeanBinder;

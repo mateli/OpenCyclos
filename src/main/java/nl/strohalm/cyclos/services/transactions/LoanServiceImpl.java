@@ -39,7 +39,7 @@ import nl.strohalm.cyclos.entities.accounts.MemberAccount;
 import nl.strohalm.cyclos.entities.accounts.SystemAccountOwner;
 import nl.strohalm.cyclos.entities.accounts.external.ExternalTransfer;
 import nl.strohalm.cyclos.entities.accounts.loans.Loan;
-import nl.strohalm.cyclos.entities.accounts.loans.LoanParameters;
+import nl.strohalm.cyclos.entities.accounts.loans.LoanParametersLight;
 import nl.strohalm.cyclos.entities.accounts.loans.LoanPayment;
 import nl.strohalm.cyclos.entities.accounts.loans.LoanPayment.Status;
 import nl.strohalm.cyclos.entities.accounts.loans.LoanPaymentQuery;
@@ -66,7 +66,7 @@ import nl.strohalm.cyclos.services.fetch.FetchServiceLocal;
 import nl.strohalm.cyclos.services.permissions.PermissionServiceLocal;
 import nl.strohalm.cyclos.services.settings.SettingsServiceLocal;
 import nl.strohalm.cyclos.services.transactions.exceptions.AuthorizedPaymentInPastException;
-import nl.strohalm.cyclos.utils.Amount;
+import nl.strohalm.cyclos.entities.utils.Amount;
 import nl.strohalm.cyclos.utils.CacheCleaner;
 import nl.strohalm.cyclos.utils.DateHelper;
 import nl.strohalm.cyclos.entities.utils.Period;
@@ -269,7 +269,7 @@ public class LoanServiceImpl implements LoanServiceLocal, InitializingService {
             Calendar expirationDate = payment.getExpirationDate();
             Calendar lastPaymentDate = (Calendar) expirationDate.clone();
             expirationDate = DateUtils.truncate(expirationDate, Calendar.DATE);
-            final LoanParameters parameters = loan.getParameters();
+            final LoanParametersLight parameters = loan.getParameters();
             Collection<Transfer> transfers = payment.getTransfers();
             if (transfers == null) {
                 transfers = Collections.emptyList();

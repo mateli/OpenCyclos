@@ -17,15 +17,23 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 
  */
-package nl.strohalm.cyclos.utils;
+package nl.strohalm.cyclos.entities.utils;
 
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
+import nl.strohalm.cyclos.utils.DateHelper;
+import nl.strohalm.cyclos.utils.FormatObject;
+import nl.strohalm.cyclos.utils.Quarter;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.time.DateUtils;
+
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
+import javax.persistence.Embedded;
+import javax.persistence.Transient;
 
 /**
  * A date period, which can be configured not to take into account the time part in calculations by setting the useTime flag in false. Note that the
@@ -36,6 +44,7 @@ import org.apache.commons.lang.time.DateUtils;
  * 
  * @author luis
  */
+@Embeddable
 public class Period implements Serializable, Cloneable {
 
     private static final long serialVersionUID = 6246167529034823152L;
@@ -72,10 +81,19 @@ public class Period implements Serializable, Cloneable {
         return new Period(time, time);
     }
 
+    @Column
     private Calendar begin;
+
+    @Column
     private Calendar end;
+
+    @Transient
     private boolean  useTime;
+
+    @Transient
     private boolean  inclusiveBegin = true;
+
+    @Transient
     private boolean  inclusiveEnd   = true;
 
     public Period() {

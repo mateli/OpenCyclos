@@ -81,7 +81,7 @@ import nl.strohalm.cyclos.services.elements.CommissionServiceLocal;
 import nl.strohalm.cyclos.services.fetch.FetchServiceLocal;
 import nl.strohalm.cyclos.services.settings.SettingsServiceLocal;
 import nl.strohalm.cyclos.services.transactions.TransactionContext;
-import nl.strohalm.cyclos.utils.Amount;
+import nl.strohalm.cyclos.entities.utils.Amount;
 import nl.strohalm.cyclos.utils.MessageProcessingHelper;
 import nl.strohalm.cyclos.utils.MessageResolver;
 import nl.strohalm.cyclos.utils.RelationshipHelper;

@@ -19,12 +19,6 @@
  */
 package nl.strohalm.cyclos.entities.accounts.loans;
 
-import java.math.BigDecimal;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-
 import nl.strohalm.cyclos.entities.Entity;
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.accounts.transactions.Payment;
@@ -35,10 +29,30 @@ import nl.strohalm.cyclos.entities.settings.LocalSettings;
 import nl.strohalm.cyclos.utils.FormatObject;
 import nl.strohalm.cyclos.utils.StringValuedEnum;
 
+import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Embedded;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
+import javax.persistence.Table;
+import java.math.BigDecimal;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+
 /**
  * A loan generates a transfer and one or more loan payments
  * @author luis
  */
+@Table(name = "loans")
+@javax.persistence.Entity
 public class Loan extends Entity {
 
     public static enum Relationships implements Relationship {
@@ -97,14 +111,40 @@ public class Loan extends Entity {
 
     private static final long  serialVersionUID = 7890624598546777599L;
 
-    private List<LoanPayment>  payments;
-    private LoanGroup          loanGroup;
-    private LoanParameters     parameters;
-    private Collection<Member> toMembers;
-    private BigDecimal         totalAmount;
-    private Transfer           transfer;
+    @OneToMany(mappedBy = "loan", cascade = CascadeType.REMOVE)
+    @OrderBy("payment_index")
+	private List<LoanPayment>  payments;
 
-    public BigDecimal getAmount() {
+    @ManyToOne
+    @JoinColumn(name = "loan_group_id")
+	private LoanGroup          loanGroup;
+
+    @AttributeOverrides({
+            @AttributeOverride(name = "type", column=@Column(name="type")),
+            @AttributeOverride(name = "monthlyInterest", column=@Column(name="monthly_interest")),
+            @AttributeOverride(name = "grantFeeValue", column=@Column(name="grant_fee_value")),
+            @AttributeOverride(name = "grantFeeType", column=@Column(name="grant_fee_type")),
+            @AttributeOverride(name = "expirationFeeValue", column=@Column(name="expiration_fee_value")),
+            @AttributeOverride(name = "expirationFeeType", column=@Column(name="expiration_fee_type", length = 1)),
+            @AttributeOverride(name = "expirationDailyInterest", column=@Column(name="expiration_daily_interest")),
+    })
+    @Embedded
+	private LoanParametersLight     parameters;
+
+    @ManyToMany
+    @JoinTable(name = "members_loans",
+            joinColumns = @JoinColumn(name = "loan_id"),
+            inverseJoinColumns = @JoinColumn(name = "member_id"))
+	private Collection<Member> toMembers;
+
+    @Column(name = "total_amount", nullable = false, precision = 15, scale = 6)
+    private BigDecimal         totalAmount;
+
+    @ManyToOne
+    @JoinColumn(name = "transfer_id", nullable = false)
+	private Transfer           transfer;
+
+	public BigDecimal getAmount() {
         return transfer == null ? null : transfer.getAmount();
     }
 
@@ -164,7 +204,7 @@ public class Loan extends Entity {
         }
     }
 
-    public LoanParameters getParameters() {
+    public LoanParametersLight getParameters() {
         return parameters;
     }
 
@@ -242,7 +282,7 @@ public class Loan extends Entity {
         this.loanGroup = loanGroup;
     }
 
-    public void setParameters(final LoanParameters parameters) {
+    public void setParameters(final LoanParametersLight parameters) {
         this.parameters = parameters;
     }
 

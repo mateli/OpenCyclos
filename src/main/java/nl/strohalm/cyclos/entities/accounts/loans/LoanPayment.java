@@ -19,20 +19,27 @@
  */
 package nl.strohalm.cyclos.entities.accounts.loans;
 
-import java.math.BigDecimal;
-import java.util.Calendar;
-import java.util.Collection;
-
 import nl.strohalm.cyclos.entities.Entity;
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.accounts.external.ExternalTransfer;
 import nl.strohalm.cyclos.entities.accounts.transactions.Transfer;
 import nl.strohalm.cyclos.utils.StringValuedEnum;
 
+import javax.persistence.Column;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import java.math.BigDecimal;
+import java.util.Calendar;
+import java.util.Collection;
+
 /**
  * A loan payment (parcel)
  * @author luis
  */
+@Table(name = "loan_payments")
+@javax.persistence.Entity
 public class LoanPayment extends Entity {
 
     public static enum Relationships implements Relationship {
@@ -71,17 +78,37 @@ public class LoanPayment extends Entity {
     }
 
     private static final long    serialVersionUID = 3972322253540292312L;
-    private Calendar             expirationDate;
-    private int                  index;
-    private Loan                 loan;
-    private BigDecimal           repaidAmount     = BigDecimal.ZERO;
-    private Calendar             repaymentDate;
-    private Status               status           = Status.OPEN;
-    private Collection<Transfer> transfers;
-    private BigDecimal           amount;
-    private ExternalTransfer     externalTransfer;
 
-    public BigDecimal getAmount() {
+    @Column(name = "expiration_date", nullable = false)
+    private Calendar             expirationDate;
+
+    @Column(name = "payment_index", nullable = false)
+    private int                  index;
+
+    @ManyToOne
+    @JoinColumn(name = "loan_id", nullable = false)
+	private Loan                 loan;
+
+    @Column(name = "repaid_amount", nullable = false, precision = 15, scale = 6)
+    private BigDecimal           repaidAmount     = BigDecimal.ZERO;
+
+    @Column(name = "repayment_date")
+    private Calendar             repaymentDate;
+
+    @Column(name = "status", nullable = false, length = 1)
+	private Status               status           = Status.OPEN;
+
+    @OneToMany(mappedBy = "loanPayment")
+	private Collection<Transfer> transfers;
+
+    @Column(name = "amount", nullable = false, precision = 15, scale = 6)
+    private BigDecimal           amount;
+
+    @ManyToOne
+    @JoinColumn(name = "external_transfer_id")
+	private ExternalTransfer     externalTransfer;
+
+	public BigDecimal getAmount() {
         return amount;
     }
 

@@ -22,7 +22,7 @@ package nl.strohalm.cyclos.utils.guarantees;
 import java.math.BigDecimal;
 
 import nl.strohalm.cyclos.entities.accounts.guarantees.GuaranteeFee;
-import nl.strohalm.cyclos.utils.Amount;
+import nl.strohalm.cyclos.entities.utils.Amount;
 import nl.strohalm.cyclos.utils.DateHelper;
 import nl.strohalm.cyclos.entities.utils.Period;
 

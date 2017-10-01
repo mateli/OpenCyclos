@@ -19,12 +19,6 @@
  */
 package nl.strohalm.cyclos.scheduling.polling;
 
-import java.math.BigDecimal;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import nl.strohalm.cyclos.entities.accounts.SystemAccountOwner;
 import nl.strohalm.cyclos.entities.accounts.fees.account.AccountFee;
 import nl.strohalm.cyclos.entities.accounts.fees.account.AccountFee.InvoiceMode;
@@ -36,6 +30,8 @@ import nl.strohalm.cyclos.entities.accounts.transactions.Transfer;
 import nl.strohalm.cyclos.entities.alerts.SystemAlert;
 import nl.strohalm.cyclos.entities.members.Member;
 import nl.strohalm.cyclos.entities.settings.LocalSettings;
+import nl.strohalm.cyclos.entities.utils.Amount;
+import nl.strohalm.cyclos.entities.utils.Period;
 import nl.strohalm.cyclos.services.accountfees.AccountFeeServiceLocal;
 import nl.strohalm.cyclos.services.alerts.AlertServiceLocal;
 import nl.strohalm.cyclos.services.fetch.FetchServiceLocal;
@@ -44,9 +40,7 @@ import nl.strohalm.cyclos.services.transactions.InvoiceServiceLocal;
 import nl.strohalm.cyclos.services.transactions.PaymentServiceLocal;
 import nl.strohalm.cyclos.services.transactions.TransferDTO;
 import nl.strohalm.cyclos.services.transactions.exceptions.NotEnoughCreditsException;
-import nl.strohalm.cyclos.utils.Amount;
 import nl.strohalm.cyclos.utils.MessageProcessingHelper;
-import nl.strohalm.cyclos.entities.utils.Period;
 import nl.strohalm.cyclos.utils.TransactionHelper;
 import nl.strohalm.cyclos.utils.conversion.AmountConverter;
 import nl.strohalm.cyclos.utils.conversion.CalendarConverter;
@@ -54,9 +48,14 @@ import nl.strohalm.cyclos.utils.conversion.UnitsConverter;
 import nl.strohalm.cyclos.utils.logging.LoggingHandler;
 import nl.strohalm.cyclos.utils.transaction.CurrentTransactionData;
 import nl.strohalm.cyclos.utils.transaction.TransactionEndListener;
-
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionCallbackWithoutResult;
+
+import java.math.BigDecimal;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * A {@link PollingTask} which charges account fees

@@ -108,9 +108,6 @@
 				<value>/nl/strohalm/cyclos/entities/ads/imports/ImportedAdCategory.hbm.xml</value>
 				<value>/nl/strohalm/cyclos/entities/ads/imports/ImportedAdCustomFieldValue.hbm.xml</value>
 				<value>/nl/strohalm/cyclos/entities/members/adInterests/AdInterest.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/accounts/loans/Loan.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/accounts/loans/LoanGroup.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/accounts/loans/LoanPayment.hbm.xml</value>
 				<value>/nl/strohalm/cyclos/entities/accounts/transactions/Ticket.hbm.xml</value>
 				<value>/nl/strohalm/cyclos/entities/accounts/transactions/WebShopTicket.hbm.xml</value>
 				<value>/nl/strohalm/cyclos/entities/accounts/transactions/PaymentRequestTicket.hbm.xml</value>

@@ -24,7 +24,6 @@ import java.util.Calendar;
 
 import nl.strohalm.cyclos.utils.DateHelper;
 import nl.strohalm.cyclos.utils.IntValuedEnum;
-import nl.strohalm.cyclos.utils.Period;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;

@@ -19,14 +19,6 @@
  */
 package nl.strohalm.cyclos.services.elements;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-
 import nl.strohalm.cyclos.access.AdminMemberPermission;
 import nl.strohalm.cyclos.access.BrokerPermission;
 import nl.strohalm.cyclos.dao.members.brokerings.BrokerCommissionContractDAO;
@@ -52,6 +44,10 @@ import nl.strohalm.cyclos.entities.members.brokerings.BrokeringCommissionStatusQ
 import nl.strohalm.cyclos.entities.members.brokerings.DefaultBrokerCommission;
 import nl.strohalm.cyclos.entities.members.brokerings.DefaultBrokerCommissionQuery;
 import nl.strohalm.cyclos.entities.settings.LocalSettings;
+import nl.strohalm.cyclos.entities.utils.Amount;
+import nl.strohalm.cyclos.entities.utils.Period;
+import nl.strohalm.cyclos.entities.utils.TimePeriod;
+import nl.strohalm.cyclos.entities.utils.TimePeriod.Field;
 import nl.strohalm.cyclos.services.InitializingService;
 import nl.strohalm.cyclos.services.fetch.FetchServiceLocal;
 import nl.strohalm.cyclos.services.groups.GroupServiceLocal;
@@ -59,13 +55,9 @@ import nl.strohalm.cyclos.services.permissions.PermissionServiceLocal;
 import nl.strohalm.cyclos.services.settings.SettingsServiceLocal;
 import nl.strohalm.cyclos.services.transactions.TransactionSummaryVO;
 import nl.strohalm.cyclos.services.transfertypes.TransactionFeeServiceLocal;
-import nl.strohalm.cyclos.utils.Amount;
 import nl.strohalm.cyclos.utils.CacheCleaner;
 import nl.strohalm.cyclos.utils.DataIteratorHelper;
 import nl.strohalm.cyclos.utils.DateHelper;
-import nl.strohalm.cyclos.entities.utils.Period;
-import nl.strohalm.cyclos.entities.utils.TimePeriod;
-import nl.strohalm.cyclos.entities.utils.TimePeriod.Field;
 import nl.strohalm.cyclos.utils.access.LoggedUser;
 import nl.strohalm.cyclos.utils.notifications.MemberNotificationHandler;
 import nl.strohalm.cyclos.utils.query.IteratorList;
@@ -76,8 +68,15 @@ import nl.strohalm.cyclos.utils.validation.PropertyValidation;
 import nl.strohalm.cyclos.utils.validation.ValidationError;
 import nl.strohalm.cyclos.utils.validation.ValidationException;
 import nl.strohalm.cyclos.utils.validation.Validator;
-
 import org.apache.commons.collections.CollectionUtils;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * Implementation for commission service

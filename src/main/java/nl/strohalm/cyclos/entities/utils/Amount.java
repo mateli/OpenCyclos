@@ -17,7 +17,7 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 
  */
-package nl.strohalm.cyclos.utils;
+package nl.strohalm.cyclos.entities.utils;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -25,6 +25,7 @@ import java.math.MathContext;
 
 import nl.strohalm.cyclos.entities.settings.LocalSettings;
 
+import nl.strohalm.cyclos.utils.StringValuedEnum;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 

@@ -20,7 +20,7 @@
 package nl.strohalm.cyclos.entities.accounts.loans;
 
 import nl.strohalm.cyclos.entities.accounts.Currency;
-import nl.strohalm.cyclos.utils.Period;
+import nl.strohalm.cyclos.entities.utils.Period;
 
 /**
  * Parameters for loan queries

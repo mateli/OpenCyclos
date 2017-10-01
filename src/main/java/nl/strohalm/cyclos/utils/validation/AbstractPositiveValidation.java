@@ -19,7 +19,7 @@
  */
 package nl.strohalm.cyclos.utils.validation;
 
-import nl.strohalm.cyclos.utils.Amount;
+import nl.strohalm.cyclos.entities.utils.Amount;
 
 /**
  * Validates a value as being positive

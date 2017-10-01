@@ -296,12 +296,12 @@
 
         <attribute>
         	<description>
-        		An instance of nl.strohalm.cyclos.utils.Amount to be formatted
-        	</description>
+				An instance of nl.strohalm.cyclos.entities.utils.Amount to be formatted
+			</description>
 	    	<name>amount</name>
             <required>false</required>
             <rtexprvalue>true</rtexprvalue>
-            <type>nl.strohalm.cyclos.utils.Amount</type>
+            <type>nl.strohalm.cyclos.entities.utils.Amount</type>
         </attribute>
 
         <attribute>
