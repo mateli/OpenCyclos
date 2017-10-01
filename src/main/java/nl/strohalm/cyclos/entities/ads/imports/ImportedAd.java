@@ -19,24 +19,35 @@
  */
 package nl.strohalm.cyclos.entities.ads.imports;
 
-import java.math.BigDecimal;
-import java.util.Collection;
-
 import nl.strohalm.cyclos.entities.Entity;
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.ads.Ad.TradeType;
 import nl.strohalm.cyclos.entities.ads.AdCategory;
 import nl.strohalm.cyclos.entities.customization.fields.AdCustomField;
 import nl.strohalm.cyclos.entities.members.Member;
+import nl.strohalm.cyclos.entities.utils.Period;
 import nl.strohalm.cyclos.utils.CustomFieldsContainer;
-import nl.strohalm.cyclos.utils.Period;
 import nl.strohalm.cyclos.utils.StringValuedEnum;
+
+import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Embedded;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import java.math.BigDecimal;
+import java.util.Collection;
 
 /**
  * An imported ad, not yet processed
  * 
  * @author luis
  */
+@Table(name = "imported_ads")
+@javax.persistence.Entity
 public class ImportedAd extends Entity implements CustomFieldsContainer<AdCustomField, ImportedAdCustomFieldValue> {
 
     public static enum Relationships implements Relationship {
@@ -62,25 +73,67 @@ public class ImportedAd extends Entity implements CustomFieldsContainer<AdCustom
     }
 
     private static final long                      serialVersionUID = 2434556061835999931L;
-    private AdImport                               _import;
-    private Integer                                lineNumber;
-    private Status                                 status;
-    private String                                 errorArgument1;
-    private String                                 errorArgument2;
-    private AdCategory                             existingCategory;
-    private ImportedAdCategory                     importedCategory;
-    private Collection<ImportedAdCustomFieldValue> customValues;
-    private String                                 description;
-    private boolean                                html;
-    private boolean                                externalPublication;
-    private Member                                 owner;
-    private boolean                                permanent;
-    private BigDecimal                             price;
-    private Period                                 publicationPeriod;
-    private String                                 title;
-    private TradeType                              tradeType;
 
-    public Class<AdCustomField> getCustomFieldClass() {
+    @ManyToOne
+    @JoinColumn(name = "import_id", nullable = false)
+	private AdImport                               _import;
+
+    @Column(name = "line_number")
+    private Integer                                lineNumber;
+
+    @Column(name = "status", nullable = false, length = 50)
+	private Status                                 status;
+
+    @Column(name = "error_argument1", length = 200)
+    private String                                 errorArgument1;
+
+    @Column(name = "error_argument2", length = 200)
+    private String                                 errorArgument2;
+
+    @ManyToOne
+    @JoinColumn(name = "existing_category_id")
+	private AdCategory                             existingCategory;
+
+    @ManyToOne
+    @JoinColumn(name = "imported_category_id")
+	private ImportedAdCategory                     importedCategory;
+
+    @OneToMany(mappedBy = "ad", cascade = CascadeType.REMOVE)
+	private Collection<ImportedAdCustomFieldValue> customValues;
+
+    @Column(name = "description", columnDefinition = "text")
+    private String                                 description;
+
+    @Column(name = "is_html", nullable = false)
+    private boolean                                html;
+
+    @Column(name = "external_publication", nullable = false)
+    private boolean                                externalPublication;
+
+    @ManyToOne
+    @JoinColumn(name = "owner_id")
+	private Member                                 owner;
+
+    @Column(name = "permanent", nullable = false)
+    private boolean                                permanent;
+
+    @Column(name = "price", precision = 15, scale = 6)
+    private BigDecimal                             price;
+
+    @AttributeOverrides({
+            @AttributeOverride(name = "begin", column=@Column(name="publication_start")),
+            @AttributeOverride(name = "end", column=@Column(name="publication_end"))
+    })
+    @Embedded
+	private Period                                 publicationPeriod;
+
+    @Column(name = "title", length = 100)
+    private String                                 title;
+
+    @Column(name = "trade_type", length = 1)
+	private TradeType                              tradeType;
+
+	public Class<AdCustomField> getCustomFieldClass() {
         return AdCustomField.class;
     }
 

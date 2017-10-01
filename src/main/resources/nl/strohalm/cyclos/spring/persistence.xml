@@ -69,12 +69,6 @@
 				<value>/nl/strohalm/cyclos/entities/members/remarks/GroupRemark.hbm.xml</value>
 				<value>/nl/strohalm/cyclos/entities/members/remarks/BrokerRemark.hbm.xml</value>
 				<value>/nl/strohalm/cyclos/entities/groups/GroupHistoryLog.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/ads/AdCategory.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/ads/Ad.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/ads/imports/AdImport.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/ads/imports/ImportedAd.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/ads/imports/ImportedAdCategory.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/ads/imports/ImportedAdCustomFieldValue.hbm.xml</value>
 				<value>/nl/strohalm/cyclos/entities/members/adInterests/AdInterest.hbm.xml</value>
 				<value>/nl/strohalm/cyclos/entities/alerts/ErrorLogEntry.hbm.xml</value>
 				<value>/nl/strohalm/cyclos/entities/alerts/Alert.hbm.xml</value>

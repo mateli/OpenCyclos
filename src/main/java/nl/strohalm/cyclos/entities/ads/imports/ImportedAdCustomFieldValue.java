@@ -22,11 +22,17 @@ package nl.strohalm.cyclos.entities.ads.imports;
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.customization.fields.CustomFieldValue;
 
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+
 /**
  * Holds a custom field value for temporary imported members
  * 
  * @author luis
  */
+@DiscriminatorValue("imp_ad")
+@javax.persistence.Entity
 public class ImportedAdCustomFieldValue extends CustomFieldValue {
 
     public static enum Relationships implements Relationship {
@@ -45,9 +51,11 @@ public class ImportedAdCustomFieldValue extends CustomFieldValue {
 
     private static final long serialVersionUID = -1298123213176775308L;
 
-    private ImportedAd        ad;
+    @ManyToOne
+    @JoinColumn(name = "imported_ad_id")
+	private ImportedAd        ad;
 
-    public ImportedAd getAd() {
+	public ImportedAd getAd() {
         return ad;
     }
 

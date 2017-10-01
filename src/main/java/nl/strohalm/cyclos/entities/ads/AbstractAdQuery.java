@@ -29,8 +29,8 @@ import nl.strohalm.cyclos.entities.customization.fields.MemberCustomFieldValue;
 import nl.strohalm.cyclos.entities.groups.GroupFilter;
 import nl.strohalm.cyclos.entities.groups.MemberGroup;
 import nl.strohalm.cyclos.entities.members.Member;
-import nl.strohalm.cyclos.utils.Period;
-import nl.strohalm.cyclos.utils.TimePeriod;
+import nl.strohalm.cyclos.entities.utils.Period;
+import nl.strohalm.cyclos.entities.utils.TimePeriod;
 import nl.strohalm.cyclos.utils.query.QueryParameters;
 
 /**
