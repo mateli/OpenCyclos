@@ -24,10 +24,16 @@ import nl.strohalm.cyclos.entities.members.Member;
 import nl.strohalm.cyclos.utils.EnumHelper;
 import nl.strohalm.cyclos.utils.StringValuedEnum;
 
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+
 /**
  * An alert sent to a member
  * @author luis
  */
+@DiscriminatorValue("M")
+@javax.persistence.Entity
 public class MemberAlert extends Alert {
     /**
      * Contains the possible member alerts
@@ -151,7 +157,9 @@ public class MemberAlert extends Alert {
 
     private static final long serialVersionUID = -3470454153060498193L;
 
-    private Member            member;
+    @ManyToOne
+    @JoinColumn(name = "member_id")
+	private Member            member;
 
     public Member getMember() {
         return member;

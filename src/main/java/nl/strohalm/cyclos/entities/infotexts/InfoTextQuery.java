@@ -19,7 +19,7 @@
  */
 package nl.strohalm.cyclos.entities.infotexts;
 
-import nl.strohalm.cyclos.utils.Period;
+import nl.strohalm.cyclos.entities.utils.Period;
 import nl.strohalm.cyclos.utils.query.QueryParameters;
 
 public class InfoTextQuery extends QueryParameters {

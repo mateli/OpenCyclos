@@ -19,9 +19,6 @@
  */
 package nl.strohalm.cyclos.entities.groups;
 
-import java.util.Collection;
-import java.util.HashSet;
-
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.access.Channel;
 import nl.strohalm.cyclos.entities.accounts.AccountType;
@@ -34,10 +31,26 @@ import nl.strohalm.cyclos.entities.customization.fields.CustomField;
 import nl.strohalm.cyclos.entities.members.RegistrationAgreement;
 import nl.strohalm.cyclos.entities.members.messages.Message;
 
+import javax.persistence.CascadeType;
+import javax.persistence.CollectionTable;
+import javax.persistence.Column;
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.ElementCollection;
+import javax.persistence.Embedded;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import java.util.Collection;
+import java.util.HashSet;
+
 /**
  * A group of regular members
  * @author luis
  */
+@DiscriminatorValue("M")
+@javax.persistence.Entity
 public class MemberGroup extends SystemGroup {
 
     public static enum Relationships implements Relationship {
@@ -55,36 +68,136 @@ public class MemberGroup extends SystemGroup {
     }
 
     private static final long                      serialVersionUID = 653102929460778599L;
-    private Collection<MemberGroupAccountSettings> accountSettings;
-    private Collection<MemberGroup>                canViewProfileOfGroups;
-    private Collection<MemberGroup>                canViewAdsOfGroups;
-    private Collection<AccountType>                canViewInformationOf;
-    private Collection<AccountFee>                 accountFees;
-    private Collection<AdminGroup>                 managedByGroups;
-    private Collection<CustomField>                customFields;
-    private Collection<TransactionFee>             fromTransactionFees;
-    private Collection<TransactionFee>             toTransactionFees;
-    private Collection<MemberGroup>                canIssueCertificationToGroups;
-    private Collection<MemberGroup>                canBuyWithPaymentObligationsFromGroups;
-    private Collection<Message.Type>               defaultMailMessages;
-    private Collection<Message.Type>               smsMessages;
-    private Collection<Message.Type>               defaultSmsMessages;
-    private Collection<Channel>                    channels;
-    private Collection<Channel>                    defaultChannels;
-    private Collection<Channel>                    requestPaymentByChannels;
-    private Collection<GroupFilter>                canViewGroupFilters;
-    private Collection<BrokerGroup>                possibleInitialGroupOf;
-    private CardType                               cardType;
-    private MemberGroupSettings                    memberSettings   = new MemberGroupSettings();
-    private String                                 initialGroupShow;
-    private boolean                                initialGroup;
-    private boolean                                active;
-    private boolean                                defaultAllowChargingSms;
-    private boolean                                defaultAcceptFreeMailing;
-    private boolean                                defaultAcceptPaidMailing;
-    private RegistrationAgreement                  registrationAgreement;
 
-    public Collection<AccountFee> getAccountFees() {
+    @OneToMany(mappedBy = "group", cascade = CascadeType.REMOVE)
+	private Collection<MemberGroupAccountSettings> accountSettings;
+
+    @ManyToMany
+    @JoinTable(name = "group_view_profile_permissions",
+            joinColumns = @JoinColumn(name = "owner_group_id"),
+            inverseJoinColumns = @JoinColumn(name = "related_group_id"))
+	private Collection<MemberGroup>                canViewProfileOfGroups;
+
+    @ManyToMany
+    @JoinTable(name = "group_view_ads_permissions",
+            joinColumns = @JoinColumn(name = "owner_group_id"),
+            inverseJoinColumns = @JoinColumn(name = "related_group_id"))
+	private Collection<MemberGroup>                canViewAdsOfGroups;
+
+    @ManyToMany
+    @JoinTable(name = "group_view_account_information_permissions",
+            joinColumns = @JoinColumn(name = "owner_group_id"),
+            inverseJoinColumns = @JoinColumn(name = "account_type_id"))
+	private Collection<AccountType>                canViewInformationOf;
+
+    @ManyToMany
+    @JoinTable(name = "groups_account_fees",
+            joinColumns = @JoinColumn(name = "group_id"),
+            inverseJoinColumns = @JoinColumn(name = "account_fee_id"))
+	private Collection<AccountFee>                 accountFees;
+
+    @ManyToMany(mappedBy = "managesGroups")
+	private Collection<AdminGroup>                 managedByGroups;
+
+    @ManyToMany
+    @JoinTable(name = "member_groups_custom_fields",
+            joinColumns = @JoinColumn(name = "group_id"),
+            inverseJoinColumns = @JoinColumn(name = "custom_field_id"))
+	private Collection<CustomField>                customFields;
+
+    @ManyToMany(mappedBy = "fromGroups")
+	private Collection<TransactionFee>             fromTransactionFees;
+
+    @ManyToMany(mappedBy = "toGroups")
+	private Collection<TransactionFee>             toTransactionFees;
+
+    @ManyToMany
+    @JoinTable(name = "group_issue_certification_to",
+            joinColumns = @JoinColumn(name = "owner_group_id"),
+            inverseJoinColumns = @JoinColumn(name = "related_group_id"))
+	private Collection<MemberGroup>                canIssueCertificationToGroups;
+
+    @ManyToMany
+    @JoinTable(name = "group_buy_with_payment_obligations_from",
+            joinColumns = @JoinColumn(name = "owner_group_id"),
+            inverseJoinColumns = @JoinColumn(name = "related_group_id"))
+	private Collection<MemberGroup>                canBuyWithPaymentObligationsFromGroups;
+
+    @ElementCollection
+    @CollectionTable(name = "member_groups_message_types",
+            joinColumns = @JoinColumn(name = "group_id"))
+    @Column(name = "type", length = 3, nullable = false)
+	private Collection<Message.Type>               defaultMailMessages;
+
+    @ElementCollection
+    @CollectionTable(name = "member_groups_sms_message_types",
+            joinColumns = @JoinColumn(name = "group_id"))
+    @Column(name = "type", length = 3, nullable = false)
+	private Collection<Message.Type>               smsMessages;
+
+    @ElementCollection
+    @CollectionTable(name = "member_groups_default_sms_message_types",
+            joinColumns = @JoinColumn(name = "group_id"))
+    @Column(name = "type", length = 3, nullable = false)
+	private Collection<Message.Type>               defaultSmsMessages;
+
+    @ManyToMany
+    @JoinTable(name = "groups_channels",
+            joinColumns = @JoinColumn(name = "group_id"),
+            inverseJoinColumns = @JoinColumn(name = "channel_id"))
+	private Collection<Channel>                    channels;
+
+    @ManyToMany
+    @JoinTable(name = "groups_default_channels",
+            joinColumns = @JoinColumn(name = "group_id"),
+            inverseJoinColumns = @JoinColumn(name = "channel_id"))
+	private Collection<Channel>                    defaultChannels;
+
+    @ManyToMany
+    @JoinTable(name = "groups_request_payment_channels",
+            joinColumns = @JoinColumn(name = "group_id"),
+            inverseJoinColumns = @JoinColumn(name = "channel_id"))
+	private Collection<Channel>                    requestPaymentByChannels;
+
+    @ManyToMany(mappedBy = "viewableBy")
+	private Collection<GroupFilter>                canViewGroupFilters;
+
+    @ManyToMany(mappedBy = "possibleInitialGroups")
+	private Collection<BrokerGroup>                possibleInitialGroupOf;
+
+    @ManyToOne
+    @JoinColumn(name = "card_type_id")
+	private CardType                               cardType;
+
+    @Embedded
+	private MemberGroupSettings                    memberSettings   = new MemberGroupSettings();
+
+    @Column(name = "initial_group_show", length = 100)
+    private String                                 initialGroupShow;
+
+    @Column(name = "initial_group", nullable = false)
+    private boolean                                initialGroup;
+
+    @Column(name = "member_active", nullable = false)
+    private boolean                                active;
+
+    @Column(name = "member_default_allow_charging_sms", nullable = false)
+    private boolean                                defaultAllowChargingSms;
+
+    @Column(name = "member_default_accept_free_mailing", nullable = false)
+    private boolean                                defaultAcceptFreeMailing;
+
+    @Column(name = "member_default_accept_paid_mailing", nullable = false)
+    private boolean                                defaultAcceptPaidMailing;
+
+    @ManyToOne
+    @JoinColumn(name = "registration_agreement_id")
+	private RegistrationAgreement                  registrationAgreement;
+
+    protected MemberGroup() {
+	}
+
+	public Collection<AccountFee> getAccountFees() {
         return accountFees;
     }
 

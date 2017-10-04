@@ -22,10 +22,16 @@ package nl.strohalm.cyclos.entities.customization.fields;
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.ads.Ad;
 
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+
 /**
  * Custom field value for ads
  * @author luis
  */
+@DiscriminatorValue("ad")
+@javax.persistence.Entity
 public class AdCustomFieldValue extends CustomFieldValue {
 
     public static enum Relationships implements Relationship {
@@ -44,9 +50,11 @@ public class AdCustomFieldValue extends CustomFieldValue {
 
     private static final long serialVersionUID = -5360132689596383745L;
 
-    private Ad                ad;
+    @ManyToOne
+    @JoinColumn(name = "ad_id")
+	private Ad                ad;
 
-    public Ad getAd() {
+	public Ad getAd() {
         return ad;
     }
 

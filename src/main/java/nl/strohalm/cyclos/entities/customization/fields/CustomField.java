@@ -19,12 +19,6 @@
  */
 package nl.strohalm.cyclos.entities.customization.fields;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-
 import nl.strohalm.cyclos.entities.Entity;
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.accounts.guarantees.Guarantee;
@@ -38,14 +32,32 @@ import nl.strohalm.cyclos.entities.members.Operator;
 import nl.strohalm.cyclos.entities.members.records.MemberRecord;
 import nl.strohalm.cyclos.services.transactions.DoPaymentDTO;
 import nl.strohalm.cyclos.utils.StringValuedEnum;
-
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
+
+import javax.persistence.Cacheable;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.Embedded;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * A customized field for a given entity
  * @author luis
  */
+@Cacheable
+@Table(name = "custom_fields")
+@DiscriminatorColumn(name = "subclass", length = 10)
+@javax.persistence.Entity
 public abstract class CustomField extends Entity {
 
     public static enum Control implements StringValuedEnum {
@@ -202,7 +214,8 @@ public abstract class CustomField extends Entity {
         MEMBER("member", Control.MEMBER_AUTOCOMPLETE);
 
         private final String        value;
-        private final List<Control> possibleControls;
+        @OneToMany
+		private final List<Control> possibleControls;
 
         private Type(final String value, final Control... possibleControls) {
             this.value = value;
@@ -221,21 +234,50 @@ public abstract class CustomField extends Entity {
 
     private static final long                    serialVersionUID = 124467598010653164L;
 
+    @Column(name = "name", nullable = false, length = 100)
     private String                               name;
-    private String                               internalName;
-    private String                               description;
-    private String                               allSelectedLabel;
-    private Type                                 type             = Type.STRING;
-    private Control                              control          = Control.TEXT;
-    private Size                                 size             = Size.DEFAULT;
-    private Validation                           validation       = new Validation();
-    private String                               pattern;
-    private Integer                              order            = 0;
-    private Collection<CustomFieldPossibleValue> possibleValues;
-    private CustomField                          parent;
-    private Collection<CustomField>              children;
 
-    public String getAllSelectedLabel() {
+    @Column(name = "internal_name", nullable = false, length = 50)
+    private String                               internalName;
+
+    @Column(name = "description", columnDefinition = "text")
+    private String                               description;
+
+    @Column(name = "all_selected_label", length = 100)
+    private String                               allSelectedLabel;
+
+    @Column(name = "type", nullable = false, updatable = false, length = 10)
+	private Type                                 type             = Type.STRING;
+
+    @Column(name = "control", nullable = false, length = 10)
+	private Control                              control          = Control.TEXT;
+
+    @Column(name = "size", length = 1)
+	private Size                                 size             = Size.DEFAULT;
+
+    @Embedded
+	private Validation                           validation       = new Validation();
+
+    @Column(name = "pattern", length = 100)
+    private String                               pattern;
+
+    @Column(name = "order_number", nullable = false, columnDefinition = "smallint")
+    private Integer                              order            = 0;
+
+    @OneToMany(mappedBy = "field", cascade = CascadeType.REMOVE)
+	private Collection<CustomFieldPossibleValue> possibleValues;
+
+    @ManyToOne
+    @JoinColumn(name = "parent_id")
+	private CustomField                          parent;
+
+    @OneToMany(mappedBy = "parent")
+	private Collection<CustomField>              children;
+
+    protected CustomField() {
+	}
+
+	public String getAllSelectedLabel() {
         return allSelectedLabel;
     }
 

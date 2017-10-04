@@ -19,18 +19,25 @@
  */
 package nl.strohalm.cyclos.entities.customization.images;
 
-import java.sql.Blob;
-import java.util.Calendar;
-
 import nl.strohalm.cyclos.entities.Entity;
 import nl.strohalm.cyclos.entities.ads.Ad;
 import nl.strohalm.cyclos.entities.members.Member;
 import nl.strohalm.cyclos.utils.StringValuedEnum;
 
+import javax.persistence.Column;
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.Lob;
+import javax.persistence.Table;
+import java.sql.Blob;
+import java.util.Calendar;
+
 /**
  * Stores an image
  * @author luis
  */
+@javax.persistence.Entity
+@Table(name = "images")
+@DiscriminatorColumn(name = "subclass", length = 3) // index="ix_subclass_name"
 public abstract class Image extends Entity {
 
     public static enum Nature implements StringValuedEnum {
@@ -92,12 +99,28 @@ public abstract class Image extends Entity {
     }
 
     private static final long serialVersionUID = 3550019581431328393L;
+
+    @Column(name = "content_type", nullable = false, length = 100)
     private String            contentType;
+
+    @Lob
+    @Column(name = "image", nullable = false, length = 16000000) // index="ix_subclass_name"
     private Blob              image;
+
+    @Column(name = "image_size", nullable = false)
     private Integer           imageSize;
+
+    @Column(name = "last_modified", nullable = false)
     private Calendar          lastModified;
+
+    @Column(name = "name", nullable = false, length = 100)
     private String            name;
+
+    @Lob
+    @Column(name = "thumbnail", length = 16000000)
     private Blob              thumbnail;
+
+    @Column(name = "thumbnail_size", nullable = false)
     private Integer           thumbnailSize;
 
     protected Image() {

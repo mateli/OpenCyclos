@@ -22,10 +22,16 @@ package nl.strohalm.cyclos.entities.customization.documents;
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.customization.files.File;
 
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+
 /**
  * A document page, may be a form for entering parameters, or the document display page itself
  * @author luis
  */
+@DiscriminatorValue("d")
+@javax.persistence.Entity
 public class DocumentPage extends File {
 
     public static enum Relationships implements Relationship {
@@ -43,9 +49,14 @@ public class DocumentPage extends File {
 
     private static final long serialVersionUID = -8540979747354200297L;
 
-    private Document          document;
+    @ManyToOne
+    @JoinColumn(name = "document_id")
+	private Document          document;
 
-    public Document getDocument() {
+    protected DocumentPage() {
+	}
+
+	public Document getDocument() {
         return document;
     }
 

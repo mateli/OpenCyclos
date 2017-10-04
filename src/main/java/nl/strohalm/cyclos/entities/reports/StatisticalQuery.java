@@ -19,19 +19,19 @@
  */
 package nl.strohalm.cyclos.entities.reports;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.Collection;
-
 import nl.strohalm.cyclos.entities.accounts.SystemAccountType;
 import nl.strohalm.cyclos.entities.accounts.transactions.PaymentFilter;
 import nl.strohalm.cyclos.entities.groups.Group;
 import nl.strohalm.cyclos.entities.groups.GroupFilter;
+import nl.strohalm.cyclos.entities.utils.Period;
 import nl.strohalm.cyclos.utils.Month;
 import nl.strohalm.cyclos.utils.NamedPeriod;
-import nl.strohalm.cyclos.utils.Period;
 import nl.strohalm.cyclos.utils.Quarter;
 import nl.strohalm.cyclos.utils.query.QueryParameters;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.Collection;
 
 /**
  * parameters for Statistical queries. This is the base type; each specific query for the statistics is a child class of this.

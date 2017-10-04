@@ -19,18 +19,24 @@
  */
 package nl.strohalm.cyclos.entities.groups;
 
-import java.util.Collection;
-
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.accounts.SystemAccountType;
 import nl.strohalm.cyclos.entities.accounts.transactions.TransferType;
 import nl.strohalm.cyclos.entities.customization.fields.AdminCustomField;
 import nl.strohalm.cyclos.entities.members.records.MemberRecordType;
 
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import java.util.Collection;
+
 /**
  * A group of administrators
  * @author luis
  */
+@DiscriminatorValue("A")
+@javax.persistence.Entity
 public class AdminGroup extends SystemGroup {
 
     public static enum Relationships implements Relationship {
@@ -50,22 +56,108 @@ public class AdminGroup extends SystemGroup {
 
     private static final long             serialVersionUID = 327847242923171219L;
 
+    @ManyToMany
+    @JoinTable(name = "groups_transfer_types_as_member",
+            joinColumns = @JoinColumn(name = "group_id"),
+            inverseJoinColumns = @JoinColumn(name = "transfer_type_id")
+    )
     private Collection<TransferType>      transferTypesAsMember;
-    private Collection<MemberGroup>       managesGroups;
-    private Collection<SystemAccountType> viewInformationOf;
-    private Collection<AdminGroup>        viewConnectedAdminsOf;
-    private Collection<AdminGroup>        connectedAdminsViewedBy;
-    private Collection<AdminCustomField>  adminCustomFields;
-    private Collection<MemberRecordType>  viewAdminRecordTypes;
-    private Collection<MemberRecordType>  createAdminRecordTypes;
-    private Collection<MemberRecordType>  modifyAdminRecordTypes;
-    private Collection<MemberRecordType>  deleteAdminRecordTypes;
-    private Collection<MemberRecordType>  viewMemberRecordTypes;
-    private Collection<MemberRecordType>  createMemberRecordTypes;
-    private Collection<MemberRecordType>  modifyMemberRecordTypes;
-    private Collection<MemberRecordType>  deleteMemberRecordTypes;
 
-    public Collection<AdminCustomField> getAdminCustomFields() {
+    @ManyToMany
+    @JoinTable(name = "admin_manages_member_groups",
+            joinColumns = @JoinColumn(name = "manager_group_id"),
+            inverseJoinColumns = @JoinColumn(name = "managed_group_id")
+    )
+	private Collection<MemberGroup>       managesGroups;
+
+    @ManyToMany
+    @JoinTable(name = "admin_view_account_information",
+            joinColumns = @JoinColumn(name = "group_id"),
+            inverseJoinColumns = @JoinColumn(name = "account_type_id")
+    )
+	private Collection<SystemAccountType> viewInformationOf;
+
+    @ManyToMany
+    @JoinTable(name = "admin_view_connected_users_of",
+            joinColumns = @JoinColumn(name = "viewer_group_id"),
+            inverseJoinColumns = @JoinColumn(name = "viewed_group_id")
+    )
+	private Collection<AdminGroup>        viewConnectedAdminsOf;
+
+    @ManyToMany
+    @JoinTable(name = "admin_view_connected_users_of",
+            joinColumns = @JoinColumn(name = "viewed_group_id"),
+            inverseJoinColumns = @JoinColumn(name = "viewer_group_id")
+    )
+	private Collection<AdminGroup>        connectedAdminsViewedBy;
+
+    @ManyToMany
+    @JoinTable(name = "admin_groups_custom_fields",
+            joinColumns = @JoinColumn(name = "group_id"),
+            inverseJoinColumns = @JoinColumn(name = "custom_field_id")
+    )
+	private Collection<AdminCustomField>  adminCustomFields;
+
+    @ManyToMany
+    @JoinTable(name = "admin_groups_admin_record_types",
+            joinColumns = @JoinColumn(name = "group_id"),
+            inverseJoinColumns = @JoinColumn(name = "member_record_type_id")
+    )
+	private Collection<MemberRecordType>  viewAdminRecordTypes;
+
+    @ManyToMany
+    @JoinTable(name = "admin_groups_create_admin_record_types",
+            joinColumns = @JoinColumn(name = "group_id"),
+            inverseJoinColumns = @JoinColumn(name = "member_record_type_id")
+    )
+	private Collection<MemberRecordType>  createAdminRecordTypes;
+
+    @ManyToMany
+    @JoinTable(name = "admin_groups_modify_admin_record_types",
+            joinColumns = @JoinColumn(name = "group_id"),
+            inverseJoinColumns = @JoinColumn(name = "member_record_type_id")
+    )
+	private Collection<MemberRecordType>  modifyAdminRecordTypes;
+
+    @ManyToMany
+    @JoinTable(name = "admin_groups_delete_admin_record_types",
+            joinColumns = @JoinColumn(name = "group_id"),
+            inverseJoinColumns = @JoinColumn(name = "member_record_type_id")
+    )
+	private Collection<MemberRecordType>  deleteAdminRecordTypes;
+
+    @ManyToMany
+    @JoinTable(name = "admin_groups_member_record_types",
+            joinColumns = @JoinColumn(name = "group_id"),
+            inverseJoinColumns = @JoinColumn(name = "member_record_type_id")
+    )
+	private Collection<MemberRecordType>  viewMemberRecordTypes;
+
+    @ManyToMany
+    @JoinTable(name = "admin_groups_create_member_record_types",
+            joinColumns = @JoinColumn(name = "group_id"),
+            inverseJoinColumns = @JoinColumn(name = "member_record_type_id")
+    )
+	private Collection<MemberRecordType>  createMemberRecordTypes;
+
+    @ManyToMany
+    @JoinTable(name = "admin_groups_modify_member_record_types",
+            joinColumns = @JoinColumn(name = "group_id"),
+            inverseJoinColumns = @JoinColumn(name = "member_record_type_id")
+    )
+	private Collection<MemberRecordType>  modifyMemberRecordTypes;
+
+    @ManyToMany
+    @JoinTable(name = "admin_groups_delete_member_record_types",
+            joinColumns = @JoinColumn(name = "group_id"),
+            inverseJoinColumns = @JoinColumn(name = "member_record_type_id")
+    )
+	private Collection<MemberRecordType>  deleteMemberRecordTypes;
+
+    protected AdminGroup() {
+	}
+
+	public Collection<AdminCustomField> getAdminCustomFields() {
         return adminCustomFields;
     }
 

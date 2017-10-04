@@ -19,21 +19,26 @@
  */
 package nl.strohalm.cyclos.entities.customization.files;
 
-import java.io.FilenameFilter;
-
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.groups.Group;
 import nl.strohalm.cyclos.entities.groups.GroupFilter;
 import nl.strohalm.cyclos.utils.StringHelper;
 import nl.strohalm.cyclos.utils.StringValuedEnum;
-
 import org.apache.commons.io.filefilter.SuffixFileFilter;
 import org.apache.commons.lang.StringUtils;
+
+import javax.persistence.Column;
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import java.io.FilenameFilter;
 
 /**
  * This entity is the customization of a display file
  * @author luis
  */
+@DiscriminatorValue("c")
+@javax.persistence.Entity
 public class CustomizedFile extends File {
 
     public static enum Relationships implements Relationship {
@@ -73,13 +78,25 @@ public class CustomizedFile extends File {
     }
 
     private static final long serialVersionUID = 3264704140933610339L;
-    private Type              type;
-    private Group             group;
-    private GroupFilter       groupFilter;
+
+    @Column(name = "type", length = 1)
+	private Type              type;
+
+    @ManyToOne
+    @JoinColumn(name = "group_id")
+	private Group             group;
+
+    @ManyToOne
+    @JoinColumn(name = "group_filter_id")
+	private GroupFilter       groupFilter;
+
+    @Column(name = "original_contents", length = 10000000)
     private String            originalContents;
+
+    @Column(name = "new_contents", length = 10000000)
     private String            newContents;
 
-    public Group getGroup() {
+	public Group getGroup() {
         return group;
     }
 

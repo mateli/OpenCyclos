@@ -23,10 +23,16 @@ import nl.strohalm.cyclos.entities.Entity;
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.ads.Ad;
 
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+
 /**
  * An image that belongs to an advertisement
  * @author luis
  */
+@DiscriminatorValue("ad")
+@javax.persistence.Entity
 public class AdImage extends OwneredImage {
     public static enum Relationships implements Relationship {
         AD("ad");
@@ -43,7 +49,9 @@ public class AdImage extends OwneredImage {
 
     private static final long serialVersionUID = -3594787484075069707L;
 
-    private Ad                ad;
+    @ManyToOne
+    @JoinColumn(name = "ad_id")
+	private Ad                ad;
 
     public AdImage() {
         super();

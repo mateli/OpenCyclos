@@ -206,11 +206,7 @@ public class TransferType extends Entity {
     @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "transferType")
     private Collection<AccountFee>     generatedByAccountFees;
 
-    @ManyToMany
-    @JoinTable(name = "groups_transfer_types",
-        joinColumns = @JoinColumn(name = "transfer_type_id"),
-        inverseJoinColumns = @JoinColumn(name = "group_id")
-    )
+    @ManyToMany(mappedBy = "transferTypes")
     private Collection<Group>          groups;
 
     @ManyToMany
@@ -286,7 +282,10 @@ public class TransferType extends Entity {
     @JoinColumn(name = "fixed_destination_member_id")
     private Member                               fixedDestinationMember;
 
-    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "transferType")
+    @ManyToMany(cascade = CascadeType.REMOVE)
+    @JoinTable(name = "transfer_types_linked_custom_fields",
+            joinColumns = @JoinColumn(name = "transfer_type_id"),
+            inverseJoinColumns = @JoinColumn(name = "field_id"))
     @OrderBy("order_number")
     private Collection<PaymentCustomField>       customFields;
 

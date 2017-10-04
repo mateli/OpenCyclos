@@ -22,6 +22,13 @@ package nl.strohalm.cyclos.entities.customization.documents;
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.customization.binaryfiles.BinaryFile;
 
+import javax.persistence.CascadeType;
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+
+@DiscriminatorValue("S")
+@javax.persistence.Entity
 public class StaticDocument extends Document {
 
     public static enum Relationships implements Relationship {
@@ -39,9 +46,15 @@ public class StaticDocument extends Document {
     }
 
     private static final long serialVersionUID = 5259915088454867316L;
-    private BinaryFile        binaryFile;
 
-    public BinaryFile getBinaryFile() {
+    @ManyToOne(cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "binary_file_id")
+	private BinaryFile        binaryFile;
+
+    protected StaticDocument() {
+	}
+
+	public BinaryFile getBinaryFile() {
         return binaryFile;
     }
 

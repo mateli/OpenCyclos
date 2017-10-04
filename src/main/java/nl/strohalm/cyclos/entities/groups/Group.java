@@ -19,10 +19,6 @@
  */
 package nl.strohalm.cyclos.entities.groups;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-
 import nl.strohalm.cyclos.access.Permission;
 import nl.strohalm.cyclos.entities.Entity;
 import nl.strohalm.cyclos.entities.Relationship;
@@ -35,10 +31,29 @@ import nl.strohalm.cyclos.entities.members.records.MemberRecordType;
 import nl.strohalm.cyclos.entities.members.remarks.GroupRemark;
 import nl.strohalm.cyclos.utils.StringValuedEnum;
 
+import javax.persistence.CascadeType;
+import javax.persistence.CollectionTable;
+import javax.persistence.Column;
+import javax.persistence.Converter;
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.ElementCollection;
+import javax.persistence.Embedded;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+
 /**
  * A group of permissions
  * @author luis
  */
+@Table(name = "groups")
+@DiscriminatorColumn(name = "subclass", length = 1)
+@javax.persistence.Entity
 public abstract class Group extends Entity implements Comparable<Group> {
 
     public static enum Nature {
@@ -119,24 +134,73 @@ public abstract class Group extends Entity implements Comparable<Group> {
 
     private static final long            serialVersionUID = 3079265000327578016L;
 
+    @Column(name = "description", columnDefinition = "longtext")
     private String                       description;
-    private Collection<Element>          elements;
-    private String                       name;
-    private Collection<PaymentFilter>    paymentFilters;
-    private Collection<Permission>       permissions;
-    private Status                       status           = Status.NORMAL;
-    private BasicGroupSettings           basicSettings    = new BasicGroupSettings();
-    private Collection<TransferType>     transferTypes;
-    private Collection<TransferType>     conversionSimulationTTs;
-    private Collection<CustomizedFile>   customizedFiles;
-    private Collection<GroupFilter>      groupFilters;
-    private Collection<MemberRecordType> memberRecordTypes;
-    private Collection<GuaranteeType>    guaranteeTypes;
-    private Collection<GroupHistoryLog>  historyLogs;
-    private Collection<GroupRemark>      oldRemarks;
-    private Collection<GroupRemark>      newRemarks;
 
-    @Override
+    @OneToMany(mappedBy = "group")
+	private Collection<Element>          elements;
+
+    @Column(name = "name", nullable = false, length = 100)
+    private String                       name;
+
+    @ManyToMany
+    @JoinTable(name = "groups_payment_filters",
+        joinColumns = @JoinColumn(name = "group_id"),
+        inverseJoinColumns = @JoinColumn(name = "payment_filter_id"))
+	private Collection<PaymentFilter>    paymentFilters;
+
+    @ElementCollection
+    @CollectionTable(name = "permissions", joinColumns = @JoinColumn(name = "group_id"))
+    @Column(name = "permission", nullable = false)
+	private Collection<Permission>       permissions;
+
+    @Column(name = "status", nullable = false, updatable = false, length = 1)
+	private Status                       status           = Status.NORMAL;
+
+    @Embedded
+	private BasicGroupSettings           basicSettings    = new BasicGroupSettings();
+
+    @ManyToMany
+    @JoinTable(name = "groups_transfer_types",
+            inverseJoinColumns = @JoinColumn(name = "transfer_type_id"),
+            joinColumns = @JoinColumn(name = "group_id")
+    )
+	private Collection<TransferType>     transferTypes;
+
+    @ManyToMany
+    @JoinTable(name = "groups_conversion_simulation_transfer_types",
+            joinColumns = @JoinColumn(name = "group_id"),
+            inverseJoinColumns = @JoinColumn(name = "transfer_type_id"))
+	private Collection<TransferType>     conversionSimulationTTs;
+
+    @OneToMany(mappedBy = "group", cascade = CascadeType.REMOVE)
+	private Collection<CustomizedFile>   customizedFiles;
+
+    @ManyToMany(mappedBy = "groups")
+	private Collection<GroupFilter>      groupFilters;
+
+    @ManyToMany(mappedBy = "groups")
+	private Collection<MemberRecordType> memberRecordTypes;
+
+    @ManyToMany
+    @JoinTable(name = "group_guarantee_types",
+            joinColumns = @JoinColumn(name = "group_id"),
+            inverseJoinColumns = @JoinColumn(name = "guarantee_type_id"))
+	private Collection<GuaranteeType>    guaranteeTypes;
+
+    @OneToMany(mappedBy = "group", cascade = CascadeType.REMOVE)
+	private Collection<GroupHistoryLog>  historyLogs;
+
+    @OneToMany(mappedBy = "newGroup", cascade = CascadeType.REMOVE)
+	private Collection<GroupRemark>      oldRemarks;
+
+    @OneToMany(mappedBy = "oldGroup", cascade = CascadeType.REMOVE)
+	private Collection<GroupRemark>      newRemarks;
+
+    protected Group() {
+	}
+
+	@Override
     public int compareTo(final Group o) {
         return name.compareTo(o.getName());
     }

@@ -19,20 +19,39 @@
  */
 package nl.strohalm.cyclos.entities.customization.fields;
 
-import java.io.Serializable;
+import nl.strohalm.cyclos.entities.utils.RangeConstraint;
 
-import nl.strohalm.cyclos.utils.RangeConstraint;
+import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
+import javax.persistence.Embedded;
+import java.io.Serializable;
 
 /**
  * Contains data for a custom field validation
  * @author luis
  */
+@Embeddable
 public class Validation implements Serializable, Cloneable {
 
     private static final long serialVersionUID = -5712666847395055720L;
+
+    @Column(name="val_required")
     private boolean           required;
+
+    @Column(name="val_unique")
     private boolean           unique;
-    private RangeConstraint   lengthConstraint;
+
+    @AttributeOverrides({
+            @AttributeOverride(name = "min", column=@Column(name="val_min_length", columnDefinition = "smallint")),
+            @AttributeOverride(name = "max", column=@Column(name="val_max_length", columnDefinition = "smallint"))
+    })
+    @Embedded
+	private RangeConstraint   lengthConstraint;
+
+    @Column(name="val_class")
     private String            validatorClass;
 
     public Validation() {
@@ -62,18 +81,26 @@ public class Validation implements Serializable, Cloneable {
         }
     }
 
+    @Basic
+    @Column(name = "val_min_length")
     public RangeConstraint getLengthConstraint() {
         return lengthConstraint;
     }
 
+    @Basic
+    @Column(name = "val_class", length = 256)
     public String getValidatorClass() {
         return validatorClass;
     }
 
+    @Basic
+    @Column(name = "val_required", nullable = false)
     public boolean isRequired() {
         return required;
     }
 
+    @Basic
+    @Column(name = "val_unique", nullable = false)
     public boolean isUnique() {
         return unique;
     }

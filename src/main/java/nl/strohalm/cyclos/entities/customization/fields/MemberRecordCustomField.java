@@ -23,10 +23,17 @@ import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.members.records.MemberRecordType;
 import nl.strohalm.cyclos.utils.StringValuedEnum;
 
+import javax.persistence.Column;
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+
 /**
  * A custom field for a member record
  * @author Jefferson Magno
  */
+@DiscriminatorValue("record")
+@javax.persistence.Entity
 public class MemberRecordCustomField extends CustomField {
 
     public static enum Access implements StringValuedEnum {
@@ -59,12 +66,20 @@ public class MemberRecordCustomField extends CustomField {
 
     private static final long serialVersionUID = -3513364926074077653L;
 
-    private MemberRecordType  memberRecordType;
-    private boolean           showInSearch;
-    private boolean           showInList;
-    private Access            brokerAccess;
+    @ManyToOne
+    @JoinColumn(name = "member_record_type_id")
+	private MemberRecordType  memberRecordType;
 
-    public Access getBrokerAccess() {
+    @Column(name = "record_show_in_search", nullable = false)
+    private boolean           showInSearch;
+
+    @Column(name = "record_show_in_list", nullable = false)
+    private boolean           showInList;
+
+    @Column(name = "record_broker_access", length = 1)
+	private Access            brokerAccess;
+
+	public Access getBrokerAccess() {
         return brokerAccess;
     }
 

@@ -19,15 +19,19 @@
  */
 package nl.strohalm.cyclos.entities.customization.fields;
 
-import java.util.Collection;
-
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.groups.AdminGroup;
+
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.ManyToMany;
+import java.util.Collection;
 
 /**
  * A custom field for administrators
  * @author luis
  */
+@DiscriminatorValue("admin")
+@javax.persistence.Entity
 public class AdminCustomField extends CustomField {
     public static enum Relationships implements Relationship {
         GROUPS("groups");
@@ -45,9 +49,13 @@ public class AdminCustomField extends CustomField {
 
     private static final long      serialVersionUID = 8634927821795430531L;
 
-    private Collection<AdminGroup> groups;
+    @ManyToMany(mappedBy = "adminCustomFields")
+	private Collection<AdminGroup> groups;
 
-    public Collection<AdminGroup> getGroups() {
+    protected AdminCustomField() {
+	}
+
+	public Collection<AdminGroup> getGroups() {
         return groups;
     }
 

@@ -19,22 +19,38 @@
  */
 package nl.strohalm.cyclos.entities.customization.binaryfiles;
 
+import nl.strohalm.cyclos.entities.Entity;
+
+import javax.persistence.Column;
+import javax.persistence.Lob;
+import javax.persistence.Table;
 import java.sql.Blob;
 import java.util.Calendar;
-
-import nl.strohalm.cyclos.entities.Entity;
 
 /**
  * Stores a binary file
  * @author Jefferson Magno
  */
+@Table(name = "binary_files")
+@javax.persistence.Entity
 public class BinaryFile extends Entity {
 
     private static final long serialVersionUID = -5332038464288668149L;
+
+    @Column(name = "content_type", nullable = false, length = 100)
     private String            contentType;
+
+    @Column(name = "name")
     private String            name;
+
+    @Column(name = "size", nullable = false)
     private Integer           size;
+
+    @Column(name = "last_modified", nullable = false)
     private Calendar          lastModified;
+
+    @Lob
+    @Column(name = "contents", nullable = false, length = 10000000)
     private Blob              contents;
 
     public Blob getContents() {

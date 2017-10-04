@@ -19,10 +19,15 @@
  */
 package nl.strohalm.cyclos.entities.customization.images;
 
+
+import javax.persistence.DiscriminatorValue;
+
 /**
  * An image to be used in file customization
  * @author luis
  */
+@DiscriminatorValue("ctm")
+@javax.persistence.Entity
 public class CustomImage extends Image {
 
     private static final long serialVersionUID = -4978693703737595475L;

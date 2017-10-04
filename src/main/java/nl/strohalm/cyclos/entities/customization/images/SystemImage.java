@@ -19,10 +19,15 @@
  */
 package nl.strohalm.cyclos.entities.customization.images;
 
+
+import javax.persistence.DiscriminatorValue;
+
 /**
  * A system image, such as the logo
  * @author luis
  */
+@DiscriminatorValue("sys")
+@javax.persistence.Entity
 public class SystemImage extends Image {
     private static final long serialVersionUID = 7010462832935683759L;
 

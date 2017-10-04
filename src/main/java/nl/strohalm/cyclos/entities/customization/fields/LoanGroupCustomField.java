@@ -19,13 +19,21 @@
  */
 package nl.strohalm.cyclos.entities.customization.fields;
 
+
+import javax.persistence.Column;
+import javax.persistence.DiscriminatorValue;
+
 /**
  * A custom field for loan groups
  * @author luis
  */
+@DiscriminatorValue("loan_group")
+@javax.persistence.Entity
 public class LoanGroupCustomField extends CustomField {
 
     private static final long serialVersionUID = 2930029409276836841L;
+
+    @Column(name = "loan_group_show_in_search", nullable = false)
     private boolean           showInSearch;
 
     public boolean isShowInSearch() {

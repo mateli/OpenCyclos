@@ -19,23 +19,48 @@
  */
 package nl.strohalm.cyclos.entities.infotexts;
 
+import nl.strohalm.cyclos.entities.Entity;
+import nl.strohalm.cyclos.entities.utils.Period;
+import org.apache.commons.lang.StringUtils;
+
+import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
+import javax.persistence.CollectionTable;
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
+import javax.persistence.Embedded;
+import javax.persistence.JoinColumn;
+import javax.persistence.Table;
 import java.util.Calendar;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import nl.strohalm.cyclos.entities.Entity;
-import nl.strohalm.cyclos.utils.Period;
-
-import org.apache.commons.lang.StringUtils;
-
+@Table(name = "info_texts")
+@javax.persistence.Entity
 public class InfoText extends Entity {
 
     private static final long serialVersionUID = 1L;
 
+    @Column(name = "subject", nullable = false, length = 160)
     private String            subject;
+
+    @Column(name = "body", columnDefinition = "text")
     private String            body;
+
+    @Column(name = "enabled", nullable = false)
     private boolean           enabled;
-    private Period            validity;
+
+    @AttributeOverrides({
+            @AttributeOverride(name = "begin", column=@Column(name="begin_date")),
+            @AttributeOverride(name = "end", column=@Column(name="end_date"))
+    })
+    @Embedded
+	private Period            validity;
+
+    @ElementCollection
+    @CollectionTable(name = "info_text_aliases",
+            joinColumns = @JoinColumn(name = "info_text_id"))
+    @Column(name = "alias")
     private Set<String>       aliases;
 
     public void addAlias(final String alias) {

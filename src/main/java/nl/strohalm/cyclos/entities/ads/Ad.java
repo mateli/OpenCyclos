@@ -105,7 +105,7 @@ public class Ad extends Entity implements CustomFieldsContainer<AdCustomField, A
     @OneToMany(mappedBy = "ad", cascade = CascadeType.REMOVE)
 	private Collection<AdCustomFieldValue> customValues;
 
-    @Column(name = "description", columnDefinition = "longtext")
+    @Column(name = "description", columnDefinition = "text")
     private String                         description;
 
     @Column(name = "external_publication", nullable = false)

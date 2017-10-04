@@ -20,7 +20,7 @@
 package nl.strohalm.cyclos.entities.settings;
 
 import nl.strohalm.cyclos.utils.DataObject;
-import nl.strohalm.cyclos.utils.TimePeriod;
+import nl.strohalm.cyclos.entities.utils.TimePeriod;
 
 /**
  * Groups alert settings

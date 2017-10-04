@@ -19,20 +19,31 @@
  */
 package nl.strohalm.cyclos.entities.customization.documents;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
 import nl.strohalm.cyclos.entities.Entity;
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.groups.BrokerGroup;
+import nl.strohalm.cyclos.entities.groups.Group;
 import nl.strohalm.cyclos.entities.groups.SystemGroup;
 import nl.strohalm.cyclos.utils.StringValuedEnum;
+
+import javax.persistence.Cacheable;
+import javax.persistence.Column;
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.ElementCollection;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
+import java.util.ArrayList;
+import java.util.Collection;
 
 /**
  * Is a customized document, it can be static or dynamic
  * @author luis
  * @author Jefferson Magno
  */
+@Cacheable
+@Table(name = "documents")
+@DiscriminatorColumn(name = "subclass", length = 1)
+@javax.persistence.Entity
 public abstract class Document extends Entity {
 
     public static enum Nature implements StringValuedEnum {
@@ -69,12 +80,23 @@ public abstract class Document extends Entity {
     }
 
     private static final long       serialVersionUID = -2006379424571494005L;
-    private String                  name;
-    private String                  description;
-    private Collection<SystemGroup> groups;
-    private Collection<BrokerGroup> brokerGroups;
 
-    public void addGroup(final SystemGroup g) {
+    @Column(name = "name", nullable = false, length = 100)
+    private String                  name;
+
+    @Column(name = "description", columnDefinition = "longtext")
+    private String                  description;
+
+    @ManyToMany(mappedBy = "documents")
+	private Collection<SystemGroup> groups;
+
+    @ManyToMany(mappedBy = "brokerDocuments")
+	private Collection<BrokerGroup> brokerGroups;
+
+    protected Document() {
+	}
+
+	public void addGroup(final SystemGroup g) {
         if (groups == null) {
             groups = new ArrayList<SystemGroup>();
         }

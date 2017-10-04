@@ -19,21 +19,32 @@
  */
 package nl.strohalm.cyclos.entities.customization.files;
 
-import java.util.Calendar;
-
 import nl.strohalm.cyclos.entities.Entity;
 import nl.strohalm.cyclos.utils.StringHelper;
+
+import javax.persistence.Column;
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.Table;
+import java.util.Calendar;
 
 /**
  * A database-stored file
  * @author luis
  */
+@Table(name = "files")
+@DiscriminatorColumn(name = "subclass", length = 1)
+@javax.persistence.Entity
 public abstract class File extends Entity {
 
     private static final long serialVersionUID = 6357271248674624613L;
 
+    @Column(name = "contents", length = 10000000)
     private String            contents;
+
+    @Column(name = "last_modified", nullable = false)
     private Calendar          lastModified;
+
+    @Column(name = "name", nullable = false, length = 100)
     private String            name;
 
     public String getContents() {

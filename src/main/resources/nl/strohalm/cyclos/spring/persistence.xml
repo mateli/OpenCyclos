@@ -16,33 +16,7 @@
 		<property name="mappingResources">
 			<list>
 				<value>/nl/strohalm/cyclos/dao/definitions.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/Application.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/IndexOperation.hbm.xml</value>
 				<value>/nl/strohalm/cyclos/entities/settings/Setting.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/customization/fields/CustomField.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/customization/fields/CustomFieldPossibleValue.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/customization/fields/CustomFieldValue.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/customization/fields/MemberCustomField.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/customization/fields/AdminCustomField.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/customization/fields/OperatorCustomField.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/customization/fields/AdCustomField.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/customization/fields/PaymentCustomField.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/customization/fields/LoanGroupCustomField.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/customization/fields/MemberCustomFieldValue.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/customization/fields/AdminCustomFieldValue.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/customization/fields/OperatorCustomFieldValue.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/customization/fields/AdCustomFieldValue.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/customization/fields/PaymentCustomFieldValue.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/customization/fields/LoanGroupCustomFieldValue.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/customization/fields/MemberRecordCustomField.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/customization/fields/MemberRecordCustomFieldValue.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/groups/Group.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/groups/SystemGroup.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/groups/AdminGroup.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/groups/MemberGroup.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/groups/BrokerGroup.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/groups/OperatorGroup.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/groups/GroupFilter.hbm.xml</value>
 				<value>/nl/strohalm/cyclos/entities/members/Element.hbm.xml</value>
 				<value>/nl/strohalm/cyclos/entities/members/Member.hbm.xml</value>
 				<value>/nl/strohalm/cyclos/entities/members/PendingMember.hbm.xml</value>
@@ -68,27 +42,7 @@
 				<value>/nl/strohalm/cyclos/entities/members/remarks/Remark.hbm.xml</value>
 				<value>/nl/strohalm/cyclos/entities/members/remarks/GroupRemark.hbm.xml</value>
 				<value>/nl/strohalm/cyclos/entities/members/remarks/BrokerRemark.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/groups/GroupHistoryLog.hbm.xml</value>
 				<value>/nl/strohalm/cyclos/entities/members/adInterests/AdInterest.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/alerts/ErrorLogEntry.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/alerts/Alert.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/alerts/SystemAlert.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/alerts/MemberAlert.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/customization/files/File.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/customization/files/CustomizedFile.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/customization/documents/Document.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/customization/documents/DynamicDocument.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/customization/documents/StaticDocument.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/customization/documents/DocumentPage.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/customization/documents/MemberDocument.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/customization/binaryfiles/BinaryFile.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/customization/images/Image.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/customization/images/MemberImage.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/customization/images/AdImage.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/customization/images/SystemImage.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/customization/translationMessages/TranslationMessage.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/customization/images/CustomImage.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/customization/images/StyleImage.hbm.xml</value>
 				<value>/nl/strohalm/cyclos/entities/members/records/MemberRecordType.hbm.xml</value>
 				<value>/nl/strohalm/cyclos/entities/members/records/MemberRecord.hbm.xml</value>
 				<value>/nl/strohalm/cyclos/entities/sms/SmsLog.hbm.xml</value>
@@ -100,8 +54,6 @@
 				<value>/nl/strohalm/cyclos/entities/members/imports/MemberImport.hbm.xml</value>
 				<value>/nl/strohalm/cyclos/entities/members/imports/ImportedMember.hbm.xml</value>				
 				<value>/nl/strohalm/cyclos/entities/members/imports/ImportedMemberRecord.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/members/imports/ImportedMemberRecordCustomFieldValue.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/infotexts/InfoText.hbm.xml</value>
 			</list>
 		</property>
 		<property name="packagesToScan" value="nl.strohalm.cyclos.entities" />

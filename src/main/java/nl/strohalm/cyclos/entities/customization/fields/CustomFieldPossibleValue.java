@@ -22,10 +22,20 @@ package nl.strohalm.cyclos.entities.customization.fields;
 import nl.strohalm.cyclos.entities.Entity;
 import nl.strohalm.cyclos.entities.Relationship;
 
+import javax.persistence.Cacheable;
+import javax.persistence.Column;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+
 /**
  * Represents a possible value of an enumerated custom field
  * @author luis
  */
+@Cacheable
+@Table(name = "custom_field_possible_values")
+@javax.persistence.Entity
 public class CustomFieldPossibleValue extends Entity {
     public static enum Relationships implements Relationship {
         FIELD("field"), PARENT("parent");
@@ -42,10 +52,21 @@ public class CustomFieldPossibleValue extends Entity {
 
     private static final long        serialVersionUID = -6580907184218500656L;
 
-    private CustomField              field;
-    private CustomFieldPossibleValue parent;
+    @ManyToOne
+    @JoinColumn(name = "field_id")  // unique-key="uk_field_value"
+	private CustomField              field;
+
+    @ManyToOne
+    @JoinColumn(name = "parent_id")  // unique-key="uk_field_value"
+	private CustomFieldPossibleValue parent;
+
+    @Column(name = "value", nullable = false) // unique-key="uk_field_value"
     private String                   value;
+
+    @Column(name = "is_enabled", nullable = false)
     private boolean                  enabled          = true;
+
+    @Column(name = "is_default", nullable = false)
     private boolean                  defaultValue     = false;
 
     public CustomFieldPossibleValue() {

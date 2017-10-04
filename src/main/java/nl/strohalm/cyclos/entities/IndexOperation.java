@@ -28,7 +28,6 @@ import nl.strohalm.cyclos.utils.FormatObject;
 import nl.strohalm.cyclos.utils.StringValuedEnum;
 
 import javax.persistence.Column;
-import javax.persistence.Enumerated;
 import javax.persistence.Table;
 import java.util.Calendar;
 
@@ -107,7 +106,7 @@ public class IndexOperation extends Entity {
     @Column(name = "entity_type", length = 3, nullable = false)
 	private EntityType        entityType;
 
-    @Column(name = "entity_type", length = 3, nullable = false)
+    @Column(name = "operation_type", length = 3, nullable = false)
 	private OperationType     operationType;
 
     @Column(name = "entity_id")
