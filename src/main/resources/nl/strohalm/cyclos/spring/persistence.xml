@@ -13,16 +13,6 @@
 
 	<!-- The Hibernate session factory -->
 	<bean id="sessionFactory" class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
-		<property name="mappingResources">
-			<list>
-				<value>/nl/strohalm/cyclos/dao/definitions.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/sms/SmsLog.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/sms/SmsType.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/sms/MemberSmsStatus.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/sms/MemberSmsStatusLock.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/sms/SmsMailing.hbm.xml</value>
-			</list>
-		</property>
 		<property name="packagesToScan" value="nl.strohalm.cyclos.entities" />
 		<!-- 
 		<property name="eventListeners">

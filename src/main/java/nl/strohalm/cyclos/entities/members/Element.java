@@ -19,10 +19,6 @@
  */
 package nl.strohalm.cyclos.entities.members;
 
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Map;
-
 import nl.strohalm.cyclos.entities.Entity;
 import nl.strohalm.cyclos.entities.Indexable;
 import nl.strohalm.cyclos.entities.Relationship;
@@ -36,10 +32,28 @@ import nl.strohalm.cyclos.entities.settings.LocalSettings;
 import nl.strohalm.cyclos.utils.ElementVO;
 import nl.strohalm.cyclos.utils.StringValuedEnum;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.Inheritance;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.OrderBy;
+import javax.persistence.Table;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Map;
+
 /**
  * A common classes for members and administrators
  * @author luis
  */
+@Inheritance
+@DiscriminatorColumn(name = "subclass", length = 1)
+@Table(name = "members")
+@javax.persistence.Entity
 public abstract class Element extends Entity implements Indexable {
 
     public static enum Nature implements StringValuedEnum {
@@ -87,16 +101,35 @@ public abstract class Element extends Entity implements Indexable {
     }
 
     private static final long           serialVersionUID = 5024785667579155058L;
-    private Calendar                    creationDate;
-    private String                      email;
-    private Group                       group;
-    private String                      name;
-    private User                        user;
-    private Collection<GroupHistoryLog> groupHistoryLogs;
-    private Collection<Remark>          remarks;
-    private Collection<MemberRecord>    memberRecords;
 
-    /**
+    @Column(name = "creation_date", nullable = false)
+    private Calendar                    creationDate;
+
+    @Column(length = 100) // index="ix_email"
+    private String                      email;
+
+    @ManyToOne
+    @JoinColumn(name = "group_id", nullable = false)
+	private Group                       group;
+
+    @Column(length = 100, nullable = false)
+    private String                      name;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "id")
+	private User                        user;
+
+    @OneToMany(mappedBy = "element", cascade = CascadeType.REMOVE)
+    @OrderBy("start_date")
+	private Collection<GroupHistoryLog> groupHistoryLogs;
+
+    @OneToMany(mappedBy = "subject", cascade = CascadeType.REMOVE)
+	private Collection<Remark>          remarks;
+
+    @OneToMany(mappedBy = "by", cascade = CascadeType.REMOVE)
+	private Collection<MemberRecord>    memberRecords;
+
+	/**
      * Returns the account owner that this element represents
      */
     public abstract AccountOwner getAccountOwner();

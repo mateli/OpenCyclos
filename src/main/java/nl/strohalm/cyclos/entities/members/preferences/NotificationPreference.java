@@ -24,11 +24,18 @@ import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.members.Member;
 import nl.strohalm.cyclos.entities.members.messages.Message;
 
+import javax.persistence.Column;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
 /**
  * Notification Preference Entity
  * @author Jefferson Magno
  * @author jeancarlo
  */
+@Table(name = "notification_preferences")
+@javax.persistence.Entity
 public class NotificationPreference extends Entity {
 
     public static enum Relationships implements Relationship {
@@ -45,13 +52,24 @@ public class NotificationPreference extends Entity {
     }
 
     private static final long serialVersionUID = 5666584487265542893L;
-    private Member            member;
+
+    @ManyToOne
+    @JoinColumn(name = "member_id")
+	private Member            member;
+
+    @Column(name = "type", nullable = false, updatable = false, length = 3)
     private Message.Type      type;
+
+    @Column(name = "is_message", nullable = false)
     private boolean           message;
+
+    @Column(name = "is_email", nullable = false)
     private boolean           email;
+
+    @Column(name = "is_sms", nullable = false)
     private boolean           sms;
 
-    public Member getMember() {
+	public Member getMember() {
         return member;
     }
 

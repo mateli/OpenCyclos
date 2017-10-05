@@ -19,22 +19,29 @@
  */
 package nl.strohalm.cyclos.entities.members.messages;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-
 import nl.strohalm.cyclos.entities.Entity;
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.groups.MemberGroup;
 import nl.strohalm.cyclos.entities.members.Member;
 import nl.strohalm.cyclos.utils.StringValuedEnum;
-
 import org.apache.commons.collections.CollectionUtils;
+
+import javax.persistence.Column;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
 
 /**
  * A message sent to a member or to system
  * @author luis
  */
+@Table(name = "messages")
+@javax.persistence.Entity
 public class Message extends Entity {
 
     /**
@@ -108,7 +115,7 @@ public class Message extends Entity {
         }
 
         private final String   value;
-        private final RootType rootType;
+		private final RootType rootType;
 
         private Type(final RootType rootType, final String value) {
             this.rootType = rootType;
@@ -134,22 +141,55 @@ public class Message extends Entity {
 
     private static final long serialVersionUID = -2421844991813820706L;
 
+    @Column(name = "date", nullable = false, updatable = false)
     private Calendar          date;
-    private Member            fromMember;
-    private Member            toMember;
-    private Direction         direction;
-    private String            subject;
-    private String            body;
-    private MessageCategory   category;
-    private Type              type;
-    private boolean           read;
-    private Calendar          removedAt;
-    private boolean           replied;
-    private boolean           html;
-    private boolean           emailSent;
-    private List<MemberGroup> toGroups;
 
-    public String getBody() {
+    @ManyToOne
+    @JoinColumn(name = "from_member_id")
+	private Member            fromMember;
+
+    @ManyToOne
+    @JoinColumn(name = "to_member_id")
+	private Member            toMember;
+
+    @Column(name = "direction", nullable = false, updatable = false, length = 1)
+	private Direction         direction;
+
+    @Column(name = "subject", nullable = false, updatable = false)
+    private String            subject;
+
+    @Column(name = "body", updatable = false, columnDefinition = "text")
+    private String            body;
+
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+	private MessageCategory   category;
+
+    @Column(name = "type", nullable = false, updatable = false, length = 3)
+	private Type              type;
+
+    @Column(name = "is_read", nullable = false)
+    private boolean           read;
+
+    @Column(name = "removed_at")
+    private Calendar          removedAt;
+
+    @Column(name = "is_replied", nullable = false)
+    private boolean           replied;
+
+    @Column(name = "is_html", nullable = false)
+    private boolean           html;
+
+    @Column(name = "email_sent", nullable = false)
+    private boolean           emailSent;
+
+    @ManyToMany
+    @JoinTable(name = "messages_to_groups",
+            joinColumns = @JoinColumn(name = "message_id"),
+            inverseJoinColumns = @JoinColumn(name = "group_id"))
+	private List<MemberGroup> toGroups;
+
+	public String getBody() {
         return body;
     }
 

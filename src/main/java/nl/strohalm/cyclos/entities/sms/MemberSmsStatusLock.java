@@ -21,11 +21,15 @@ package nl.strohalm.cyclos.entities.sms;
 
 import nl.strohalm.cyclos.entities.Entity;
 
+import javax.persistence.Table;
+
 /**
  * Handler for locks in SMS status for a given member
  * 
  * @author luis
  */
+@Table(name = "member_sms_status_locks")
+@javax.persistence.Entity
 public class MemberSmsStatusLock extends Entity {
 
     private static final long serialVersionUID = -7116369978414829539L;

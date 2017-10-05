@@ -78,6 +78,7 @@ public abstract class User extends Entity {
     }
 
     private static final long           serialVersionUID          = 545429548353183777L;
+
     @OneToOne(mappedBy = "user")
 	private Element                     element;
 

@@ -132,3 +132,4 @@ $RECYCLE.BIN/
 
 !libs/*
 /.nb-gradle/
+bin/

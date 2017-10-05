@@ -19,17 +19,23 @@
  */
 package nl.strohalm.cyclos.entities.sms;
 
-import java.util.Calendar;
-
 import nl.strohalm.cyclos.entities.Entity;
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.members.Member;
+
+import javax.persistence.Column;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import java.util.Calendar;
 
 /**
  * Stores the SMS status for an specific member
  * 
  * @author luis
  */
+@Table(name = "member_sms_status")
+@javax.persistence.Entity
 public class MemberSmsStatus extends Entity {
 
     public static enum Relationships implements Relationship {
@@ -46,16 +52,33 @@ public class MemberSmsStatus extends Entity {
     }
 
     private static final long serialVersionUID = 5082258765577170190L;
-    private Member            member;
+
+    @ManyToOne
+    @JoinColumn(name = "member_id", unique = true, nullable = false)
+	private Member            member;
+
+    @Column(name = "free_sms_sent", nullable = false)
     private int               freeSmsSent;
+
+    @Column(name = "free_sms_expiration")
     private Calendar          freeSmsExpiration;
+
+    @Column(name = "paid_sms_left", nullable = false)
     private int               paidSmsLeft;
+
+    @Column(name = "paid_sms_expiration")
     private Calendar          paidSmsExpiration;
+
+    @Column(name = "allow_charging_sms", nullable = false)
     private boolean           allowChargingSms;
+
+    @Column(name = "accept_free_mailing", nullable = false)
     private boolean           acceptFreeMailing;
+
+    @Column(name = "accept_paid_mailing", nullable = false)
     private boolean           acceptPaidMailing;
 
-    public Calendar getFreeSmsExpiration() {
+	public Calendar getFreeSmsExpiration() {
         return freeSmsExpiration;
     }
 

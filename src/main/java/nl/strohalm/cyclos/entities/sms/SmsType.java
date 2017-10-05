@@ -21,10 +21,18 @@ package nl.strohalm.cyclos.entities.sms;
 
 import nl.strohalm.cyclos.entities.Entity;
 
+import javax.persistence.Column;
+import javax.persistence.Table;
+
+@Table(name = "sms_types")
+@javax.persistence.Entity
 public class SmsType extends Entity {
     private static final long serialVersionUID = 1L;
 
+    @Column(name = "code", unique = true, nullable = false, length = 100)
     private String            code;
+
+    @Column(name = "order_index")
     private int               order;
 
     public String getCode() {

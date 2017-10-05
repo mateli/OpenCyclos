@@ -19,9 +19,6 @@
  */
 package nl.strohalm.cyclos.entities.sms;
 
-import java.util.Calendar;
-import java.util.Collection;
-
 import nl.strohalm.cyclos.entities.Entity;
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.groups.MemberGroup;
@@ -29,11 +26,24 @@ import nl.strohalm.cyclos.entities.members.Element;
 import nl.strohalm.cyclos.entities.members.Member;
 import nl.strohalm.cyclos.utils.FormatObject;
 
+import javax.persistence.Cacheable;
+import javax.persistence.Column;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import java.util.Calendar;
+import java.util.Collection;
+
 /**
  * An SMS mailing is a brodcast SMS sent to a group of members
  * 
  * @author luis
  */
+@Cacheable
+@Table(name = "sms_mailings")
+@javax.persistence.Entity
 public class SmsMailing extends Entity {
 
     public static enum Relationships implements Relationship {
@@ -51,19 +61,47 @@ public class SmsMailing extends Entity {
     }
 
     private static final long       serialVersionUID = 2525066930563530937L;
+
+    @Column(name = "date", nullable = false, updatable = false)
     private Calendar                date;
-    private Element                 by;
+
+    @ManyToOne
+    @JoinColumn(name = "by_id", nullable = false)
+	private Element                 by;
+
+    @Column(name = "text", nullable = false)
     private String                  text;
+
+    @Column(name = "sent_sms", nullable = false)
     private int                     sentSms;
+
+    @Column(name = "free", nullable = false)
     private boolean                 free;
-    private Collection<MemberGroup> groups;
+
+    @ManyToMany
+    @JoinTable(name = "sms_mailings_groups",
+            joinColumns = @JoinColumn(name = "sms_mailing_id"),
+            inverseJoinColumns = @JoinColumn(name = "group_id"))
+	private Collection<MemberGroup> groups;
+
     // if it's not null this mailing will be send only to this member
-    private Member                  member;
-    private Collection<Member>      pendingToSend;
+    @ManyToOne
+    @JoinColumn(name = "member_id")
+	private Member                  member;
 
-    private transient boolean       finished;
+    @ManyToMany
+    @JoinTable(name = "sms_mailings_pending_to_send",
+            joinColumns = @JoinColumn(name = "sms_mailing_id"),
+            inverseJoinColumns = @JoinColumn(name = "member_id"))
+	private Collection<Member>      pendingToSend;
 
-    public Element getBy() {
+    @Column(name = "finished", nullable = false)
+    private boolean       finished;
+
+    protected SmsMailing() {
+	}
+
+	public Element getBy() {
         return by;
     }
 
