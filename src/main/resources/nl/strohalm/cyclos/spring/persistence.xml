@@ -16,44 +16,11 @@
 		<property name="mappingResources">
 			<list>
 				<value>/nl/strohalm/cyclos/dao/definitions.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/settings/Setting.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/members/Element.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/members/Member.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/members/PendingMember.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/members/PendingEmailChange.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/members/Administrator.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/members/Operator.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/members/Reference.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/members/GeneralReference.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/members/TransactionFeedback.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/members/ReferenceHistoryLog.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/members/Contact.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/members/RegistrationAgreement.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/members/RegistrationAgreementLog.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/members/brokerings/Brokering.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/members/brokerings/DefaultBrokerCommission.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/members/brokerings/BrokerCommissionContract.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/members/brokerings/BrokeringCommissionStatus.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/members/messages/Message.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/members/messages/MessageCategory.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/members/preferences/NotificationPreference.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/members/preferences/AdminNotificationPreference.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/members/printsettings/ReceiptPrinterSettings.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/members/remarks/Remark.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/members/remarks/GroupRemark.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/members/remarks/BrokerRemark.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/members/adInterests/AdInterest.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/members/records/MemberRecordType.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/members/records/MemberRecord.hbm.xml</value>
 				<value>/nl/strohalm/cyclos/entities/sms/SmsLog.hbm.xml</value>
 				<value>/nl/strohalm/cyclos/entities/sms/SmsType.hbm.xml</value>
 				<value>/nl/strohalm/cyclos/entities/sms/MemberSmsStatus.hbm.xml</value>
 				<value>/nl/strohalm/cyclos/entities/sms/MemberSmsStatusLock.hbm.xml</value>
 				<value>/nl/strohalm/cyclos/entities/sms/SmsMailing.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/services/ServiceClient.hbm.xml</value>								
-				<value>/nl/strohalm/cyclos/entities/members/imports/MemberImport.hbm.xml</value>
-				<value>/nl/strohalm/cyclos/entities/members/imports/ImportedMember.hbm.xml</value>				
-				<value>/nl/strohalm/cyclos/entities/members/imports/ImportedMemberRecord.hbm.xml</value>
 			</list>
 		</property>
 		<property name="packagesToScan" value="nl.strohalm.cyclos.entities" />

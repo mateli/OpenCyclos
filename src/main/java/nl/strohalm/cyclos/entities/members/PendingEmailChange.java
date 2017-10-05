@@ -19,17 +19,23 @@
  */
 package nl.strohalm.cyclos.entities.members;
 
-import java.util.Calendar;
-import java.util.Map;
-
 import nl.strohalm.cyclos.entities.Entity;
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.settings.LocalSettings;
+
+import javax.persistence.Column;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import java.util.Calendar;
+import java.util.Map;
 
 /**
  * Tracks a pending e-mail change until it is confirmed
  * @author luis
  */
+@Table(name = "pending_email_changes")
+@javax.persistence.Entity
 public class PendingEmailChange extends Entity {
 
     public static enum Relationships implements Relationship {
@@ -48,15 +54,30 @@ public class PendingEmailChange extends Entity {
 
     private static final long serialVersionUID = -1968070598567991893L;
 
+    @Column(name = "creation_date", nullable = false)
     private Calendar          creationDate;
-    private Member            member;
+
+    @ManyToOne
+    @JoinColumn(name = "member_id", nullable = false)
+	private Member            member;
+
+    @Column(name = "validation_key", nullable = false, length = 64)
     private String            validationKey;
+
+    @Column(name = "new_email", nullable = false, length = 100)
     private String            newEmail;
+
+    @Column(name = "last_email_date")
     private Calendar          lastEmailDate;
-    private Element           by;
+
+    @ManyToOne
+    @JoinColumn(name = "by_id")
+	private Element           by;
+
+    @Column(name = "remote_address", length = 100)
     private String            remoteAddress;
 
-    public Element getBy() {
+	public Element getBy() {
         return by;
     }
 

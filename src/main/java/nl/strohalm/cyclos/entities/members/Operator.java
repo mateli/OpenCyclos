@@ -19,8 +19,6 @@
  */
 package nl.strohalm.cyclos.entities.members;
 
-import java.util.Collection;
-
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.access.OperatorUser;
 import nl.strohalm.cyclos.entities.accounts.AccountOwner;
@@ -29,10 +27,19 @@ import nl.strohalm.cyclos.entities.customization.fields.OperatorCustomFieldValue
 import nl.strohalm.cyclos.entities.groups.OperatorGroup;
 import nl.strohalm.cyclos.utils.CustomFieldsContainer;
 
+import javax.persistence.CascadeType;
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import java.util.Collection;
+
 /**
  * A member's operator
  * @author luis
  */
+@DiscriminatorValue("O")
+@javax.persistence.Entity
 public class Operator extends Element implements CustomFieldsContainer<OperatorCustomField, OperatorCustomFieldValue> {
 
     public static enum Relationships implements Relationship {
@@ -49,10 +56,18 @@ public class Operator extends Element implements CustomFieldsContainer<OperatorC
     }
 
     private static final long                    serialVersionUID = 4105825541748672232L;
-    private Member                               member;
-    private Collection<OperatorCustomFieldValue> customValues;
 
-    @Override
+    @ManyToOne
+    @JoinColumn(name = "member_id", updatable = false)
+	private Member                               member;
+
+    @OneToMany(mappedBy = "operator", cascade = CascadeType.REMOVE)
+	private Collection<OperatorCustomFieldValue> customValues;
+
+    protected Operator() {
+	}
+
+	@Override
     public AccountOwner getAccountOwner() {
         return member;
     }

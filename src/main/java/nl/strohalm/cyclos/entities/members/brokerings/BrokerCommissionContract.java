@@ -19,21 +19,31 @@
  */
 package nl.strohalm.cyclos.entities.members.brokerings;
 
-import java.util.Map;
-
 import nl.strohalm.cyclos.entities.Entity;
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.accounts.fees.transaction.BrokerCommission;
 import nl.strohalm.cyclos.entities.members.Element;
 import nl.strohalm.cyclos.entities.settings.LocalSettings;
-import nl.strohalm.cyclos.utils.Amount;
-import nl.strohalm.cyclos.utils.Period;
+import nl.strohalm.cyclos.entities.utils.Amount;
+import nl.strohalm.cyclos.entities.utils.Period;
 import nl.strohalm.cyclos.utils.StringValuedEnum;
+
+import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
+import javax.persistence.Column;
+import javax.persistence.Embedded;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import java.math.BigDecimal;
+import java.util.Map;
 
 /**
  * Broker commission contract
  * @author Jefferson Magno
  */
+@Table(name = "broker_commission_contracts")
+@javax.persistence.Entity
 public class BrokerCommissionContract extends Entity {
 
     public static enum Relationships implements Relationship {
@@ -68,16 +78,42 @@ public class BrokerCommissionContract extends Entity {
 
     private static final long serialVersionUID = -4791497274620475610L;
 
-    private Brokering         brokering;
-    private BrokerCommission  brokerCommission;
-    private Period            period;
-    private Amount            amount;
-    private Status            status;
-    private Status            statusBeforeSuspension;
-    private Element           cancelledBy;
+    @ManyToOne
+    @JoinColumn(name = "brokering_id")
+	private Brokering         brokering;
+
+    @ManyToOne
+    @JoinColumn(name = "broker_commission_id")
+	private BrokerCommission  brokerCommission;
+
+    @AttributeOverrides({
+            @AttributeOverride(name = "begin", column=@Column(name="start_date")),
+            @AttributeOverride(name = "end", column=@Column(name="end_date"))
+    })
+    @Embedded
+	private Period            period;
+
+    @Column(name = "amount_value", precision = 15, scale = 6, nullable = false)
+    private BigDecimal amountValue;
+
+    @Column(name = "amount_type", length = 1)
+    private Amount.Type amountType;
+
+    @Column(name = "status", nullable = false, length = 1)
+	private Status            status;
+
+    @Column(name = "status_before_suspension", length = 1)
+	private Status            statusBeforeSuspension;
+
+    @ManyToOne
+    @JoinColumn(name = "cancelled_by_id")
+	private Element           cancelledBy;
 
     public Amount getAmount() {
-        return amount;
+        if (amountType == null || amountValue == null) {
+            return null;
+        }
+        return new Amount(amountValue, amountType);
     }
 
     public BrokerCommission getBrokerCommission() {
@@ -105,7 +141,13 @@ public class BrokerCommissionContract extends Entity {
     }
 
     public void setAmount(final Amount amount) {
-        this.amount = amount;
+        if (amount == null) {
+            amountValue = null;
+            amountType = null;
+        } else {
+            amountValue = amount.getValue();
+            amountType = amount.getType();
+        }
     }
 
     public void setBrokerCommission(final BrokerCommission brokerCommission) {

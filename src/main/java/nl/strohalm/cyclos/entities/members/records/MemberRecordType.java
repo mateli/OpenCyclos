@@ -19,8 +19,6 @@
  */
 package nl.strohalm.cyclos.entities.members.records;
 
-import java.util.Collection;
-
 import nl.strohalm.cyclos.entities.Entity;
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.customization.fields.MemberRecordCustomField;
@@ -29,10 +27,23 @@ import nl.strohalm.cyclos.entities.groups.BrokerGroup;
 import nl.strohalm.cyclos.entities.groups.Group;
 import nl.strohalm.cyclos.utils.StringValuedEnum;
 
+import javax.persistence.Cacheable;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import java.util.Collection;
+
 /**
  * Defines a group of custom fields for a member
  * @author Jefferson Magno
  */
+@Cacheable
+@Table(name = "member_record_types")
+@javax.persistence.Entity
 public class MemberRecordType extends Entity {
 
     public static enum Layout implements StringValuedEnum {
@@ -62,24 +73,59 @@ public class MemberRecordType extends Entity {
     }
 
     private static final long                   serialVersionUID = -1708482580670924301L;
+
+    @Column(name = "name", nullable = false, length = 100)
     private String                              name;
+
+    @Column(name = "label", nullable = false, length = 100)
     private String                              label;
+
+    @Column(name = "description", columnDefinition = "text")
     private String                              description;
-    private Collection<MemberRecordCustomField> fields;
-    private Collection<Group>                   groups;
-    private Collection<AdminGroup>              viewableByAdminGroups;
-    private Collection<AdminGroup>              creatableByAdminGroups;
-    private Collection<AdminGroup>              updatableByAdminGroups;
-    private Collection<AdminGroup>              deletableByAdminGroups;
-    private Collection<BrokerGroup>             viewableByBrokerGroups;
-    private Collection<BrokerGroup>             creatableByBrokerGroups;
-    private Collection<BrokerGroup>             updatableByBrokerGroups;
-    private Collection<BrokerGroup>             deletableByBrokerGroups;
-    private Layout                              layout;
+
+    @OneToMany(mappedBy = "memberRecordType", cascade = CascadeType.REMOVE)
+	private Collection<MemberRecordCustomField> fields;
+
+    @ManyToMany
+    @JoinTable(name = "groups_member_record_types",
+            joinColumns = @JoinColumn(name = "member_record_type_id"),
+            inverseJoinColumns = @JoinColumn(name = "group_id"))
+	private Collection<Group>                   groups;
+
+    @ManyToMany(mappedBy = "viewMemberRecordTypes")
+	private Collection<AdminGroup>              viewableByAdminGroups;
+
+    @ManyToMany(mappedBy = "createMemberRecordTypes")
+	private Collection<AdminGroup>              creatableByAdminGroups;
+
+    @ManyToMany(mappedBy = "modifyMemberRecordTypes")
+	private Collection<AdminGroup>              updatableByAdminGroups;
+
+    @ManyToMany(mappedBy = "deleteMemberRecordTypes")
+	private Collection<AdminGroup>              deletableByAdminGroups;
+
+    @ManyToMany(mappedBy = "brokerMemberRecordTypes")
+	private Collection<BrokerGroup>             viewableByBrokerGroups;
+
+    @ManyToMany(mappedBy = "brokerCreateMemberRecordTypes")
+	private Collection<BrokerGroup>             creatableByBrokerGroups;
+
+    @ManyToMany(mappedBy = "brokerModifyMemberRecordTypes")
+	private Collection<BrokerGroup>             updatableByBrokerGroups;
+
+    @ManyToMany(mappedBy = "brokerDeleteMemberRecordTypes")
+	private Collection<BrokerGroup>             deletableByBrokerGroups;
+
+    @Column(name = "layout", nullable = false, length = 1)
+	private Layout                              layout;
+
+    @Column(name = "editable", nullable = false)
     private boolean                             editable;
+
+    @Column(name = "show_menu_item", nullable = false)
     private boolean                             showMenuItem;
 
-    public Collection<AdminGroup> getCreatableByAdminGroups() {
+	public Collection<AdminGroup> getCreatableByAdminGroups() {
         return creatableByAdminGroups;
     }
 

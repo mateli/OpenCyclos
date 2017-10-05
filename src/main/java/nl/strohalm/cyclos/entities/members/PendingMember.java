@@ -19,10 +19,6 @@
  */
 package nl.strohalm.cyclos.entities.members;
 
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Map;
-
 import nl.strohalm.cyclos.entities.Entity;
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.customization.fields.MemberCustomField;
@@ -30,11 +26,23 @@ import nl.strohalm.cyclos.entities.customization.fields.MemberCustomFieldValue;
 import nl.strohalm.cyclos.entities.groups.MemberGroup;
 import nl.strohalm.cyclos.entities.settings.LocalSettings;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Map;
+
 /**
  * A pending member is a member which still have not validated it's registration by mail, and is removed if not confirmed within an amount of time (in
  * {@link LocalSettings#getDeletePendingRegistrationsAfter()})
  * @author luis
  */
+@Table(name = "pending_members")
+@javax.persistence.Entity
 public class PendingMember extends Entity implements RegisteredMember {
 
     public static enum Relationships implements Relationship {
@@ -51,26 +59,66 @@ public class PendingMember extends Entity implements RegisteredMember {
     }
 
     private static final long                  serialVersionUID = 6961857645089403722L;
-    private Calendar                           creationDate;
-    private Calendar                           lastEmailDate;
-    private MemberGroup                        memberGroup;
-    private String                             name;
-    private String                             salt;
-    private String                             username;
-    private String                             password;
-    private String                             pin;
-    private boolean                            forceChangePassword;
-    private String                             email;
-    private String                             validationKey;
-    private boolean                            hideEmail;
-    private Member                             broker;
-    private RegistrationAgreement              registrationAgreement;
-    private Calendar                           registrationAgreementDate;
-    private Member                             member;
-    private String                             remoteAddress;
-    private Collection<MemberCustomFieldValue> customValues;
 
-    public Member getBroker() {
+    @Column(name = "creation_date", nullable = false)
+    private Calendar                           creationDate;
+
+    @Column(name = "last_email_date")
+    private Calendar                           lastEmailDate;
+
+    @ManyToOne
+    @JoinColumn(name = "group_id", nullable = false)
+	private MemberGroup                        memberGroup;
+
+    @Column(name = "name", nullable = false, length = 100)
+    private String                             name;
+
+    @Column(name = "salt", length = 32)
+    private String                             salt;
+
+    @Column(name = "username", length = 64)
+    private String                             username;
+
+    @Column(name = "password", length = 64)
+    private String                             password;
+
+    @Column(name = "pin", length = 64)
+    private String                             pin;
+
+    @Column(name = "force_change_password", nullable = false)
+    private boolean                            forceChangePassword;
+
+    @Column(name = "email", nullable = false, length = 100)
+    private String                             email;
+
+    @Column(name = "validation_key", nullable = false, length = 64)
+    private String                             validationKey;
+
+    @Column(name = "hide_email", nullable = false)
+    private boolean                            hideEmail;
+
+    @ManyToOne
+    @JoinColumn(name = "broker_id")
+	private Member                             broker;
+
+    @ManyToOne
+    @JoinColumn(name = "registration_agreement_id")
+	private RegistrationAgreement              registrationAgreement;
+
+    @Column(name = "registration_agreement_date")
+    private Calendar                           registrationAgreementDate;
+
+    @ManyToOne
+    @JoinColumn(name = "member_id")
+	private Member                             member;
+
+    @Column(name = "remote_address", length = 100)
+    private String                             remoteAddress;
+
+    @OneToMany(mappedBy = "pendingMember", cascade = CascadeType.REMOVE)
+	private Collection<MemberCustomFieldValue> customValues;
+
+	public Member getBroker() {
         return broker;
     }
 

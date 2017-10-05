@@ -19,8 +19,6 @@
  */
 package nl.strohalm.cyclos.entities.members;
 
-import java.util.Collection;
-
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.access.AdminUser;
 import nl.strohalm.cyclos.entities.accounts.AccountOwner;
@@ -30,10 +28,17 @@ import nl.strohalm.cyclos.entities.customization.fields.AdminCustomFieldValue;
 import nl.strohalm.cyclos.entities.groups.AdminGroup;
 import nl.strohalm.cyclos.utils.CustomFieldsContainer;
 
+import javax.persistence.CascadeType;
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.OneToMany;
+import java.util.Collection;
+
 /**
  * An administrator is an user with system privilleges
  * @author luis
  */
+@DiscriminatorValue("A")
+@javax.persistence.Entity
 public class Administrator extends Element implements CustomFieldsContainer<AdminCustomField, AdminCustomFieldValue> {
 
     public static enum Relationships implements Relationship {
@@ -50,9 +55,11 @@ public class Administrator extends Element implements CustomFieldsContainer<Admi
     }
 
     private static final long                 serialVersionUID = -3378150810991395557L;
-    private Collection<AdminCustomFieldValue> customValues;
 
-    @Override
+    @OneToMany(mappedBy = "admin", cascade = CascadeType.REMOVE)
+	private Collection<AdminCustomFieldValue> customValues;
+
+	@Override
     public AccountOwner getAccountOwner() {
         return SystemAccountOwner.instance();
     }

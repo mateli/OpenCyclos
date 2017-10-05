@@ -19,17 +19,26 @@
  */
 package nl.strohalm.cyclos.entities.members.brokerings;
 
-import java.util.Calendar;
-import java.util.Collection;
-
 import nl.strohalm.cyclos.entities.Entity;
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.members.Member;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
+import javax.persistence.Table;
+import java.util.Calendar;
+import java.util.Collection;
 
 /**
  * Contains data about brokering
  * @author luis
  */
+@Table(name = "brokerings")
+@javax.persistence.Entity
 public class Brokering extends Entity {
 
     public static enum Relationships implements Relationship {
@@ -48,14 +57,29 @@ public class Brokering extends Entity {
 
     private static final long                     serialVersionUID = 5481485302378656979L;
 
-    private Member                                broker;
-    private Member                                brokered;
-    private Calendar                              endDate;
-    private Calendar                              startDate;
-    private Collection<BrokerCommissionContract>  contracts;
-    private Collection<BrokeringCommissionStatus> statuses;
+    @ManyToOne
+    @JoinColumn(name = "broker_id", nullable = false)
+	private Member                                broker;
 
-    public Member getBroker() {
+    @ManyToOne
+    @JoinColumn(name = "brokered_id", nullable = false)
+	private Member                                brokered;
+
+    @Column(name = "end_date")
+    private Calendar                              endDate;
+
+    @Column(name = "start_date", nullable = false, updatable = false)
+    private Calendar                              startDate;
+
+    @OneToMany(mappedBy = "brokering", cascade = CascadeType.REMOVE)
+    @OrderBy("start_date desc")
+	private Collection<BrokerCommissionContract>  contracts;
+
+    @OneToMany(mappedBy = "brokering", cascade = CascadeType.REMOVE)
+    @OrderBy("start_date desc")
+	private Collection<BrokeringCommissionStatus> statuses;
+
+	public Member getBroker() {
         return broker;
     }
 

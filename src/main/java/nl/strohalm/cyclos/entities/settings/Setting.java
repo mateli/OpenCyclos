@@ -22,10 +22,15 @@ package nl.strohalm.cyclos.entities.settings;
 import nl.strohalm.cyclos.entities.Entity;
 import nl.strohalm.cyclos.utils.StringValuedEnum;
 
+import javax.persistence.Column;
+import javax.persistence.Table;
+
 /**
  * Contains the value of a single setting
  * @author luis
  */
+@Table(name = "settings")
+@javax.persistence.Entity
 public class Setting extends Entity {
 
     public static enum Type implements StringValuedEnum {
@@ -43,11 +48,16 @@ public class Setting extends Entity {
 
     private static final long serialVersionUID = 8376447152912773532L;
 
+    @Column(name = "name", nullable = false, updatable = false, length = 100)
     private String            name;
-    private Type              type;
+
+    @Column(name = "type", nullable = false, updatable = false, length = 15) // unique-key="uk_type_name"
+	private Type              type;
+
+    @Column(name = "value", length = 4096)
     private String            value;
 
-    public String getName() {
+	public String getName() {
         return name;
     }
 

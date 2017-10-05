@@ -25,7 +25,7 @@ import nl.strohalm.cyclos.entities.customization.fields.CustomFieldValue;
 import nl.strohalm.cyclos.entities.groups.Group;
 import nl.strohalm.cyclos.entities.settings.LocalSettings.MemberResultDisplay;
 import nl.strohalm.cyclos.utils.FormatObject;
-import nl.strohalm.cyclos.utils.Period;
+import nl.strohalm.cyclos.entities.utils.Period;
 import nl.strohalm.cyclos.utils.query.QueryParameters;
 
 /**

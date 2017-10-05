@@ -22,7 +22,7 @@ package nl.strohalm.cyclos.entities.members;
 import java.util.Collection;
 
 import nl.strohalm.cyclos.entities.groups.GroupFilter;
-import nl.strohalm.cyclos.utils.Period;
+import nl.strohalm.cyclos.entities.utils.Period;
 
 /**
  * Query parameters for member

@@ -22,10 +22,16 @@ package nl.strohalm.cyclos.entities.members.remarks;
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.groups.Group;
 
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+
 /**
  * Records a group change
  * @author luis
  */
+@DiscriminatorValue("G")
+@javax.persistence.Entity
 public class GroupRemark extends Remark {
     public static enum Relationships implements Relationship {
         OLD_GROUP("oldGroup"), NEW_GROUP("newGroup");
@@ -42,10 +48,15 @@ public class GroupRemark extends Remark {
 
     private static final long serialVersionUID = 4806071178145432817L;
 
-    private Group             newGroup;
-    private Group             oldGroup;
+    @ManyToOne
+    @JoinColumn(name = "new_group_id")
+	private Group             newGroup;
 
-    @Override
+    @ManyToOne
+    @JoinColumn(name = "old_group_id")
+	private Group             oldGroup;
+
+	@Override
     public Nature getNature() {
         return Nature.GROUP;
     }

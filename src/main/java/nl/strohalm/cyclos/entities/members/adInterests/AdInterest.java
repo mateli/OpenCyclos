@@ -19,8 +19,6 @@
  */
 package nl.strohalm.cyclos.entities.members.adInterests;
 
-import java.math.BigDecimal;
-
 import nl.strohalm.cyclos.entities.Entity;
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.accounts.Currency;
@@ -29,6 +27,14 @@ import nl.strohalm.cyclos.entities.ads.AdCategory;
 import nl.strohalm.cyclos.entities.groups.GroupFilter;
 import nl.strohalm.cyclos.entities.members.Member;
 
+import javax.persistence.Column;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import java.math.BigDecimal;
+
+@Table(name = "ad_interests")
+@javax.persistence.Entity
 public class AdInterest extends Entity {
 
     public static enum Relationships implements Relationship {
@@ -46,18 +52,45 @@ public class AdInterest extends Entity {
 
     private static final long serialVersionUID = 7809184121372381237L;
 
-    private Member            owner;
+    @ManyToOne
+    @JoinColumn(name = "owner_id", nullable = false)
+	private Member            owner;
+
+    @Column(name = "title", nullable = false, length = 100)
     private String            title;
+
+    @Column(name = "trade_type", nullable = false, length = 1)
     private Ad.TradeType      type;
-    private AdCategory        category;
-    private Member            member;
-    private GroupFilter       groupFilter;
+
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+	private AdCategory        category;
+
+    @ManyToOne
+    @JoinColumn(name = "member_id")
+	private Member            member;
+
+    @ManyToOne
+    @JoinColumn(name = "group_filter_id")
+	private GroupFilter       groupFilter;
+
+    @Column(name = "initial_price", precision = 15, scale = 6)
     private BigDecimal        initialPrice;
+
+    @Column(name = "final_price", precision = 15, scale = 6)
     private BigDecimal        finalPrice;
-    private Currency          currency;
+
+    @ManyToOne
+    @JoinColumn(name = "currency_id")
+	private Currency          currency;
+
+    @Column(name = "keywords")
     private String            keywords;
 
-    public AdCategory getCategory() {
+    protected AdInterest() {
+	}
+
+	public AdCategory getCategory() {
         return category;
     }
 

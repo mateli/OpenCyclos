@@ -22,10 +22,17 @@ package nl.strohalm.cyclos.entities.members;
 import nl.strohalm.cyclos.entities.Entity;
 import nl.strohalm.cyclos.entities.Relationship;
 
+import javax.persistence.Column;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
 /**
  * A member contact
  * @author luis
  */
+@Table(name = "contacts")
+@javax.persistence.Entity
 public class Contact extends Entity {
 
     public static enum Relationships implements Relationship {
@@ -43,11 +50,18 @@ public class Contact extends Entity {
 
     private static final long serialVersionUID = 9128456589118721030L;
 
-    private Member            contact;
-    private String            notes;
-    private Member            owner;
+    @ManyToOne
+    @JoinColumn(name = "contact_id", nullable = false, updatable = false)
+	private Member            contact;
 
-    public Member getContact() {
+    @Column(name = "notes", columnDefinition = "text")
+    private String            notes;
+
+    @ManyToOne
+    @JoinColumn(name = "owner_id", nullable = false, updatable = false)
+	private Member            owner;
+
+	public Member getContact() {
         return contact;
     }
 

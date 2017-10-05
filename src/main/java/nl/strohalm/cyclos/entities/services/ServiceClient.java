@@ -19,8 +19,6 @@
  */
 package nl.strohalm.cyclos.entities.services;
 
-import java.util.Set;
-
 import nl.strohalm.cyclos.entities.Entity;
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.access.Channel;
@@ -28,10 +26,22 @@ import nl.strohalm.cyclos.entities.accounts.transactions.TransferType;
 import nl.strohalm.cyclos.entities.groups.MemberGroup;
 import nl.strohalm.cyclos.entities.members.Member;
 
+import javax.persistence.CollectionTable;
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import java.util.Set;
+
 /**
  * A remote host that may access specific web services
  * @author luis
  */
+@Table(name = "service_clients")
+@javax.persistence.Entity
 public class ServiceClient extends Entity {
 
     public static enum Relationships implements Relationship {
@@ -49,23 +59,69 @@ public class ServiceClient extends Entity {
     }
 
     private static final long     serialVersionUID = -7219751905408334999L;
-    private String                name;
-    private String                username;
-    private String                password;
-    private String                addressBegin;
-    private String                addressEnd;
-    private String                hostname;
-    private Member                member;
-    private boolean               credentialsRequired;
-    private boolean               ignoreRegistrationValidations;
-    private Channel               channel;
-    private Set<ServiceOperation> permissions;
-    private Set<TransferType>     doPaymentTypes;
-    private Set<TransferType>     receivePaymentTypes;
-    private Set<TransferType>     chargebackPaymentTypes;
-    private Set<MemberGroup>      manageGroups;
 
-    public String getAddressBegin() {
+    @Column(name = "name", nullable = false, length = 100)
+    private String                name;
+
+    @Column(name = "username", length = 100)
+    private String                username;
+
+    @Column(name = "password", length = 100)
+    private String                password;
+
+    @Column(name = "address_begin", length = 100)
+    private String                addressBegin;
+
+    @Column(name = "address_end", length = 100)
+    private String                addressEnd;
+
+    @Column(name = "hostname", nullable = false, length = 100)
+    private String                hostname;
+
+    @ManyToOne
+    @JoinColumn(name = "member_id")
+	private Member                member;
+
+    @Column(name = "credentials_required", nullable = false)
+    private boolean               credentialsRequired;
+
+    @Column(name = "ignore_registration_validations", nullable = false)
+    private boolean               ignoreRegistrationValidations;
+
+    @ManyToOne
+    @JoinColumn(name = "channel_id")
+	private Channel               channel;
+
+    @ElementCollection
+    @CollectionTable(name = "service_client_permissions", joinColumns = @JoinColumn(name = "service_client_id"))
+    @Column(name = "operation", length = 50, nullable = false)
+	private Set<ServiceOperation> permissions;
+
+    @ManyToMany
+    @JoinTable(name = "service_clients_do_payment_types",
+            joinColumns = @JoinColumn(name = "service_client_id"),
+            inverseJoinColumns = @JoinColumn(name = "transfer_type_id"))
+	private Set<TransferType>     doPaymentTypes;
+
+    @ManyToMany
+    @JoinTable(name = "service_clients_receive_payment_types",
+            joinColumns = @JoinColumn(name = "service_client_id"),
+            inverseJoinColumns = @JoinColumn(name = "transfer_type_id"))
+	private Set<TransferType>     receivePaymentTypes;
+
+    @ManyToMany
+    @JoinTable(name = "service_clients_chargeback_payment_types",
+            joinColumns = @JoinColumn(name = "service_client_id"),
+            inverseJoinColumns = @JoinColumn(name = "transfer_type_id"))
+	private Set<TransferType>     chargebackPaymentTypes;
+
+    @ManyToMany
+    @JoinTable(name = "service_clients_manage_groups",
+            joinColumns = @JoinColumn(name = "service_client_id"),
+            inverseJoinColumns = @JoinColumn(name = "group_id"))
+	private Set<MemberGroup>      manageGroups;
+
+	public String getAddressBegin() {
         return addressBegin;
     }
 

@@ -19,10 +19,6 @@
  */
 package nl.strohalm.cyclos.entities.members.imports;
 
-import java.math.BigDecimal;
-import java.util.Calendar;
-import java.util.Collection;
-
 import nl.strohalm.cyclos.entities.Entity;
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.customization.fields.MemberCustomField;
@@ -30,11 +26,23 @@ import nl.strohalm.cyclos.entities.customization.fields.MemberCustomFieldValue;
 import nl.strohalm.cyclos.utils.CustomFieldsContainer;
 import nl.strohalm.cyclos.utils.StringValuedEnum;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import java.math.BigDecimal;
+import java.util.Calendar;
+import java.util.Collection;
+
 /**
  * Contains temporary data for an imported member
  * 
  * @author luis
  */
+@Table(name = "imported_members")
+@javax.persistence.Entity
 public class ImportedMember extends Entity implements CustomFieldsContainer<MemberCustomField, MemberCustomFieldValue> {
 
     public static enum Relationships implements Relationship {
@@ -62,24 +70,57 @@ public class ImportedMember extends Entity implements CustomFieldsContainer<Memb
     }
 
     private static final long                  serialVersionUID = -4080042034080488479L;
-    private MemberImport                       _import;
-    private Status                             status;
-    private String                             errorArgument1;
-    private String                             errorArgument2;
-    private String                             name;
-    private String                             salt;
-    private String                             username;
-    private String                             password;
-    private String                             email;
-    private Integer                            lineNumber;
-    private Calendar                           creationDate;
-    private BigDecimal                         creditLimit;
-    private BigDecimal                         upperCreditLimit;
-    private BigDecimal                         initialBalance;
-    private Collection<MemberCustomFieldValue> customValues;
-    private Collection<ImportedMemberRecord>   records;
 
-    public Calendar getCreationDate() {
+    @ManyToOne
+    @JoinColumn(name = "import_id", nullable = false)
+	private MemberImport                       _import;
+
+    @Column(name = "status", nullable = false, length = 50)
+	private Status                             status;
+
+    @Column(name = "error_argument1", length = 200)
+    private String                             errorArgument1;
+
+    @Column(name = "error_argument2", length = 200)
+    private String                             errorArgument2;
+
+    @Column(name = "name", length = 100)
+    private String                             name;
+
+    @Column(name = "salt", length = 32)
+    private String                             salt;
+
+    @Column(name = "username", length = 64)
+    private String                             username;
+
+    @Column(name = "password", length = 64)
+    private String                             password;
+
+    @Column(name = "email", length = 100)
+    private String                             email;
+
+    @Column(name = "line_number")
+    private Integer                            lineNumber;
+
+    @Column(name = "creation_date")
+    private Calendar                           creationDate;
+
+    @Column(name = "credit_limit", precision = 15, scale = 6)
+    private BigDecimal                         creditLimit;
+
+    @Column(name = "upper_credit_limit", precision = 15, scale = 6)
+    private BigDecimal                         upperCreditLimit;
+
+    @Column(name = "initial_balance", precision = 15, scale = 6)
+    private BigDecimal                         initialBalance;
+
+    @OneToMany(mappedBy = "importedMember", cascade = CascadeType.REMOVE)
+	private Collection<MemberCustomFieldValue> customValues;
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
+	private Collection<ImportedMemberRecord>   records;
+
+	public Calendar getCreationDate() {
         return creationDate;
     }
 

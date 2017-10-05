@@ -24,12 +24,20 @@ import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.accounts.fees.transaction.BrokerCommission;
 import nl.strohalm.cyclos.entities.accounts.fees.transaction.BrokerCommission.When;
 import nl.strohalm.cyclos.entities.members.Member;
-import nl.strohalm.cyclos.utils.Amount;
+import nl.strohalm.cyclos.entities.utils.Amount;
+
+import javax.persistence.Column;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import java.math.BigDecimal;
 
 /**
  * Default commission settings for a broker
  * @author Jefferson Magno
  */
+@Table(name = "default_broker_commissions")
+@javax.persistence.Entity
 public class DefaultBrokerCommission extends Entity {
 
     public static enum Relationships implements Relationship {
@@ -51,16 +59,38 @@ public class DefaultBrokerCommission extends Entity {
     }
 
     private static final long serialVersionUID = -4791497274620475610L;
-    private Member            broker;
-    private BrokerCommission  brokerCommission;
-    private Amount            amount;
+
+    @ManyToOne
+    @JoinColumn(name = "broker_id")
+	private Member            broker;
+
+    @ManyToOne
+    @JoinColumn(name = "broker_commission_id")
+	private BrokerCommission  brokerCommission;
+
+    @Column(name = "amount", precision = 15, scale = 6, nullable = false)
+    private BigDecimal amountValue;
+
+    @Column(name = "amount_type", length = 1)
+    private Amount.Type amountType;
+
+    @Column(name = "when_count")
     private Integer           count;
-    private When              when;
+
+    @Column(name = "when_apply", nullable = false, length = 1)
+	private When              when;
+
+    @Column(name = "set_by_broker")
     private boolean           setByBroker;
+
+    @Column(name = "suspended")
     private boolean           suspended;
 
     public Amount getAmount() {
-        return amount;
+        if (amountType == null || amountValue == null) {
+            return null;
+        }
+        return new Amount(amountValue, amountType);
     }
 
     public Member getBroker() {
@@ -98,7 +128,13 @@ public class DefaultBrokerCommission extends Entity {
     }
 
     public void setAmount(final Amount amount) {
-        this.amount = amount;
+        if (amount == null) {
+            amountValue = null;
+            amountType = null;
+        } else {
+            amountValue = amount.getValue();
+            amountType = amount.getType();
+        }
     }
 
     public void setBroker(final Member broker) {
