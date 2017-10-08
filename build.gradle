@@ -261,7 +261,7 @@ compile group: 'org.javassist', name: 'javassist', version: '3.20.0-GA'
 
     // MySQL Connector/J
     // http://mvnrepository.com/artifact/mysql/mysql-connector-java
-    compile group: 'mysql', name: 'mysql-connector-java', version: '6.0.2'
+    runtimeClasspath group: 'mysql', name: 'mysql-connector-java', version: '6.0.2'
 
     // Mariadb Client
     // http://mvnrepository.com/artifact/org.mariadb.jdbc/mariadb-java-client
