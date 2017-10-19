@@ -274,9 +274,6 @@ public abstract class CustomField extends Entity {
     @OneToMany(mappedBy = "parent")
 	private Collection<CustomField>              children;
 
-    protected CustomField() {
-	}
-
 	public String getAllSelectedLabel() {
         return allSelectedLabel;
     }

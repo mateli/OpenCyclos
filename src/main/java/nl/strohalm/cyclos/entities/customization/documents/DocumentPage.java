@@ -53,9 +53,6 @@ public class DocumentPage extends File {
     @JoinColumn(name = "document_id")
 	private Document          document;
 
-    protected DocumentPage() {
-	}
-
 	public Document getDocument() {
         return document;
     }

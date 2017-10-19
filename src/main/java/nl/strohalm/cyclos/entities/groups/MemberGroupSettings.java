@@ -107,7 +107,7 @@ public class MemberGroupSettings extends DataObject {
     @ElementCollection
     @CollectionTable(name = "member_groups_email_validation",
             joinColumns = @JoinColumn(name = "group_id"))
-    @Column(name = "type", length = 1, nullable = false)
+    @Column(name = "type", length = 1)
     private Set<EmailValidation>  emailValidation;
 
     @AttributeOverrides({
@@ -136,10 +136,10 @@ public class MemberGroupSettings extends DataObject {
     @Column(name = "sms_charge_amount", precision = 15, scale = 6)
     private BigDecimal            smsChargeAmount;
 
-    @Column(name = "sms_free_count", nullable = false)
+    @Column(name = "sms_free_count")
     private int                   smsFree                      = 0;
 
-    @Column(name = "sms_additional_charged_count", nullable = false)
+    @Column(name = "sms_additional_charged_count")
     private int                   smsAdditionalCharged         = 1;
 
     @Column(name = "sms_show_free_threshold")
@@ -156,7 +156,7 @@ public class MemberGroupSettings extends DataObject {
     private String                smsContextClassName;
 
     // Registration
-    @Column(name = "member_send_password_by_email", nullable = false)
+    @Column(name = "member_send_password_by_email")
     private boolean               sendPasswordByEmail          = true;
 
     @AttributeOverrides({
@@ -177,7 +177,7 @@ public class MemberGroupSettings extends DataObject {
     @Column(name = "member_max_ads_per_member")
     private int                   maxAdsPerMember              = 10;
 
-    @Column(name = "member_enable_permanent_ads", nullable = false)
+    @Column(name = "member_enable_permanent_ads")
     private boolean               enablePermanentAds           = true;
 
     @AttributeOverrides({
@@ -204,7 +204,7 @@ public class MemberGroupSettings extends DataObject {
     private int                   maxAdDescriptionSize         = 2048;
 
     // Scheduled payments
-    @Column(name = "member_max_scheduling_payments", nullable = false)
+    @Column(name = "member_max_scheduling_payments")
     private int                   maxSchedulingPayments        = 36;
 
     @AttributeOverrides({
@@ -215,26 +215,26 @@ public class MemberGroupSettings extends DataObject {
     private TimePeriod            maxSchedulingPeriod          = new TimePeriod(3, TimePeriod.Field.YEARS);
 
     // Loans
-    @Column(name = "member_view_loans_by_group", nullable = false)
+    @Column(name = "member_view_loans_by_group")
     private boolean               viewLoansByGroup             = true;
 
-    @Column(name = "member_repay_loan_by_group", nullable = false)
+    @Column(name = "member_repay_loan_by_group")
     private boolean               repayLoanByGroup             = true;
 
     // Pos
-    @Column(name = "member_allow_make_payment", nullable = false)
+    @Column(name = "member_allow_make_payment")
     private boolean               allowMakePayment             = false;
 
-    @Column(name = "member_max_pos_scheduling_payments", nullable = false)
+    @Column(name = "member_max_pos_scheduling_payments")
     private int                   maxPosSchedulingPayments     = 6;
 
-    @Column(name = "member_number_of_copies", nullable = false)
+    @Column(name = "member_number_of_copies")
     private int                   numberOfCopies               = 2;
 
-    @Column(name = "member_result_page_size", nullable = false)
+    @Column(name = "member_result_page_size")
     private int                   resultPageSize               = 5;
 
-    @Column(name = "member_show_posweb_pmt_dsc", nullable = false)
+    @Column(name = "member_show_posweb_pmt_dsc")
     private boolean               showPosWebPaymentDescription = false;
 
     public TimePeriod getDefaultAdPublicationTime() {

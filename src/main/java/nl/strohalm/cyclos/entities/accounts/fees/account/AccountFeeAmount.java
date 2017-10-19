@@ -72,9 +72,6 @@ public class AccountFeeAmount extends Entity {
     @JoinColumn(name = "account_fee_id", nullable = false)
 	private AccountFee        accountFee;
 
-    protected AccountFeeAmount() {
-	}
-
 	public MemberAccount getAccount() {
         return account;
     }

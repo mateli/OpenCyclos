@@ -107,9 +107,6 @@ public class Certification extends Entity {
     @JoinColumn(name = "issuer_id", nullable = false)
 	private Member                       issuer;
 
-    protected Certification() {
-	}
-
 	/**
      * Change the certification's status and adds a new certification log to it
      * @param status the new certification's status

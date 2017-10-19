@@ -66,9 +66,6 @@ public class InvoicePayment extends Entity {
     @JoinColumn(name = "transfer_id")
 	private Transfer          transfer;
 
-    protected InvoicePayment() {
-	}
-
 	public BigDecimal getAmount() {
         return amount;
     }

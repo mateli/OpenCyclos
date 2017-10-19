@@ -64,9 +64,6 @@ public class GuaranteeLog extends Entity {
     @JoinColumn(name = "by_id")
 	private Element           by;
 
-    protected GuaranteeLog() {
-	}
-
 	public Element getBy() {
         return by;
     }

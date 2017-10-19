@@ -54,9 +54,6 @@ public class AdminCustomFieldValue extends CustomFieldValue {
     @JoinColumn(name = "admin_id")
 	private Administrator     admin;
 
-    protected AdminCustomFieldValue() {
-	}
-
 	public Administrator getAdmin() {
         return admin;
     }

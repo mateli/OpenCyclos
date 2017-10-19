@@ -88,7 +88,7 @@ public class BrokerCommission extends TransactionFee {
     @Column(name = "which_broker", length = 1)
 	private WhichBroker             whichBroker;
 
-    @Column(name = "all_broker_groups", nullable = false)
+    @Column(name = "all_broker_groups")
     private boolean                 allBrokerGroups  = true;
 
     @ManyToMany(targetEntity = BrokerGroup.class)

@@ -77,9 +77,6 @@ public class OperatorCustomField extends CustomField {
     @Column(name = "operator_visibility", length = 1)
 	private Visibility        visibility       = Visibility.EDITABLE;
 
-    protected OperatorCustomField() {
-	}
-
 	public Member getMember() {
         return member;
     }

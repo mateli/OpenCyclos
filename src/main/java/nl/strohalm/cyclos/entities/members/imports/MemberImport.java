@@ -87,9 +87,6 @@ public class MemberImport extends Entity {
     @OneToMany(mappedBy = "_import", cascade = CascadeType.REMOVE)
 	private Collection<ImportedMember> members;
 
-    protected MemberImport() {
-	}
-
 	public MemberAccountType getAccountType() {
         return accountType;
     }

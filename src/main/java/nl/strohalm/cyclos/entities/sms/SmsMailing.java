@@ -98,9 +98,6 @@ public class SmsMailing extends Entity {
     @Column(name = "finished", nullable = false)
     private boolean       finished;
 
-    protected SmsMailing() {
-	}
-
 	public Element getBy() {
         return by;
     }

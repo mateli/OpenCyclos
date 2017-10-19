@@ -105,9 +105,6 @@ public abstract class FileMappingWithFields extends FileMapping {
     @OrderBy("order_index")
 	private Collection<FieldMapping> fields;
 
-    protected FileMappingWithFields() {
-	}
-
 	/**
      * Returns a converter for date
      */

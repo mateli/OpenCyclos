@@ -80,7 +80,7 @@ public class Member extends Element implements RegisteredMember, AccountOwner {
     @JoinColumn(name = "member_broker_id")
 	private Member                               broker;
 
-    @Column(name = "hide_email", nullable = false)
+    @Column(name = "hide_email")
     private boolean                              hideEmail;
 
     @OneToMany(mappedBy = "broker")

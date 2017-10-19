@@ -66,7 +66,7 @@ public class MemberGroupAccountSettings extends Entity {
     @Column(name = "default_credit_limit", nullable = false, precision = 15, scale = 6)
     private BigDecimal        defaultCreditLimit = BigDecimal.ZERO;
 
-    @Column(name = "default_upper_credit_limit", nullable = false, precision = 15, scale = 6)
+    @Column(name = "default_upper_credit_limit", precision = 15, scale = 6)
     private BigDecimal        defaultUpperCreditLimit;
 
     @Column(name = "initial_credit", precision = 15, scale = 6)

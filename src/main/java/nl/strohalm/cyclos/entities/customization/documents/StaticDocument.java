@@ -51,9 +51,6 @@ public class StaticDocument extends Document {
     @JoinColumn(name = "binary_file_id")
 	private BinaryFile        binaryFile;
 
-    protected StaticDocument() {
-	}
-
 	public BinaryFile getBinaryFile() {
         return binaryFile;
     }

@@ -129,9 +129,6 @@ public abstract class Ticket extends Entity {
     @JoinColumn(name = "transfer_type_id")
 	private TransferType      transferType;
 
-    protected Ticket() {
-	}
-
 	public BigDecimal getAmount() {
         return amount;
     }

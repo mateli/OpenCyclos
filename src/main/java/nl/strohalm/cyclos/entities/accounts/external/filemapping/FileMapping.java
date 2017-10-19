@@ -71,9 +71,6 @@ public abstract class FileMapping extends Entity {
     @JoinColumn(nullable = false)
 	private ExternalAccount   account;
 
-    protected FileMapping() {
-	}
-
 	public ExternalAccount getAccount() {
         return account;
     }

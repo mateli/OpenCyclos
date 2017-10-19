@@ -88,9 +88,6 @@ public abstract class SystemGroup extends Group {
             inverseJoinColumns = @JoinColumn(name = "transfer_type_id"))
 	private Collection<TransferType>    chargebackTransferTypes;
 
-    protected SystemGroup() {
-	}
-
     @Override
     public Nature getNature() {
         return null;

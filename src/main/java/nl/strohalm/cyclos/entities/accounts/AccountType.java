@@ -104,9 +104,6 @@ public abstract class AccountType extends Entity implements Comparable<AccountTy
     @OneToMany(mappedBy = "accountType", cascade = CascadeType.REMOVE)
 	private Collection<PaymentFilter> paymentFilters;
 
-    protected AccountType() {
-	}
-
 	@Override
     public int compareTo(final AccountType o) {
         final int compareByName = name.compareTo(o.name);

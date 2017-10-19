@@ -197,9 +197,6 @@ public abstract class Group extends Entity implements Comparable<Group> {
     @OneToMany(mappedBy = "oldGroup", cascade = CascadeType.REMOVE)
 	private Collection<GroupRemark>      newRemarks;
 
-    protected Group() {
-	}
-
 	@Override
     public int compareTo(final Group o) {
         return name.compareTo(o.getName());

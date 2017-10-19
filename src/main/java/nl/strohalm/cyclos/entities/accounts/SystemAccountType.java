@@ -24,6 +24,7 @@ import nl.strohalm.cyclos.entities.accounts.external.ExternalAccount;
 import nl.strohalm.cyclos.entities.groups.AdminGroup;
 
 import javax.persistence.CascadeType;
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
@@ -36,6 +37,7 @@ import java.util.Collection;
  * Type for system accounts
  * @author luis
  */
+@DiscriminatorValue("S")
 @javax.persistence.Entity
 public class SystemAccountType extends AccountType {
 

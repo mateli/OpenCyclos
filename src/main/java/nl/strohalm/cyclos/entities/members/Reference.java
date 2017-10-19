@@ -98,9 +98,6 @@ public abstract class Reference extends Entity {
     @Column(name = "comments", nullable = false, columnDefinition = "longtext")
     private String            comments;
 
-    protected Reference() {
-	}
-
 	public String getComments() {
         return comments;
     }

@@ -87,9 +87,6 @@ public abstract class Remark extends Entity {
     @Column(name = "comments", columnDefinition = "longtext")
     private String            comments;
 
-    protected Remark() {
-	}
-
 	public String getComments() {
         return comments;
     }

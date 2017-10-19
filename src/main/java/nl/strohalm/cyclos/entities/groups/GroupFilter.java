@@ -89,9 +89,6 @@ public class GroupFilter extends Entity {
     @OneToMany(mappedBy = "groupFilter", cascade = CascadeType.REMOVE)
 	private Collection<CustomizedFile> customizedFiles;
 
-    protected GroupFilter() {
-	}
-
 	public String getContainerUrl() {
         return containerUrl;
     }

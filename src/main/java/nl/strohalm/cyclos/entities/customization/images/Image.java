@@ -123,9 +123,6 @@ public abstract class Image extends Entity {
     @Column(name = "thumbnail_size", nullable = false)
     private Integer           thumbnailSize;
 
-    protected Image() {
-    }
-
     public String getContentType() {
         return contentType;
     }
