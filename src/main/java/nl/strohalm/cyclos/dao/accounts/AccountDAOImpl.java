@@ -394,58 +394,38 @@ public class AccountDAOImpl extends BaseDAOImpl<Account> implements AccountDAO {
 
     @Override
     public void markForActivation(final BulkUpdateAccountDTO dto) {
-        runNative(new JDBCCallback() {
-            @Override
-            public void execute(final JDBCWrapper jdbc) throws SQLException {
-                final StringBuilder sql = new StringBuilder();
-                Calendar date = Calendar.getInstance();
-                Long typeId = dto.getType().getId();
-                BigDecimal limit = dto.getCreditLimit();
-                BigDecimal upperLimit = dto.getUpperCreditLimit();
-                Long groupId = dto.getGroup().getId();
+        final StringBuilder sql = new StringBuilder();
+        Calendar date = Calendar.getInstance();
+        Long typeId = dto.getType().getId();
+        BigDecimal limit = dto.getCreditLimit();
+        BigDecimal upperLimit = dto.getUpperCreditLimit();
+        Long groupId = dto.getGroup().getId();
 
-                // Fist, mark for activation all accounts which where already there but are inactive
-                if (jdbc.isHSQLDB()) {
-                    // this is because HSQLDB (e.g.: used by Cyclos Standalone) doesn't support join in update statements
-                    sql.append("update accounts a");
-                    sql.append(" set member_action = 'A'");
-                    sql.append(" where a.member_status = 'I'");
-                    sql.append("   and a.member_action is null");
-                    sql.append("   and a.type_id = ?");
-                    sql.append("   and exists (select 1 from members m");
-                    sql.append("              where a.member_id = m.id and");
-                    sql.append("              m.group_id = ?)");
+        // Fist, mark for activation all accounts which where already there but are inactive
+        sql.append("update accounts a inner join members m on a.member_id = m.id");
+        sql.append(" set member_action = 'A'");
+        sql.append(" where a.member_status = 'I'");
+        sql.append("   and a.member_action is null");
+        sql.append("   and m.group_id = ?");
+        sql.append("   and a.type_id = ?");
+        runNative(sql.toString(), groupId, typeId);
 
-                    jdbc.execute(sql.toString(), groupId, typeId);
-                } else {
-                    sql.append("update accounts a inner join members m on a.member_id = m.id");
-                    sql.append(" set member_action = 'A'");
-                    sql.append(" where a.member_status = 'I'");
-                    sql.append("   and a.member_action is null");
-                    sql.append("   and m.group_id = ?");
-                    sql.append("   and a.type_id = ?");
-
-                    jdbc.execute(sql.toString(), groupId, typeId);
-                }
-
-                // Then insert the missing accounts
-                sql.setLength(0);
-                sql.append("insert into accounts ");
-                sql.append("(subclass, creation_date, owner_name, type_id, credit_limit, ");
-                sql.append(" upper_credit_limit, member_id, member_status, member_action) ");
-                sql.append(" select ");
-                sql.append(" 'M', ?, u.username, ?, ?, ?, m.id, 'I', 'A' ");
-                sql.append(" from members m, users u ");
-                sql.append(" where m.id = u.id and m.group_id = ? ");
-                sql.append("   and not exists (");
-                sql.append("       select 1");
-                sql.append("       from accounts a");
-                sql.append("       where a.member_id = m.id");
-                sql.append("         and a.type_id = ?");
-                sql.append("   )");
-                jdbc.execute(sql.toString(), date, typeId, limit, upperLimit, groupId, typeId);
-            }
-        });
+        // Then insert the missing accounts
+        sql.setLength(0);
+        sql.append("insert into accounts ");
+        sql.append("(subclass, creation_date, owner_name, type_id, credit_limit, ");
+        sql.append(" upper_credit_limit, member_id, member_status, member_action) ");
+        sql.append(" select ");
+        sql.append(" 'M', ?, u.username, ?, ?, ?, m.id, 'I', 'A' ");
+        sql.append(" from members m, users u ");
+        sql.append(" where m.id = u.id and m.group_id = ? ");
+        sql.append("   and not exists (");
+        sql.append("       select 1");
+        sql.append("       from accounts a");
+        sql.append("       where a.member_id = m.id");
+        sql.append("         and a.type_id = ?");
+        sql.append("   )");
+        runNative(sql.toString(), date, typeId, limit, upperLimit, groupId, typeId);
     }
 
     @Override

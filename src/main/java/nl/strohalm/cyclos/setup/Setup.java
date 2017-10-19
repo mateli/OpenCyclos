@@ -32,6 +32,7 @@ import java.util.Properties;
 import java.util.ResourceBundle;
 
 import nl.strohalm.cyclos.CyclosConfiguration;
+import nl.strohalm.cyclos.entities.Entity;
 import nl.strohalm.cyclos.utils.PropertiesHelper;
 import nl.strohalm.cyclos.utils.conversion.LocaleConverter;
 
@@ -39,9 +40,10 @@ import org.apache.commons.lang.StringUtils;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import org.hibernate.cfg.Configuration;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+import javax.persistence.EntityManagerFactory;
 
 /**
  * Generate cyclos default data
@@ -75,8 +77,7 @@ public class Setup {
         setup.locale = locale;
         setup.showInitializing();
         final ApplicationContext applicationContext = new ClassPathXmlApplicationContext(SPRING_CONFIG_FILES);
-        setup.configuration = applicationContext.getBean(Configuration.class);
-        setup.sessionFactory = applicationContext.getBean(SessionFactory.class);
+        setup.entityManagerFactory = applicationContext.getBean(EntityManagerFactory.class);
         setup.execute();
         System.exit(0);
     }
@@ -94,7 +95,6 @@ public class Setup {
     }
 
     private ResourceBundle bundle;
-    private Configuration  configuration;
     private boolean        createBasicData;
     private boolean        createDataBase;
     private boolean        createSetupData;
@@ -103,15 +103,14 @@ public class Setup {
     private File           exportScriptTo;
     private boolean        force;
     private Session        session;
-    private SessionFactory sessionFactory;
+    private EntityManagerFactory entityManagerFactory;
     private Locale         locale;
 
     public Setup() {
     }
 
-    public Setup(final Configuration configuration, final SessionFactory sessionFactory) {
-        this.configuration = configuration;
-        this.sessionFactory = sessionFactory;
+    public Setup(final EntityManagerFactory entityManagerFactory) {
+        this.entityManagerFactory = entityManagerFactory;
     }
 
     public boolean execute() {
@@ -127,11 +126,11 @@ public class Setup {
         }
 
         // Configure Hibernate if necessary
-        if (configuration == null || sessionFactory == null) {
+        if (entityManagerFactory == null) {
             throw new IllegalStateException("Persistence not configured");
         }
         // Execute the actions
-        session = sessionFactory.openSession();
+        session = (Session) entityManagerFactory.createEntityManager().getDelegate();
         final Transaction transaction = session.beginTransaction();
         try {
             if (createDataBase) {
@@ -177,10 +176,6 @@ public class Setup {
         return bundle;
     }
 
-    public Configuration getConfiguration() {
-        return configuration;
-    }
-
     public File getExportScriptTo() {
         return exportScriptTo;
     }
@@ -191,10 +186,6 @@ public class Setup {
 
     public Session getSession() {
         return session;
-    }
-
-    public SessionFactory getSessionFactory() {
-        return sessionFactory;
     }
 
     public boolean isCreateBasicData() {
@@ -215,10 +206,6 @@ public class Setup {
 
     public boolean isValid() {
         return createDataBase || exportScriptTo != null || createBasicData || createInitialData || createSmsData;
-    }
-
-    public void setConfiguration(final Configuration configuration) {
-        this.configuration = configuration;
     }
 
     public void setCreateBasicData(final boolean createBasicData) {
@@ -251,10 +238,6 @@ public class Setup {
 
     public void setLocale(final Locale locale) {
         this.locale = locale;
-    }
-
-    public void setSessionFactory(final SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
     }
 
     private void checkBundle() {

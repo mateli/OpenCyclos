@@ -60,32 +60,27 @@ public class MessageDAOImpl extends BaseDAOImpl<Message> implements MessageDAO {
         if (broker == null) {
             return;
         }
-        runNative(new JDBCCallback() {
-            @Override
-            public void execute(final JDBCWrapper jdbc) throws SQLException {
-                final StringBuilder sql = new StringBuilder();
-                sql.append("insert into messages");
-                sql.append(" (date,subject,type,direction,is_read,is_replied,is_html,from_member_id,body,email_sent,to_member_id)");
-                sql.append(" select ?,?,?,?,?,?,?,?,?,?,id");
-                sql.append(" from members m");
-                sql.append(" where m.member_broker_id = ?");
+        final StringBuilder sql = new StringBuilder();
+        sql.append("insert into messages");
+        sql.append(" (date,subject,type,direction,is_read,is_replied,is_html,from_member_id,body,email_sent,to_member_id)");
+        sql.append(" select ?,?,?,?,?,?,?,?,?,?,id");
+        sql.append(" from members m");
+        sql.append(" where m.member_broker_id = ?");
 
-                final List<Object> params = new ArrayList<Object>();
-                params.add(message.getDate());
-                params.add(message.getSubject());
-                params.add(message.getType().getValue());
-                params.add(Message.Direction.INCOMING.getValue());
-                params.add(false);
-                params.add(false);
-                params.add(message.isHtml());
-                params.add(broker.getId());
-                params.add(message.getBody());
-                params.add(false);
-                params.add(broker.getId());
+        final List<Object> params = new ArrayList<Object>();
+        params.add(message.getDate());
+        params.add(message.getSubject());
+        params.add(message.getType().getValue());
+        params.add(Message.Direction.INCOMING.getValue());
+        params.add(false);
+        params.add(false);
+        params.add(message.isHtml());
+        params.add(broker.getId());
+        params.add(message.getBody());
+        params.add(false);
+        params.add(broker.getId());
 
-                jdbc.execute(sql.toString(), params.toArray());
-            }
-        });
+        runNative(sql.toString(), params.toArray());
     }
 
     @Override
@@ -94,38 +89,34 @@ public class MessageDAOImpl extends BaseDAOImpl<Message> implements MessageDAO {
         if (ArrayUtils.isEmpty(groupIds)) {
             return;
         }
-        runNative(new JDBCCallback() {
-            @Override
-            public void execute(final JDBCWrapper jdbc) throws SQLException {
-                final StringBuilder sql = new StringBuilder();
 
-                sql.append("insert into messages");
-                sql.append(" (date,subject,type,direction,is_read,is_replied,is_html,from_member_id,category_id,body,email_sent,to_member_id)");
-                sql.append(" select ?,?,?,?,?,?,?,?,?,?,?,id");
-                sql.append(" from members m");
-                sql.append(" where m.group_id in (");
-                final String[] placeHolders = new String[groupIds.length];
-                Arrays.fill(placeHolders, "?");
-                sql.append(StringUtils.join(placeHolders, ","));
-                sql.append(")");
+        final StringBuilder sql = new StringBuilder();
 
-                final List<Object> params = new ArrayList<Object>();
-                params.add(message.getDate());
-                params.add(message.getSubject());
-                params.add(message.getType().getValue());
-                params.add(Message.Direction.INCOMING.getValue());
-                params.add(false);
-                params.add(false);
-                params.add(message.isHtml());
-                params.add(null);
-                params.add(message.getCategory().getId());
-                params.add(message.getBody());
-                params.add(false);
-                params.addAll(Arrays.asList(groupIds));
+        sql.append("insert into messages");
+        sql.append(" (date,subject,type,direction,is_read,is_replied,is_html,from_member_id,category_id,body,email_sent,to_member_id)");
+        sql.append(" select ?,?,?,?,?,?,?,?,?,?,?,id");
+        sql.append(" from members m");
+        sql.append(" where m.group_id in (");
+        final String[] placeHolders = new String[groupIds.length];
+        Arrays.fill(placeHolders, "?");
+        sql.append(StringUtils.join(placeHolders, ","));
+        sql.append(")");
 
-                jdbc.execute(sql.toString(), params.toArray());
-            }
-        });
+        final List<Object> params = new ArrayList<Object>();
+        params.add(message.getDate());
+        params.add(message.getSubject());
+        params.add(message.getType().getValue());
+        params.add(Message.Direction.INCOMING.getValue());
+        params.add(false);
+        params.add(false);
+        params.add(message.isHtml());
+        params.add(null);
+        params.add(message.getCategory().getId());
+        params.add(message.getBody());
+        params.add(false);
+        params.addAll(Arrays.asList(groupIds));
+
+        runNative(sql.toString(), params.toArray());
     }
 
     @Override
@@ -138,23 +129,19 @@ public class MessageDAOImpl extends BaseDAOImpl<Message> implements MessageDAO {
 
     @Override
     public void removeMessagesOnTrashBefore(final Calendar limit) {
-        runNative(new JDBCCallback() {
-            @Override
-            public void execute(final JDBCWrapper jdbc) throws SQLException {
-                // First, we need to remove all rows in messages_to_groups for messages which would be deleted, to avoid constraint errors
-                final String deleteMessagesGroups = "delete from messages_to_groups " +
-                        " where exists ( " +
-                        "     select 1 " +
-                        "     from messages m " +
-                        "     where m.removed_at < ? " +
-                        "       and m.id = messages_to_groups.message_id) ";
-                jdbc.execute(deleteMessagesGroups, limit);
 
-                // Then, delete the messages
-                final String deleteMessages = "delete from messages where removed_at < ?";
-                jdbc.execute(deleteMessages, limit);
-            }
-        });
+        // First, we need to remove all rows in messages_to_groups for messages which would be deleted, to avoid constraint errors
+        final String deleteMessagesGroups = "delete from messages_to_groups " +
+                " where exists ( " +
+                "     select 1 " +
+                "     from messages m " +
+                "     where m.removed_at < ? " +
+                "       and m.id = messages_to_groups.message_id) ";
+        runNative(deleteMessagesGroups, limit);
+
+        // Then, delete the messages
+        final String deleteMessages = "delete from messages where removed_at < ?";
+        runNative(deleteMessages, limit);
     }
 
     @Override

@@ -19,7 +19,6 @@
  */
 package nl.strohalm.cyclos.dao.members;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -33,7 +32,6 @@ import java.util.Map;
 import java.util.Set;
 
 import nl.strohalm.cyclos.dao.IndexedDAOImpl;
-import nl.strohalm.cyclos.dao.JDBCCallback;
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.access.Channel;
 import nl.strohalm.cyclos.entities.accounts.Account;
@@ -64,7 +62,6 @@ import nl.strohalm.cyclos.entities.settings.LocalSettings.SortOrder;
 import nl.strohalm.cyclos.services.elements.BrokerQuery;
 import nl.strohalm.cyclos.services.settings.SettingsServiceLocal;
 import nl.strohalm.cyclos.utils.EntityHelper;
-import nl.strohalm.cyclos.utils.JDBCWrapper;
 import nl.strohalm.cyclos.entities.utils.Period;
 import nl.strohalm.cyclos.utils.hibernate.HibernateCustomFieldHandler;
 import nl.strohalm.cyclos.utils.hibernate.HibernateHelper;
@@ -109,13 +106,8 @@ public class ElementDAOImpl extends IndexedDAOImpl<Element> implements ElementDA
 
     @Override
     public void createAgreementForAllMembers(final RegistrationAgreement registrationAgreement, final MemberGroup group) {
-        runNative(new JDBCCallback() {
-            @Override
-            public void execute(final JDBCWrapper jdbc) throws SQLException {
-                final String insert = "insert into registration_agreement_logs (member_id, registration_agreement_id, date) select id, ?, ? from members where group_id = ?";
-                jdbc.execute(insert, registrationAgreement.getId(), Calendar.getInstance(), group.getId());
-            }
-        });
+        final String insert = "insert into registration_agreement_logs (member_id, registration_agreement_id, date) select id, ?, ? from members where group_id = ?";
+        runNative(insert, registrationAgreement.getId(), Calendar.getInstance(), group.getId());
     }
 
     @Override
@@ -425,9 +417,7 @@ public class ElementDAOImpl extends IndexedDAOImpl<Element> implements ElementDA
             final String statement = " delete from members_channels " +
                     " where channel_id in (:channelIds) " +
                     " and member_id in (select id from members where group_id = :groupId) ";
-            final SQLQuery query = getSession().createSQLQuery(statement);
-            getHibernateQueryHandler().setQueryParameters(query, parameters);
-            query.executeUpdate();
+            runNative(statement, parameters);
         }
 
     }
@@ -559,9 +549,10 @@ public class ElementDAOImpl extends IndexedDAOImpl<Element> implements ElementDA
         return list(query, hql.toString(), namedParameters);
     }
 
-    @SuppressWarnings("unchecked")
     public Iterator<Member> searchActiveMembers(final Collection<Group> toSearch) {
-        return (Iterator<Member>) getHibernateTemplate().iterate(" from " + Member.class.getName() + " m  where m.group in (?)  and exists (select 1 from " + Account.class.getName() + " a where a.member = m) ", toSearch);
+        javax.persistence.Query query = entityManager.createQuery(" from " + Member.class.getName() + " m  where m.group in (?)  and exists (select 1 from " + Account.class.getName() + " a where a.member = m) ", Member.class);
+        query.setParameter(1, toSearch);
+        return query.getResultList().iterator();
     }
 
     @Override

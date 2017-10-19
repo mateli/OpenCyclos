@@ -33,9 +33,9 @@ import nl.strohalm.cyclos.services.permissions.PermissionServiceLocal;
 import nl.strohalm.cyclos.utils.access.LoggedUser;
 
 import org.hibernate.ObjectNotFoundException;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 /**
  * Base class for implementations of service security layer
@@ -45,7 +45,8 @@ public abstract class BaseServiceSecurity implements ServiceSecurity {
 
     protected PermissionServiceLocal permissionService;
     protected FetchServiceLocal      fetchService;
-    private SessionFactory           sessionFactory;
+    @PersistenceContext
+    protected EntityManager entityManager;
 
     public void setFetchServiceLocal(final FetchServiceLocal fetchService) {
         this.fetchService = fetchService;
@@ -53,10 +54,6 @@ public abstract class BaseServiceSecurity implements ServiceSecurity {
 
     public final void setPermissionServiceLocal(final PermissionServiceLocal permissionService) {
         this.permissionService = permissionService;
-    }
-
-    public final void setSessionFactory(final SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
     }
 
     /**
@@ -95,15 +92,6 @@ public abstract class BaseServiceSecurity implements ServiceSecurity {
         return permissionService;
     }
 
-    protected Session getSession() {
-        //return SessionFactoryUtils.getSession(sessionFactory, true);
-        return sessionFactory.openSession();
-    }
-
-    protected SessionFactory getSessionFactory() {
-        return sessionFactory;
-    }
-
     /**
      * @return if the logged user has or not at least one of the requested permissions
      */
@@ -121,7 +109,7 @@ public abstract class BaseServiceSecurity implements ServiceSecurity {
     @SuppressWarnings("unchecked")
     protected <T extends Entity> T load(final Class<T> type, final Long id) {
         try {
-            return (T) getSession().load(type, id);
+            return (T) entityManager.find(type, id);
         } catch (final ObjectNotFoundException e) {
             throw new EntityNotFoundException(type, id);
         }

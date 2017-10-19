@@ -28,6 +28,7 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.engine.spi.SessionFactoryImplementor;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 
+import javax.persistence.EntityManagerFactory;
 
 
 /**
@@ -56,21 +57,21 @@ public class CustomSessionFactoryBean extends LocalSessionFactoryBean {
     }
 
 //    @Override
-    protected SessionFactory newSessionFactory(final Configuration config) throws HibernateException {
+    protected EntityManagerFactory newSessionFactory(final Configuration config) throws HibernateException {
         // Configure the database
         dataBaseConfiguration = new DataBaseConfiguration(config, taskRunner);
         dataBaseConfiguration.run();
 
         // The SessionFactory may have been already configured
-        SessionFactory sessionFactory = dataBaseConfiguration.getSessionFactory();
-        if (sessionFactory == null) {
+        EntityManagerFactory entityManagerFactory = dataBaseConfiguration.getEntityManagerFactory();
+        if (entityManagerFactory == null) {
             // Probably the database tests were skipped... Build the session factory using the default mechanism
          //   sessionFactory = super.newSessionFactory(config);
         }
 
-        sessionFactoryImplementor = (SessionFactoryImplementor) sessionFactory;
+//        sessionFactoryImplementor = (SessionFactoryImplementor) sessionFactory;
 
-        return sessionFactory;
+        return entityManagerFactory;
     }
 
     //@Override

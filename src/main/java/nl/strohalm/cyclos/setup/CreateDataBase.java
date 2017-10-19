@@ -30,11 +30,9 @@ import org.hibernate.tool.hbm2ddl.SchemaExport;
  */
 public class CreateDataBase implements Runnable {
 
-    private final Configuration  configuration;
     private final ResourceBundle bundle;
 
     public CreateDataBase(final Setup setup) {
-        configuration = setup.getConfiguration();
         bundle = setup.getBundle();
     }
 

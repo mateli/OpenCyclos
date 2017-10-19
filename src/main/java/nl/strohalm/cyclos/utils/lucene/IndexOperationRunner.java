@@ -69,15 +69,16 @@ import org.hibernate.ObjectNotFoundException;
 import org.hibernate.ScrollMode;
 import org.hibernate.ScrollableResults;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.orm.hibernate5.SessionFactoryUtils;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionCallback;
 import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 import org.springframework.transaction.support.TransactionTemplate;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 /**
  * Keeps polling the {@link IndexOperation} entities and applying them
@@ -104,11 +105,13 @@ public class IndexOperationRunner implements Runnable, InitializingBean, Disposa
     private MessageResolver                    messageResolver;
     private IndexHandler                       indexHandler;
     private InstanceHandler                    instanceHandler;
-    private SessionFactory                     sessionFactory;
     private Map<Class<?>, IndexWriter>         cachedWriters;
     private SettingsServiceLocal               settingsService;
     private ApplicationServiceLocal            applicationService;
     private IndexOperationDAO                  indexOperationDao;
+
+    @PersistenceContext
+    protected EntityManager entityManager;
 
     private final List<IndexOperationListener> indexOperationListeners = new ArrayList<IndexOperationListener>();
 
@@ -217,10 +220,6 @@ public class IndexOperationRunner implements Runnable, InitializingBean, Disposa
         this.messageResolver = messageResolver;
     }
 
-    public void setSessionFactory(final SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
-    }
-
     public void setSettingsServiceLocal(final SettingsServiceLocal settingsService) {
         this.settingsService = settingsService;
     }
@@ -242,14 +241,13 @@ public class IndexOperationRunner implements Runnable, InitializingBean, Disposa
                 @Override
                 public Document doInTransaction(final TransactionStatus status) {
                     try {
-                        Session session = getSession();
-                        Indexable entity = (Indexable) session.load(entityType, id);
+                        Indexable entity = entityManager.find(entityType, id);
                         DocumentMapper documentMapper = indexHandler.getDocumentMapper(entityType);
                         if (entityType.equals(Member.class)) {
-                            rebuildMemberAds(id, analyzer, session);
+                            rebuildMemberAds(id, analyzer, entityManager);
                         }
                         if (entityType.equals(Administrator.class) || entityType.equals(Member.class)) {
-                            rebuildMemberRecords(id, analyzer, session);
+                            rebuildMemberRecords(id, analyzer, entityManager);
                         }
                         return documentMapper.map(entity);
                     } catch (ObjectNotFoundException e) {
@@ -292,11 +290,6 @@ public class IndexOperationRunner implements Runnable, InitializingBean, Disposa
 
     private Analyzer getAnalyzer() {
         return settingsService.getLocalSettings().getLanguage().getAnalyzer();
-    }
-
-    private Session getSession() {
-        //return SessionFactoryUtils.getSession(sessionFactory, true);
-        return sessionFactory.openSession();
     }
 
     /**
@@ -399,7 +392,7 @@ public class IndexOperationRunner implements Runnable, InitializingBean, Disposa
         boolean success = readonlyTransactionTemplate.execute(new TransactionCallback<Boolean>() {
             @Override
             public Boolean doInTransaction(final TransactionStatus status) {
-                Session session = getSession();
+                Session session = (Session) entityManager.getDelegate();
                 ScrollableResults scroll = session.createQuery(resolveHql(entityType)).scroll(ScrollMode.FORWARD_ONLY);
 
                 try {
@@ -468,7 +461,7 @@ public class IndexOperationRunner implements Runnable, InitializingBean, Disposa
         persistStatus(time, id);
     }
 
-    private boolean rebuildMemberAds(final Long userId, final Analyzer analyzer, final Session session) {
+    private boolean rebuildMemberAds(final Long userId, final Analyzer analyzer, final EntityManager entityManager) {
         final Class<? extends Indexable> entityType = Ad.class;
         final IndexWriter writer = getWriter(entityType);
         boolean success = false;
@@ -484,6 +477,8 @@ public class IndexOperationRunner implements Runnable, InitializingBean, Disposa
             success = false;
         }
 
+        // FIXME: MIG_JPA
+        Session session = (Session) entityManager.getDelegate();
         ScrollableResults scroll = session.createQuery("from Ad a where a.deleteDate is null and a.owner.id = " + userId).scroll(ScrollMode.FORWARD_ONLY);
 
         try {
@@ -522,7 +517,7 @@ public class IndexOperationRunner implements Runnable, InitializingBean, Disposa
         }
     }
 
-    private boolean rebuildMemberRecords(final Long userId, final Analyzer analyzer, final Session session) {
+    private boolean rebuildMemberRecords(final Long userId, final Analyzer analyzer, final EntityManager entityManager) {
         final Class<? extends Indexable> entityType = MemberRecord.class;
         final IndexWriter writer = getWriter(entityType);
         boolean success = false;
@@ -538,6 +533,8 @@ public class IndexOperationRunner implements Runnable, InitializingBean, Disposa
             success = false;
         }
 
+        // FIXME: MIG_JPA
+        Session session = (Session) entityManager.getDelegate();
         ScrollableResults scroll = session.createQuery("from MemberRecord mr where mr.element.id = " + userId).scroll(ScrollMode.FORWARD_ONLY);
 
         try {

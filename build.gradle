@@ -189,8 +189,7 @@ dependencies {
 
     // http://mvnrepository.com/artifact/org.hibernate/hibernate-core
     compile group: 'org.hibernate', name: 'hibernate-core', version: '5.2.1.Final'
-    // http://mvnrepository.com/artifact/org.hibernate.javax.persistence/hibernate-jpa-2.1-api
-    compile group: 'org.hibernate.javax.persistence', name: 'hibernate-jpa-2.1-api', version: '1.0.0.Final'
+
     // http://mvnrepository.com/artifact/org.hibernate/hibernate-c3p0
     compile group: 'org.hibernate', name: 'hibernate-c3p0', version: '5.2.1.Final'
 

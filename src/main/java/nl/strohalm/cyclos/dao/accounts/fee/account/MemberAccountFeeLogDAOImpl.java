@@ -50,6 +50,8 @@ import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.mutable.MutableInt;
 
+import javax.persistence.Query;
+
 /**
  * Implementation for {@link MemberAccountFeeLogDAO}
  * 
@@ -145,28 +147,41 @@ public class MemberAccountFeeLogDAOImpl extends BaseDAOImpl<MemberAccountFeeLog>
             return 0;
         }
         final MutableInt result = new MutableInt();
-        runNative(new JDBCCallback() {
-            @Override
-            public void execute(final JDBCWrapper jdbc) throws SQLException {
-                String[] placeHolders = new String[groupIds.length];
-                Arrays.fill(placeHolders, "?");
 
-                StringBuilder sql = new StringBuilder();
-                sql.append(" insert into members_pending_charge");
-                sql.append(" (account_fee_log_id, member_id)");
-                sql.append(" select ?, id");
-                sql.append(" from members m");
-                sql.append(" where m.subclass = ?");
-                sql.append(" and m.group_id in (").append(StringUtils.join(placeHolders, ",")).append(')');
+        String[] placeHolders = new String[groupIds.length];
+        Arrays.fill(placeHolders, "?");
 
-                List<Object> args = new ArrayList<Object>(groupIds.length + 2);
-                args.add(log.getId());
-                args.add("M");
-                CollectionUtils.addAll(args, groupIds);
-                int totalMembers = jdbc.execute(sql.toString(), args.toArray());
-                result.setValue(totalMembers);
-            }
-        });
+        StringBuilder sql = new StringBuilder();
+        sql.append(" insert into members_pending_charge");
+        sql.append(" (account_fee_log_id, member_id)");
+        sql.append(" select ?, id");
+        sql.append(" from members m");
+        sql.append(" where m.subclass = ?");
+        sql.append(" and m.group_id in (").append(StringUtils.join(placeHolders, ",")).append(')');
+
+        List<Object> args = new ArrayList<>(groupIds.length + 2);
+        args.add(log.getId());
+        args.add("M");
+        CollectionUtils.addAll(args, groupIds);
+        runNative(sql.toString(), args.toArray());
+
+        // Retrieve the number of inserted entities
+        sql = new StringBuilder();
+        sql.append(" select count(*) from into members_pending_charge");
+        sql.append(" join members m");
+        sql.append(" where m.subclass = ?");
+        sql.append(" and account_fee_log_id = ?");
+        sql.append(" and m.group_id in (").append(StringUtils.join(placeHolders, ",")).append(')');
+
+        Query query = entityManager.createNativeQuery(sql.toString(), Long.class);
+        query.setParameter(1, "M");
+        query.setParameter(2, log.getId());
+        for (int i = 0; i < groupIds.length; i++) {
+            query.setParameter(i+3, groupIds[i]);
+        }
+        int totalMembers = (int) query.getSingleResult();
+
+        result.setValue(totalMembers);
         return result.intValue();
     }
 
@@ -180,12 +195,7 @@ public class MemberAccountFeeLogDAOImpl extends BaseDAOImpl<MemberAccountFeeLog>
 
     @Override
     public void removePendingCharge(final AccountFeeLog feeLog, final Member member) {
-        runNative(new JDBCCallback() {
-            @Override
-            public void execute(final JDBCWrapper jdbc) throws SQLException {
-                jdbc.execute("delete from members_pending_charge where account_fee_log_id = ? and member_id = ?", feeLog.getId(), member.getId());
-            }
-        });
+        runNative("delete from members_pending_charge where account_fee_log_id = ? and member_id = ?", feeLog.getId(), member.getId());
     }
 
     @Override

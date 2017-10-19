@@ -72,8 +72,8 @@ public class TransferTypeDAOImpl extends BaseDAOImpl<TransferType> implements Tr
                 // Ensure the initial credit relationship is removed
                 bulkUpdate("update " + MemberGroupAccountSettings.class.getName() + " set initialCreditTransferType=null where (initialCredit is null or initialCredit = 0) and initialCreditTransferType=:tt", Collections.singletonMap("tt", transferType));
 
-                getHibernateTemplate().delete(transferType);
-                getHibernateTemplate().flush();
+                entityManager.remove(transferType);
+                entityManager.flush();
                 rows++;
             } catch (final EntityNotFoundException e) {
                 // Ignore

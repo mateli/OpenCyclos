@@ -39,7 +39,7 @@ public class MemberGroupAccountSettingsDAOImpl extends BaseDAOImpl<MemberGroupAc
     }
 
     public void delete(final long groupId, final long accountTypeId) {
-        getHibernateTemplate().delete(load(groupId, accountTypeId));
+        entityManager.remove(load(groupId, accountTypeId));
     }
 
     public MemberGroupAccountSettings load(final long groupId, final long accountTypeId, final Relationship... fetch) {

@@ -33,14 +33,12 @@ import org.hibernate.tool.hbm2ddl.SchemaExport;
 public class ExportScript implements Runnable {
 
     private final ResourceBundle bundle;
-    private final Configuration  configuration;
     private File                 exportTo;
 
     public ExportScript(final Setup setup, final File exportTo) {
         if (exportTo == null) {
             throw new IllegalArgumentException("No file for the script");
         }
-        configuration = setup.getConfiguration();
         bundle = setup.getBundle();
         this.exportTo = exportTo;
     }

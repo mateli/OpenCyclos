@@ -47,16 +47,12 @@ public class ApplicationDAOImpl extends BaseDAOImpl<Application> implements Appl
 
     @Override
     public Application read() {
-        return getHibernateTemplate().execute(new HibernateCallback<Application>() {
-            @Override
-            public Application doInHibernate(final Session session) throws HibernateException{
-                return (Application) session.createCriteria(Application.class).uniqueResult();
-            }
-        });
+        return uniqueResult("from " + getEntityType().getName(), null);
     }
 
     @Override
     public void shutdownDBIfNeeded() {
+        // FIXME: MIG_JPA
         SessionFactoryImplementor sessionFactory = (SessionFactoryImplementor) getSessionFactory();
                 
         Session session = sessionFactory.openSession();

@@ -37,18 +37,23 @@ import org.springframework.orm.ObjectRetrievalFailureException;
 import org.springframework.orm.hibernate5.HibernateTemplate;
 import org.springframework.orm.hibernate5.support.HibernateDaoSupport;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
 /**
  * Implementation for fetch DAO
  * @author luis
  */
-public class FetchDAOImpl extends HibernateDaoSupport implements FetchDAO {
+public class FetchDAOImpl /* extends HibernateDaoSupport */ implements FetchDAO {
+
+    @PersistenceContext
+    protected EntityManager entityManager;
 
     private HibernateQueryHandler hibernateQueryHandler;
 
     public void clearCache() {
-        final HibernateTemplate ht = getHibernateTemplate();
-        ht.flush();
-        ht.clear();
+        entityManager.flush();
+        entityManager.clear();
     }
 
     public <E extends Entity> E fetch(final E inputEntity, final Relationship... fetch) {
@@ -64,14 +69,13 @@ public class FetchDAOImpl extends HibernateDaoSupport implements FetchDAO {
         if (entity == null || entity.getId() == null) {
             throw new UnexpectedEntityException();
         }
-        final HibernateTemplate ht = getHibernateTemplate();
-        final E current = (E) ht.load(EntityHelper.getRealClass(entity), entity.getId());
-        ht.refresh(current);
+        final E current = (E) entityManager.find(EntityHelper.getRealClass(entity), entity.getId());
+        entityManager.refresh(current);
         return doFetch(current, fetch);
     }
 
     public void removeFromCache(final Entity entity) {
-        getHibernateTemplate().evict(entity);
+        entityManager.getEntityManagerFactory().getCache().evict(entity.getClass(), entity.getId());
     }
 
     public void setHibernateQueryHandler(final HibernateQueryHandler hibernateQueryHandler) {
@@ -94,7 +98,7 @@ public class FetchDAOImpl extends HibernateDaoSupport implements FetchDAO {
 
         // Load and initialize the entity
         try {
-            entity = (E) getHibernateTemplate().load(entityType, id);
+            entity = (E) entityManager.find(entityType, id);
             entity = (E) hibernateQueryHandler.initialize(entity);
         } catch (final ObjectRetrievalFailureException e) {
             throw new EntityNotFoundException(entityType, id);

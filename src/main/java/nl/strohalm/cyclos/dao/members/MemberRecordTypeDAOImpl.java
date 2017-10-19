@@ -88,14 +88,14 @@ public class MemberRecordTypeDAOImpl extends BaseDAOImpl<MemberRecordType> imple
                     group.getCreateMemberRecordTypes().remove(type);
                 }
 
-                getHibernateTemplate().delete(type);
+                entityManager.remove(type);
                 count++;
             } catch (final EntityNotFoundException e) {
                 continue;
             }
         }
         if (flush) {
-            getHibernateTemplate().flush();
+            entityManager.flush();
         }
         return count;
     }

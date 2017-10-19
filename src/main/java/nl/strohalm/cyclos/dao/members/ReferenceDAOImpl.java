@@ -59,6 +59,8 @@ import org.apache.commons.collections.CollectionUtils;
 import org.hibernate.SQLQuery;
 import org.hibernate.type.StandardBasicTypes;
 
+import javax.persistence.Query;
+
 /**
  * Implementation class for reference DAO
  * @author rafael
@@ -191,12 +193,15 @@ public class ReferenceDAOImpl extends BaseDAOImpl<Reference> implements Referenc
         }
 
         SQLQuery sqlQuery = getSession().createSQLQuery(sql.toString());
+        Query nativeQuery = entityManager.createNativeQuery(sql.toString());
         if (member != null) {
             sqlQuery.setLong("memberId", member.getId());
+            nativeQuery.setParameter("memberId", member.getId());
         }
         if (countOnly) {
             // Handle the special case for count only
             sqlQuery.addScalar("row_count", StandardBasicTypes.INTEGER);
+            nativeQuery.setParameter("row_count", member.getId());
             int count = ((Number) sqlQuery.uniqueResult()).intValue();
             return new PageImpl<PaymentAwaitingFeedbackDTO>(pageParameters, count, Collections.<PaymentAwaitingFeedbackDTO> emptyList());
         } else {
@@ -225,7 +230,7 @@ public class ReferenceDAOImpl extends BaseDAOImpl<Reference> implements Referenc
                     dto.setMemberName((String) input[6]);
                     dto.setMemberUsername((String) input[7]);
 
-                    TransferType transferType = (TransferType) getSession().load(TransferType.class, dto.getTransferTypeId());
+                    TransferType transferType = entityManager.find(TransferType.class, dto.getTransferTypeId());
                     dto.setCurrency(getFetchDao().fetch(transferType.getCurrency()));
 
                     return dto;

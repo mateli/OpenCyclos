@@ -54,60 +54,55 @@ public class SmsMailingDAOImpl extends BaseDAOImpl<SmsMailing> implements SmsMai
 
     @Override
     public void assignUsersToSend(final SmsMailing smsMailing, final MemberCustomField smsCustomField) {
-        runNative(new JDBCCallback() {
-            @Override
-            public void execute(final JDBCWrapper jdbc) throws SQLException {
-                final Collection<MemberGroup> groups = smsMailing.getGroups();
-                final Member broker = (Member) (LoggedUser.isBroker() ? LoggedUser.element() : null);
+        final Collection<MemberGroup> groups = smsMailing.getGroups();
+        final Member broker = (Member) (LoggedUser.isBroker() ? LoggedUser.element() : null);
 
-                final List<Object> params = new ArrayList<Object>();
-                params.add(smsMailing.getId());
-                params.add(smsCustomField.getId());
+        final List<Object> params = new ArrayList<Object>();
+        params.add(smsMailing.getId());
+        params.add(smsCustomField.getId());
 
-                final StringBuilder sql = new StringBuilder();
-                sql.append(" insert into sms_mailings_pending_to_send (sms_mailing_id, member_id)");
-                sql.append(" select ?, m.id ");
-                sql.append(" from custom_field_values fv inner join members m on fv.member_id = m.id left join member_sms_status s on m.id = s.member_id inner join groups g on m.group_id = g.id");
-                sql.append(" where fv.field_id = ?");
-                sql.append("  and length(fv.string_value) > 0"); // Only if the custom field has value
-                if (!smsMailing.isSingleMember() && CollectionUtils.isNotEmpty(groups)) {
-                    // By admin - set the groups
-                    sql.append(" and m.group_id in (");
-                    for (final Iterator<MemberGroup> iterator = groups.iterator(); iterator.hasNext();) {
-                        final MemberGroup group = iterator.next();
-                        sql.append('?');
-                        if (iterator.hasNext()) {
-                            sql.append(',');
-                        }
-                        params.add(group.getId());
-                    }
-                    sql.append(" )");
+        final StringBuilder sql = new StringBuilder();
+        sql.append(" insert into sms_mailings_pending_to_send (sms_mailing_id, member_id)");
+        sql.append(" select ?, m.id ");
+        sql.append(" from custom_field_values fv inner join members m on fv.member_id = m.id left join member_sms_status s on m.id = s.member_id inner join groups g on m.group_id = g.id");
+        sql.append(" where fv.field_id = ?");
+        sql.append("  and length(fv.string_value) > 0"); // Only if the custom field has value
+        if (!smsMailing.isSingleMember() && CollectionUtils.isNotEmpty(groups)) {
+            // By admin - set the groups
+            sql.append(" and m.group_id in (");
+            for (final Iterator<MemberGroup> iterator = groups.iterator(); iterator.hasNext();) {
+                final MemberGroup group = iterator.next();
+                sql.append('?');
+                if (iterator.hasNext()) {
+                    sql.append(',');
                 }
-                if (broker != null) {
-                    // By broker - set the broker
-                    sql.append(" and m.member_broker_id = ?");
-                    params.add(broker.getId());
-                }
-                if (smsMailing.isSingleMember()) {
-                    // Mailing to member - set the member
-                    sql.append(" and m.id = ?");
-                    params.add(smsMailing.getMember().getId());
-                }
-                // Individual mailings are always free and delivered no matter the member preferences
-                if (!smsMailing.isSingleMember()) {
-                    // Ensure there's a MemberSmsStatus which accepts free / paid mailings
-                    final String acceptColumn = smsMailing.isFree() ? "accept_free_mailing" : "accept_paid_mailing";
-                    sql.append(" and (s.id is null and g.").append("member_default_").append(acceptColumn).append(" = ?").append(" or s.").append(acceptColumn).append(" = ?)");
-                    params.add(true);
-                    params.add(true);
-                }
-                jdbc.execute(sql.toString(), params.toArray());
-
-                // Set the sent_sms as the number of members which will receive the message
-                final String updateSentSQL = "update sms_mailings m set m.sent_sms = (select count(*) from sms_mailings_pending_to_send p where p.sms_mailing_id = m.id) where m.id = ?";
-                jdbc.execute(updateSentSQL, smsMailing.getId());
+                params.add(group.getId());
             }
-        });
+            sql.append(" )");
+        }
+        if (broker != null) {
+            // By broker - set the broker
+            sql.append(" and m.member_broker_id = ?");
+            params.add(broker.getId());
+        }
+        if (smsMailing.isSingleMember()) {
+            // Mailing to member - set the member
+            sql.append(" and m.id = ?");
+            params.add(smsMailing.getMember().getId());
+        }
+        // Individual mailings are always free and delivered no matter the member preferences
+        if (!smsMailing.isSingleMember()) {
+            // Ensure there's a MemberSmsStatus which accepts free / paid mailings
+            final String acceptColumn = smsMailing.isFree() ? "accept_free_mailing" : "accept_paid_mailing";
+            sql.append(" and (s.id is null and g.").append("member_default_").append(acceptColumn).append(" = ?").append(" or s.").append(acceptColumn).append(" = ?)");
+            params.add(true);
+            params.add(true);
+        }
+        runNative(sql.toString(), params.toArray());
+
+        // Set the sent_sms as the number of members which will receive the message
+        final String updateSentSQL = "update sms_mailings m set m.sent_sms = (select count(*) from sms_mailings_pending_to_send p where p.sms_mailing_id = m.id) where m.id = ?";
+        runNative(updateSentSQL, smsMailing.getId());
     }
 
     public List<SmsMailing> listUnfinishedMailings() {
@@ -121,12 +116,7 @@ public class SmsMailingDAOImpl extends BaseDAOImpl<SmsMailing> implements SmsMai
 
     @Override
     public void removeMemberFromPending(final SmsMailing smsMailing, final Member member) {
-        runNative(new JDBCCallback() {
-            @Override
-            public void execute(final JDBCWrapper jdbc) throws SQLException {
-                jdbc.execute("delete from sms_mailings_pending_to_send where sms_mailing_id = ? and member_id = ?", smsMailing.getId(), member.getId());
-            }
-        });
+        runNative("delete from sms_mailings_pending_to_send where sms_mailing_id = ? and member_id = ?", smsMailing.getId(), member.getId());
     }
 
     @Override

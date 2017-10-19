@@ -25,8 +25,6 @@ import nl.strohalm.cyclos.entities.exceptions.EntityNotFoundException;
 import nl.strohalm.cyclos.entities.members.Member;
 import nl.strohalm.cyclos.entities.sms.MemberSmsStatus;
 
-import org.hibernate.Query;
-
 /**
  * Implementation for MemberSmsStatusDAO
  * 
@@ -40,9 +38,7 @@ public class MemberSmsStatusDAOImpl extends BaseDAOImpl<MemberSmsStatus> impleme
 
     @Override
     public MemberSmsStatus load(final Member member, final Relationship... fetch) throws EntityNotFoundException {
-        final Query query = getSession().createQuery("from MemberSmsStatus s where s.member = :member");
-        query.setParameter("member", member);
-        final MemberSmsStatus status = (MemberSmsStatus) query.uniqueResult();
+        final MemberSmsStatus status = uniqueResult("from MemberSmsStatus s where s.member = :member", member);
         if (status == null) {
             throw new EntityNotFoundException(MemberSmsStatus.class);
         }

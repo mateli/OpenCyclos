@@ -4,52 +4,77 @@
  -->
 <beans default-autowire="byName"
        xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:context="http://www.springframework.org/schema/context"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:util="http://www.springframework.org/schema/util"
        xsi:schemaLocation="
 			http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+			http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
 			http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd"
 	   >
 
-	<!-- The Hibernate session factory -->
-	<bean id="sessionFactory" class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
+	<!--  Tell spring to use annotation based congfigurations and where to find the beans -->
+	<context:annotation-config />
+	<context:component-scan base-package="nl.strohalm.cyclos.dao" />
+	<context:component-scan base-package="nl.strohalm.cyclos.utils" />
+
+	<context:property-placeholder location="classpath:/cyclos.properties"/>
+
+	<bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean" >
 		<property name="packagesToScan" value="nl.strohalm.cyclos.entities" />
-		<!-- 
-		<property name="eventListeners">
-			<map>
-				<entry key="post-update">
-					<ref bean="writeDetectEventListener"/>
-				</entry>
-				<entry key="post-insert">
-					<ref bean="writeDetectEventListener"/>
-				</entry>
-				<entry key="post-delete">
-					<ref bean="writeDetectEventListener"/>
-				</entry>
-				<entry key="post-collection-recreate">
-					<ref bean="writeDetectEventListener"/>
-				</entry>
-				<entry key="post-collection-remove">
-					<ref bean="writeDetectEventListener"/>
-				</entry>
-				<entry key="post-collection-update">
-					<ref bean="writeDetectEventListener"/>
-				</entry>
-			</map>
+		<property name="dataSource" ref="dataSource" />
+		<property name="jpaVendorAdapter">
+			<bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"/>
 		</property>
-                -->
+		<property name="jpaProperties">
+			<props>
+				<prop key="javax.persistence.sharedCache.mode">ENABLE_SELECTIVE</prop>
+				<prop key="hibernate.hbm2ddl.auto">${hibernate.hbm2ddl.auto}</prop>
+				<prop key="hibernate.dialect">${hibernate.dialect}</prop>
+				<prop key="current_session_context_class">thread</prop>
+				<prop key="hibernate.cache.provider_class">org.hibernate.cache.internal.NoCacheProvider</prop>
+				<!-- used for debug -->
+				<prop key="hibernate.show_sql">true</prop>
+				<!-- EhCache -->
+				<prop key="hibernate.cache.provider_configuration_file_resource_path">classpath:ehcache.xml</prop>
+				<prop key="hibernate.cache.region.factory_class">org.hibernate.cache.ehcache.EhCacheRegionFactory</prop>
+				<prop key="hibernate.cache.provider_class">org.hibernate.cache.SingletonEhCacheProvider</prop>
+				<prop key="hibernate.cache.use_second_level_cache">${hibernate.cache.use_second_level_cache}</prop>
+				<prop key="hibernate.cache.use_query_cache">${hibernate.cache.use_query_cache}</prop>
+				<prop key="hibernate.generate_statistics">true</prop>
+				<!-- configuration pool via c3p0, see https://community.jboss.org/wiki/HowToConfigureTheC3P0ConnectionPool -->
+				<!--<prop key="hibernate.connection.provider_class">${hibernate.connection.provider_class}</prop>-->
+				<!--<prop key="hibernate.c3p0.min_size">${hibernate.c3p0.minPoolSize}</prop>-->
+				<!--<prop key="hibernate.c3p0.max_size">${hibernate.c3p0.maxPoolSize}</prop>-->
+				<!--<prop key="hibernate.c3p0.acquire_increment">${hibernate.c3p0.acquire_increment}</prop>-->
+				<!--<prop key="hibernate.c3p0.max_statements">${hibernate.c3p0.max_statements}</prop>-->
+				<!--<prop key="hibernate.c3p0.timeout">${hibernate.c3p0.timeout}</prop>-->
+				<!--<prop key="hibernate.c3p0.checkoutTimeout">${hibernate.c3p0.checkoutTimeout}</prop>-->
+				<!--<prop key="hibernate.c3p0.idleConnectionTestPeriod">${hibernate.c3p0.idleConnectionTestPeriod}</prop>-->
+				<!--<prop key="hibernate.c3p0.preferredTestQuery">${hibernate.c3p0.preferredTestQuery}</prop>-->
+			</props>
+		</property>
 	</bean>
-	
+
+	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+		<property name="driverClass" value="${hibernate.connection.driver_class}" />
+		<property name="jdbcUrl" value="${hibernate.connection.url}" />
+		<property name="user" value="${hibernate.connection.username}" />
+		<property name="password" value="${hibernate.connection.password}" />
+		<property name="maxPoolSize" value="${hibernate.c3p0.maxPoolSize}"/>
+		<property name="minPoolSize" value="${hibernate.c3p0.minPoolSize}"/>
+		<property name="idleConnectionTestPeriod" value="${hibernate.c3p0.idleConnectionTestPeriod}"/>
+	</bean>
+
 	<bean id="writeDetectEventListener" class="nl.strohalm.cyclos.utils.hibernate.WriteDetectEventListener" />
 	
-	<!-- The Hibernate configuration object -->
-	<util:property-path id="configuration" path="&amp;sessionFactory.configuration"/>
-
 	<!-- Declared hibernate properties on the Cyclos configuration file -->
 	<util:properties id="hibernateProperties" location="classpath:/cyclos.properties" />
 
 	<!-- Transaction related beans -->
-	<bean id="transactionManager" class="org.springframework.orm.hibernate5.HibernateTransactionManager"/>
+	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+		<property name="entityManagerFactory" ref="entityManagerFactory" />
+	</bean>
 	<bean id="transactionTemplate" class="org.springframework.transaction.support.TransactionTemplate"/>
 	
     <!-- Hibernate specific helpers -->
