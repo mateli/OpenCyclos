@@ -19,28 +19,27 @@
  */
 package nl.strohalm.cyclos.utils;
 
-import java.util.Map;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
-
 import nl.strohalm.cyclos.entities.accounts.LockedAccountsOnPayments;
 import nl.strohalm.cyclos.entities.exceptions.LockingException;
 import nl.strohalm.cyclos.exceptions.ApplicationException;
 import nl.strohalm.cyclos.services.application.ApplicationServiceLocal;
 import nl.strohalm.cyclos.utils.access.LoggedUser;
 import nl.strohalm.cyclos.utils.transaction.CurrentTransactionData;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.hibernate.SessionFactory;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionCallback;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.springframework.transaction.support.TransactionTemplate;
+
+import javax.persistence.EntityManagerFactory;
+import java.util.Map;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 /**
  * Utility class used to run code in a new transaction, taking care of running {@link CurrentTransactionData#runCurrentTransactionCommitListeners()}
@@ -157,12 +156,12 @@ public class TransactionHelperImpl implements TransactionHelper {
     private TransactionTemplate     transactionTemplate;
 
     private ApplicationServiceLocal applicationService;
-    private SessionFactory          sessionFactory;
+    private EntityManagerFactory entityManagerFactory;
     private ThreadPoolTaskExecutor  taskExecutor;
 
     @Override
     public boolean hasActiveTransaction() {
-        return TransactionSynchronizationManager.hasResource(sessionFactory);
+        return TransactionSynchronizationManager.hasResource(entityManagerFactory);
     }
 
     @Override
@@ -217,8 +216,8 @@ public class TransactionHelperImpl implements TransactionHelper {
         this.applicationService = applicationService;
     }
 
-    public void setSessionFactory(final SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
+    public void setEntityManagerFactory(final EntityManagerFactory entityManagerFactory) {
+        this.entityManagerFactory = entityManagerFactory;
     }
 
     public void setTaskExecutor(final ThreadPoolTaskExecutor taskExecutor) {

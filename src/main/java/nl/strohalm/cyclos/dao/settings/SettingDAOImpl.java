@@ -19,14 +19,6 @@
  */
 package nl.strohalm.cyclos.dao.settings;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Properties;
-
 import nl.strohalm.cyclos.dao.BaseDAOImpl;
 import nl.strohalm.cyclos.entities.exceptions.DaoException;
 import nl.strohalm.cyclos.entities.exceptions.EntityNotFoundException;
@@ -34,6 +26,14 @@ import nl.strohalm.cyclos.entities.settings.Setting;
 import nl.strohalm.cyclos.entities.settings.Setting.Type;
 import nl.strohalm.cyclos.setup.CreateBasicData;
 import nl.strohalm.cyclos.setup.Setup;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Properties;
 
 /**
  * Implementation class for settings DAO
@@ -56,7 +56,7 @@ public class SettingDAOImpl extends BaseDAOImpl<Setting> implements SettingDAO {
     }
 
     public void importNew(final Locale locale) {
-        CreateBasicData.createSettings(getSession(), Setup.getResourceBundle(locale), locale, cyclosProperties);
+        CreateBasicData.createSettings(entityManager, Setup.getResourceBundle(locale), locale, cyclosProperties);
     }
 
     public List<Setting> listByType(final Type type) {

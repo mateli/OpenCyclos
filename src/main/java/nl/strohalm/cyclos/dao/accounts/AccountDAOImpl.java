@@ -19,25 +19,7 @@
  */
 package nl.strohalm.cyclos.dao.accounts;
 
-import java.io.Closeable;
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import nl.strohalm.cyclos.dao.BaseDAOImpl;
-import nl.strohalm.cyclos.dao.JDBCCallback;
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.accounts.Account;
 import nl.strohalm.cyclos.entities.accounts.AccountLock;
@@ -65,14 +47,13 @@ import nl.strohalm.cyclos.entities.members.MemberTransactionDetailsReportData;
 import nl.strohalm.cyclos.entities.members.MemberTransactionSummaryVO;
 import nl.strohalm.cyclos.entities.members.MembersTransactionsReportParameters;
 import nl.strohalm.cyclos.entities.settings.LocalSettings.MemberResultDisplay;
+import nl.strohalm.cyclos.entities.utils.Period;
 import nl.strohalm.cyclos.services.accounts.AccountDTO;
 import nl.strohalm.cyclos.services.accounts.BulkUpdateAccountDTO;
 import nl.strohalm.cyclos.services.accounts.GetTransactionsDTO;
 import nl.strohalm.cyclos.services.transactions.TransactionSummaryVO;
 import nl.strohalm.cyclos.utils.EntityHelper;
 import nl.strohalm.cyclos.utils.IteratorListImpl;
-import nl.strohalm.cyclos.utils.JDBCWrapper;
-import nl.strohalm.cyclos.entities.utils.Period;
 import nl.strohalm.cyclos.utils.PropertyHelper;
 import nl.strohalm.cyclos.utils.ScrollableResultsIterator;
 import nl.strohalm.cyclos.utils.conversion.Transformer;
@@ -81,15 +62,29 @@ import nl.strohalm.cyclos.utils.hibernate.HibernateHelper.QueryParameter;
 import nl.strohalm.cyclos.utils.query.IteratorList;
 import nl.strohalm.cyclos.utils.query.PageParameters;
 import nl.strohalm.cyclos.utils.query.QueryParameters.ResultType;
-
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.WordUtils;
-import org.hibernate.SQLQuery;
-import org.hibernate.ScrollMode;
-import org.hibernate.ScrollableResults;
 import org.hibernate.type.StandardBasicTypes;
 import org.hibernate.type.Type;
+
+import javax.persistence.Query;
+import java.io.Closeable;
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Implementation DAO for accounts
@@ -98,17 +93,16 @@ import org.hibernate.type.Type;
 public class AccountDAOImpl extends BaseDAOImpl<Account> implements AccountDAO {
 
     private class DiffsIterator implements Iterator<AccountDailyDifference>, Closeable {
-        private final ScrollableResults results;
+        private final ListIterator<Object[]> results;
         private AccountDailyDifference  diff;
 
-        public DiffsIterator(final ScrollableResults results) {
+        public DiffsIterator(final ListIterator<Object[]> results) {
             this.results = results;
             advance();
         }
 
         @Override
         public void close() throws IOException {
-            results.close();
         }
 
         @Override
@@ -129,23 +123,25 @@ public class AccountDAOImpl extends BaseDAOImpl<Account> implements AccountDAO {
         }
 
         private void advance() {
-            if (!results.next()) {
+            if (!results.hasNext()) {
                 diff = null;
                 return;
             }
+            Object[] result = results.next();
             diff = new AccountDailyDifference();
-            diff.setDay(results.getCalendar(1));
+            diff.setDay((Calendar) result[1]);
             diff.setBalance(BigDecimal.ZERO);
             diff.setReserved(BigDecimal.ZERO);
-            readAmount();
+            readAmount(result);
 
             // We have to try to iterate once, as there could be 2 records by day: one for balance and other for reserved
             boolean shouldRewind = true;
-            if (results.next()) {
-                Calendar day = results.getCalendar(1);
+            if (results.hasNext()) {
+                Object[] nextResult = results.next();
+                Calendar day = (Calendar) nextResult[1];
                 if (day.equals(diff.getDay())) {
                     shouldRewind = false;
-                    readAmount();
+                    readAmount(result);
                 }
             }
             // We've peeked the next one to get the other data, but it was another record. Rewind.
@@ -154,9 +150,9 @@ public class AccountDAOImpl extends BaseDAOImpl<Account> implements AccountDAO {
             }
         }
 
-        private void readAmount() {
-            String type = results.getString(0);
-            BigDecimal amount = results.getBigDecimal(2);
+        private void readAmount(Object[] result) {
+            String type = (String) result[0];
+            BigDecimal amount = (BigDecimal) result[2];
             if ("R".equals(type)) {
                 diff.setReserved(amount);
             } else {
@@ -209,10 +205,7 @@ public class AccountDAOImpl extends BaseDAOImpl<Account> implements AccountDAO {
 
     @Override
     public int delete(final boolean flush, final Long... ids) {
-        getSession()
-                .createQuery("delete from AccountLock l where l.id in (:ids)")
-                .setParameterList("ids", ids)
-                .executeUpdate();
+        this.bulkUpdate("delete from AccountLock l where l.id in (:ids)", Collections.singletonMap("ids", ids));
         return super.delete(flush, ids);
     };
 
@@ -294,9 +287,9 @@ public class AccountDAOImpl extends BaseDAOImpl<Account> implements AccountDAO {
     @Override
     public <T extends Account> T insert(final T entity, final boolean flush) throws UnexpectedEntityException, DaoException {
         final T account = super.insert(entity, false);
-        getSession().persist(new AccountLock(account));
+        entityManager.persist(new AccountLock(account));
         if (flush) {
-            getSession().flush();
+            entityManager.flush();
         }
         return account;
     }
@@ -344,13 +337,9 @@ public class AccountDAOImpl extends BaseDAOImpl<Account> implements AccountDAO {
         sql.append(" ) d ");
         sql.append(" group by type, date(d.date) ");
         sql.append(" order by date(d.date) ");
-        SQLQuery query = getSession().createSQLQuery(sql.toString());
-        query.addScalar("type", StandardBasicTypes.STRING);
-        query.addScalar("date", StandardBasicTypes.CALENDAR_DATE);
-        query.addScalar("amount", StandardBasicTypes.BIG_DECIMAL);
+        Query query = entityManager.createNativeQuery(sql.toString());
         getHibernateQueryHandler().setQueryParameters(query, params);
-        ScrollableResults results = query.scroll(ScrollMode.SCROLL_INSENSITIVE);
-        return new IteratorListImpl<AccountDailyDifference>(new DiffsIterator(results));
+        return new IteratorListImpl<>(new DiffsIterator(query.getResultList().listIterator()));
     }
 
     @Override
@@ -512,8 +501,8 @@ public class AccountDAOImpl extends BaseDAOImpl<Account> implements AccountDAO {
         sql.append(" order by m.name, u.username, h.account_type_name, h.date desc, h.transfer_id desc");
 
         // Prepare the query
-        final SQLQuery query = getSession().createSQLQuery(sql.toString());
-        final Map<String, Type> columns = new LinkedHashMap<String, Type>();
+        final Query query = entityManager.createNativeQuery(sql.toString());
+        final Map<String, Type> columns = new LinkedHashMap<>();
         columns.put("username", StandardBasicTypes.STRING);
         columns.put("name", StandardBasicTypes.STRING);
         columns.put("broker_username", StandardBasicTypes.STRING);
@@ -526,31 +515,25 @@ public class AccountDAOImpl extends BaseDAOImpl<Account> implements AccountDAO {
         columns.put("related_name", StandardBasicTypes.STRING);
         columns.put("transfer_type_name", StandardBasicTypes.STRING);
         columns.put("transaction_number", StandardBasicTypes.STRING);
-        for (final Map.Entry<String, Type> entry : columns.entrySet()) {
-            query.addScalar(entry.getKey(), entry.getValue());
-        }
         getHibernateQueryHandler().setQueryParameters(query, parameters);
 
         // Create a transformer, which will read rows as Object[] and transform them to MemberTransactionDetailsReportData
-        final Transformer<Object[], MemberTransactionDetailsReportData> transformer = new Transformer<Object[], MemberTransactionDetailsReportData>() {
-            @Override
-            public MemberTransactionDetailsReportData transform(final Object[] input) {
-                final MemberTransactionDetailsReportData data = new MemberTransactionDetailsReportData();
-                int i = 0;
-                for (final Map.Entry<String, Type> entry : columns.entrySet()) {
-                    final String columnName = entry.getKey();
-                    // Column names are transfer_type_name, property is transferTypeName
-                    String propertyName = WordUtils.capitalize(columnName, COLUMN_DELIMITERS);
-                    propertyName = Character.toLowerCase(propertyName.charAt(0)) + propertyName.substring(1);
-                    propertyName = StringUtils.replace(propertyName, "_", "");
-                    PropertyHelper.set(data, propertyName, input[i]);
-                    i++;
-                }
-                return data;
+        final Transformer<Object[], MemberTransactionDetailsReportData> transformer = input -> {
+            final MemberTransactionDetailsReportData data = new MemberTransactionDetailsReportData();
+            int i = 0;
+            for (final Map.Entry<String, Type> entry : columns.entrySet()) {
+                final String columnName = entry.getKey();
+                // Column names are transfer_type_name, property is transferTypeName
+                String propertyName = WordUtils.capitalize(columnName, COLUMN_DELIMITERS);
+                propertyName = Character.toLowerCase(propertyName.charAt(0)) + propertyName.substring(1);
+                propertyName = StringUtils.replace(propertyName, "_", "");
+                PropertyHelper.set(data, propertyName, input[i]);
+                i++;
             }
+            return data;
         };
 
-        return new ScrollableResultsIterator<MemberTransactionDetailsReportData>(query, transformer);
+        return new ScrollableResultsIterator<>(query, transformer);
     }
 
     @Override
@@ -598,10 +581,7 @@ public class AccountDAOImpl extends BaseDAOImpl<Account> implements AccountDAO {
         sql.append(" group by member_id");
         sql.append(" order by ").append(order == MemberResultDisplay.NAME ? "member_name, member_id" : "username");
 
-        final SQLQuery query = getSession().createSQLQuery(sql.toString());
-        query.addScalar("member_id", StandardBasicTypes.LONG);
-        query.addScalar("count", StandardBasicTypes.INTEGER);
-        query.addScalar("amount", StandardBasicTypes.BIG_DECIMAL);
+        final Query query = entityManager.createNativeQuery(sql.toString());
         getHibernateQueryHandler().setQueryParameters(query, parameters);
 
         final Transformer<Object[], MemberTransactionSummaryVO> transformer = new Transformer<Object[], MemberTransactionSummaryVO>() {
@@ -615,7 +595,7 @@ public class AccountDAOImpl extends BaseDAOImpl<Account> implements AccountDAO {
             }
         };
 
-        return new ScrollableResultsIterator<MemberTransactionSummaryVO>(query, transformer);
+        return new ScrollableResultsIterator<>(query, transformer);
     }
 
     @Override

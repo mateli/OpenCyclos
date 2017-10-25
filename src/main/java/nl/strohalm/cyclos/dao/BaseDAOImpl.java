@@ -19,19 +19,6 @@
  */
 package nl.strohalm.cyclos.dao;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.sql.Blob;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
 import nl.strohalm.cyclos.entities.Entity;
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.exceptions.DaoException;
@@ -47,31 +34,38 @@ import nl.strohalm.cyclos.utils.query.PageParameters;
 import nl.strohalm.cyclos.utils.query.QueryParameters;
 import nl.strohalm.cyclos.utils.query.QueryParameters.ResultType;
 import nl.strohalm.cyclos.utils.transaction.CurrentTransactionData;
-
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.ArrayUtils;
-import org.hibernate.NonUniqueObjectException;
-import org.hibernate.ObjectNotFoundException;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.Cache;
+import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.sql.rowset.serial.SerialBlob;
+import java.io.IOException;
+import java.io.InputStream;
+import java.sql.Blob;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
- * Basic implementation for DAOs, extending Spring Framework support for Hibernate 3.
+ * Basic implementation for DAOs.
  * 
  * @author rafael
  * @author Ivan "Fireblade" Diana
  */
 @Transactional
-public abstract class BaseDAOImpl<E extends Entity> /* extends HibernateDaoSupport */ implements BaseDAO<E>, InsertableDAO<E>, UpdatableDAO<E>, DeletableDAO<E> {
+public abstract class BaseDAOImpl<E extends Entity> implements BaseDAO<E>, InsertableDAO<E>, UpdatableDAO<E>, DeletableDAO<E> {
 
     private FetchDAO              fetchDao;
     private HibernateQueryHandler hibernateQueryHandler;
@@ -225,13 +219,14 @@ public abstract class BaseDAOImpl<E extends Entity> /* extends HibernateDaoSuppo
                 // Although there are no fetch relationships we must call the fetch DAO
                 // to initialize the entity itself
                 entity = (T) entityManager.find(getEntityType(), id);
+                if (entity == null) {
+                    throw new EntityNotFoundException(this.getEntityType(), id);
+                }
             }
 
             return fetchDao.fetch(entity, fetch);
         } catch (final ApplicationException e) {
             throw e;
-        } catch (final ObjectNotFoundException e) {
-            throw new EntityNotFoundException(getEntityType(), id);
         } catch (final Exception e) {
             throw new DaoException(e);
         }
@@ -271,7 +266,7 @@ public abstract class BaseDAOImpl<E extends Entity> /* extends HibernateDaoSuppo
             hibernateQueryHandler.resolveReferences(entity);
             try {
                 entityManager.persist(entity);
-            } catch (final NonUniqueObjectException e) {
+            } catch (final EntityExistsException e) {
                 // If there is another instance associated with the same id,
                 // merge the data on the associated instance...
                 // ... and return it
@@ -309,21 +304,6 @@ public abstract class BaseDAOImpl<E extends Entity> /* extends HibernateDaoSuppo
         } catch (final Exception e) {
             throw new DaoException(e);
         }
-    }
-
-    /**
-     * Return the Hibernate SessionFactory used by this DAO.
-     */
-    @Deprecated
-    // FIXME: MIG_JPA
-    public final SessionFactory getSessionFactory() {
-        return getSession().getSessionFactory();
-    }
-
-    @Deprecated
-    // FIXME: MIG_JPA
-    protected Session getSession(){
-        return entityManager.unwrap(Session.class);
     }
 
     /**

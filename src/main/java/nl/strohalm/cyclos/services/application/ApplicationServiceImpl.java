@@ -471,7 +471,6 @@ public class ApplicationServiceImpl implements ApplicationServiceLocal, Applicat
                 alertService.create(SystemAlert.Alerts.APPLICATION_SHUTDOWN, instanceHandler.getId());
             }
         });
-        applicationDao.shutdownDBIfNeeded();
     }
 
     private int countOpenInvoices() {

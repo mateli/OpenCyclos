@@ -19,15 +19,6 @@
  */
 package nl.strohalm.cyclos.utils.hibernate;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import nl.strohalm.cyclos.dao.FetchDAO;
 import nl.strohalm.cyclos.entities.Entity;
 import nl.strohalm.cyclos.entities.EntityReference;
@@ -38,18 +29,15 @@ import nl.strohalm.cyclos.utils.EntityHelper;
 import nl.strohalm.cyclos.utils.FetchingIteratorListImpl;
 import nl.strohalm.cyclos.utils.IteratorListImpl;
 import nl.strohalm.cyclos.utils.PropertyHelper;
-import nl.strohalm.cyclos.utils.ScrollableResultsIterator;
 import nl.strohalm.cyclos.utils.query.IteratorList;
 import nl.strohalm.cyclos.utils.query.Page;
 import nl.strohalm.cyclos.utils.query.PageImpl;
 import nl.strohalm.cyclos.utils.query.PageParameters;
 import nl.strohalm.cyclos.utils.query.QueryParameters.ResultType;
-
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.Hibernate;
 import org.hibernate.ObjectNotFoundException;
 import org.hibernate.Query;
-import org.hibernate.Session;
 import org.hibernate.collection.spi.PersistentCollection;
 import org.hibernate.proxy.HibernateProxy;
 import org.hibernate.proxy.LazyInitializer;
@@ -59,6 +47,14 @@ import javax.persistence.Parameter;
 import javax.persistence.PersistenceContext;
 import javax.persistence.metamodel.Attribute;
 import javax.persistence.metamodel.ManagedType;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Handler for entity queries using Hibernate
@@ -358,40 +354,6 @@ public class HibernateQueryHandler {
     /**
      * Sets the query bind named parameters
      */
-    @Deprecated
-    // FIXME: MIG_JPA
-    public void setQueryParameters(final Query query, final Object parameters) {
-        if (parameters != null) {
-            if (parameters instanceof Map<?, ?>) {
-                final Map<?, ?> map = (Map<?, ?>) parameters;
-                final String[] paramNames = query.getNamedParameters();
-                for (final String param : paramNames) {
-                    final Object value = map.get(param);
-                    if (value instanceof Collection<?>) {
-                        final Collection<Object> values = new ArrayList<Object>(((Collection<?>) value).size());
-                        for (final Object object : (Collection<?>) value) {
-                            if (object instanceof EntityReference) {
-                                values.add(fetchDao.fetch((Entity) object));
-                            } else {
-                                values.add(object);
-                            }
-                        }
-                        query.setParameterList(param, values);
-                    } else if (value instanceof EntityReference) {
-                        query.setParameter(param, fetchDao.fetch((Entity) value));
-                    } else {
-                        query.setParameter(param, value);
-                    }
-                }
-            } else {
-                query.setProperties(parameters);
-            }
-        }
-    }
-
-    /**
-     * Sets the query bind named parameters
-     */
     public void setQueryParameters(final javax.persistence.Query query, final Object parameters) {
         if (parameters != null) {
             if (parameters instanceof Map<?, ?>) {
@@ -424,13 +386,11 @@ public class HibernateQueryHandler {
      */
     @Deprecated
     public <E> Iterator<E> simpleIterator(final String hql, final Object namedParameters, final PageParameters pageParameters) {
-
         String strippedHql = stripFetch(hql);
-        Session session = (Session) entityManager.getDelegate();
-        final Query query = session.createQuery(strippedHql);
+        javax.persistence.Query query = entityManager.createQuery(strippedHql);
         applyPageParameters(pageParameters, query);
         setQueryParameters(query, namedParameters);
-        return new ScrollableResultsIterator<>(query, null);
+        return query.getResultList().iterator();
     }
 
     /**

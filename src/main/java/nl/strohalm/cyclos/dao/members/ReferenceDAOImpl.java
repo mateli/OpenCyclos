@@ -19,18 +19,6 @@
  */
 package nl.strohalm.cyclos.dao.members;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import nl.strohalm.cyclos.dao.BaseDAOImpl;
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.accounts.transactions.PaymentAwaitingFeedbackDTO;
@@ -44,9 +32,9 @@ import nl.strohalm.cyclos.entities.members.Reference.Level;
 import nl.strohalm.cyclos.entities.members.Reference.Nature;
 import nl.strohalm.cyclos.entities.members.ReferenceQuery;
 import nl.strohalm.cyclos.entities.members.TransactionFeedback;
+import nl.strohalm.cyclos.entities.utils.Period;
 import nl.strohalm.cyclos.utils.DataIteratorHelper;
 import nl.strohalm.cyclos.utils.IteratorListImpl;
-import nl.strohalm.cyclos.entities.utils.Period;
 import nl.strohalm.cyclos.utils.ScrollableResultsIterator;
 import nl.strohalm.cyclos.utils.conversion.Transformer;
 import nl.strohalm.cyclos.utils.hibernate.HibernateHelper;
@@ -54,12 +42,20 @@ import nl.strohalm.cyclos.utils.query.PageHelper;
 import nl.strohalm.cyclos.utils.query.PageImpl;
 import nl.strohalm.cyclos.utils.query.PageParameters;
 import nl.strohalm.cyclos.utils.query.QueryParameters.ResultType;
-
 import org.apache.commons.collections.CollectionUtils;
-import org.hibernate.SQLQuery;
-import org.hibernate.type.StandardBasicTypes;
 
 import javax.persistence.Query;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.EnumMap;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Implementation class for reference DAO
@@ -192,32 +188,21 @@ public class ReferenceDAOImpl extends BaseDAOImpl<Reference> implements Referenc
             sql.append("order by date");
         }
 
-        SQLQuery sqlQuery = getSession().createSQLQuery(sql.toString());
         Query nativeQuery = entityManager.createNativeQuery(sql.toString());
         if (member != null) {
-            sqlQuery.setLong("memberId", member.getId());
             nativeQuery.setParameter("memberId", member.getId());
         }
         if (countOnly) {
             // Handle the special case for count only
-            sqlQuery.addScalar("row_count", StandardBasicTypes.INTEGER);
             nativeQuery.setParameter("row_count", member.getId());
-            int count = ((Number) sqlQuery.uniqueResult()).intValue();
-            return new PageImpl<PaymentAwaitingFeedbackDTO>(pageParameters, count, Collections.<PaymentAwaitingFeedbackDTO> emptyList());
+            int count = ((Number) nativeQuery.getSingleResult()).intValue();
+            return new PageImpl<>(pageParameters, count, Collections.<PaymentAwaitingFeedbackDTO> emptyList());
         } else {
             // Execute the search
-            sqlQuery.addScalar("id", StandardBasicTypes.LONG);
-            sqlQuery.addScalar("transferTypeId", StandardBasicTypes.LONG);
-            sqlQuery.addScalar("scheduled", StandardBasicTypes.BOOLEAN);
-            sqlQuery.addScalar("date", StandardBasicTypes.CALENDAR);
-            sqlQuery.addScalar("amount", StandardBasicTypes.BIG_DECIMAL);
-            sqlQuery.addScalar("memberId", StandardBasicTypes.LONG);
-            sqlQuery.addScalar("memberName", StandardBasicTypes.STRING);
-            sqlQuery.addScalar("memberUsername", StandardBasicTypes.STRING);
-            getHibernateQueryHandler().applyPageParameters(pageParameters, sqlQuery);
+            getHibernateQueryHandler().applyPageParameters(pageParameters, nativeQuery);
 
             // We'll always use an iterator, even if it is for later adding it to a list
-            Iterator<PaymentAwaitingFeedbackDTO> iterator = new ScrollableResultsIterator<PaymentAwaitingFeedbackDTO>(sqlQuery, new Transformer<Object[], PaymentAwaitingFeedbackDTO>() {
+            Iterator<PaymentAwaitingFeedbackDTO> iterator = new ScrollableResultsIterator<>(nativeQuery, new Transformer<Object[], PaymentAwaitingFeedbackDTO>() {
                 @Override
                 public PaymentAwaitingFeedbackDTO transform(final Object[] input) {
                     PaymentAwaitingFeedbackDTO dto = new PaymentAwaitingFeedbackDTO();
@@ -237,7 +222,7 @@ public class ReferenceDAOImpl extends BaseDAOImpl<Reference> implements Referenc
                 }
             });
             if (resultType == ResultType.ITERATOR) {
-                return new IteratorListImpl<PaymentAwaitingFeedbackDTO>(iterator);
+                return new IteratorListImpl<>(iterator);
             } else {
                 List<PaymentAwaitingFeedbackDTO> list = new ArrayList<PaymentAwaitingFeedbackDTO>();
                 CollectionUtils.addAll(list, iterator);

@@ -19,19 +19,6 @@
  */
 package nl.strohalm.cyclos.setup;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-import java.util.Properties;
-import java.util.ResourceBundle;
-
 import nl.strohalm.cyclos.CyclosConfiguration;
 import nl.strohalm.cyclos.access.AdminMemberPermission;
 import nl.strohalm.cyclos.access.AdminSystemPermission;
@@ -61,10 +48,21 @@ import nl.strohalm.cyclos.entities.sms.SmsType;
 import nl.strohalm.cyclos.utils.HashHandler;
 import nl.strohalm.cyclos.utils.conversion.LocaleConverter;
 import nl.strohalm.cyclos.webservices.sms.SmsTypeCode;
-
 import org.apache.commons.lang.StringUtils;
-import org.hibernate.Session;
-import org.hibernate.criterion.Restrictions;
+
+import javax.persistence.EntityManager;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
+import java.util.Properties;
+import java.util.ResourceBundle;
 
 /**
  * Creates basic data, like application version, permissions, groups, a system administrator and the default settings
@@ -167,37 +165,37 @@ public class CreateBasicData implements Runnable {
         unwantedMemberPermissions.addAll(Module.BROKER_MEMBER_SMS.getPermissions());
     }
 
-    public static void createChannels(final Session session, final ResourceBundle bundle) {
+    public static void createChannels(final EntityManager entityManager, final ResourceBundle bundle) {
         final List<Channel> builtinChannels = getBuiltinChannels(bundle);
         for (final Channel channel : builtinChannels) {
-            Number count = (Number) session.createQuery("select count(*) from Channel c where c.internalName = :name").setString("name", channel.getInternalName()).uniqueResult();
+            Number count = (Number) entityManager.createQuery("select count(*) from Channel c where c.internalName = :name").setParameter("name", channel.getInternalName()).getSingleResult();
             if (count.intValue() == 0) {
-                session.save(channel);
+                entityManager.persist(channel);
             }
         }
     }
 
-    public static void createSettings(final Session session, final ResourceBundle bundle, final Locale locale, final Properties cyclosProperties) {
-        createSetting(session, Setting.Type.LOCAL, "charset", "UTF-8");
-        createSetting(session, Setting.Type.LOCAL, "language", LocaleConverter.instance().toString(locale));
-        createSetting(session, Setting.Type.LOCAL, "applicationUsername", bundle.getString("settings.local.application-name"));
-        createSetting(session, Setting.Type.LOCAL, "defaultExternalPaymentDescription", bundle.getString("settings.local.default-external-payment-description"));
-        createSetting(session, Setting.Type.LOCAL, "chargebackDescription", bundle.getString("settings.local.chargeback-description"));
-        createSetting(session, Setting.Type.MAIL_TRANSLATION, "invitationSubject", bundle.getString("settings.mail.invitation.subject"));
-        createSetting(session, Setting.Type.MAIL_TRANSLATION, "invitationMessage", bundle.getString("settings.mail.invitation.message"));
-        createSetting(session, Setting.Type.MAIL_TRANSLATION, "activationSubject", bundle.getString("settings.mail.activation.subject"));
-        createSetting(session, Setting.Type.MAIL_TRANSLATION, "activationMessageWithoutPassword", bundle.getString("settings.mail.activationWithoutPassword.message"));
-        createSetting(session, Setting.Type.MAIL_TRANSLATION, "activationMessageWithPassword", bundle.getString("settings.mail.activationWithPassword.message"));
-        createSetting(session, Setting.Type.MAIL_TRANSLATION, "resetPasswordSubject", bundle.getString("settings.mail.reset-password.subject"));
-        createSetting(session, Setting.Type.MAIL_TRANSLATION, "resetPasswordMessage", bundle.getString("settings.mail.reset-password.message"));
-        createSetting(session, Setting.Type.MAIL_TRANSLATION, "mailValidationSubject", bundle.getString("settings.mail.mail-validation.subject"));
-        createSetting(session, Setting.Type.MAIL_TRANSLATION, "mailValidationMessage", bundle.getString("settings.mail.mail-validation.message"));
+    public static void createSettings(final EntityManager entityManager, final ResourceBundle bundle, final Locale locale, final Properties cyclosProperties) {
+        createSetting(entityManager, Setting.Type.LOCAL, "charset", "UTF-8");
+        createSetting(entityManager, Setting.Type.LOCAL, "language", LocaleConverter.instance().toString(locale));
+        createSetting(entityManager, Setting.Type.LOCAL, "applicationUsername", bundle.getString("settings.local.application-name"));
+        createSetting(entityManager, Setting.Type.LOCAL, "defaultExternalPaymentDescription", bundle.getString("settings.local.default-external-payment-description"));
+        createSetting(entityManager, Setting.Type.LOCAL, "chargebackDescription", bundle.getString("settings.local.chargeback-description"));
+        createSetting(entityManager, Setting.Type.MAIL_TRANSLATION, "invitationSubject", bundle.getString("settings.mail.invitation.subject"));
+        createSetting(entityManager, Setting.Type.MAIL_TRANSLATION, "invitationMessage", bundle.getString("settings.mail.invitation.message"));
+        createSetting(entityManager, Setting.Type.MAIL_TRANSLATION, "activationSubject", bundle.getString("settings.mail.activation.subject"));
+        createSetting(entityManager, Setting.Type.MAIL_TRANSLATION, "activationMessageWithoutPassword", bundle.getString("settings.mail.activationWithoutPassword.message"));
+        createSetting(entityManager, Setting.Type.MAIL_TRANSLATION, "activationMessageWithPassword", bundle.getString("settings.mail.activationWithPassword.message"));
+        createSetting(entityManager, Setting.Type.MAIL_TRANSLATION, "resetPasswordSubject", bundle.getString("settings.mail.reset-password.subject"));
+        createSetting(entityManager, Setting.Type.MAIL_TRANSLATION, "resetPasswordMessage", bundle.getString("settings.mail.reset-password.message"));
+        createSetting(entityManager, Setting.Type.MAIL_TRANSLATION, "mailValidationSubject", bundle.getString("settings.mail.mail-validation.subject"));
+        createSetting(entityManager, Setting.Type.MAIL_TRANSLATION, "mailValidationMessage", bundle.getString("settings.mail.mail-validation.message"));
 
         for (final MessageSettingsEnum messageSetting : MessageSettingsEnum.values()) {
             if (messageSetting.messageSettingKey() != null) {
                 try {
                     final String body = bundle.getString(messageSetting.messageSettingKey());
-                    createSetting(session, Setting.Type.MESSAGE, messageSetting.messageSettingName(), body);
+                    createSetting(entityManager, Setting.Type.MESSAGE, messageSetting.messageSettingName(), body);
                 } catch (final Exception e) {
                     // No message in the bundle. Ignore, as Cyclos will use the default value
                 }
@@ -205,7 +203,7 @@ public class CreateBasicData implements Runnable {
             if (messageSetting.subjectSettingKey() != null) {
                 try {
                     final String subject = bundle.getString(messageSetting.subjectSettingKey());
-                    createSetting(session, Setting.Type.MESSAGE, messageSetting.subjectSettingName(), subject);
+                    createSetting(entityManager, Setting.Type.MESSAGE, messageSetting.subjectSettingName(), subject);
                 } catch (final Exception e) {
                     // No message in the bundle. Ignore, as Cyclos will use the default value
                 }
@@ -213,7 +211,7 @@ public class CreateBasicData implements Runnable {
             if (messageSetting.smsSettingKey() != null) {
                 try {
                     final String sms = bundle.getString(messageSetting.smsSettingKey());
-                    createSetting(session, Setting.Type.MESSAGE, messageSetting.smsSettingName(), sms);
+                    createSetting(entityManager, Setting.Type.MESSAGE, messageSetting.smsSettingName(), sms);
                 } catch (final Exception e) {
                     // No message in the bundle. Ignore, as Cyclos will use the default value
                 }
@@ -223,12 +221,12 @@ public class CreateBasicData implements Runnable {
         // Define logs dir
         final String defaultLogDir = cyclosProperties.getProperty("cyclos.default.logDir", "%t");
         final String defaultLogPrefix = cyclosProperties.getProperty("cyclos.default.logPrefix", "cyclos_");
-        createSetting(session, Setting.Type.LOG, "traceFile", defaultLogDir + "/" + defaultLogPrefix + "trace%g.log");
-        createSetting(session, Setting.Type.LOG, "transactionFile", defaultLogDir + "/" + defaultLogPrefix + "transactions%g.log");
-        createSetting(session, Setting.Type.LOG, "accountFeeFile", defaultLogDir + "/" + defaultLogPrefix + "account_fees%g.log");
-        createSetting(session, Setting.Type.LOG, "scheduledTaskFile", defaultLogDir + "/" + defaultLogPrefix + "scheduled_task%g.log");
-        createSetting(session, Setting.Type.LOG, "webServiceFile", defaultLogDir + "/" + defaultLogPrefix + "webservices%g.log");
-        createSetting(session, Setting.Type.LOG, "restFile", defaultLogDir + "/" + defaultLogPrefix + "rest%g.log");
+        createSetting(entityManager, Setting.Type.LOG, "traceFile", defaultLogDir + "/" + defaultLogPrefix + "trace%g.log");
+        createSetting(entityManager, Setting.Type.LOG, "transactionFile", defaultLogDir + "/" + defaultLogPrefix + "transactions%g.log");
+        createSetting(entityManager, Setting.Type.LOG, "accountFeeFile", defaultLogDir + "/" + defaultLogPrefix + "account_fees%g.log");
+        createSetting(entityManager, Setting.Type.LOG, "scheduledTaskFile", defaultLogDir + "/" + defaultLogPrefix + "scheduled_task%g.log");
+        createSetting(entityManager, Setting.Type.LOG, "webServiceFile", defaultLogDir + "/" + defaultLogPrefix + "webservices%g.log");
+        createSetting(entityManager, Setting.Type.LOG, "restFile", defaultLogDir + "/" + defaultLogPrefix + "rest%g.log");
     }
 
     public static List<Channel> getBuiltinChannels(final ResourceBundle bundle) {
@@ -301,10 +299,10 @@ public class CreateBasicData implements Runnable {
         defaultChannels.add(channel);
     }
 
-    static void createSetting(final Session session, final Setting.Type type, final String name, final String value) {
+    static void createSetting(final EntityManager entityManager, final Setting.Type type, final String name, final String value) {
         final String newValue = StringUtils.trimToEmpty(value);
 
-        Setting setting = (Setting) session.createQuery("from Setting s where s.type=:type and s.name=:name").setParameter("type", type).setParameter("name", name).uniqueResult();
+        Setting setting = (Setting) entityManager.createQuery("from Setting s where s.type=:type and s.name=:name").setParameter("type", type).setParameter("name", name).getSingleResult();
 
         if (setting == null) {
             setting = new Setting();
@@ -319,13 +317,13 @@ public class CreateBasicData implements Runnable {
 
         if (!newValue.equals(setting.getValue())) {
             setting.setValue(value);
-            session.saveOrUpdate(setting);
+            entityManager.persist(setting);
         }
     }
 
     private final ResourceBundle bundle;
     private Properties           cyclosProperties;
-    private final Session        session;
+    private final EntityManager entityManager;
     private final boolean        setupOnly;
     private final Locale         locale;
 
@@ -333,7 +331,7 @@ public class CreateBasicData implements Runnable {
 
     public CreateBasicData(final Setup setup, final boolean setupOnly) {
         this.setupOnly = setupOnly;
-        session = setup.getSession();
+        entityManager = setup.getEntityManager();
         bundle = setup.getBundle();
         try {
             cyclosProperties = CyclosConfiguration.getCyclosProperties();
@@ -349,7 +347,7 @@ public class CreateBasicData implements Runnable {
     @Override
     public void run() {
         // Check if the basic data is already there
-        if (session.createCriteria(Application.class).uniqueResult() != null) {
+        if (entityManager.createQuery("select a from Application", Application.class).getSingleResult() != null) {
             Setup.out.println(bundle.getString("basic-data.error.already"));
             return;
         }
@@ -363,9 +361,9 @@ public class CreateBasicData implements Runnable {
             createGroups();
             createAdministrator();
         }
-        createSettings(session, bundle, locale, cyclosProperties);
+        createSettings(entityManager, bundle, locale, cyclosProperties);
 
-        session.flush();
+        entityManager.flush();
 
         Setup.out.println(bundle.getString("basic-data.end"));
     }
@@ -378,7 +376,9 @@ public class CreateBasicData implements Runnable {
 
     private void associateGroupToChannel(final String channelStr, final MemberGroup memberGroup) {
         // Get the channel
-        final Channel channel = (Channel) session.createCriteria(Channel.class).add(Restrictions.eq("internalName", channelStr)).uniqueResult();
+        final Channel channel = entityManager.createQuery("from Channel c where c.internalName=:channelStr", Channel.class)
+                .setParameter("channelStr", channelStr)
+                .getSingleResult();
 
         associateGroupToChannel(channel, memberGroup);
     }
@@ -396,7 +396,7 @@ public class CreateBasicData implements Runnable {
         administrator.setCreationDate(Calendar.getInstance());
         administrator.setGroup(systemAdmins);
         administrator.setUser(user);
-        session.save(administrator);
+        entityManager.persist(administrator);
     }
 
     private void createApplication() {
@@ -406,11 +406,11 @@ public class CreateBasicData implements Runnable {
         application.setAccountStatusEnabledSince(Calendar.getInstance());
         application.setPasswordHash(PasswordHash.SHA2_SALT);
         application.setOnline(true);
-        session.save(application);
+        entityManager.persist(application);
     }
 
     private void createChannels() {
-        createChannels(session, bundle);
+        createChannels(entityManager, bundle);
     }
 
     private <G extends Group> G createGroup(final Class<G> groupClass, final Group.Status status, final String keyPart, final ModuleType... moduleTypes) {
@@ -426,7 +426,7 @@ public class CreateBasicData implements Runnable {
         group.setDescription(bundle.getString("group." + keyPart + ".description"));
         group.getBasicSettings().setPasswordPolicy(PasswordPolicy.NONE);
 
-        session.save(group);
+        entityManager.persist(group);
         if (moduleTypes != null && moduleTypes.length > 0) {
             if (group.getPermissions() == null) {
                 group.setPermissions(new HashSet<Permission>());
@@ -437,7 +437,7 @@ public class CreateBasicData implements Runnable {
                 }
             }
 
-            session.flush();
+            entityManager.flush();
         }
         return group;
     }
@@ -499,7 +499,7 @@ public class CreateBasicData implements Runnable {
     private void createSmsTypes() {
         final List<SmsType> builtinSmsTypes = getBuiltinSmsTypes(bundle);
         for (final SmsType smsType : builtinSmsTypes) {
-            session.save(smsType);
+            entityManager.persist(smsType);
         }
     }
 

@@ -19,6 +19,15 @@
  */
 package nl.strohalm.cyclos.setup;
 
+import nl.strohalm.cyclos.CyclosConfiguration;
+import nl.strohalm.cyclos.utils.PropertiesHelper;
+import nl.strohalm.cyclos.utils.conversion.LocaleConverter;
+import org.apache.commons.lang.StringUtils;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -30,20 +39,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
 import java.util.ResourceBundle;
-
-import nl.strohalm.cyclos.CyclosConfiguration;
-import nl.strohalm.cyclos.entities.Entity;
-import nl.strohalm.cyclos.utils.PropertiesHelper;
-import nl.strohalm.cyclos.utils.conversion.LocaleConverter;
-
-import org.apache.commons.lang.StringUtils;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
-
-import javax.persistence.EntityManagerFactory;
 
 /**
  * Generate cyclos default data
@@ -102,7 +97,7 @@ public class Setup {
     private boolean        createSmsData;
     private File           exportScriptTo;
     private boolean        force;
-    private Session        session;
+    private EntityManager  entityManager;
     private EntityManagerFactory entityManagerFactory;
     private Locale         locale;
 
@@ -130,8 +125,8 @@ public class Setup {
             throw new IllegalStateException("Persistence not configured");
         }
         // Execute the actions
-        session = (Session) entityManagerFactory.createEntityManager().getDelegate();
-        final Transaction transaction = session.beginTransaction();
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        entityManager.getTransaction().begin();
         try {
             if (createDataBase) {
                 new CreateDataBase(this).run();
@@ -151,7 +146,7 @@ public class Setup {
             if (createSmsData) {
                 new CreateSmsData(this).run();
             }
-            transaction.commit();
+            entityManager.getTransaction().commit();
             out.println(bundle.getString("setup.end"));
 
             if (Boolean.getBoolean("cyclos.standalone")) {
@@ -160,12 +155,12 @@ public class Setup {
 
             return true;
         } catch (final Exception e) {
-            transaction.rollback();
+            entityManager.getTransaction().rollback();
             e.printStackTrace(out);
             return false;
         } finally {
             try {
-                session.close();
+                entityManager.close();
             } catch (final Exception e) {
                 out.println("Error closing session: " + e);
             }
@@ -184,8 +179,8 @@ public class Setup {
         return locale;
     }
 
-    public Session getSession() {
-        return session;
+    public EntityManager getEntityManager() {
+        return entityManager;
     }
 
     public boolean isCreateBasicData() {

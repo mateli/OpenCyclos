@@ -22,11 +22,10 @@ package nl.strohalm.cyclos.utils.lucene;
 import nl.strohalm.cyclos.dao.FetchDAO;
 import nl.strohalm.cyclos.entities.Entity;
 import nl.strohalm.cyclos.entities.Indexable;
-
 import org.apache.lucene.document.Document;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.springframework.orm.hibernate5.SessionFactoryUtils;
+
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 
 /**
  * Abstract implementation for document mappers
@@ -34,7 +33,7 @@ import org.springframework.orm.hibernate5.SessionFactoryUtils;
  */
 public abstract class AbstractDocumentMapper<E extends Entity & Indexable> implements DocumentMapper {
 
-    protected SessionFactory sessionFactory;
+    protected EntityManagerFactory entityManagerFactory;
     protected FetchDAO       fetchDao;
 
     @Override
@@ -51,12 +50,12 @@ public abstract class AbstractDocumentMapper<E extends Entity & Indexable> imple
         this.fetchDao = fetchDao;
     }
 
-    public void setSessionFactory(final SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
+    public void setEntityManagerFactory(final EntityManagerFactory entityManagerFactory) {
+        this.entityManagerFactory = entityManagerFactory;
     }
 
-    protected Session getSession() {
-        return sessionFactory.openSession();
+    protected EntityManager getEntityManager() {
+        return entityManagerFactory.createEntityManager();
     }
 
     protected DocumentBuilder newDocumentBuilder() {

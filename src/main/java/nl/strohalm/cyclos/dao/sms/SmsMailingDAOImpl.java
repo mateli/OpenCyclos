@@ -19,27 +19,23 @@
  */
 package nl.strohalm.cyclos.dao.sms;
 
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
 import nl.strohalm.cyclos.dao.BaseDAOImpl;
-import nl.strohalm.cyclos.dao.JDBCCallback;
 import nl.strohalm.cyclos.entities.customization.fields.MemberCustomField;
 import nl.strohalm.cyclos.entities.groups.MemberGroup;
 import nl.strohalm.cyclos.entities.members.Member;
 import nl.strohalm.cyclos.entities.sms.SmsMailing;
 import nl.strohalm.cyclos.entities.sms.SmsMailingQuery;
 import nl.strohalm.cyclos.entities.sms.SmsMailingQuery.Recipient;
-import nl.strohalm.cyclos.utils.JDBCWrapper;
 import nl.strohalm.cyclos.utils.access.LoggedUser;
 import nl.strohalm.cyclos.utils.hibernate.HibernateHelper;
-
 import org.apache.commons.collections.CollectionUtils;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 /**
  * DAO implementation for SMS mailings
@@ -111,7 +107,7 @@ public class SmsMailingDAOImpl extends BaseDAOImpl<SmsMailing> implements SmsMai
 
     @Override
     public Member nextMemberToSend(final SmsMailing smsMailing) {
-        return (Member) getSession().createFilter(smsMailing.getPendingToSend(), "where 1=1").setMaxResults(1).uniqueResult();
+        return smsMailing.getPendingToSend().stream().findFirst().orElse(null);
     }
 
     @Override

@@ -19,17 +19,17 @@
  */
 package nl.strohalm.cyclos.dao.access;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-
 import nl.strohalm.cyclos.dao.BaseDAOImpl;
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.access.Channel;
 import nl.strohalm.cyclos.entities.exceptions.EntityNotFoundException;
 import nl.strohalm.cyclos.setup.CreateBasicData;
 import nl.strohalm.cyclos.setup.Setup;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 /**
  * Implementation for ChannelDAOImpl
@@ -53,7 +53,7 @@ public class ChannelDAOImpl extends BaseDAOImpl<Channel> implements ChannelDAO {
 
     @Override
     public void importNewBuiltin(final Locale locale) {
-        CreateBasicData.createChannels(getSession(), Setup.getResourceBundle(locale));
+        CreateBasicData.createChannels(entityManager, Setup.getResourceBundle(locale));
     }
 
     @Override

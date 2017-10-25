@@ -23,7 +23,6 @@ import nl.strohalm.cyclos.setup.DataBaseConfiguration;
 import nl.strohalm.cyclos.utils.tasks.TaskRunner;
 
 import org.hibernate.HibernateException;
-import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.engine.spi.SessionFactoryImplementor;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;

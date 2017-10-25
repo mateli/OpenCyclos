@@ -19,18 +19,6 @@
  */
 package nl.strohalm.cyclos.struts;
 
-import java.io.IOException;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
 import nl.strohalm.cyclos.annotations.Inject;
 import nl.strohalm.cyclos.entities.exceptions.LockingException;
 import nl.strohalm.cyclos.entities.settings.events.LocalSettingsChangeListener;
@@ -48,7 +36,6 @@ import nl.strohalm.cyclos.utils.access.LoggedUser;
 import nl.strohalm.cyclos.utils.logging.LoggingHandler;
 import nl.strohalm.cyclos.utils.logging.TraceLogDTO;
 import nl.strohalm.cyclos.utils.transaction.CurrentTransactionData;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -68,6 +55,17 @@ import org.hibernate.engine.spi.SessionBuilderImplementor;
 import org.hibernate.engine.spi.SessionFactoryImplementor;
 import org.springframework.orm.hibernate5.SessionHolder;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
+
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Custom struts request processor. Among other things, we control the DB transactions here, opening a read-write transaction for action execution

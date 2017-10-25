@@ -19,21 +19,22 @@
  */
 package nl.strohalm.cyclos.utils;
 
+import nl.strohalm.cyclos.utils.query.IteratorList;
+import org.hibernate.Hibernate;
+
 import java.io.Closeable;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import nl.strohalm.cyclos.utils.query.IteratorList;
-
-import org.hibernate.Hibernate;
-
 /**
  * Helper class for data iterators
  * 
  * @author luis
  */
+@Deprecated
+// FIXME: MIG_JPA
 public class DataIteratorHelper {
 
     private static final ThreadLocal<Map<Iterator<?>, Boolean>> OPEN_ITERATORS = new ThreadLocal<Map<Iterator<?>, Boolean>>();
