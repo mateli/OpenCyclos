@@ -250,7 +250,7 @@ compile group: 'org.javassist', name: 'javassist', version: '3.20.0-GA'
     compile group: 'net.sf.jtidy', name: 'jtidy', version: 'r938'
 
     // Kaptcha
-    compile name: 'kaptcha', version: '2.3' // Sorry, I couldn't find Kaptcha on Maven Central or jCenter. I grabbed the jar from Cyclos' lib directory.
+    compile group: 'com.github.penggle', name: 'kaptcha', version: '2.3.2'
 
     // Logkit
     // http://mvnrepository.com/artifact/logkit/logkit
