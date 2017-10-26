@@ -299,9 +299,6 @@ compile group: 'org.javassist', name: 'javassist', version: '3.20.0-GA'
     // http://mvnrepository.com/artifact/org.springframework.security/spring-security-web
     compile group: 'org.springframework.security', name: 'spring-security-web', version: '4.1.0.RELEASE'
 
-    // PJA Toolkit
-    compile name: 'pjatools' // Sorry, I couldn't find the PJA Toolkit on Maven Central or jCenter. I grabbed the jar from Cyclos' lib directory.
-
     compile group: 'org.imgscalr', name: 'imgscalr-lib', version: '4.2'
 
     // SLF4J (I used 1.6 because Gradle wasn't happy with 1.5.6.)
