@@ -37,7 +37,6 @@ import nl.strohalm.cyclos.utils.query.QueryParameters.ResultType;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.Hibernate;
 import org.hibernate.ObjectNotFoundException;
-import org.hibernate.Query;
 import org.hibernate.collection.spi.PersistentCollection;
 import org.hibernate.proxy.HibernateProxy;
 import org.hibernate.proxy.LazyInitializer;
@@ -314,7 +313,7 @@ public class HibernateQueryHandler {
     public void resolveReferences(final Entity entity) {
         final ManagedType<? extends Entity> metaData = getClassMetamodel(entity);
         for (Attribute<?, ?> attribute : metaData.getAttributes()) {
-            if (attribute.isAssociation()) {
+            if (attribute.isAssociation() && !Map.class.isAssignableFrom(attribute.getJavaType())) {
                 // Properties that are relationships to other entities
                 Entity rel = PropertyHelper.get(entity, attribute.getName());
                 if (rel instanceof EntityReference) {
@@ -358,7 +357,8 @@ public class HibernateQueryHandler {
         if (parameters != null) {
             if (parameters instanceof Map<?, ?>) {
                 for (final Parameter<?> param : query.getParameters()) {
-                    final Object value = query.getParameterValue(param.getName());
+                    final Map<?, ?> map = (Map<?, ?>) parameters;
+                    final Object value = map.get(param.getName());
                     if (value instanceof Collection<?>) {
                         final Collection<Object> values = new ArrayList<>(((Collection<?>) value).size());
                         for (final Object object : (Collection<?>) value) {
