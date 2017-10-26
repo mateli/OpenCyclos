@@ -19,13 +19,6 @@
  */
 package nl.strohalm.cyclos.dao.accounts.transactions;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import nl.strohalm.cyclos.dao.BaseDAOImpl;
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.accounts.AccountOwner;
@@ -42,8 +35,14 @@ import nl.strohalm.cyclos.entities.members.Element;
 import nl.strohalm.cyclos.entities.members.Member;
 import nl.strohalm.cyclos.services.transactions.TransactionContext;
 import nl.strohalm.cyclos.utils.hibernate.HibernateHelper;
-
 import org.apache.commons.collections.CollectionUtils;
+
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Implementation class for transfer type DAO
@@ -85,7 +84,7 @@ public class TransferTypeDAOImpl extends BaseDAOImpl<TransferType> implements Tr
     @Override
     public List<TransferType> search(final TransferTypeQuery query) {
         final Map<String, Object> namedParameters = new HashMap<String, Object>();
-        namedParameters.put("system", AccountType.Nature.SYSTEM.getValue());
+        namedParameters.put("system", AccountType.Nature.SYSTEM);
         final Set<Relationship> fetch = query.getFetch();
         final StringBuilder hql = HibernateHelper.getInitialQuery(getEntityType(), "tt", fetch);
         HibernateHelper.addLikeParameterToQuery(hql, namedParameters, "tt.description", query.getDescription());
@@ -188,15 +187,15 @@ public class TransferTypeDAOImpl extends BaseDAOImpl<TransferType> implements Tr
         // Nature
         if (query.getFromNature() != null) {
             hql.append(" and tt.from.class = :fromNature");
-            namedParameters.put("fromNature", query.getFromNature().getValue());
+            namedParameters.put("fromNature", query.getFromNature());
         }
         if (query.getToNature() != null) {
             hql.append(" and tt.to.class = :toNature");
-            namedParameters.put("toNature", query.getToNature().getValue());
+            namedParameters.put("toNature", query.getToNature());
         }
         if (query.getFromOrToNature() != null) {
             hql.append(" and (tt.from.class = :fromOrToNature or tt.to.class = :fromOrToNature)");
-            namedParameters.put("fromOrToNature", query.getFromOrToNature().getValue());
+            namedParameters.put("fromOrToNature", query.getFromOrToNature());
         }
 
         // LimitType

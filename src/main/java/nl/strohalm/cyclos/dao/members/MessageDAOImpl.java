@@ -19,17 +19,7 @@
  */
 package nl.strohalm.cyclos.dao.members;
 
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import nl.strohalm.cyclos.dao.BaseDAOImpl;
-import nl.strohalm.cyclos.dao.JDBCCallback;
 import nl.strohalm.cyclos.entities.groups.MemberGroup;
 import nl.strohalm.cyclos.entities.members.Administrator;
 import nl.strohalm.cyclos.entities.members.Element;
@@ -39,11 +29,17 @@ import nl.strohalm.cyclos.entities.members.messages.Message;
 import nl.strohalm.cyclos.entities.members.messages.MessageBox;
 import nl.strohalm.cyclos.entities.members.messages.MessageQuery;
 import nl.strohalm.cyclos.utils.EntityHelper;
-import nl.strohalm.cyclos.utils.JDBCWrapper;
 import nl.strohalm.cyclos.utils.hibernate.HibernateHelper;
-
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Implementation for MessageDAO
@@ -67,11 +63,11 @@ public class MessageDAOImpl extends BaseDAOImpl<Message> implements MessageDAO {
         sql.append(" from members m");
         sql.append(" where m.member_broker_id = ?");
 
-        final List<Object> params = new ArrayList<Object>();
+        final List<Object> params = new ArrayList<>();
         params.add(message.getDate());
         params.add(message.getSubject());
-        params.add(message.getType().getValue());
-        params.add(Message.Direction.INCOMING.getValue());
+        params.add(message.getType());
+        params.add(Message.Direction.INCOMING);
         params.add(false);
         params.add(false);
         params.add(message.isHtml());

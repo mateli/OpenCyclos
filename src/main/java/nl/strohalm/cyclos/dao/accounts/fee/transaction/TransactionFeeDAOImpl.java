@@ -19,11 +19,6 @@
  */
 package nl.strohalm.cyclos.dao.accounts.fee.transaction;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import nl.strohalm.cyclos.dao.BaseDAOImpl;
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.accounts.AccountType;
@@ -32,6 +27,11 @@ import nl.strohalm.cyclos.entities.accounts.fees.transaction.TransactionFee;
 import nl.strohalm.cyclos.entities.accounts.fees.transaction.TransactionFee.Nature;
 import nl.strohalm.cyclos.entities.accounts.fees.transaction.TransactionFeeQuery;
 import nl.strohalm.cyclos.utils.hibernate.HibernateHelper;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Implementation DAO for transaction fees
@@ -61,12 +61,12 @@ public class TransactionFeeDAOImpl extends BaseDAOImpl<TransactionFee> implement
         // Search by nature
         final Nature nature = query.getNature();
         if (nature != null) {
-            HibernateHelper.addParameterToQuery(hql, namedParameters, "f.class", nature.getValue());
+            HibernateHelper.addParameterToQuery(hql, namedParameters, "f.class", nature);
         }
 
         // Generated transfer type from nature
         final AccountType.Nature genTTFromNature = query.getGeneratedTransferTypeFromNature();
-        HibernateHelper.addParameterToQuery(hql, namedParameters, "f.generatedTransferType.from.class", genTTFromNature == null ? null : genTTFromNature.getValue());
+        HibernateHelper.addParameterToQuery(hql, namedParameters, "f.generatedTransferType.from.class", genTTFromNature == null ? null : genTTFromNature);
 
         // Broker group
         if (entityType == BrokerCommission.class && query.getBrokerGroup() != null) {

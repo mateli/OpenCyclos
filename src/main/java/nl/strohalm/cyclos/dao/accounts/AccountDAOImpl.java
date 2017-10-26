@@ -473,7 +473,7 @@ public class AccountDAOImpl extends BaseDAOImpl<Account> implements AccountDAO {
         if (endParameter != null) {
             parameters.put("endDate", endParameter.getValue());
         }
-        parameters.put("processed", Payment.Status.PROCESSED.getValue());
+        parameters.put("processed", Payment.Status.PROCESSED);
 
         // Build the sql string
         sql.append(" select u.username, m.name, bu.username broker_username, b.name broker_name, h.account_type_name, h.date, h.amount, h.description, h.related_username, h.related_name, h.transfer_type_name, h.transaction_number");
@@ -569,7 +569,7 @@ public class AccountDAOImpl extends BaseDAOImpl<Account> implements AccountDAO {
         if (endParameter != null) {
             parameters.put("endDate", endParameter.getValue());
         }
-        parameters.put("processed", Payment.Status.PROCESSED.getValue());
+        parameters.put("processed", Payment.Status.PROCESSED);
 
         // Create the SQL query
         sql.append(" select member_id, sum(count) as count, sum(amount) as amount");

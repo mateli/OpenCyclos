@@ -19,12 +19,6 @@
  */
 package nl.strohalm.cyclos.dao.sms;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import nl.strohalm.cyclos.dao.BaseDAOImpl;
 import nl.strohalm.cyclos.entities.members.Element;
 import nl.strohalm.cyclos.entities.members.Member;
@@ -37,8 +31,13 @@ import nl.strohalm.cyclos.entities.sms.SmsLogType;
 import nl.strohalm.cyclos.entities.sms.SmsMailingType;
 import nl.strohalm.cyclos.entities.sms.SmsType;
 import nl.strohalm.cyclos.utils.hibernate.HibernateHelper;
-
 import org.apache.commons.collections.CollectionUtils;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Implementation class for SMS log DAO
@@ -110,7 +109,7 @@ public class SmsLogDAOImpl extends BaseDAOImpl<SmsLog> implements SmsLogDAO {
                     if (CollectionUtils.isEmpty(mailingTypes)) {
                         hql.append(" and l.smsMailing is not null");
                     } else {
-                        namedParameters.put("admin", Element.Nature.ADMIN.getValue());
+                        namedParameters.put("admin", Element.Nature.ADMIN);
                         final StringBuilder expr = new StringBuilder();
                         expr.append("(case when m.member is not null then 'INDIVIDUAL' ");
                         expr.append("      when b.class =  :admin and m.free =  true then 'FREE_TO_GROUP' ");

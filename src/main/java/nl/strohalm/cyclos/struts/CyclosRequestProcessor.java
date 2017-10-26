@@ -47,23 +47,19 @@ import org.apache.struts.action.ActionServlet;
 import org.apache.struts.action.SecureTilesRequestProcessor;
 import org.apache.struts.config.ForwardConfig;
 import org.apache.struts.config.ModuleConfig;
-import org.hibernate.FlushMode;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
-import org.hibernate.engine.jdbc.connections.spi.ConnectionProvider;
-import org.hibernate.engine.spi.SessionBuilderImplementor;
-import org.hibernate.engine.spi.SessionFactoryImplementor;
-import org.springframework.orm.hibernate5.SessionHolder;
+import org.springframework.orm.jpa.EntityManagerHolder;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.FlushModeType;
+import javax.persistence.PersistenceException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -118,9 +114,8 @@ public class CyclosRequestProcessor extends SecureTilesRequestProcessor {
 
     private SettingsService           settingsService;
     private LoggingHandler            loggingHandler;
-    private SessionFactoryImplementor sessionFactory;
-    private ConnectionProvider        connectionProvider;
     private ActionHelper              actionHelper;
+    private EntityManagerFactory      entityManagerFactory;
 
     public SettingsService getSettingsService() {
         return settingsService;
@@ -165,9 +160,8 @@ public class CyclosRequestProcessor extends SecureTilesRequestProcessor {
     }
 
     @Inject
-    public void setSessionFactory(final SessionFactoryImplementor sessionFactory) {
-        this.sessionFactory = sessionFactory;
-        this.connectionProvider = sessionFactory.getServiceRegistry().getService(ConnectionProvider.class);
+    public void setEntityManagerFactory(final EntityManagerFactory entityManagerFactory) {
+        this.entityManagerFactory = entityManagerFactory;
     }
 
     @Inject
@@ -357,28 +351,17 @@ public class CyclosRequestProcessor extends SecureTilesRequestProcessor {
         DataIteratorHelper.closeOpenIterators();
 
         // Close the session
-        final SessionHolder holder = (SessionHolder) TransactionSynchronizationManager.getResource(sessionFactory);
+        final EntityManagerHolder holder = getEntityManagerHolder();
         if (holder != null) {
             try {
-                final Session session = holder.getSession();
-                if (session.isOpen()) {
-                    session.close();
+                final EntityManager entityManager = holder.getEntityManager();
+                if (entityManager.isOpen()) {
+                    entityManager.close();
                 }
             } catch (final Exception e) {
                 LOG.error("Error closing Hibernate session", e);
             }
-            TransactionSynchronizationManager.unbindResourceIfPossible(sessionFactory);
-        }
-
-        // Close the connection
-        final Connection connection = (Connection) TransactionSynchronizationManager.getResource(connectionProvider);
-        if (connection != null) {
-            try {
-                connectionProvider.closeConnection(connection);
-            } catch (final Exception e) {
-                LOG.error("Error closing database connection", e);
-            }
-            TransactionSynchronizationManager.unbindResourceIfPossible(connectionProvider);
+            TransactionSynchronizationManager.unbindResourceIfPossible(entityManagerFactory);
         }
 
         // Cleanup the Spring transaction data
@@ -396,7 +379,7 @@ public class CyclosRequestProcessor extends SecureTilesRequestProcessor {
             return;
         }
         final ExecutionResult result = (ExecutionResult) request.getAttribute(EXECUTION_RESULT_KEY);
-        final SessionHolder sessionHolder = getSessionHolder();
+        final EntityManagerHolder holder = getEntityManagerHolder();
         // Commit or rollback the transaction
         boolean runCommitListeners = false;
         boolean lockingException = false;
@@ -404,7 +387,7 @@ public class CyclosRequestProcessor extends SecureTilesRequestProcessor {
             logDebug(request, "Committing transaction");
             runCommitListeners = true; // Marked as commit - should run commit listeners
             try {
-                sessionHolder.getTransaction().commit();
+                holder.getEntityManager().getTransaction().commit();
             } catch (final Throwable t) {
                 // In case of locking exceptions, we must make sure the correct exception type is returned, so the transaction will be retried
                 lockingException = ExceptionHelper.isLockingException(t);
@@ -419,11 +402,8 @@ public class CyclosRequestProcessor extends SecureTilesRequestProcessor {
             } else {
                 logDebug(request, "Rolling-back transaction");
             }
-            sessionHolder.getTransaction().rollback();
+            holder.getEntityManager().getTransaction().rollback();
         }
-
-        // Disconnect the session
-        sessionHolder.getSession().disconnect();
 
         if (lockingException) {
             // There was a locking exception - throw it now, so the transaction will be retried
@@ -432,13 +412,13 @@ public class CyclosRequestProcessor extends SecureTilesRequestProcessor {
         }
 
         // Unbind the session holder, so that listeners which should open a new transaction on this same thread won't be messed up
-        TransactionSynchronizationManager.unbindResourceIfPossible(sessionFactory);
+        TransactionSynchronizationManager.unbindResourceIfPossible(entityManagerFactory);
 
         // Run the transaction listener
         CurrentTransactionData.detachListeners().runListeners(runCommitListeners);
 
         // Bind the session holder again
-        TransactionSynchronizationManager.bindResource(sessionFactory, sessionHolder);
+        TransactionSynchronizationManager.bindResource(entityManagerFactory, holder);
 
         // Log the execution if a regular user is logged in and this is not an AJAX request
         if (result.traceLog) {
@@ -461,8 +441,8 @@ public class CyclosRequestProcessor extends SecureTilesRequestProcessor {
             result.errorWasSilenced = result.error != null;
             result.longTransaction = DataIteratorHelper.hasOpenIteratorsRequiringOpenConnection();
             if (result.error == null) {
-                final SessionHolder holder = getSessionHolder();
-                holder.getSession().flush();
+                final EntityManagerHolder holder = getEntityManagerHolder();
+                holder.getEntityManager().flush();
             }
             result.hasWrite = CurrentTransactionData.hasWrite();
             if (result.error instanceof ApplicationException) {
@@ -508,8 +488,8 @@ public class CyclosRequestProcessor extends SecureTilesRequestProcessor {
         return LoggedUser.getAccessType() == LoggedUser.AccessType.USER && !RequestHelper.isAjax(request) && !uri.endsWith("/login") && !uri.endsWith("/logout");
     }
 
-    private SessionHolder getSessionHolder() {
-        return (SessionHolder) TransactionSynchronizationManager.getResource(sessionFactory);
+    private EntityManagerHolder getEntityManagerHolder() {
+        return (EntityManagerHolder) TransactionSynchronizationManager.getResource(entityManagerFactory);
     }
 
     private void logDebug(final HttpServletRequest request, final String message) {
@@ -529,13 +509,9 @@ public class CyclosRequestProcessor extends SecureTilesRequestProcessor {
         }
         logDebug(request, "Opening read-only transaction for include");
 
-        final Connection connection = (Connection) TransactionSynchronizationManager.getResource(connectionProvider);
-
-        final SessionHolder holder = (SessionHolder) TransactionSynchronizationManager.getResource(sessionFactory);
-        final Session session = holder.getSession();
-        session.setFlushMode(FlushMode.MANUAL);
-        session.setDefaultReadOnly(true);
-        session.reconnect(connection);
+        final EntityManagerHolder holder = getEntityManagerHolder();
+        holder.getEntityManager().setFlushMode(FlushModeType.COMMIT);
+        holder.getEntityManager().getTransaction().setRollbackOnly();
 
         TransactionSynchronizationManager.setCurrentTransactionReadOnly(true);
     }
@@ -546,33 +522,18 @@ public class CyclosRequestProcessor extends SecureTilesRequestProcessor {
         }
         logDebug(request, "Opening a new read-write transaction");
         // Open a read-write transaction
-        Connection connection = null;
-        Session session = null;
-        SessionHolder holder = null;
-        Transaction transaction = null;
+        EntityManager entityManager = null;
+        EntityManagerHolder holder = null;
         try {
-            connection = connectionProvider.getConnection();
-            TransactionSynchronizationManager.bindResource(connectionProvider, connection);
-            SessionBuilderImplementor sb = sessionFactory.withOptions();
-            session = sb.connection(connection).openSession();
-            holder = new SessionHolder(session);
-            transaction = session.beginTransaction();
-            holder.setTransaction(transaction);
-            TransactionSynchronizationManager.bindResource(sessionFactory, holder);
+            entityManager = entityManagerFactory.createEntityManager();
+            holder = new EntityManagerHolder(entityManager);
+            entityManager.getTransaction().begin();
+            TransactionSynchronizationManager.bindResource(entityManagerFactory, holder);
             holder.setSynchronizedWithTransaction(true);
             TransactionSynchronizationManager.setActualTransactionActive(true);
             TransactionSynchronizationManager.setCurrentTransactionReadOnly(false);
         } catch (final Exception e) {
-            if (connection != null) {
-                try {
-                    connectionProvider.closeConnection(connection);
-                } catch (final Exception e1) {
-                    LOG.warn("Error closing connection", e1);
-                } finally {
-                    TransactionSynchronizationManager.unbindResourceIfPossible(connectionProvider);
-                    TransactionSynchronizationManager.unbindResourceIfPossible(sessionFactory);
-                }
-            }
+            TransactionSynchronizationManager.unbindResourceIfPossible(entityManagerFactory);
             LOG.error("Couldn't open a transaction", e);
             ActionHelper.throwException(e);
         }
@@ -582,11 +543,11 @@ public class CyclosRequestProcessor extends SecureTilesRequestProcessor {
         if (noTransaction(request)) {
             return;
         }
-        final Connection connection = (Connection) TransactionSynchronizationManager.getResource(connectionProvider);
+        final EntityManagerHolder holder = getEntityManagerHolder();
         try {
             logDebug(request, "Rolling back read-only transaction");
-            connection.rollback();
-        } catch (final SQLException e) {
+            holder.getEntityManager().getTransaction().rollback();
+        } catch (final PersistenceException e) {
             throw new IllegalStateException(e);
         }
     }

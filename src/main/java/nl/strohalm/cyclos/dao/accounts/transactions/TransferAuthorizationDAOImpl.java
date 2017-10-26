@@ -19,15 +19,15 @@
  */
 package nl.strohalm.cyclos.dao.accounts.transactions;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import nl.strohalm.cyclos.dao.BaseDAOImpl;
 import nl.strohalm.cyclos.entities.accounts.transactions.TransferAuthorization;
 import nl.strohalm.cyclos.entities.accounts.transactions.TransferAuthorizationQuery;
 import nl.strohalm.cyclos.entities.members.Element;
 import nl.strohalm.cyclos.utils.hibernate.HibernateHelper;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Implementation for TransferAuthorizationDAO
@@ -44,7 +44,7 @@ public class TransferAuthorizationDAOImpl extends BaseDAOImpl<TransferAuthorizat
         final StringBuilder hql = HibernateHelper.getInitialQuery(getEntityType(), "a", query.getFetch());
         if (query.isByAdministration()) {
             hql.append(" and a.by.class = :admin");
-            namedParameters.put("admin", Element.Nature.ADMIN.getValue());
+            namedParameters.put("admin", Element.Nature.ADMIN);
         }
         if (query.getBy() != null) {
             hql.append(" and (a.by = :by or exists (select op.id from Operator op where op = a.by and op.member = :by))");

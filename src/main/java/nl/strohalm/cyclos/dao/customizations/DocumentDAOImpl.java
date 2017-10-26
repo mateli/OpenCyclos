@@ -19,12 +19,6 @@
  */
 package nl.strohalm.cyclos.dao.customizations;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import nl.strohalm.cyclos.dao.BaseDAOImpl;
 import nl.strohalm.cyclos.entities.customization.documents.Document;
 import nl.strohalm.cyclos.entities.customization.documents.DocumentQuery;
@@ -34,6 +28,12 @@ import nl.strohalm.cyclos.entities.members.Element;
 import nl.strohalm.cyclos.entities.members.Member;
 import nl.strohalm.cyclos.utils.access.LoggedUser;
 import nl.strohalm.cyclos.utils.hibernate.HibernateHelper;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Implementation for DocumentDAO
@@ -47,15 +47,15 @@ public class DocumentDAOImpl extends BaseDAOImpl<Document> implements DocumentDA
 
     @Override
     public List<Document> search(final DocumentQuery query) throws DaoException {
-        final Map<String, Object> namedParameters = new HashMap<String, Object>();
+        final Map<String, Object> namedParameters = new HashMap<>();
         final StringBuilder hql = HibernateHelper.getInitialQuery(getEntityType(), "doc", query.getFetch());
 
         // Save named parameters values
-        namedParameters.put("dynamicType", Document.Nature.DYNAMIC.getValue());
-        namedParameters.put("memberType", Document.Nature.MEMBER.getValue());
-        namedParameters.put("staticType", Document.Nature.STATIC.getValue());
-        namedParameters.put("memberVisibility", MemberDocument.Visibility.MEMBER.getValue());
-        namedParameters.put("brokerVisibility", MemberDocument.Visibility.BROKER.getValue());
+        namedParameters.put("dynamicType", Document.Nature.DYNAMIC);
+        namedParameters.put("memberType", Document.Nature.MEMBER);
+        namedParameters.put("staticType", Document.Nature.STATIC);
+        namedParameters.put("memberVisibility", MemberDocument.Visibility.MEMBER);
+        namedParameters.put("brokerVisibility", MemberDocument.Visibility.BROKER);
 
         // Document id
         if (query.getId() != null) {
