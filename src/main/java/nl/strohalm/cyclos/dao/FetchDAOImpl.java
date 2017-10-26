@@ -28,14 +28,10 @@ import nl.strohalm.cyclos.utils.EntityHelper;
 import nl.strohalm.cyclos.utils.PropertyHelper;
 import nl.strohalm.cyclos.utils.binding.PropertyException;
 import nl.strohalm.cyclos.utils.hibernate.HibernateQueryHandler;
-
 import org.apache.commons.lang.ArrayUtils;
 import org.hibernate.Hibernate;
-import org.hibernate.ObjectNotFoundException;
 import org.hibernate.proxy.HibernateProxy;
 import org.springframework.orm.ObjectRetrievalFailureException;
-import org.springframework.orm.hibernate5.HibernateTemplate;
-import org.springframework.orm.hibernate5.support.HibernateDaoSupport;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -99,10 +95,11 @@ public class FetchDAOImpl /* extends HibernateDaoSupport */ implements FetchDAO 
         // Load and initialize the entity
         try {
             entity = (E) entityManager.find(entityType, id);
+            if (entity == null) {
+                throw new EntityNotFoundException(entityType, id);
+            }
             entity = (E) hibernateQueryHandler.initialize(entity);
         } catch (final ObjectRetrievalFailureException e) {
-            throw new EntityNotFoundException(entityType, id);
-        } catch (final ObjectNotFoundException e) {
             throw new EntityNotFoundException(entityType, id);
         }
 

@@ -65,8 +65,6 @@ import nl.strohalm.cyclos.utils.query.QueryParameters.ResultType;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.WordUtils;
-import org.hibernate.type.StandardBasicTypes;
-import org.hibernate.type.Type;
 
 import javax.persistence.Query;
 import java.io.Closeable;
@@ -80,7 +78,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
@@ -502,27 +499,26 @@ public class AccountDAOImpl extends BaseDAOImpl<Account> implements AccountDAO {
 
         // Prepare the query
         final Query query = entityManager.createNativeQuery(sql.toString());
-        final Map<String, Type> columns = new LinkedHashMap<>();
-        columns.put("username", StandardBasicTypes.STRING);
-        columns.put("name", StandardBasicTypes.STRING);
-        columns.put("broker_username", StandardBasicTypes.STRING);
-        columns.put("broker_name", StandardBasicTypes.STRING);
-        columns.put("account_type_name", StandardBasicTypes.STRING);
-        columns.put("date", StandardBasicTypes.CALENDAR);
-        columns.put("amount", StandardBasicTypes.BIG_DECIMAL);
-        columns.put("description", StandardBasicTypes.STRING);
-        columns.put("related_username", StandardBasicTypes.STRING);
-        columns.put("related_name", StandardBasicTypes.STRING);
-        columns.put("transfer_type_name", StandardBasicTypes.STRING);
-        columns.put("transaction_number", StandardBasicTypes.STRING);
+        final List<String> columns = new ArrayList<>();
+        columns.add("username");
+        columns.add("name");
+        columns.add("broker_username");
+        columns.add("broker_name");
+        columns.add("account_type_name");
+        columns.add("date");
+        columns.add("amount");
+        columns.add("description");
+        columns.add("related_username");
+        columns.add("related_name");
+        columns.add("transfer_type_name");
+        columns.add("transaction_number");
         getHibernateQueryHandler().setQueryParameters(query, parameters);
 
         // Create a transformer, which will read rows as Object[] and transform them to MemberTransactionDetailsReportData
         final Transformer<Object[], MemberTransactionDetailsReportData> transformer = input -> {
             final MemberTransactionDetailsReportData data = new MemberTransactionDetailsReportData();
             int i = 0;
-            for (final Map.Entry<String, Type> entry : columns.entrySet()) {
-                final String columnName = entry.getKey();
+            for (final String columnName : columns) {
                 // Column names are transfer_type_name, property is transferTypeName
                 String propertyName = WordUtils.capitalize(columnName, COLUMN_DELIMITERS);
                 propertyName = Character.toLowerCase(propertyName.charAt(0)) + propertyName.substring(1);
