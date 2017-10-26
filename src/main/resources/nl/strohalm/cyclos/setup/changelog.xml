@@ -120,6 +120,14 @@
 			  JOIN information_schema.COLUMNS c on c.TABLE_SCHEMA = kcu.TABLE_SCHEMA and c.TABLE_NAME = kcu.REFERENCED_TABLE_NAME and c.COLUMN_NAME = kcu.REFERENCED_COLUMN_NAME
 			WHERE REFERENCED_COLUMN_NAME = 'id' and data_type = 'bigint';
 			-->
+
+			<!-- #4
+			SELECT CONCAT('ALTER TABLE ', table_name, ' MODIFY COLUMN ', column_name, ' BIGINT AUTO_INCREMENT;')
+			FROM information_schema.columns
+			WHERE table_schema='cyclos' AND (column_name = 'id' /* OR column_name LIKE '%_id' */) AND data_type = 'bigint'
+			ORDER BY table_name, column_name;
+			-->
+
 			<item>ALTER TABLE notification_preferences CHANGE member member_id BIGINT;</item>
 			<item>ALTER TABLE print_settings CHANGE member member_id BIGINT;</item>
 			<item>ALTER TABLE pos_logs MODIFY assigned_to BIGINT;</item>
