@@ -314,9 +314,6 @@ compile group: 'org.javassist', name: 'javassist', version: '3.20.0-GA'
     // http://mvnrepository.com/artifact/org.apache.taglibs/taglibs-standard-impl
     compile group: 'org.apache.taglibs', name: 'taglibs-standard-impl', version: '1.2.5'
 
-    // "toggletag.jar" (I couldn't find anything on this JAR's existance online, so I just grabbed the jar from Cyclos' lib directory)
-    compile name: 'toggletag'
-
     // WSDL4J
     // http://mvnrepository.com/artifact/wsdl4j/wsdl4j
     compile group: 'wsdl4j', name: 'wsdl4j', version: '1.6.3'
