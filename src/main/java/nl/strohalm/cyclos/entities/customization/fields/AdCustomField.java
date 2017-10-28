@@ -61,17 +61,14 @@ public class AdCustomField extends CustomField {
 
     private static final long serialVersionUID = 444181817416712379L;
 
-    @Column(name = "ad_show_in_search", nullable = false)
+    @Column(name = "ad_show_in_search")
     private boolean           showInSearch;
 
-    @Column(name = "ad_indexed", nullable = false)
+    @Column(name = "ad_indexed")
     private boolean           indexed;
 
     @Column(name = "ad_visibility", length = 1)
 	private Visibility        visibility       = Visibility.MEMBER;
-
-    protected AdCustomField() {
-	}
 
 	public Visibility getVisibility() {
         return visibility;

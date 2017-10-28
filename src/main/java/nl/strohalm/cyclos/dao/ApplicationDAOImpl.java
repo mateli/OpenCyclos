@@ -19,19 +19,9 @@
  */
 package nl.strohalm.cyclos.dao;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-
 import nl.strohalm.cyclos.entities.Application;
-import nl.strohalm.cyclos.utils.JDBCWrapper;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.hibernate.HibernateException;
-import org.hibernate.Session;
-import org.hibernate.engine.spi.SessionFactoryImplementor;
-import org.hibernate.jdbc.ReturningWork;
-import org.springframework.orm.hibernate5.HibernateCallback;
 
 /**
  * Implementation for application dao
@@ -47,38 +37,7 @@ public class ApplicationDAOImpl extends BaseDAOImpl<Application> implements Appl
 
     @Override
     public Application read() {
-        return getHibernateTemplate().execute(new HibernateCallback<Application>() {
-            @Override
-            public Application doInHibernate(final Session session) throws HibernateException{
-                return (Application) session.createCriteria(Application.class).uniqueResult();
-            }
-        });
+        return uniqueResult("from " + getEntityType().getName(), null);
     }
 
-    @Override
-    public void shutdownDBIfNeeded() {
-        SessionFactoryImplementor sessionFactory = (SessionFactoryImplementor) getSessionFactory();
-                
-        Session session = sessionFactory.openSession();
-        try {
-        // Way2 - using doReturningWork method
-        Connection connection = session.doReturningWork(new ReturningWork<Connection>() {
-            @Override
-            public Connection execute(Connection conn) throws SQLException {
-                return conn;
-            }
-        });
-            try {
-                String dbName = connection.getMetaData().getDatabaseProductName();
-                if (dbName.startsWith("HSQL")) {
-                    new JDBCWrapper(connection).execute("SHUTDOWN");
-                    LOG.info("Shutdown on HSQL Database was successful");
-                }
-            } finally {
-                connection.close();
-            }
-        } catch (SQLException e) {
-            LOG.warn("Error shutting down database connection", e);
-        }
-    }
 }

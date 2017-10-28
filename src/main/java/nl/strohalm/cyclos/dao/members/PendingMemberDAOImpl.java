@@ -56,7 +56,7 @@ public class PendingMemberDAOImpl extends BaseDAOImpl<PendingMember> implements 
         final Iterator<PendingMember> iterator = iterate("from " + getEntityType().getName() + " pm where pm.creationDate < :date", namedParameters);
         try {
             while (iterator.hasNext()) {
-                getHibernateTemplate().delete(iterator.next());
+                entityManager.remove(iterator.next());
             }
         } finally {
             DataIteratorHelper.close(iterator);

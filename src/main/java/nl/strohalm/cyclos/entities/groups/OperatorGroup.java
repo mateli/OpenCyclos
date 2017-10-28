@@ -67,7 +67,7 @@ public class OperatorGroup extends Group {
     @ElementCollection
     @CollectionTable(name = "operator_groups_max_amount", joinColumns = @JoinColumn(name = "group_id"))
     @MapKeyJoinColumn(name = "transfer_type_id")
-    @Column(name = "amount", precision = 15, scale = 6, nullable = false)
+    @Column(name = "amount", precision = 15, scale = 6)
 	private Map<TransferType, BigDecimal> maxAmountPerDayByTransferType;
 
     @ManyToMany
@@ -75,9 +75,6 @@ public class OperatorGroup extends Group {
             joinColumns = @JoinColumn(name = "owner_group_id"),
             inverseJoinColumns = @JoinColumn(name = "account_type_id"))
 	private Collection<AccountType>       canViewInformationOf;
-
-    protected OperatorGroup() {
-	}
 
 	@Override
     public BasicGroupSettings getBasicSettings() {

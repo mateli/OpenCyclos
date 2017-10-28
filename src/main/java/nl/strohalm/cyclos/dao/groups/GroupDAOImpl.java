@@ -82,12 +82,12 @@ public class GroupDAOImpl extends BaseDAOImpl<Group> implements GroupDAO {
                     groupFilter.getViewableBy().remove(group);
                 }
 
-                getHibernateTemplate().delete(group);
+                entityManager.remove(group);
             } catch (final EntityNotFoundException e) {
                 continue;
             }
         }
-        getHibernateTemplate().flush();
+        entityManager.flush();
         return count;
     }
 

@@ -48,7 +48,7 @@ public class TranslationMessageDAOImpl extends BaseDAOImpl<TranslationMessage> i
     }
 
     public int deleteAll() {
-        return getHibernateTemplate().bulkUpdate("delete from " + getEntityType().getName());
+        return bulkUpdate("delete from " + getEntityType().getName(), null);
     }
 
     public Iterator<String> listAllKeys() throws DaoException {

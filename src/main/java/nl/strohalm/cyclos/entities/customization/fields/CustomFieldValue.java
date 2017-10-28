@@ -76,9 +76,6 @@ public abstract class CustomFieldValue extends Entity {
     @Column(name = "string_value") // index="ix_string_value"
     private String                   stringValue;
 
-    protected CustomFieldValue() {
-	}
-
 	public CustomField getField() {
         return field;
     }

@@ -19,16 +19,6 @@
  */
 package nl.strohalm.cyclos.utils.hibernate;
 
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import nl.strohalm.cyclos.dao.FetchDAO;
 import nl.strohalm.cyclos.entities.Entity;
 import nl.strohalm.cyclos.entities.EntityReference;
@@ -39,31 +29,31 @@ import nl.strohalm.cyclos.utils.EntityHelper;
 import nl.strohalm.cyclos.utils.FetchingIteratorListImpl;
 import nl.strohalm.cyclos.utils.IteratorListImpl;
 import nl.strohalm.cyclos.utils.PropertyHelper;
-import nl.strohalm.cyclos.utils.ScrollableResultsIterator;
 import nl.strohalm.cyclos.utils.query.IteratorList;
 import nl.strohalm.cyclos.utils.query.Page;
 import nl.strohalm.cyclos.utils.query.PageImpl;
 import nl.strohalm.cyclos.utils.query.PageParameters;
 import nl.strohalm.cyclos.utils.query.QueryParameters.ResultType;
-
 import org.apache.commons.lang.StringUtils;
-import org.hibernate.EntityMode;
 import org.hibernate.Hibernate;
-import org.hibernate.HibernateException;
 import org.hibernate.ObjectNotFoundException;
-import org.hibernate.Query;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.hibernate.collection.spi.PersistentCollection;
-import org.hibernate.metadata.ClassMetadata;
 import org.hibernate.proxy.HibernateProxy;
 import org.hibernate.proxy.LazyInitializer;
-import org.hibernate.type.CollectionType;
-import org.hibernate.type.EntityType;
-import org.hibernate.type.MapType;
-import org.hibernate.type.Type;
-import org.springframework.orm.hibernate5.HibernateCallback;
-import org.springframework.orm.hibernate5.HibernateTemplate;
+
+import javax.persistence.EntityManager;
+import javax.persistence.Parameter;
+import javax.persistence.PersistenceContext;
+import javax.persistence.metamodel.Attribute;
+import javax.persistence.metamodel.ManagedType;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Handler for entity queries using Hibernate
@@ -73,6 +63,9 @@ public class HibernateQueryHandler {
 
     private static Pattern FIRST_ALIAS     = Pattern.compile("^ *(from +[^ ]+|select(?: +distinct)?) +([^ ]+).*");
     private static Pattern LEFT_JOIN_FETCH = Pattern.compile("\\^left\\s+join\\s+fetch(\\s+[\\w\\.]+)?(\\s*[\\w]+)?");
+
+    @PersistenceContext
+    private EntityManager entityManager;
 
     /**
      * Returns an HQL query without the fetch part
@@ -132,12 +125,10 @@ public class HibernateQueryHandler {
 
     private FetchDAO          fetchDao;
 
-    private HibernateTemplate hibernateTemplate;
-
     /**
      * Applies the result limits to the given query
      */
-    public void applyPageParameters(final PageParameters pageParameters, final Query query) {
+    public void applyPageParameters(final PageParameters pageParameters, final javax.persistence.Query query) {
         Integer firstResult = pageParameters == null ? null : pageParameters.getFirstResult();
         if (firstResult != null && firstResult >= 0) {
             query.setFirstResult(firstResult);
@@ -201,17 +192,17 @@ public class HibernateQueryHandler {
         if (source == null || dest == null) {
             return;
         }
-        final ClassMetadata metaData = getClassMetaData(source);
-        final Object[] values = metaData.getPropertyValues(source);
-        // Skip the collections
-        final Type[] types = metaData.getPropertyTypes();
-        for (int i = 0; i < types.length; i++) {
-            final Type type = types[i];
-            if (type instanceof CollectionType) {
-                values[i] = null;
+
+        final ManagedType<? extends Entity> metaData = getClassMetamodel(source);
+        for (Attribute<?, ?> attribute : metaData.getAttributes()) {
+            // Skip the collections
+            if (attribute.isCollection()) {
+                PropertyHelper.set(dest, attribute.getName(), null);
+            } else {
+                PropertyHelper.set(dest, attribute.getName(), PropertyHelper.get(source, attribute.getName()));
             }
         }
-        metaData.setPropertyValues(dest, values);
+
     }
 
     /**
@@ -252,8 +243,8 @@ public class HibernateQueryHandler {
     /**
      * Returns the class meta data for the given entity
      */
-    public ClassMetadata getClassMetaData(final Entity entity) {
-        return hibernateTemplate.getSessionFactory().getClassMetadata(EntityHelper.getRealClass(entity));
+    public ManagedType<? extends Entity> getClassMetamodel(final Entity entity) {
+        return entityManager.getMetamodel().managedType(entity.getClass());
     }
 
     public FetchDAO getFetchDao() {
@@ -267,7 +258,7 @@ public class HibernateQueryHandler {
         if (object instanceof HibernateProxy) {
             // Reassociate the entity with the current session
             Entity entity = (Entity) object;
-            entity = getHibernateTemplate().load(EntityHelper.getRealClass(entity), entity.getId());
+            entity = entityManager.find(EntityHelper.getRealClass(entity), entity.getId());
             // Return the implementation associated with the proxy
             if (entity instanceof HibernateProxy) {
                 final LazyInitializer lazyInitializer = ((HibernateProxy) entity).getHibernateLazyInitializer();
@@ -278,26 +269,26 @@ public class HibernateQueryHandler {
             }
         } else if (object instanceof PersistentCollection) {
             // Reassociate the collection with the current session
-            return getHibernateTemplate().execute(new HibernateCallback<Object>() {
-                @Override
-                public Object doInHibernate(final Session session) throws HibernateException{
-                    final PersistentCollection persistentCollection = ((PersistentCollection) object);
-                    Entity owner = (Entity) persistentCollection.getOwner();
-                    final String role = persistentCollection.getRole();
-                    if (owner == null || role == null) {
-                        return persistentCollection;
-                    }
-                    // Retrieve the owner of this persistent collection, associated with the current session
-                    owner = (Entity) session.get(EntityHelper.getRealClass(owner), owner.getId());
-                    // Retrieve the collection through it's role (property name)
-                    final String propertyName = PropertyHelper.lastProperty(role);
-                    final Object currentCollection = PropertyHelper.get(owner, propertyName);
-                    if (currentCollection instanceof PersistentCollection) {
-                        Hibernate.initialize(currentCollection);
-                    }
-                    return currentCollection;
-                }
-            });
+//            return getHibernateTemplate().execute(new HibernateCallback<Object>() {
+//                @Override
+//                public Object doInHibernate(final Session session) throws HibernateException{
+//                    final PersistentCollection persistentCollection = ((PersistentCollection) object);
+//                    Entity owner = (Entity) persistentCollection.getOwner();
+//                    final String role = persistentCollection.getRole();
+//                    if (owner == null || role == null) {
+//                        return persistentCollection;
+//                    }
+//                    // Retrieve the owner of this persistent collection, associated with the current session
+//                    owner = (Entity) entityManager.find(EntityHelper.getRealClass(owner), owner.getId());
+//                    // Retrieve the collection through it's role (property name)
+//                    final String propertyName = PropertyHelper.lastProperty(role);
+//                    final Object currentCollection = PropertyHelper.get(owner, propertyName);
+//                    if (currentCollection instanceof PersistentCollection) {
+//                        Hibernate.initialize(currentCollection);
+//                    }
+//                    return currentCollection;
+//                }
+//            });
         }
         try {
             Hibernate.initialize(object);
@@ -320,22 +311,18 @@ public class HibernateQueryHandler {
 
     @SuppressWarnings("unchecked")
     public void resolveReferences(final Entity entity) {
-        final ClassMetadata meta = getClassMetaData(entity);
-        final String[] names = meta.getPropertyNames();
-        final Type[] types = meta.getPropertyTypes();
-        for (int i = 0; i < types.length; i++) {
-            final Type type = types[i];
-            final String name = names[i];
-            if (type instanceof EntityType) {
+        final ManagedType<? extends Entity> metaData = getClassMetamodel(entity);
+        for (Attribute<?, ?> attribute : metaData.getAttributes()) {
+            if (attribute.isAssociation() && !Map.class.isAssignableFrom(attribute.getJavaType())) {
                 // Properties that are relationships to other entities
-                Entity rel = PropertyHelper.get(entity, name);
+                Entity rel = PropertyHelper.get(entity, attribute.getName());
                 if (rel instanceof EntityReference) {
-                    rel = getHibernateTemplate().load(EntityHelper.getRealClass(rel), rel.getId());
-                    PropertyHelper.set(entity, name, rel);
+                    rel = entityManager.find(EntityHelper.getRealClass(rel), rel.getId());
+                    PropertyHelper.set(entity, attribute.getName(), rel);
                 }
-            } else if (type instanceof CollectionType && !(type instanceof MapType)) {
+            } else if (attribute.isCollection() && !Map.class.isAssignableFrom(attribute.getJavaType())) {
                 // Properties that are collections of other entities
-                final Collection<?> current = PropertyHelper.get(entity, name);
+                final Collection<?> current = PropertyHelper.get(entity, attribute.getName());
                 if (current != null && !(current instanceof PersistentCollection)) {
                     // We must check that the collection is made of entities, since Hibernate supports collections os values
                     boolean isEntityCollection = true;
@@ -347,12 +334,12 @@ public class HibernateQueryHandler {
                         }
                         Entity e = (Entity) object;
                         if (object instanceof EntityReference) {
-                            e = getHibernateTemplate().load(EntityHelper.getRealClass(e), e.getId());
+                            e = entityManager.find(EntityHelper.getRealClass(e), e.getId());
                         }
                         resolved.add(e);
                     }
                     if (isEntityCollection) {
-                        PropertyHelper.set(entity, name, resolved);
+                        PropertyHelper.set(entity, attribute.getName(), resolved);
                     }
                 }
             }
@@ -366,15 +353,14 @@ public class HibernateQueryHandler {
     /**
      * Sets the query bind named parameters
      */
-    public void setQueryParameters(final Query query, final Object parameters) {
+    public void setQueryParameters(final javax.persistence.Query query, final Object parameters) {
         if (parameters != null) {
             if (parameters instanceof Map<?, ?>) {
-                final Map<?, ?> map = (Map<?, ?>) parameters;
-                final String[] paramNames = query.getNamedParameters();
-                for (final String param : paramNames) {
-                    final Object value = map.get(param);
+                for (final Parameter<?> param : query.getParameters()) {
+                    final Map<?, ?> map = (Map<?, ?>) parameters;
+                    final Object value = map.get(param.getName());
                     if (value instanceof Collection<?>) {
-                        final Collection<Object> values = new ArrayList<Object>(((Collection<?>) value).size());
+                        final Collection<Object> values = new ArrayList<>(((Collection<?>) value).size());
                         for (final Object object : (Collection<?>) value) {
                             if (object instanceof EntityReference) {
                                 values.add(fetchDao.fetch((Entity) object));
@@ -382,39 +368,29 @@ public class HibernateQueryHandler {
                                 values.add(object);
                             }
                         }
-                        query.setParameterList(param, values);
+                        query.setParameter(param.getName(), values);
                     } else if (value instanceof EntityReference) {
-                        query.setParameter(param, fetchDao.fetch((Entity) value));
+                        query.setParameter(param.getName(), fetchDao.fetch((Entity) value));
                     } else {
-                        query.setParameter(param, value);
+                        query.setParameter(param.getName(), value);
                     }
                 }
             } else {
-                query.setProperties(parameters);
+                query.setParameter(1, parameters);
             }
         }
-    }
-
-    public void setSessionFactory(final SessionFactory sessionFactory) {
-        hibernateTemplate = new HibernateTemplate(sessionFactory);
     }
 
     /**
      * Iterate the query with hibernate
      */
+    @Deprecated
     public <E> Iterator<E> simpleIterator(final String hql, final Object namedParameters, final PageParameters pageParameters) {
-        final Iterator<E> iterator = getHibernateTemplate().execute(new HibernateCallback<Iterator<E>>() {
-            @Override
-            public Iterator<E> doInHibernate(final Session session) throws HibernateException {
-                // Iterators cannot have fetch on HQL
-                String strippedHql = stripFetch(hql);
-                final Query query = session.createQuery(strippedHql);
-                applyPageParameters(pageParameters, query);
-                setQueryParameters(query, namedParameters);
-                return new ScrollableResultsIterator<E>(query, null);
-            }
-        });
-        return iterator;
+        String strippedHql = stripFetch(hql);
+        javax.persistence.Query query = entityManager.createQuery(strippedHql);
+        applyPageParameters(pageParameters, query);
+        setQueryParameters(query, namedParameters);
+        return query.getResultList().iterator();
     }
 
     /**
@@ -422,19 +398,13 @@ public class HibernateQueryHandler {
      */
     @SuppressWarnings("unchecked")
     public <E> List<E> simpleList(final String cacheRegion, final String hql, final Object namedParameters, final PageParameters pageParameters, final Relationship... fetch) {
-        final List<E> list = getHibernateTemplate().execute(new HibernateCallback<List<E>>() {
-            @Override
-            public List<E> doInHibernate(final Session session) throws HibernateException {
-                final Query query = session.createQuery(hql);
-                setQueryParameters(query, namedParameters);
-                applyPageParameters(pageParameters, query);
-                if (cacheRegion != null) {
-                    query.setCacheable(true);
-                    query.setCacheRegion(cacheRegion);
-                }
-                return query.list();
-            }
-        });
+
+        final javax.persistence.Query query = entityManager.createQuery(hql);
+        setQueryParameters(query, namedParameters);
+        applyPageParameters(pageParameters, query);
+        setCacheRegion(query, cacheRegion);
+        final List<E> list = query.getResultList();
+
         if (fetch != null && fetch.length > 0) {
             for (int i = 0; i < list.size(); i++) {
                 final Entity entity = (Entity) list.get(i);
@@ -442,10 +412,6 @@ public class HibernateQueryHandler {
             }
         }
         return list;
-    }
-
-    private HibernateTemplate getHibernateTemplate() {
-        return hibernateTemplate;
     }
 
     /**
@@ -470,15 +436,10 @@ public class HibernateQueryHandler {
     private <E> List<E> page(final String cacheRegion, final String hql, final Object namedParameters, final PageParameters pageParameters, final Relationship[] fetch) {
 
         // Count all records
-        final Integer totalCount = getHibernateTemplate().execute(new HibernateCallback<Integer>() {
-            @Override
-            public Integer doInHibernate(final Session session) throws HibernateException {
-                final Query query = session.createQuery(transformToCount(hql.toString()));
-                setQueryParameters(query, namedParameters);
-                setCacheRegion(query, cacheRegion);
-                return ((Long) query.uniqueResult()).intValue();
-            }
-        });
+        final javax.persistence.Query query = entityManager.createQuery(transformToCount(hql.toString()), Long.class);
+        setQueryParameters(query, namedParameters);
+        setCacheRegion(query, cacheRegion);
+        final Integer totalCount = ((Long) query.getSingleResult()).intValue();
 
         // Get only the page records
         List<E> list;
@@ -490,13 +451,13 @@ public class HibernateQueryHandler {
         }
 
         // Create a page instance
-        return new PageImpl<E>(pageParameters, totalCount, list);
+        return new PageImpl<>(pageParameters, totalCount, list);
     }
 
-    private void setCacheRegion(final Query query, final String cacheRegion) {
+    private void setCacheRegion(final javax.persistence.Query query, final String cacheRegion) {
         if (cacheRegion != null) {
-            query.setCacheable(true);
-            query.setCacheRegion(cacheRegion);
+            query.setHint("org.hibernate.cacheable", true);
+            query.setHint("org.hibernate.cacheRegion", cacheRegion);
         }
     }
 

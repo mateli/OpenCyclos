@@ -186,9 +186,6 @@ public class GuaranteeType extends Entity {
     @JoinColumn(name = "forward_transfer_type_id")
 	private TransferType       forwardTransferType;
 
-    protected GuaranteeType() {
-	}
-
 	public AuthorizedBy getAuthorizedBy() {
         return authorizedBy;
     }

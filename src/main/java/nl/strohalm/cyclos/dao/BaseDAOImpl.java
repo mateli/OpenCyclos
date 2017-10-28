@@ -19,9 +19,35 @@
  */
 package nl.strohalm.cyclos.dao;
 
+import nl.strohalm.cyclos.entities.Entity;
+import nl.strohalm.cyclos.entities.Relationship;
+import nl.strohalm.cyclos.entities.exceptions.DaoException;
+import nl.strohalm.cyclos.entities.exceptions.EntityNotFoundException;
+import nl.strohalm.cyclos.entities.exceptions.UnexpectedEntityException;
+import nl.strohalm.cyclos.exceptions.ApplicationException;
+import nl.strohalm.cyclos.utils.ClassHelper;
+import nl.strohalm.cyclos.utils.DataIteratorHelper;
+import nl.strohalm.cyclos.utils.EntityHelper;
+import nl.strohalm.cyclos.utils.hibernate.HibernateHelper;
+import nl.strohalm.cyclos.utils.hibernate.HibernateQueryHandler;
+import nl.strohalm.cyclos.utils.query.PageParameters;
+import nl.strohalm.cyclos.utils.query.QueryParameters;
+import nl.strohalm.cyclos.utils.query.QueryParameters.ResultType;
+import nl.strohalm.cyclos.utils.transaction.CurrentTransactionData;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.ArrayUtils;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.persistence.Cache;
+import javax.persistence.EntityExistsException;
+import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+import javax.sql.rowset.serial.SerialBlob;
+import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Blob;
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -32,44 +58,14 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import nl.strohalm.cyclos.entities.Entity;
-import nl.strohalm.cyclos.entities.Relationship;
-import nl.strohalm.cyclos.entities.exceptions.DaoException;
-import nl.strohalm.cyclos.entities.exceptions.EntityNotFoundException;
-import nl.strohalm.cyclos.entities.exceptions.UnexpectedEntityException;
-import nl.strohalm.cyclos.exceptions.ApplicationException;
-import nl.strohalm.cyclos.utils.ClassHelper;
-import nl.strohalm.cyclos.utils.DataIteratorHelper;
-import nl.strohalm.cyclos.utils.EntityHelper;
-import nl.strohalm.cyclos.utils.JDBCWrapper;
-import nl.strohalm.cyclos.utils.hibernate.HibernateHelper;
-import nl.strohalm.cyclos.utils.hibernate.HibernateQueryHandler;
-import nl.strohalm.cyclos.utils.query.PageParameters;
-import nl.strohalm.cyclos.utils.query.QueryParameters;
-import nl.strohalm.cyclos.utils.query.QueryParameters.ResultType;
-import nl.strohalm.cyclos.utils.transaction.CurrentTransactionData;
-
-import org.apache.commons.lang.ArrayUtils;
-import org.hibernate.Cache;
-import org.hibernate.HibernateException;
-import org.hibernate.NonUniqueObjectException;
-import org.hibernate.ObjectNotFoundException;
-import org.hibernate.Query;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.engine.spi.SessionFactoryImplementor;
-import org.hibernate.jdbc.Work;
-import org.springframework.orm.hibernate5.HibernateCallback;
-import org.springframework.orm.hibernate5.HibernateTemplate;
-import org.springframework.orm.hibernate5.support.HibernateDaoSupport;
-
 /**
- * Basic implementation for DAOs, extending Spring Framework support for Hibernate 3.
+ * Basic implementation for DAOs.
  * 
  * @author rafael
  * @author Ivan "Fireblade" Diana
  */
-public abstract class BaseDAOImpl<E extends Entity> extends HibernateDaoSupport implements BaseDAO<E>, InsertableDAO<E>, UpdatableDAO<E>, DeletableDAO<E> {
+@Transactional
+public abstract class BaseDAOImpl<E extends Entity> implements BaseDAO<E>, InsertableDAO<E>, UpdatableDAO<E>, DeletableDAO<E> {
 
     private FetchDAO              fetchDao;
     private HibernateQueryHandler hibernateQueryHandler;
@@ -77,19 +73,23 @@ public abstract class BaseDAOImpl<E extends Entity> extends HibernateDaoSupport 
     protected Class<E>            entityClass;
     private String                queryCacheRegion;
 
+    @PersistenceContext
+    protected EntityManager entityManager;
+
     public BaseDAOImpl(final Class<E> entityClass) {
         this.entityClass = entityClass;
     }
 
     @Override
     public Blob createBlob(final InputStream stream, final int length) {
-        return getHibernateTemplate().execute(new HibernateCallback<Blob>() {
-            @Override
-            public Blob doInHibernate(final Session session) throws HibernateException {
-                return session.getLobHelper().createBlob(stream, length);
-            }
-        });
-
+        try {
+            return new SerialBlob(IOUtils.toByteArray(stream));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     @Override
@@ -98,9 +98,9 @@ public abstract class BaseDAOImpl<E extends Entity> extends HibernateDaoSupport 
             if (ids != null && ids.length > 0) {
                 int count = 0;
                 for (final Long id : ids) {
-                    final Object element = getHibernateTemplate().get(getEntityType(), id);
+                    final Object element = entityManager.find(getEntityType(), id);
                     if (element != null) {
-                        getHibernateTemplate().delete(element);
+                        entityManager.remove(element);
                         count++;
                     }
                 }
@@ -133,7 +133,7 @@ public abstract class BaseDAOImpl<E extends Entity> extends HibernateDaoSupport 
             return null;
         }
         final T duplicate = (T) ClassHelper.instantiate(entity.getClass());
-        hibernateQueryHandler.copyProperties(entity, duplicate);
+        getHibernateQueryHandler().copyProperties(entity, duplicate);
         return duplicate;
     }
 
@@ -161,14 +161,14 @@ public abstract class BaseDAOImpl<E extends Entity> extends HibernateDaoSupport 
             if (entity == null || entity.isPersistent()) {
                 throw new UnexpectedEntityException();
             }
-            hibernateQueryHandler.resolveReferences(entity);
-            getHibernateTemplate().save(entity);
+            getHibernateQueryHandler().resolveReferences(entity);
+            entityManager.persist(entity);
             if (flush) {
                 flush();
             }
 
             // Ensure the second level cache is not getting stale
-            evictSecondLevelCache();
+            evictSecondLevelCache(entity);
 
             return entity;
         } catch (final ApplicationException e) {
@@ -183,9 +183,9 @@ public abstract class BaseDAOImpl<E extends Entity> extends HibernateDaoSupport 
         if (ids == null) {
             return null;
         }
-        final Collection<T> toReturn = new ArrayList<T>();
+        final Collection<T> toReturn = new ArrayList<>();
         for (final Long id : ids) {
-            T entity = this.<T> load(id, fetch);
+            T entity = this.load(id, fetch);
             toReturn.add(entity);
         }
         return toReturn;
@@ -204,7 +204,7 @@ public abstract class BaseDAOImpl<E extends Entity> extends HibernateDaoSupport 
             T entity = null;
             if (!hasCache && !ArrayUtils.isEmpty(fetch)) {
                 // Perform a query
-                final Map<String, Object> namedParams = new HashMap<String, Object>();
+                final Map<String, Object> namedParams = new HashMap<>();
                 final StringBuilder hql = HibernateHelper.getInitialQuery(getEntityType(), "e", Arrays.asList(fetch));
                 HibernateHelper.addParameterToQuery(hql, namedParams, "e.id", id);
                 final List<E> list = list(ResultType.LIST, hql.toString(), namedParams, PageParameters.unique(), fetch);
@@ -216,11 +216,10 @@ public abstract class BaseDAOImpl<E extends Entity> extends HibernateDaoSupport 
                 }
             } else {
                 // Perform a normal load
-                try {
-                    // Although there are no fetch relationships we must call the fetch DAO
-                    // to initialize the entity itself
-                    entity = (T) getHibernateTemplate().load(getEntityType(), id);
-                } catch (final ObjectNotFoundException e) {
+                // Although there are no fetch relationships we must call the fetch DAO
+                // to initialize the entity itself
+                entity = (T) entityManager.find(getEntityType(), id);
+                if (entity == null) {
                     throw new EntityNotFoundException(this.getEntityType(), id);
                 }
             }
@@ -228,8 +227,6 @@ public abstract class BaseDAOImpl<E extends Entity> extends HibernateDaoSupport 
             return fetchDao.fetch(entity, fetch);
         } catch (final ApplicationException e) {
             throw e;
-        } catch (final ObjectNotFoundException e) {
-            throw new EntityNotFoundException(getEntityType(), id);
         } catch (final Exception e) {
             throw new DaoException(e);
         }
@@ -261,39 +258,28 @@ public abstract class BaseDAOImpl<E extends Entity> extends HibernateDaoSupport 
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T extends E> T update(final T entity, final boolean flush) {
+    public <T extends E> T update(T entity, final boolean flush) {
         if (entity == null || entity.isTransient()) {
             throw new UnexpectedEntityException();
         }
         try {
             hibernateQueryHandler.resolveReferences(entity);
-            final T ret = getHibernateTemplate().execute(new HibernateCallback<T>() {
-                @Override
-                public T doInHibernate(final Session session) throws HibernateException{
-                    // As hibernate can have only 1 instance with a given id, if another instance with that id
-                    // is passed to update, it will throw a NonUniqueObjectException. So, we must merge the data
-                    try {
-                        session.update(entity);
-                        return entity;
-                    } catch (final NonUniqueObjectException e) {
-                        // If there is another instance associated with the same id,
-                        // merge the data on the associated instance...
-                        session.merge(entity);
-                        final Entity current = (Entity) session.load(EntityHelper.getRealClass(entity), entity.getId());
-                        // hibernateQueryHandler.copyProperties(entity, current);
-                        // ... and return it
-                        return (T) current;
-                    }
-                }
-            });
+            try {
+                entityManager.persist(entity);
+            } catch (final EntityExistsException e) {
+                // If there is another instance associated with the same id,
+                // merge the data on the associated instance...
+                // ... and return it
+                entity = entityManager.merge(entity);
+            }
             if (flush) {
                 flush();
             }
 
             // Ensure the second level cache is not getting stale
-            evictSecondLevelCache();
+            evictSecondLevelCache(entity);
 
-            return ret;
+            return entity;
         } catch (final ApplicationException e) {
             throw e;
         } catch (final Exception e) {
@@ -306,18 +292,13 @@ public abstract class BaseDAOImpl<E extends Entity> extends HibernateDaoSupport 
      */
     protected int bulkUpdate(final String hql, final Object namedParameters) {
         try {
-            return getHibernateTemplate().execute(new HibernateCallback<Integer>() {
-                @Override
-                public Integer doInHibernate(final Session session) throws HibernateException{
-                    final Query query = session.createQuery(hql);
-                    hibernateQueryHandler.setQueryParameters(query, namedParameters);
-                    int rows = query.executeUpdate();
-                    if (rows > 0) {
-                        CurrentTransactionData.setWrite();
-                    }
-                    return rows;
-                }
-            });
+            final Query query = entityManager.createQuery(hql);
+            hibernateQueryHandler.setQueryParameters(query, namedParameters);
+            int rows = query.executeUpdate();
+            if (rows > 0) {
+                CurrentTransactionData.setWrite();
+            }
+            return rows;
         } catch (final ApplicationException e) {
             throw e;
         } catch (final Exception e) {
@@ -325,40 +306,37 @@ public abstract class BaseDAOImpl<E extends Entity> extends HibernateDaoSupport 
         }
     }
 
-    @Override
-    protected HibernateTemplate createHibernateTemplate(final SessionFactory sessionFactory) {
-        // Retrieve whether this entity uses the second level cache or not
-        final SessionFactoryImplementor sf = (SessionFactoryImplementor) sessionFactory;
-        hasCache = sf.getEntityPersister(getEntityType().getName()).hasCache();
-        if (shouldUseQueryCache()) {
-            queryCacheRegion = "query." + getClass().getSimpleName();
+    /**
+     * Evicts all second-level cache elements which could get stale on entity updates
+     */
+    protected void evictSecondLevelCache(E entity) {
+        if (hasCache) {
+            Cache cache = entityManager.getEntityManagerFactory().getCache();
+            synchronized (cache) {
+                // We must invalidate all collection regions, as we don't know which other entities have many-to-many relationships with this one
+                cache.evict(getEntityType(), entity.getId());
+            }
         }
-        return super.createHibernateTemplate(sessionFactory);
     }
 
-    protected Session getSession(){
-        return getSessionFactory().getCurrentSession();
-    }
     /**
      * Evicts all second-level cache elements which could get stale on entity updates
      */
     protected void evictSecondLevelCache() {
-        final SessionFactory sessionFactory = getSessionFactory();
+        Cache cache = entityManager.getEntityManagerFactory().getCache();
 
         // If this DAO is cached, evict the collection regions, as we don't know which ones will point out to it
         if (hasCache) {
-            synchronized (sessionFactory) {
-                final Cache cache = sessionFactory.getCache();
+            synchronized (cache) {
                 // We must invalidate all collection regions, as we don't know which other entities have many-to-many relationships with this one
-                cache.evictCollectionRegions();
+                cache.evict(getEntityType());
             }
         }
 
         // Evict the query cache region
         if (queryCacheRegion != null) {
-            synchronized (sessionFactory) {
-                final Cache cache = sessionFactory.getCache();
-                cache.evictQueryRegion(queryCacheRegion);
+            synchronized (cache) {
+                cache.evict(getEntityType());
             }
         }
     }
@@ -367,7 +345,7 @@ public abstract class BaseDAOImpl<E extends Entity> extends HibernateDaoSupport 
      * Flushes the hibernate session
      */
     protected void flush() {
-        getHibernateTemplate().flush();
+        entityManager.flush();
     }
 
     /**
@@ -415,7 +393,6 @@ public abstract class BaseDAOImpl<E extends Entity> extends HibernateDaoSupport 
      */
     protected <T> List<T> list(final ResultType resultType, final String hql, final Object namedParameters, final PageParameters pageParameters, final Relationship... fetch) {
         try {
-                   
             return hibernateQueryHandler.executeQuery(queryCacheRegion, resultType, hql, namedParameters, pageParameters, fetch);
         } catch (final ApplicationException e) {
             throw e;
@@ -427,17 +404,11 @@ public abstract class BaseDAOImpl<E extends Entity> extends HibernateDaoSupport 
     /**
      * Execute a simple list, binding parameters to the query
      */
-    @SuppressWarnings("unchecked")
     protected <T> List<T> list(final String hql, final Object namedParameters) {
         try {
-            return (List<T>) getHibernateTemplate().execute(new HibernateCallback<List<T>>() {
-                @Override
-                public List<T> doInHibernate(final Session session) throws HibernateException{
-                    final Query query = session.createQuery(hql);
-                    process(query, namedParameters);
-                    return query.list();
-                }
-            });
+            final Query query = entityManager.createQuery(hql, getEntityType());
+            process(query, namedParameters);
+            return query.getResultList();
         } catch (final ApplicationException e) {
             throw e;
         } catch (final Exception e) {
@@ -451,8 +422,8 @@ public abstract class BaseDAOImpl<E extends Entity> extends HibernateDaoSupport 
      */
     @SuppressWarnings("unchecked")
     protected <K, V> Map<K, V> map(final String hql, final Object namedParameters) {
-        Map<K, V> map = new LinkedHashMap<K, V>();
-        Iterator<Object[]> iterator = this.<Object[]> iterate(hql, namedParameters);
+        Map<K, V> map = new LinkedHashMap<>();
+        Iterator<Object[]> iterator = this.iterate(hql, namedParameters);
         try {
             while (iterator.hasNext()) {
                 Object[] row = iterator.next();
@@ -467,15 +438,31 @@ public abstract class BaseDAOImpl<E extends Entity> extends HibernateDaoSupport 
     /**
      * Runs something directly in the database connection using a {@link JDBCCallback}
      */
-    protected void runNative(final JDBCCallback callback) {
-        getSession().doWork(new Work() {
-            @Override
-            public void execute(final Connection connection) throws SQLException {
-                callback.execute(new JDBCWrapper(connection));
-            }
-        });
+    protected void runNative(final String sql, final Object... namedParameters) {
+        Query query = entityManager.createNativeQuery(sql);
+        for (int i = 0; i < namedParameters.length; i++) {
+            query.setParameter(i+1, namedParameters[i]);
+        }
+        int modifiedEntities = query.executeUpdate();
         // As there is no way to know whether the native execution performed writes, assume yes
-        CurrentTransactionData.setWrite();
+        if (modifiedEntities > 0) {
+            CurrentTransactionData.setWrite();
+        }
+    }
+
+    /**
+     * Runs something directly in the database connection using a {@link JDBCCallback}
+     */
+    protected void runNative(final String sql, Map<String, Object> parameters) {
+        Query query = entityManager.createNativeQuery(sql);
+        for(Map.Entry<String, Object> entry : parameters.entrySet()) {
+            query.setParameter(entry.getKey(), entry.getValue());
+        }
+        int modifiedEntities = query.executeUpdate();
+        // As there is no way to know whether the native execution performed writes, assume yes
+        if (modifiedEntities > 0) {
+            CurrentTransactionData.setWrite();
+        }
     }
 
     /**
@@ -492,15 +479,13 @@ public abstract class BaseDAOImpl<E extends Entity> extends HibernateDaoSupport 
     @SuppressWarnings("unchecked")
     protected <T> T uniqueResult(final String hql, final Object namedParameters) {
         try {
-            return getHibernateTemplate().execute(new HibernateCallback<T>() {
-                @Override
-                public T doInHibernate(final Session session) throws HibernateException{
-                    final Query query = session.createQuery(hql);
-                    process(query, namedParameters);
-                    query.setMaxResults(1);
-                    return (T) query.uniqueResult();
-                }
-            });
+            final Query query = entityManager.createQuery(hql);
+            process(query, namedParameters);
+            query.setMaxResults(1);
+            return (T) query.getSingleResult();
+        } catch (final NoResultException e) {
+            // To emulate previous Hibernate behavior
+            return null;
         } catch (final ApplicationException e) {
             throw e;
         } catch (final Exception e) {
@@ -521,8 +506,8 @@ public abstract class BaseDAOImpl<E extends Entity> extends HibernateDaoSupport 
     private void process(final Query query, final Object namedParameters) {
         hibernateQueryHandler.setQueryParameters(query, namedParameters);
         if (queryCacheRegion != null) {
-            query.setCacheable(true);
-            query.setCacheRegion(queryCacheRegion);
+            query.setHint("org.hibernate.cacheable", true);
+            query.setHint("org.hibernate.cacheRegion", queryCacheRegion);
         }
     }
 }

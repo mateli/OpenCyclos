@@ -82,9 +82,6 @@ public abstract class Account extends Entity {
     @OneToMany(mappedBy = "account", cascade = CascadeType.REMOVE)
 	private Collection<AccountLimitLog> limitLogs;
 
-    protected Account() {
-	}
-
 	public Calendar getCreationDate() {
         return creationDate;
     }

@@ -31,9 +31,12 @@ import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.ads.AdCategory;
 import nl.strohalm.cyclos.entities.ads.AdCategoryQuery;
 import nl.strohalm.cyclos.entities.ads.AdQuery;
+import nl.strohalm.cyclos.entities.members.Member;
 import nl.strohalm.cyclos.utils.hibernate.HibernateHelper;
 
 import org.apache.commons.beanutils.BeanComparator;
+
+import javax.persistence.Query;
 
 /**
  * Implementation class for ad category DAO
@@ -59,9 +62,9 @@ public class AdCategoryDAOImpl extends BaseDAOImpl<AdCategory> implements AdCate
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public Iterator<AdCategory> iterateAll() {
-        return (Iterator<AdCategory>) getHibernateTemplate().iterate("from " + getEntityType().getName());
+        Query query = entityManager.createQuery(" from " + getEntityType().getName(), getEntityType());
+        return query.getResultList().iterator();
     }
 
     @Override

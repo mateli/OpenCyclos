@@ -87,9 +87,6 @@ public class AdInterest extends Entity {
     @Column(name = "keywords")
     private String            keywords;
 
-    protected AdInterest() {
-	}
-
 	public AdCategory getCategory() {
         return category;
     }

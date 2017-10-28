@@ -27,17 +27,15 @@ import nl.strohalm.cyclos.utils.EntityHelper;
 import nl.strohalm.cyclos.utils.ExceptionHelper;
 import nl.strohalm.cyclos.utils.transaction.CurrentTransactionData;
 import nl.strohalm.cyclos.utils.transaction.TransactionRollbackListener;
-
 import org.apache.commons.lang.ArrayUtils;
 import org.hibernate.JDBCException;
-import org.hibernate.LockMode;
-import org.hibernate.LockOptions;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.springframework.orm.hibernate5.SessionFactoryUtils;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 import org.springframework.transaction.support.TransactionTemplate;
+
+import javax.persistence.EntityManager;
+import javax.persistence.LockModeType;
+import javax.persistence.PersistenceContext;
 
 /**
  * Returns {@link LockHandler}s which use the current transaction to perform locks. Suitable for most cases, except replicated databases (like MySQL
@@ -52,20 +50,21 @@ public class DirectLockHandlerFactory extends BaseLockHandlerFactory {
      */
     private class DirectLockHandler implements LockHandler {
 
+        @PersistenceContext
+        protected EntityManager entityManager;
+
         @Override
         public void lock(final Account... accounts) throws LockingException {
             if (ArrayUtils.isEmpty(accounts)) {
                 return;
             }
             Long[] ids = EntityHelper.toIds(accounts);
-            //Session session = SessionFactoryUtils.getSession(sessionFactory, true);
-            Session session = sessionFactory.openSession();
             try {
-                session
+                entityManager
                         .createQuery("select l.id from AccountLock l where l.id in (:ids)")
-                        .setLockOptions(new LockOptions(LockMode.PESSIMISTIC_WRITE))
-                        .setParameterList("ids", ids)
-                        .list();
+                        .setLockMode(LockModeType.PESSIMISTIC_WRITE)
+                        .setParameter("ids", ids)
+                        .executeUpdate();
             } catch (JDBCException e) {
                 handleException(e);
             }
@@ -76,14 +75,12 @@ public class DirectLockHandlerFactory extends BaseLockHandlerFactory {
             if (member == null) {
                 return;
             }
-            //final Session session = SessionFactoryUtils.getSession(sessionFactory, true);
-            Session session = sessionFactory.openSession();
             try {
-                Long id = (Long) session
-                        .createQuery("select m.id from MemberSmsStatusLock m where m.id = :id")
-                        .setLockOptions(new LockOptions(LockMode.PESSIMISTIC_WRITE))
+                Long id = entityManager
+                        .createQuery("select m.id from MemberSmsStatusLock m where m.id = :id", Long.class)
+                        .setLockMode(LockModeType.PESSIMISTIC_WRITE)
                         .setParameter("id", member.getId())
-                        .uniqueResult();
+                        .getSingleResult();
 
                 // If the id didn't exist, insert it and throw a LockingException, so the next attempt will succeed
                 if (id == null) {
@@ -95,9 +92,7 @@ public class DirectLockHandlerFactory extends BaseLockHandlerFactory {
                                 protected void doInTransactionWithoutResult(final TransactionStatus status) {
                                     MemberSmsStatusLock lock = new MemberSmsStatusLock();
                                     lock.setId(member.getId());
-                                    //Session session = SessionFactoryUtils.getSession(sessionFactory., true);
-                                    Session session = sessionFactory.openSession();
-                                    session.save(lock);
+                                    entityManager.persist(lock);
                                 }
                             });
                         }
@@ -122,17 +117,12 @@ public class DirectLockHandlerFactory extends BaseLockHandlerFactory {
         }
     }
 
-    private SessionFactory      sessionFactory;
     private TransactionTemplate transactionTemplate;
     private final LockHandler   lockHandler = new DirectLockHandler();
 
     @Override
     public LockHandler getLockHandler() {
         return lockHandler;
-    }
-
-    public void setSessionFactory(final SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
     }
 
     public void setTransactionTemplate(final TransactionTemplate transactionTemplate) {

@@ -44,24 +44,19 @@ public class AccountLimitLogDAOImpl extends BaseDAOImpl<AccountLimitLog> impleme
 
     @Override
     public void insertAfterCreditLimitBulkUpdate(final MemberAccountType accountType, final MemberGroup group) {
-        runNative(new JDBCCallback() {
-            @Override
-            public void execute(final JDBCWrapper jdbc) throws SQLException {
-                final StringBuilder sql = new StringBuilder();
-                sql.append("insert into account_limit_logs ");
-                sql.append("(account_id, date, by_id, credit_limit, upper_credit_limit) ");
-                sql.append(" select ");
-                sql.append(" a.id, ?, ?, a.credit_limit, a.upper_credit_limit ");
-                sql.append(" from accounts a, members m ");
-                sql.append(" where a.member_id = m.id ");
-                sql.append(" and m.group_id = ? and a.type_id = ? ");
-                Calendar date = Calendar.getInstance();
-                Long byId = ((Administrator) LoggedUser.element()).getId();
-                Long groupId = group.getId();
-                Long typeId = accountType.getId();
-                jdbc.execute(sql.toString(), date, byId, groupId, typeId);
-            }
-        });
+        final StringBuilder sql = new StringBuilder();
+        sql.append("insert into account_limit_logs ");
+        sql.append("(account_id, date, by_id, credit_limit, upper_credit_limit) ");
+        sql.append(" select ");
+        sql.append(" a.id, ?, ?, a.credit_limit, a.upper_credit_limit ");
+        sql.append(" from accounts a, members m ");
+        sql.append(" where a.member_id = m.id ");
+        sql.append(" and m.group_id = ? and a.type_id = ? ");
+        Calendar date = Calendar.getInstance();
+        Long byId = LoggedUser.element().getId();
+        Long groupId = group.getId();
+        Long typeId = accountType.getId();
+        runNative(sql.toString(), date, byId, groupId, typeId);
     }
 
 }

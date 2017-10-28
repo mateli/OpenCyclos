@@ -109,9 +109,6 @@ public class BrokerGroup extends MemberGroup {
             inverseJoinColumns = @JoinColumn(name = "possible_initial_group_id"))
 	private Collection<MemberGroup>      possibleInitialGroups;
 
-    protected BrokerGroup() {
-	}
-
 	public Collection<AccountType> getBrokerCanViewInformationOf() {
         return brokerCanViewInformationOf;
     }

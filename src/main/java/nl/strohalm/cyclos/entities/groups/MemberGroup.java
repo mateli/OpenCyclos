@@ -175,27 +175,24 @@ public class MemberGroup extends SystemGroup {
     @Column(name = "initial_group_show", length = 100)
     private String                                 initialGroupShow;
 
-    @Column(name = "initial_group", nullable = false)
+    @Column(name = "initial_group")
     private boolean                                initialGroup;
 
-    @Column(name = "member_active", nullable = false)
+    @Column(name = "member_active")
     private boolean                                active;
 
-    @Column(name = "member_default_allow_charging_sms", nullable = false)
+    @Column(name = "member_default_allow_charging_sms")
     private boolean                                defaultAllowChargingSms;
 
-    @Column(name = "member_default_accept_free_mailing", nullable = false)
+    @Column(name = "member_default_accept_free_mailing")
     private boolean                                defaultAcceptFreeMailing;
 
-    @Column(name = "member_default_accept_paid_mailing", nullable = false)
+    @Column(name = "member_default_accept_paid_mailing")
     private boolean                                defaultAcceptPaidMailing;
 
     @ManyToOne
     @JoinColumn(name = "registration_agreement_id")
 	private RegistrationAgreement                  registrationAgreement;
-
-    protected MemberGroup() {
-	}
 
 	public Collection<AccountFee> getAccountFees() {
         return accountFees;

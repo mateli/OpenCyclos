@@ -52,13 +52,14 @@ import nl.strohalm.cyclos.entities.settings.Setting;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
-import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
+
+import javax.persistence.EntityManager;
 
 public class CreateSmsData implements Runnable {
 
     private final ResourceBundle    bundle;
-    private final Session           session;
+    private final EntityManager entityManager;
     private MemberGroup             fullMembers;
     private MemberGroup             inactiveMembers;
     private BrokerGroup             fullBrokers;
@@ -71,7 +72,7 @@ public class CreateSmsData implements Runnable {
     private Collection<MemberGroup> enabledMemberGroups;
 
     public CreateSmsData(final Setup setup) {
-        session = setup.getSession();
+        entityManager = setup.getEntityManager();
         bundle = setup.getBundle();
     }
 
@@ -79,16 +80,34 @@ public class CreateSmsData implements Runnable {
     public void run() {
         Setup.out.println(bundle.getString("sms-data.start"));
 
-        fullMembers = (MemberGroup) session.createCriteria(MemberGroup.class).add(Restrictions.eq("name", bundle.getString("group.full-members.name"))).uniqueResult();
-        inactiveMembers = (MemberGroup) session.createCriteria(MemberGroup.class).add(Restrictions.eq("name", bundle.getString("group.inactive-members.name"))).uniqueResult();
-        fullBrokers = (BrokerGroup) session.createCriteria(BrokerGroup.class).add(Restrictions.eq("name", bundle.getString("group.full-brokers.name"))).uniqueResult();
+        fullMembers = entityManager
+                .createQuery("from MemberGroup e where e.name=:name", MemberGroup.class)
+                .setParameter("name",  bundle.getString("group.full-members.name"))
+                .getSingleResult();
+        inactiveMembers = entityManager
+                .createQuery("from MemberGroup e where e.name=:name", MemberGroup.class)
+                .setParameter("name", bundle.getString("group.inactive-members.name"))
+                .getSingleResult();
+        fullBrokers = entityManager
+                .createQuery("from BrokerGroup e where e.name=:name", BrokerGroup.class)
+                .setParameter("name", bundle.getString("group.full-brokers.name"))
+                .getSingleResult();
 
         enabledMemberGroups = Arrays.asList(fullMembers, fullBrokers);
 
-        mobileCustomField = (MemberCustomField) session.createCriteria(MemberCustomField.class).add(Restrictions.eq("internalName", "mobilePhone")).uniqueResult();
+        mobileCustomField = entityManager
+                .createQuery("from MemberCustomField e where e.internalName = :name", MemberCustomField.class)
+                .setParameter("name", "mobilePhone")
+                .getSingleResult();
 
-        memberAccType = (MemberAccountType) session.createCriteria(MemberAccountType.class).add(Restrictions.eq("name", bundle.getString("account.member.name"))).uniqueResult();
-        organizationAccType = (SystemAccountType) session.createCriteria(SystemAccountType.class).add(Restrictions.eq("name", bundle.getString("account.organization.name"))).uniqueResult();
+        memberAccType = entityManager
+                .createQuery("from MemberAccountType e where e.name = :name", MemberAccountType.class)
+                .setParameter("name", bundle.getString("account.member.name"))
+                .getSingleResult();
+        organizationAccType = entityManager
+                .createQuery("from SystemAccountType e where e.name = :name", SystemAccountType.class)
+                .setParameter("name", bundle.getString("account.organization.name"))
+                .getSingleResult();
 
         createChannel();
         createTransfers();
@@ -100,7 +119,7 @@ public class CreateSmsData implements Runnable {
         customizeFullMembersGroup();
         customizeInactiveMembersGroup();
 
-        session.flush();
+        entityManager.flush();
         Setup.out.println(bundle.getString("sms-data.end"));
     }
 
@@ -126,17 +145,17 @@ public class CreateSmsData implements Runnable {
         mobilePrincipal.setCustomField(mobileCustomField);
         principals.add(mobilePrincipal);
 
-        session.save(smsChannel);
-        session.save(userPrincipal);
-        session.save(mobilePrincipal);
+        entityManager.persist(smsChannel);
+        entityManager.persist(userPrincipal);
+        entityManager.persist(mobilePrincipal);
     }
 
     private void createLocalSettings() {
-        CreateBasicData.createSetting(session, Setting.Type.LOCAL, "cyclosId", "cyclos");
-        CreateBasicData.createSetting(session, Setting.Type.LOCAL, "smsEnabled", "true");
-        CreateBasicData.createSetting(session, Setting.Type.LOCAL, "smsCustomFieldId", mobileCustomField.getId().toString());
-        CreateBasicData.createSetting(session, Setting.Type.LOCAL, "smsChannelName", smsChannel.getInternalName());
-        CreateBasicData.createSetting(session, Setting.Type.LOCAL, "sendSmsWebServiceUrl", "http://localhost:8080/sms/services/smsSender");
+        CreateBasicData.createSetting(entityManager, Setting.Type.LOCAL, "cyclosId", "cyclos");
+        CreateBasicData.createSetting(entityManager, Setting.Type.LOCAL, "smsEnabled", "true");
+        CreateBasicData.createSetting(entityManager, Setting.Type.LOCAL, "smsCustomFieldId", mobileCustomField.getId().toString());
+        CreateBasicData.createSetting(entityManager, Setting.Type.LOCAL, "smsChannelName", smsChannel.getInternalName());
+        CreateBasicData.createSetting(entityManager, Setting.Type.LOCAL, "sendSmsWebServiceUrl", "http://localhost:8080/sms/services/smsSender");
     }
 
     private void createServiceClient() {
@@ -165,7 +184,7 @@ public class CreateSmsData implements Runnable {
 
         client.setPermissions(permissions);
 
-        session.save(client);
+        entityManager.persist(client);
     }
 
     private void createTransfers() {
@@ -181,7 +200,7 @@ public class CreateSmsData implements Runnable {
         smsTradeTT.setAllowSmsNotification(true);
         smsTradeTT.setGroups(new HashSet<Group>(enabledMemberGroups));
 
-        session.save(smsTradeTT);
+        entityManager.persist(smsTradeTT);
 
         // Add the sms charging transfer
         smsChargeTT = new TransferType();
@@ -190,7 +209,7 @@ public class CreateSmsData implements Runnable {
         smsChargeTT.setFrom(memberAccType);
         smsChargeTT.setTo(organizationAccType);
 
-        session.save(smsChargeTT);
+        entityManager.persist(smsChargeTT);
 
     }
 
@@ -201,7 +220,7 @@ public class CreateSmsData implements Runnable {
         info.setSubject(bundle.getString("info-text.sample.subject"));
         info.setEnabled(true);
 
-        session.save(info);
+        entityManager.persist(info);
     }
 
     private void customizeFullMembersGroup() {
@@ -253,23 +272,25 @@ public class CreateSmsData implements Runnable {
 
             // Add the sms trade transfer to the member-to-member permission collection
             mGrp.getTransferTypes().add(smsTradeTT);
-            session.save(mGrp);
+            entityManager.persist(mGrp);
         }
     }
 
     private void updatePaymentFilter() {
-        PaymentFilter filter = (PaymentFilter) session.createCriteria(PaymentFilter.class).
-                add(Restrictions.eq("name", bundle.getString("payment-filter.member-payments"))).
-                add(Restrictions.eq("accountType", memberAccType))
-                .uniqueResult();
+        PaymentFilter filter = entityManager
+                .createQuery("from PaymentFilter e where e.name = :name and e.accountType = :accountType", PaymentFilter.class)
+                .setParameter("name", bundle.getString("payment-filter.member-payments"))
+                .setParameter("accountType", memberAccType)
+                .getSingleResult();
         filter.getTransferTypes().add(smsTradeTT);
 
-        filter = (PaymentFilter) session.createCriteria(PaymentFilter.class).
-                add(Restrictions.eq("name", bundle.getString("payment-filter.member-payments"))).
-                add(Restrictions.eq("accountType", organizationAccType))
-                .uniqueResult();
+        filter = entityManager
+                .createQuery("from PaymentFilter e where e.name = :name and e.accountType = :accountType", PaymentFilter.class)
+                .setParameter("name", bundle.getString("payment-filter.member-payments"))
+                .setParameter("accountType", organizationAccType)
+                .getSingleResult();
         filter.getTransferTypes().add(smsChargeTT);
 
-        session.save(filter);
+        entityManager.persist(filter);
     }
 }

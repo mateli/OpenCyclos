@@ -69,7 +69,7 @@ public class PaymentCustomField extends CustomField {
 
     private static final long        serialVersionUID = 958467435523383262L;
 
-    @Column(name = "payment_enabled", nullable = false)
+    @Column(name = "payment_enabled")
     private boolean                  enabled          = true;
 
     @ManyToOne

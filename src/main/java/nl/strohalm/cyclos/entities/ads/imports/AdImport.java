@@ -76,9 +76,6 @@ public class AdImport extends Entity {
     @OneToMany(mappedBy = "adImport", cascade = CascadeType.REMOVE)
 	private Collection<ImportedAdCategory> categories;
 
-    protected AdImport() {
-	}
-
 	public Collection<ImportedAd> getAds() {
         return ads;
     }

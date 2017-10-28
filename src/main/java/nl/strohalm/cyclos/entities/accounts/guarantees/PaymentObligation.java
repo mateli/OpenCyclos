@@ -115,9 +115,6 @@ public class PaymentObligation extends Entity {
     @JoinColumn(name = "seller_id", nullable = false)
 	private Member                           seller;
 
-    protected PaymentObligation() {
-	}
-
 	/**
      * Change the payment obligation's status and adds a new payment obligation log to it
      * @param status the new payment obligation's status

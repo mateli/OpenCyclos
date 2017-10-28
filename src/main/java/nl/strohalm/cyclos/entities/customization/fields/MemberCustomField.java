@@ -148,7 +148,7 @@ public class MemberCustomField extends CustomField {
     @Column(name = "member_loan_search_access", length = 1)
 	private Access                  loanSearchAccess   = Access.NONE;
 
-    @Column(name = "member_can_hide", nullable = false)
+    @Column(name = "member_can_hide")
     private boolean                 memberCanHide      = true;
 
     @Column(name = "member_search_access", length = 1)

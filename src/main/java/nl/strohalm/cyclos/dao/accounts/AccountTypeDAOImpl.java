@@ -84,8 +84,8 @@ public class AccountTypeDAOImpl extends BaseDAOImpl<AccountType> implements Acco
                     Map<String, AccountType> params = Collections.singletonMap("type", accountType);
                     bulkUpdate("delete from " + AccountFee.class.getName() + " e where e.accountType = :type", params);
                 }
-                getHibernateTemplate().refresh(accountType);
-                getHibernateTemplate().delete(accountType);
+                entityManager.refresh(accountType);
+                entityManager.remove(accountType);
                 rows++;
             } catch (final EntityNotFoundException e) {
                 // Ignore

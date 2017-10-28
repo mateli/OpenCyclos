@@ -93,9 +93,6 @@ public class AuthorizationLevel extends Entity {
             inverseJoinColumns = @JoinColumn(name = "group_id"))
 	private Collection<AdminGroup> adminGroups;
 
-    protected AuthorizationLevel() {
-	}
-
 	public Collection<AdminGroup> getAdminGroups() {
         return adminGroups;
     }

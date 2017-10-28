@@ -80,9 +80,6 @@ abstract public class RateParameters extends Entity {
     @Column(name = "reinit_date")
     private Calendar          reinitDate;
 
-    protected RateParameters() {
-	}
-
 	public BigDecimal getCreationValue() {
         return creationValue;
     }

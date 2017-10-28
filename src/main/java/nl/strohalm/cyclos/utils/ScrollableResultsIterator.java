@@ -19,15 +19,10 @@
  */
 package nl.strohalm.cyclos.utils;
 
-import java.io.Closeable;
-import java.util.Iterator;
-
 import nl.strohalm.cyclos.utils.conversion.Transformer;
 
-import org.hibernate.Query;
-import org.hibernate.SQLQuery;
-import org.hibernate.ScrollMode;
-import org.hibernate.ScrollableResults;
+import java.io.Closeable;
+import java.util.Iterator;
 
 /**
  * Wraps a Hibernate ScrollableResults in an iterator
@@ -36,31 +31,18 @@ import org.hibernate.ScrollableResults;
  */
 public class ScrollableResultsIterator<T> implements Iterator<T>, Closeable {
 
-    private ScrollableResults        results;
     private T                        nextObject;
     private Transformer<Object[], T> transformer;
-    private boolean                  array;
+    private Iterator                 jpaIterator;
 
-    public ScrollableResultsIterator(final Query query, final Transformer<Object[], T> transformer) {
-        this.results = query.scroll(ScrollMode.FORWARD_ONLY);
-        if (query instanceof SQLQuery) {
-            // The getReturnTypes doesn't work for SQLQueries... Assume an array
-            array = true;
-        } else {
-            // this (extra) check to see if the query starts with "select new" is just to support the
-            // following case: SELECT new A(e.prop1, e.prop2) FROM Entity e ...
-            // in that case we musn't return an array in the next() method.
-            array = query.getReturnTypes().length > 1 && !query.getQueryString().trim().toLowerCase().startsWith("select new");
-        }
+    public ScrollableResultsIterator(final javax.persistence.Query query, final Transformer<Object[], T> transformer) {
+        this.jpaIterator = query.getResultList().iterator();
         this.transformer = transformer;
         getNextObject();
-
-        DataIteratorHelper.registerOpen(this, true);
     }
 
     @Override
     public void close() {
-        results.close();
     }
 
     @Override
@@ -82,11 +64,11 @@ public class ScrollableResultsIterator<T> implements Iterator<T>, Closeable {
 
     @SuppressWarnings("unchecked")
     private void getNextObject() {
-        if (results.next()) {
+        if (jpaIterator != null) {
             if (transformer != null) {
-                nextObject = transformer.transform(results.get());
+                nextObject = transformer.transform((Object[]) jpaIterator.next());
             } else {
-                nextObject = (T) (array ? results.get() : results.get(0));
+                nextObject = (T) jpaIterator.next();
             }
         } else {
             nextObject = null;

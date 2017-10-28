@@ -37,10 +37,11 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.cfg.Environment;
 import org.hibernate.engine.jdbc.connections.internal.DatasourceConnectionProviderImpl;
+
+import javax.persistence.EntityManagerFactory;
 
 /**
  * Class used to manage database configuration, validate the connection, generate the database when in embedded mode and apply automatic schema
@@ -51,7 +52,7 @@ public class DataBaseConfiguration {
     public static boolean       SKIP = false;
     private static final Log    LOG  = LogFactory.getLog(DataBaseConfiguration.class);
     private final Configuration configuration;
-    private SessionFactory      sessionFactory;
+    private EntityManagerFactory entityManagerFactory;
     private final TaskRunner    taskRunner;
     private Class<?>            driverToUnregister;
 
@@ -64,8 +65,8 @@ public class DataBaseConfiguration {
         return configuration;
     }
 
-    public SessionFactory getSessionFactory() {
-        return sessionFactory;
+    public EntityManagerFactory getEntityManagerFactory() {
+        return entityManagerFactory;
     }
 
     public void release() {
@@ -201,9 +202,8 @@ public class DataBaseConfiguration {
             if (embedded) {
                 final boolean smsEmbedded = Boolean.valueOf(properties.getProperty("cyclos.embedded.sms.enable", "false"));
                 LOG.info("Database is empty. Running setup to populate it");
-                sessionFactory = configuration.buildSessionFactory();
                 final Locale locale = LocaleConverter.instance().valueOf(properties.getProperty("cyclos.embedded.locale", "en_US"));
-                final Setup setup = new Setup(configuration, sessionFactory);
+                final Setup setup = new Setup(entityManagerFactory);
                 setup.setLocale(locale);
                 setup.setCreateDataBase(true);
                 setup.setCreateBasicData(true);

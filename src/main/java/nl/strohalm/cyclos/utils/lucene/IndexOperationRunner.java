@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -68,16 +69,16 @@ import org.apache.lucene.store.Directory;
 import org.hibernate.ObjectNotFoundException;
 import org.hibernate.ScrollMode;
 import org.hibernate.ScrollableResults;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.orm.hibernate5.SessionFactoryUtils;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionCallback;
 import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 import org.springframework.transaction.support.TransactionTemplate;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 /**
  * Keeps polling the {@link IndexOperation} entities and applying them
@@ -104,11 +105,13 @@ public class IndexOperationRunner implements Runnable, InitializingBean, Disposa
     private MessageResolver                    messageResolver;
     private IndexHandler                       indexHandler;
     private InstanceHandler                    instanceHandler;
-    private SessionFactory                     sessionFactory;
     private Map<Class<?>, IndexWriter>         cachedWriters;
     private SettingsServiceLocal               settingsService;
     private ApplicationServiceLocal            applicationService;
     private IndexOperationDAO                  indexOperationDao;
+
+    @PersistenceContext
+    protected EntityManager entityManager;
 
     private final List<IndexOperationListener> indexOperationListeners = new ArrayList<IndexOperationListener>();
 
@@ -217,10 +220,6 @@ public class IndexOperationRunner implements Runnable, InitializingBean, Disposa
         this.messageResolver = messageResolver;
     }
 
-    public void setSessionFactory(final SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
-    }
-
     public void setSettingsServiceLocal(final SettingsServiceLocal settingsService) {
         this.settingsService = settingsService;
     }
@@ -242,14 +241,13 @@ public class IndexOperationRunner implements Runnable, InitializingBean, Disposa
                 @Override
                 public Document doInTransaction(final TransactionStatus status) {
                     try {
-                        Session session = getSession();
-                        Indexable entity = (Indexable) session.load(entityType, id);
+                        Indexable entity = entityManager.find(entityType, id);
                         DocumentMapper documentMapper = indexHandler.getDocumentMapper(entityType);
                         if (entityType.equals(Member.class)) {
-                            rebuildMemberAds(id, analyzer, session);
+                            rebuildMemberAds(id, analyzer, entityManager);
                         }
                         if (entityType.equals(Administrator.class) || entityType.equals(Member.class)) {
-                            rebuildMemberRecords(id, analyzer, session);
+                            rebuildMemberRecords(id, analyzer, entityManager);
                         }
                         return documentMapper.map(entity);
                     } catch (ObjectNotFoundException e) {
@@ -292,11 +290,6 @@ public class IndexOperationRunner implements Runnable, InitializingBean, Disposa
 
     private Analyzer getAnalyzer() {
         return settingsService.getLocalSettings().getLanguage().getAnalyzer();
-    }
-
-    private Session getSession() {
-        //return SessionFactoryUtils.getSession(sessionFactory, true);
-        return sessionFactory.openSession();
     }
 
     /**
@@ -399,33 +392,26 @@ public class IndexOperationRunner implements Runnable, InitializingBean, Disposa
         boolean success = readonlyTransactionTemplate.execute(new TransactionCallback<Boolean>() {
             @Override
             public Boolean doInTransaction(final TransactionStatus status) {
-                Session session = getSession();
-                ScrollableResults scroll = session.createQuery(resolveHql(entityType)).scroll(ScrollMode.FORWARD_ONLY);
-
-                try {
-                    int index = 0;
-                    while (scroll.next()) {
-                        Indexable entity = (Indexable) scroll.get(0);
-                        Document document = documentMapper.map(entity);
-                        try {
-                            writer.addDocument(document);
-                        } catch (CorruptIndexException e) {
-                            handleIndexCorrupted(entityType);
-                            return false;
-                        } catch (IOException e) {
-                            LOG.error("Error while adding document to index after rebuilding " + ClassHelper.getClassName(entityType), e);
-                            return false;
-                        }
-                        // Every batch, clear the session and commit the writer
-                        if (++index % 30 == 0) {
-                            session.clear();
-                            commit(entityType, writer);
-                        }
+                Iterator<? extends Indexable> iterator = entityManager.createQuery(resolveHql(entityType), entityType).getResultList().iterator();
+                int index = 0;
+                while (iterator.hasNext()) {
+                    Indexable entity = iterator.next();
+                    Document document = documentMapper.map(entity);
+                    try {
+                        writer.addDocument(document);
+                    } catch (CorruptIndexException e) {
+                        handleIndexCorrupted(entityType);
+                        return false;
+                    } catch (IOException e) {
+                        LOG.error("Error while adding document to index after rebuilding " + ClassHelper.getClassName(entityType), e);
+                        return false;
                     }
-                    return true;
-                } finally {
-                    scroll.close();
+                    // Every batch, clear the session and commit the writer
+                    if (++index % 30 == 0) {
+                        commit(entityType, writer);
+                    }
                 }
+                return true;
             }
         });
 
@@ -468,7 +454,7 @@ public class IndexOperationRunner implements Runnable, InitializingBean, Disposa
         persistStatus(time, id);
     }
 
-    private boolean rebuildMemberAds(final Long userId, final Analyzer analyzer, final Session session) {
+    private boolean rebuildMemberAds(final Long userId, final Analyzer analyzer, final EntityManager entityManager) {
         final Class<? extends Indexable> entityType = Ad.class;
         final IndexWriter writer = getWriter(entityType);
         boolean success = false;
@@ -484,33 +470,25 @@ public class IndexOperationRunner implements Runnable, InitializingBean, Disposa
             success = false;
         }
 
-        ScrollableResults scroll = session.createQuery("from Ad a where a.deleteDate is null and a.owner.id = " + userId).scroll(ScrollMode.FORWARD_ONLY);
+        Iterator<? extends Indexable> iterator = entityManager.createQuery("from Ad a where a.deleteDate is null and a.owner.id = " + userId, Ad.class).getResultList().iterator();
 
-        try {
-            int index = 0;
-            while (scroll.next()) {
-                Indexable entity = (Indexable) scroll.get(0);
-                Document document = documentMapper.map(entity);
-                try {
-                    writer.addDocument(document, analyzer);
-                } catch (CorruptIndexException e) {
-                    handleIndexCorrupted(entityType);
-                    success = false;
-                    break;
-                } catch (IOException e) {
-                    LOG.error("Error while adding advertisements to index", e);
-                    success = false;
-                    break;
-                }
-                // Every batch, clear the session and commit the writer
-                if (++index % 30 == 0) {
-                    session.clear();
-                }
+        int index = 0;
+        while (iterator.hasNext()) {
+            Indexable entity = iterator.next();
+            Document document = documentMapper.map(entity);
+            try {
+                writer.addDocument(document, analyzer);
+            } catch (CorruptIndexException e) {
+                handleIndexCorrupted(entityType);
+                success = false;
+                break;
+            } catch (IOException e) {
+                LOG.error("Error while adding advertisements to index", e);
+                success = false;
+                break;
             }
-            success = true;
-        } finally {
-            scroll.close();
         }
+        success = true;
 
         // Finish the writer operation
         if (success) {
@@ -522,7 +500,7 @@ public class IndexOperationRunner implements Runnable, InitializingBean, Disposa
         }
     }
 
-    private boolean rebuildMemberRecords(final Long userId, final Analyzer analyzer, final Session session) {
+    private boolean rebuildMemberRecords(final Long userId, final Analyzer analyzer, final EntityManager entityManager) {
         final Class<? extends Indexable> entityType = MemberRecord.class;
         final IndexWriter writer = getWriter(entityType);
         boolean success = false;
@@ -538,33 +516,25 @@ public class IndexOperationRunner implements Runnable, InitializingBean, Disposa
             success = false;
         }
 
-        ScrollableResults scroll = session.createQuery("from MemberRecord mr where mr.element.id = " + userId).scroll(ScrollMode.FORWARD_ONLY);
+        Iterator<? extends Indexable> iterator = entityManager.createQuery("from MemberRecord mr where mr.element.id = " + userId, MemberRecord.class).getResultList().iterator();
 
-        try {
-            int index = 0;
-            while (scroll.next()) {
-                Indexable entity = (Indexable) scroll.get(0);
-                Document document = documentMapper.map(entity);
-                try {
-                    writer.addDocument(document, analyzer);
-                } catch (CorruptIndexException e) {
-                    handleIndexCorrupted(entityType);
-                    success = false;
-                    break;
-                } catch (IOException e) {
-                    LOG.error("Error while adding member records to index", e);
-                    success = false;
-                    break;
-                }
-                // Every batch, clear the session and commit the writer
-                if (++index % 30 == 0) {
-                    session.clear();
-                }
+        int index = 0;
+        while (iterator.hasNext()) {
+            Indexable entity = iterator.next();
+            Document document = documentMapper.map(entity);
+            try {
+                writer.addDocument(document, analyzer);
+            } catch (CorruptIndexException e) {
+                handleIndexCorrupted(entityType);
+                success = false;
+                break;
+            } catch (IOException e) {
+                LOG.error("Error while adding member records to index", e);
+                success = false;
+                break;
             }
-            success = true;
-        } finally {
-            scroll.close();
         }
+        success = true;
 
         // Finish the writer operation
         if (success) {

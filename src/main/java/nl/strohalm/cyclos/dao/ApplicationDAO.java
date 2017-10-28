@@ -32,8 +32,4 @@ public interface ApplicationDAO extends UpdatableDAO<Application> {
      */
     Application read();
 
-    /**
-     * Shuts down the database, if needed
-     */
-    void shutdownDBIfNeeded();
 }

@@ -214,9 +214,6 @@ public abstract class TransactionFee extends Entity {
     @JoinColumn(name = "from_member_id")
 	private Member                  fromFixedMember;
 
-    protected TransactionFee() {
-	}
-
 	public Amount getAmount() {
         if (chargeType == null || value == null) {
             return null;

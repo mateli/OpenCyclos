@@ -19,11 +19,6 @@
  */
 package nl.strohalm.cyclos.dao.members;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import nl.strohalm.cyclos.dao.BaseDAOImpl;
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.accounts.SystemAccountType;
@@ -33,9 +28,13 @@ import nl.strohalm.cyclos.entities.members.Administrator;
 import nl.strohalm.cyclos.entities.members.preferences.AdminNotificationPreference;
 import nl.strohalm.cyclos.entities.members.preferences.AdminNotificationPreferenceQuery;
 import nl.strohalm.cyclos.utils.hibernate.HibernateHelper;
-
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.ArrayUtils;
+
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Implementation for
@@ -96,11 +95,11 @@ public class AdminNotificationPreferenceDAOImpl extends BaseDAOImpl<AdminNotific
         }
         if (query.getSystemAlert() != null) {
             hql.append(" and :systemAlertType in elements(p.systemAlerts)");
-            namedParameters.put("systemAlertType", query.getSystemAlert().getValue());
+            namedParameters.put("systemAlertType", query.getSystemAlert());
         }
         if (query.getMemberAlert() != null) {
             hql.append(" and :memberAlertType in elements(p.memberAlerts)");
-            namedParameters.put("memberAlertType", query.getMemberAlert().getValue());
+            namedParameters.put("memberAlertType", query.getMemberAlert());
         }
         if (query.getMemberGroup() != null) {
             hql.append(" and exists (select ag.id from AdminGroup ag where ag.id = a.group.id and :memberGroup in elements(ag.managesGroups))");

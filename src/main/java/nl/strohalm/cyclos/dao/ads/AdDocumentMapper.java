@@ -19,9 +19,6 @@
  */
 package nl.strohalm.cyclos.dao.ads;
 
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-
 import nl.strohalm.cyclos.dao.members.MemberDocumentMapper;
 import nl.strohalm.cyclos.entities.ads.Ad;
 import nl.strohalm.cyclos.entities.ads.AdCategory;
@@ -35,8 +32,10 @@ import nl.strohalm.cyclos.entities.members.Member;
 import nl.strohalm.cyclos.utils.StringHelper;
 import nl.strohalm.cyclos.utils.lucene.AbstractDocumentMapper;
 import nl.strohalm.cyclos.utils.lucene.DocumentBuilder;
-
 import org.apache.lucene.document.Document;
+
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 /**
  * Maps {@link Ad}s to lucene {@link Document}s
@@ -86,7 +85,9 @@ public class AdDocumentMapper extends AbstractDocumentMapper<Ad> {
         }
 
         // Check if the ad has images
-        final boolean hasImages = ((Number) getSession().createFilter(ad.getImages(), "select count(*)").uniqueResult()).intValue() > 0;
+        final boolean hasImages = (getEntityManager().createQuery("select count(ad.images) from Ad ad where ad.id = :id", Long.class)
+                .setParameter("id", ad.getId())
+                .getSingleResult()) > 0;
 
         // Get the publication period
         Calendar publicationBegin = ad.getPublicationPeriod() == null ? null : ad.getPublicationPeriod().getBegin();

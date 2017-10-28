@@ -33,7 +33,7 @@ public class LoanGroupCustomField extends CustomField {
 
     private static final long serialVersionUID = 2930029409276836841L;
 
-    @Column(name = "loan_group_show_in_search", nullable = false)
+    @Column(name = "loan_group_show_in_search")
     private boolean           showInSearch;
 
     public boolean isShowInSearch() {

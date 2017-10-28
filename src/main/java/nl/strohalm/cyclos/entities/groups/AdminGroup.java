@@ -154,9 +154,6 @@ public class AdminGroup extends SystemGroup {
     )
 	private Collection<MemberRecordType>  deleteMemberRecordTypes;
 
-    protected AdminGroup() {
-	}
-
 	public Collection<AdminCustomField> getAdminCustomFields() {
         return adminCustomFields;
     }

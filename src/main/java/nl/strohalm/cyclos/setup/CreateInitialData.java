@@ -55,11 +55,12 @@ import nl.strohalm.cyclos.entities.groups.MemberGroup;
 import nl.strohalm.cyclos.entities.members.Reference.Level;
 import nl.strohalm.cyclos.entities.members.messages.MessageCategory;
 import nl.strohalm.cyclos.entities.members.records.MemberRecordType;
-import nl.strohalm.cyclos.entities.utils.TimePeriod;
 import nl.strohalm.cyclos.entities.utils.Amount;
-import org.hibernate.Session;
+import nl.strohalm.cyclos.entities.utils.TimePeriod;
 import org.hibernate.criterion.Restrictions;
 
+import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -98,7 +99,7 @@ public class CreateInitialData implements Runnable {
     private SystemAccountType              debit;
     private MemberAccountType              member;
     private SystemAccountType              organization;
-    private final Session                  session;
+    private final EntityManager entityManager;
     private final Map<String, AccountType> systemTypes;
     private SystemAccountType              voucher;
     private TransferType                   trade;
@@ -135,7 +136,7 @@ public class CreateInitialData implements Runnable {
     private Collection<MemberGroup>        enabledMemberGroups;
 
     public CreateInitialData(final Setup setup) {
-        session = setup.getSession();
+        entityManager = setup.getEntityManager();
         bundle = setup.getBundle();
         systemTypes = new LinkedHashMap<String, AccountType>();
     }
@@ -146,13 +147,23 @@ public class CreateInitialData implements Runnable {
     @Override
     public void run() {
         Setup.out.println(bundle.getString("initial-data.start"));
-        session.clear();
+        entityManager.clear();
 
-        systemAdmins = (AdminGroup) session.createCriteria(AdminGroup.class).add(Restrictions.eq("name", bundle.getString("group.system-admins.name"))).uniqueResult();
-        accountAdmins = (AdminGroup) session.createCriteria(AdminGroup.class).add(Restrictions.eq("name", bundle.getString("group.account-admins.name"))).uniqueResult();
-        fullMembers = (MemberGroup) session.createCriteria(MemberGroup.class).add(Restrictions.eq("name", bundle.getString("group.full-members.name"))).uniqueResult();
-        inactiveMembers = (MemberGroup) session.createCriteria(MemberGroup.class).add(Restrictions.eq("name", bundle.getString("group.inactive-members.name"))).uniqueResult();
-        fullBrokers = (BrokerGroup) session.createCriteria(BrokerGroup.class).add(Restrictions.eq("name", bundle.getString("group.full-brokers.name"))).uniqueResult();
+        systemAdmins = entityManager.createQuery("from AdminGroup c where c.name=:name", AdminGroup.class)
+                .setParameter("name", bundle.getString("group.system-admins.name"))
+                .getSingleResult();
+        accountAdmins = entityManager.createQuery("from AdminGroup c where c.name=:name", AdminGroup.class)
+                .setParameter("name", bundle.getString("group.account-admins.name"))
+                .getSingleResult();
+        fullMembers = entityManager.createQuery("from MemberGroup c where c.name=:name", MemberGroup.class)
+                .setParameter("name", bundle.getString("group.full-members.name"))
+                .getSingleResult();
+        inactiveMembers = entityManager.createQuery("from MemberGroup c where c.name=:name", MemberGroup.class)
+                .setParameter("name", bundle.getString("group.inactive-members.name"))
+                .getSingleResult();
+        fullBrokers = entityManager.createQuery("from BrokerGroup c where c.name=:name", BrokerGroup.class)
+                .setParameter("name", bundle.getString("group.full-brokers.name"))
+                .getSingleResult();
 
         enabledAdminGroups = Arrays.asList(systemAdmins, accountAdmins);
         enabledMemberGroups = Arrays.asList(fullMembers, fullBrokers);
@@ -171,7 +182,7 @@ public class CreateInitialData implements Runnable {
         createCustomFields();
         createRemarks();
 
-        session.flush();
+        entityManager.flush();
 
         Setup.out.println(bundle.getString("initial-data.end"));
     }
@@ -181,7 +192,7 @@ public class CreateInitialData implements Runnable {
             final CustomFieldPossibleValue pv = new CustomFieldPossibleValue();
             pv.setField(field);
             pv.setValue(bundle.getString(key));
-            session.save(pv);
+            entityManager.persist(pv);
         }
     }
 
@@ -208,7 +219,7 @@ public class CreateInitialData implements Runnable {
         contribution.setInvoiceMode(InvoiceMode.NOT_ENOUGH_CREDITS);
         contribution.setTransferType(contributionPayment);
         contribution.setGroups(new HashSet<MemberGroup>(enabledMemberGroups));
-        session.save(contribution);
+        entityManager.persist(contribution);
 
         final AccountFee liquidity = new AccountFee();
         liquidity.setName(bundle.getString("tax.liquidity.name"));
@@ -225,7 +236,7 @@ public class CreateInitialData implements Runnable {
         liquidity.setInvoiceMode(InvoiceMode.NEVER);
         liquidity.setTransferType(liquidityTaxPayment);
         liquidity.setGroups(new HashSet<MemberGroup>(enabledMemberGroups));
-        session.save(liquidity);
+        entityManager.persist(liquidity);
     }
 
     private void createCurrencies() {
@@ -233,7 +244,7 @@ public class CreateInitialData implements Runnable {
         units.setName("Units");
         units.setPattern("#amount# units");
         units.setSymbol("units");
-        session.save(units);
+        entityManager.persist(units);
     }
 
     private void createCustomFields() {
@@ -251,7 +262,7 @@ public class CreateInitialData implements Runnable {
         birthday.setIndexing(Indexing.NONE);
         birthday.setShowInPrint(true);
         birthday.setGroups(new ArrayList<MemberGroup>(memberGroups));
-        session.save(birthday);
+        entityManager.persist(birthday);
 
         // Gender
         final MemberCustomField gender = new MemberCustomField();
@@ -265,7 +276,7 @@ public class CreateInitialData implements Runnable {
         gender.setShowInPrint(true);
         gender.setGroups(new ArrayList<MemberGroup>(memberGroups));
         gender.setIndexing(Indexing.NONE);
-        session.save(gender);
+        entityManager.persist(gender);
         addPossibleValues(gender, "field.gender.male", "field.gender.female");
 
         // Address
@@ -279,7 +290,7 @@ public class CreateInitialData implements Runnable {
         address.setOrder(2);
         address.setIndexing(Indexing.MEMBERS_AND_ADS);
         address.setGroups(new ArrayList<MemberGroup>(memberGroups));
-        session.save(address);
+        entityManager.persist(address);
 
         // Postal code
         final MemberCustomField postalCode = new MemberCustomField();
@@ -292,7 +303,7 @@ public class CreateInitialData implements Runnable {
         postalCode.setOrder(3);
         postalCode.setIndexing(Indexing.NONE);
         postalCode.setGroups(new ArrayList<MemberGroup>(memberGroups));
-        session.save(postalCode);
+        entityManager.persist(postalCode);
 
         // City
         final MemberCustomField city = new MemberCustomField();
@@ -305,7 +316,7 @@ public class CreateInitialData implements Runnable {
         city.setOrder(4);
         city.setIndexing(Indexing.MEMBERS_AND_ADS);
         city.setGroups(new ArrayList<MemberGroup>(memberGroups));
-        session.save(city);
+        entityManager.persist(city);
 
         // Area
         final MemberCustomField area = new MemberCustomField();
@@ -317,7 +328,7 @@ public class CreateInitialData implements Runnable {
         area.setOrder(5);
         area.setGroups(new ArrayList<MemberGroup>(memberGroups));
         area.setIndexing(Indexing.MEMBERS_AND_ADS);
-        session.save(area);
+        entityManager.persist(area);
         addPossibleValues(area, "area.name");
 
         // Phone
@@ -331,7 +342,7 @@ public class CreateInitialData implements Runnable {
         phone.setOrder(6);
         phone.setIndexing(Indexing.NONE);
         phone.setGroups(new ArrayList<MemberGroup>(memberGroups));
-        session.save(phone);
+        entityManager.persist(phone);
 
         // Mobile phone
         final MemberCustomField mobilePhone = new MemberCustomField();
@@ -345,7 +356,7 @@ public class CreateInitialData implements Runnable {
         mobilePhone.setIndexing(Indexing.NONE);
         mobilePhone.setGroups(new ArrayList<MemberGroup>(memberGroups));
         mobilePhone.setValidation(new Validation(false, true));
-        session.save(mobilePhone);
+        entityManager.persist(mobilePhone);
 
         // Fax
         final MemberCustomField fax = new MemberCustomField();
@@ -358,7 +369,7 @@ public class CreateInitialData implements Runnable {
         fax.setOrder(8);
         fax.setIndexing(Indexing.NONE);
         fax.setGroups(new ArrayList<MemberGroup>(memberGroups));
-        session.save(fax);
+        entityManager.persist(fax);
 
         // URL
         final MemberCustomField url = new MemberCustomField();
@@ -371,7 +382,7 @@ public class CreateInitialData implements Runnable {
         url.setOrder(9);
         url.setIndexing(Indexing.NONE);
         url.setGroups(new ArrayList<MemberGroup>(memberGroups));
-        session.save(url);
+        entityManager.persist(url);
 
         // Loan identifier
         final PaymentCustomField loanIdentifier = new PaymentCustomField();
@@ -383,7 +394,7 @@ public class CreateInitialData implements Runnable {
         loanIdentifier.setType(CustomField.Type.STRING);
         loanIdentifier.setSearchAccess(PaymentCustomField.Access.FROM_ACCOUNT);
         loanIdentifier.setOrder(0);
-        session.save(loanIdentifier);
+        entityManager.persist(loanIdentifier);
     }
 
     /**
@@ -393,7 +404,7 @@ public class CreateInitialData implements Runnable {
         final AdCategory category = new AdCategory();
         category.setActive(true);
         category.setName(bundle.getString("ad-category.name"));
-        session.save(category);
+        entityManager.persist(category);
     }
 
     /**
@@ -404,17 +415,17 @@ public class CreateInitialData implements Runnable {
 
         final MessageCategory support = new MessageCategory();
         support.setName(bundle.getString("message-category.support.name"));
-        session.save(support);
+        entityManager.persist(support);
         allCategories.add(support);
 
         final MessageCategory administration = new MessageCategory();
         administration.setName(bundle.getString("message-category.administration.name"));
-        session.save(administration);
+        entityManager.persist(administration);
         allCategories.add(administration);
 
         final MessageCategory loanRequest = new MessageCategory();
         loanRequest.setName(bundle.getString("message-category.loan-request.name"));
-        session.save(loanRequest);
+        entityManager.persist(loanRequest);
         allCategories.add(loanRequest);
 
         systemAdmins.setMessageCategories(new ArrayList<MessageCategory>(allCategories));
@@ -433,7 +444,7 @@ public class CreateInitialData implements Runnable {
         transactionTax.setEnabled(false);
         transactionTax.setPayer(Subject.SOURCE);
         transactionTax.setReceiver(Subject.SYSTEM);
-        session.save(transactionTax);
+        entityManager.persist(transactionTax);
 
         final BrokerCommission brokerCommission = new BrokerCommission();
         brokerCommission.setName(bundle.getString("fee.broker-commission.name"));
@@ -446,7 +457,7 @@ public class CreateInitialData implements Runnable {
         brokerCommission.setWhichBroker(WhichBroker.SOURCE);
         brokerCommission.setWhen(When.COUNT);
         brokerCommission.setCount(20);
-        session.save(brokerCommission);
+        entityManager.persist(brokerCommission);
     }
 
     private void createMemberAccountSettings() {
@@ -460,7 +471,7 @@ public class CreateInitialData implements Runnable {
             mgas.setInitialCredit(BigDecimal.ZERO);
             mgas.setLowUnits(new BigDecimal(20));
             mgas.setLowUnitsMessage(bundle.getString("account.member.low-units"));
-            session.save(mgas);
+            entityManager.persist(mgas);
         }
     }
 
@@ -469,7 +480,7 @@ public class CreateInitialData implements Runnable {
         member.setCurrency(units);
         member.setName(bundle.getString("account.member.name"));
         member.setDescription(bundle.getString("account.member.description"));
-        session.save(member);
+        entityManager.persist(member);
     }
 
     @SuppressWarnings("unchecked")
@@ -499,7 +510,7 @@ public class CreateInitialData implements Runnable {
             groups.addAll(enabledMemberGroups);
         }
         filter.setGroups(groups);
-        session.save(filter);
+        entityManager.persist(filter);
     }
 
     private void createPaymentFilters() {
@@ -537,7 +548,7 @@ public class CreateInitialData implements Runnable {
 
     @SuppressWarnings("unchecked")
     private MemberRecordType createRemarks() {
-        final Collection<Group> allGroups = session.createCriteria(Group.class).list();
+        final Collection<Group> allGroups = entityManager.createQuery("from Group", Group.class).getResultList();
 
         // Create member record type "remarks"
         final MemberRecordType memberRecordType = new MemberRecordType();
@@ -549,7 +560,7 @@ public class CreateInitialData implements Runnable {
         memberRecordType.setViewableByBrokerGroups(Collections.singletonList(fullBrokers));
         memberRecordType.setLayout(MemberRecordType.Layout.FLAT);
         memberRecordType.setShowMenuItem(true);
-        session.save(memberRecordType);
+        entityManager.persist(memberRecordType);
 
         // Add permissions to administrators groups (system and account) and full brokers group
         systemAdmins.getViewAdminRecordTypes().add(memberRecordType);
@@ -577,7 +588,7 @@ public class CreateInitialData implements Runnable {
         commentsField.setOrder(0);
         commentsField.setMemberRecordType(memberRecordType);
         commentsField.setBrokerAccess(MemberRecordCustomField.Access.EDITABLE);
-        session.save(commentsField);
+        entityManager.persist(commentsField);
 
         return memberRecordType;
     }
@@ -589,10 +600,10 @@ public class CreateInitialData implements Runnable {
         account.setCreationDate(Calendar.getInstance());
         account.setType(type);
         account.setOwnerName(type.getName());
-        session.save(account);
+        entityManager.persist(account);
 
         // Save the account lock
-        session.save(new AccountLock(account));
+        entityManager.persist(new AccountLock(account));
 
         type.setAccount(account);
         return account;
@@ -613,7 +624,7 @@ public class CreateInitialData implements Runnable {
         debit.setDescription(bundle.getString("account.debit.description"));
         debit.setCurrency(units);
 
-        session.save(debit);
+        entityManager.persist(debit);
         systemTypes.put("debit", debit);
 
         community = new SystemAccountType();
@@ -621,7 +632,7 @@ public class CreateInitialData implements Runnable {
         community.setName(bundle.getString("account.community.name"));
         community.setDescription(bundle.getString("account.community.description"));
         community.setCreditLimit(BigDecimal.ZERO);
-        session.save(community);
+        entityManager.persist(community);
         systemTypes.put("community", community);
 
         voucher = new SystemAccountType();
@@ -629,7 +640,7 @@ public class CreateInitialData implements Runnable {
         voucher.setName(bundle.getString("account.voucher.name"));
         voucher.setDescription(bundle.getString("account.voucher.description"));
         voucher.setCreditLimit(BigDecimal.ZERO);
-        session.save(voucher);
+        entityManager.persist(voucher);
         systemTypes.put("voucher", voucher);
 
         organization = new SystemAccountType();
@@ -637,18 +648,19 @@ public class CreateInitialData implements Runnable {
         organization.setName(bundle.getString("account.organization.name"));
         organization.setDescription(bundle.getString("account.organization.description"));
         organization.setCreditLimit(BigDecimal.ZERO);
-        session.save(organization);
+        entityManager.persist(organization);
         systemTypes.put("organization", organization);
 
         // Allow the adminstrator group to view all system account types
-        final List<SystemAccountType> allSystemAccountTypes = session.createCriteria(SystemAccountType.class).list();
+        final List<SystemAccountType> allSystemAccountTypes = entityManager.createQuery("from SystemAccountType", SystemAccountType.class).getResultList();
         systemAdmins.setViewInformationOf(new ArrayList<SystemAccountType>(allSystemAccountTypes));
         accountAdmins.setViewInformationOf(new ArrayList<SystemAccountType>(allSystemAccountTypes));
     }
 
     private void createTransferTypes() {
 
-        final Channel web = (Channel) session.createCriteria(Channel.class).add(Restrictions.eq("internalName", Channel.WEB)).uniqueResult();
+        final Channel web = entityManager.createQuery("from Channel c where c.internalName=:internalName", Channel.class)
+                .setParameter("internalName", Channel.WEB).getSingleResult();
 
         memberDebit = new ArrayList<TransferType>();
         memberCommunity = new ArrayList<TransferType>();
@@ -680,7 +692,7 @@ public class CreateInitialData implements Runnable {
                 tt.getContext().setSelfPayment(true);
                 tt.setFrom(from);
                 tt.setTo(to);
-                session.save(tt);
+                entityManager.persist(tt);
                 systemAdmins.getTransferTypes().add(tt);
                 systemToSystem.add(tt);
                 if ((from == debit && to == community) || (from == community && to == debit)) {
@@ -710,7 +722,7 @@ public class CreateInitialData implements Runnable {
         trade.setChannels(Collections.singletonList(web));
         trade.setAllowsScheduledPayments(true);
         setFeedbackParameters(trade);
-        session.save(trade);
+        entityManager.persist(trade);
         associateTransferTypeToGroups(trade, enabledMemberGroups);
 
         // Insert all combinations of from:system / to:member
@@ -726,7 +738,7 @@ public class CreateInitialData implements Runnable {
             tt.setFrom(from);
             tt.setTo(member);
             tt.setChannels(Collections.singletonList(web));
-            session.save(tt);
+            entityManager.persist(tt);
             systemAdmins.getTransferTypes().add(tt);
             systemToMember.add(tt);
             if (from == debit) {
@@ -755,7 +767,7 @@ public class CreateInitialData implements Runnable {
             tt.setFrom(member);
             tt.setTo(to);
             tt.setChannels(Collections.singletonList(web));
-            session.save(tt);
+            entityManager.persist(tt);
             associateTransferTypeToGroups(tt, enabledMemberGroups);
             memberToSystem.add(tt);
             if (to == community) {
@@ -773,7 +785,7 @@ public class CreateInitialData implements Runnable {
         loanRepayment.setDescription(bundle.getString("transfer-type.loan-repayment.description"));
         loanRepayment.setFrom(member);
         loanRepayment.setTo(debit);
-        session.save(loanRepayment);
+        entityManager.persist(loanRepayment);
 
         loan = new TransferType();
         loan.setName(bundle.getString("transfer-type.loan.name"));
@@ -786,7 +798,7 @@ public class CreateInitialData implements Runnable {
         loanParameters.setType(Loan.Type.SINGLE_PAYMENT);
         loanParameters.setRepaymentType(loanRepayment);
         loanParameters.setRepaymentDays(30);
-        session.save(loan);
+        entityManager.persist(loan);
         systemAdmins.getTransferTypes().add(loan);
         memberDebit.add(loan);
 
@@ -796,7 +808,7 @@ public class CreateInitialData implements Runnable {
         initialCredit.setDescription(bundle.getString("transfer-type.initial-credit.description"));
         initialCredit.setFrom(debit);
         initialCredit.setTo(member);
-        session.save(initialCredit);
+        entityManager.persist(initialCredit);
         memberDebit.add(initialCredit);
 
         // Add the money conversion
@@ -806,7 +818,7 @@ public class CreateInitialData implements Runnable {
         moneyConversion.setFrom(debit);
         moneyConversion.setTo(member);
         moneyConversion.getContext().setPayment(true);
-        session.save(moneyConversion);
+        entityManager.persist(moneyConversion);
         systemAdmins.getTransferTypes().add(moneyConversion);
 
         // Add the transaction tax payment
@@ -815,7 +827,7 @@ public class CreateInitialData implements Runnable {
         transactionTaxPayment.setDescription(bundle.getString("transfer-type.transaction-tax-payment.description"));
         transactionTaxPayment.setFrom(member);
         transactionTaxPayment.setTo(community);
-        session.save(transactionTaxPayment);
+        entityManager.persist(transactionTaxPayment);
 
         // Add the broker commission payment
         brokerCommissionPayment = new TransferType();
@@ -823,7 +835,7 @@ public class CreateInitialData implements Runnable {
         brokerCommissionPayment.setDescription(bundle.getString("transfer-type.broker-commission-payment.description"));
         brokerCommissionPayment.setFrom(community);
         brokerCommissionPayment.setTo(member);
-        session.save(brokerCommissionPayment);
+        entityManager.persist(brokerCommissionPayment);
 
         // Insert the contribution payment
         contributionPayment = new TransferType();
@@ -831,7 +843,7 @@ public class CreateInitialData implements Runnable {
         contributionPayment.setDescription(bundle.getString("transfer-type.contribution-payment.description"));
         contributionPayment.setFrom(member);
         contributionPayment.setTo(community);
-        session.save(contributionPayment);
+        entityManager.persist(contributionPayment);
 
         // Insert the liquidity tax payment
         liquidityTaxPayment = new TransferType();
@@ -839,12 +851,13 @@ public class CreateInitialData implements Runnable {
         liquidityTaxPayment.setDescription(bundle.getString("transfer-type.liquidity-tax-payment.description"));
         liquidityTaxPayment.setFrom(member);
         liquidityTaxPayment.setTo(community);
-        session.save(liquidityTaxPayment);
+        entityManager.persist(liquidityTaxPayment);
 
         // Get mobile channels
-        final Channel restChannel = (Channel) session.createCriteria(Channel.class).add(Restrictions.eq("internalName", Channel.REST)).uniqueResult();
-        final Channel wap2Channel = (Channel) session.createCriteria(Channel.class).add(Restrictions.eq("internalName", Channel.WAP2)).uniqueResult();
-        final Channel wap1Channel = (Channel) session.createCriteria(Channel.class).add(Restrictions.eq("internalName", Channel.WAP1)).uniqueResult();
+        TypedQuery<Channel> channelQuery = entityManager.createQuery("from Channel c where c.internalName=:internalName", Channel.class);
+        final Channel restChannel = channelQuery.setParameter("internalName", Channel.REST).getSingleResult();
+        final Channel wap2Channel = channelQuery.setParameter("internalName", Channel.WAP2).getSingleResult();
+        final Channel wap1Channel = channelQuery.setParameter("internalName", Channel.WAP1).getSingleResult();
         final List<Channel> mobileChannels = new ArrayList<Channel>();
         mobileChannels.add(restChannel);
         mobileChannels.add(wap2Channel);
@@ -861,12 +874,12 @@ public class CreateInitialData implements Runnable {
         mobileTrade.setMaxAmountPerDay(new BigDecimal(500));
         mobileTrade.setGroups(new HashSet<Group>(enabledMemberGroups));
         setFeedbackParameters(mobileTrade);
-        session.save(mobileTrade);
+        entityManager.persist(mobileTrade);
         associateTransferTypeToGroups(mobileTrade, enabledMemberGroups);
 
         // Add the external trade transfer
-        final Channel poswebChannel = (Channel) session.createCriteria(Channel.class).add(Restrictions.eq("internalName", Channel.POSWEB)).uniqueResult();
-        final Channel webshopChannel = (Channel) session.createCriteria(Channel.class).add(Restrictions.eq("internalName", Channel.WEBSHOP)).uniqueResult();
+        final Channel poswebChannel = channelQuery.setParameter("internalName", Channel.POSWEB).getSingleResult();
+        final Channel webshopChannel = channelQuery.setParameter("internalName", Channel.WEBSHOP).getSingleResult();
         final List<Channel> externalTradeTransferChannels = Arrays.asList(webshopChannel, poswebChannel);
         externalTrade = new TransferType();
         externalTrade.setName(bundle.getString("transfer-type.external-trade.name"));
@@ -877,7 +890,7 @@ public class CreateInitialData implements Runnable {
         externalTrade.getContext().setPayment(true);
         externalTrade.setMaxAmountPerDay(new BigDecimal(500));
         externalTrade.setGroups(new HashSet<Group>(enabledMemberGroups));
-        session.save(externalTrade);
+        entityManager.persist(externalTrade);
         associateTransferTypeToGroups(externalTrade, enabledMemberGroups);
     }
 

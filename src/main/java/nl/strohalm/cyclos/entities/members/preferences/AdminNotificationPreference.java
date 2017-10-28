@@ -114,9 +114,6 @@ public class AdminNotificationPreference extends Entity {
             inverseJoinColumns = @JoinColumn(name = "group_id"))
 	private Set<MemberGroup>        newMembers;
 
-    protected AdminNotificationPreference() {
-	}
-
 	public Administrator getAdmin() {
         return admin;
     }

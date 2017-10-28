@@ -54,9 +54,6 @@ public class LoanGroupCustomFieldValue extends CustomFieldValue {
     @JoinColumn(name = "loan_group_id")
 	private LoanGroup         loanGroup;
 
-    protected LoanGroupCustomFieldValue() {
-	}
-
 	public LoanGroup getLoanGroup() {
         return loanGroup;
     }

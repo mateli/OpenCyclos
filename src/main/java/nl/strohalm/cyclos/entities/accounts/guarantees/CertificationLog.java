@@ -64,9 +64,6 @@ public class CertificationLog extends Entity {
     @JoinColumn(name = "by_id")
 	private Element           by;
 
-    protected CertificationLog() {
-	}
-
 	public Element getBy() {
         return by;
     }

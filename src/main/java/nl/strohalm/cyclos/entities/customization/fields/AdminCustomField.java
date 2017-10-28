@@ -52,9 +52,6 @@ public class AdminCustomField extends CustomField {
     @ManyToMany(mappedBy = "adminCustomFields")
 	private Collection<AdminGroup> groups;
 
-    protected AdminCustomField() {
-	}
-
 	public Collection<AdminGroup> getGroups() {
         return groups;
     }

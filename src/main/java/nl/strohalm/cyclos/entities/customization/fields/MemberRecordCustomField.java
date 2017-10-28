@@ -70,10 +70,10 @@ public class MemberRecordCustomField extends CustomField {
     @JoinColumn(name = "member_record_type_id")
 	private MemberRecordType  memberRecordType;
 
-    @Column(name = "record_show_in_search", nullable = false)
+    @Column(name = "record_show_in_search")
     private boolean           showInSearch;
 
-    @Column(name = "record_show_in_list", nullable = false)
+    @Column(name = "record_show_in_list")
     private boolean           showInList;
 
     @Column(name = "record_broker_access", length = 1)

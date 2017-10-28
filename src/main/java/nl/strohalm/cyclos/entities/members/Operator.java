@@ -64,9 +64,6 @@ public class Operator extends Element implements CustomFieldsContainer<OperatorC
     @OneToMany(mappedBy = "operator", cascade = CascadeType.REMOVE)
 	private Collection<OperatorCustomFieldValue> customValues;
 
-    protected Operator() {
-	}
-
 	@Override
     public AccountOwner getAccountOwner() {
         return member;

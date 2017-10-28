@@ -19,11 +19,6 @@
  */
 package nl.strohalm.cyclos.dao.access;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import nl.strohalm.cyclos.dao.BaseDAOImpl;
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.access.OperatorUser;
@@ -36,6 +31,11 @@ import nl.strohalm.cyclos.entities.members.Member;
 import nl.strohalm.cyclos.utils.hibernate.HibernateHelper;
 import nl.strohalm.cyclos.utils.query.PageParameters;
 import nl.strohalm.cyclos.utils.query.QueryParameters.ResultType;
+
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Default implementation for UserDAO. It just delegates operations do InsertableDAO, UpdatableDAO and DeletableDAO.
@@ -53,8 +53,8 @@ public class UserDAOImpl extends BaseDAOImpl<User> implements UserDAO {
     public <T extends User> T load(final String username, final Relationship... fetch) throws EntityNotFoundException, DaoException {
         final Map<String, Object> namedParameters = new HashMap<String, Object>();
         namedParameters.put("username", username);
-        namedParameters.put("admin", Element.Nature.ADMIN.getValue());
-        namedParameters.put("member", Element.Nature.MEMBER.getValue());
+        namedParameters.put("admin", Element.Nature.ADMIN);
+        namedParameters.put("member", Element.Nature.MEMBER);
         namedParameters.put("removed", Group.Status.REMOVED);
         final T user = this.<T> uniqueResult("select u from User u left join fetch u.element e where u.username = :username and e.class in (:admin, :member) and e.group.status <> :removed", namedParameters);
         if (user == null) {

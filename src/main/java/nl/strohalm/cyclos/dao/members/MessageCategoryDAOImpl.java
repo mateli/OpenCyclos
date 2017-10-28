@@ -54,8 +54,8 @@ public class MessageCategoryDAOImpl extends BaseDAOImpl<MessageCategory> impleme
                 for (final SystemGroup group : category.getGroups()) {
                     group.getMessageCategories().remove(category);
                 }
-                getHibernateTemplate().delete(category);
-                getHibernateTemplate().flush();
+                entityManager.remove(category);
+                entityManager.flush();
                 rows++;
             } catch (final EntityNotFoundException e) {
                 // Ignore

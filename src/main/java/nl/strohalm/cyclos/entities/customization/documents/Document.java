@@ -93,9 +93,6 @@ public abstract class Document extends Entity {
     @ManyToMany(mappedBy = "brokerDocuments")
 	private Collection<BrokerGroup> brokerGroups;
 
-    protected Document() {
-	}
-
 	public void addGroup(final SystemGroup g) {
         if (groups == null) {
             groups = new ArrayList<SystemGroup>();
