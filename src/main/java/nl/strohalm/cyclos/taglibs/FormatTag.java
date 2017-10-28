@@ -30,7 +30,7 @@ import javax.servlet.jsp.tagext.TagSupport;
 import nl.strohalm.cyclos.entities.reports.StatisticalNumber;
 import nl.strohalm.cyclos.entities.settings.LocalSettings;
 import nl.strohalm.cyclos.services.settings.SettingsService;
-import nl.strohalm.cyclos.utils.Amount;
+import nl.strohalm.cyclos.entities.utils.Amount;
 import nl.strohalm.cyclos.utils.SpringHelper;
 import nl.strohalm.cyclos.utils.conversion.CardNumberConverter;
 import nl.strohalm.cyclos.utils.conversion.CoercionHelper;

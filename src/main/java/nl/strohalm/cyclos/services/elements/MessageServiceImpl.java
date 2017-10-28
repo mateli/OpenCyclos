@@ -67,7 +67,7 @@ import nl.strohalm.cyclos.services.transactions.exceptions.UpperCreditLimitReach
 import nl.strohalm.cyclos.utils.DateHelper;
 import nl.strohalm.cyclos.utils.LinkGenerator;
 import nl.strohalm.cyclos.utils.MailHandler;
-import nl.strohalm.cyclos.utils.TimePeriod;
+import nl.strohalm.cyclos.entities.utils.TimePeriod;
 import nl.strohalm.cyclos.utils.TransactionHelper;
 import nl.strohalm.cyclos.utils.WorkerThreads;
 import nl.strohalm.cyclos.utils.access.LoggedUser;

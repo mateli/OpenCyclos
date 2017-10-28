@@ -39,7 +39,7 @@ import nl.strohalm.cyclos.entities.reports.ThroughTimeRange;
 import nl.strohalm.cyclos.services.stats.StatisticalResultDTO.MultiGraph;
 import nl.strohalm.cyclos.services.stats.general.FilterUsed;
 import nl.strohalm.cyclos.services.stats.general.KeyDevelopmentsStatsPerMonthVO;
-import nl.strohalm.cyclos.utils.Period;
+import nl.strohalm.cyclos.entities.utils.Period;
 import nl.strohalm.cyclos.utils.query.PageHelper;
 import nl.strohalm.cyclos.utils.statistics.ListOperations;
 import nl.strohalm.cyclos.utils.statistics.Median;
@@ -59,7 +59,7 @@ public class StatisticalKeyDevelopmentsServiceImpl extends StatisticalServiceImp
     private List<Number>                    transactionAmounts2;
 
     public StatisticalResultDTO getComparePeriodsGrossProduct(final StatisticalKeyDevelopmentsQuery queryParameters) {
-        final byte precision = (byte) getLocalSettings().getPrecision().getValue();
+        final byte precision = (byte) getLocalSettings().getPrecision().getValue().intValue();
         final Period periodMain = queryParameters.getPeriodMain();
         final Period periodComparedTo = queryParameters.getPeriodComparedTo();
         final Collection<Group> groups = queryParameters.getGroups();
@@ -105,7 +105,7 @@ public class StatisticalKeyDevelopmentsServiceImpl extends StatisticalServiceImp
     }
 
     public StatisticalResultDTO getComparePeriodsHighestTransactionAmount(final StatisticalKeyDevelopmentsQuery queryParameters) {
-        final byte precision = (byte) getLocalSettings().getPrecision().getValue();
+        final byte precision = (byte) getLocalSettings().getPrecision().getValue().intValue();
         final PaymentFilter paymentFilter = getInitializedPaymentFilter(queryParameters);
         // Data structure to build the table
         final String baseKey = "reports.stats.keydevelopments.highestAmountPerTransaction";
@@ -366,7 +366,7 @@ public class StatisticalKeyDevelopmentsServiceImpl extends StatisticalServiceImp
     }
 
     public StatisticalResultDTO getSinglePeriodGrossProduct(final StatisticalKeyDevelopmentsQuery queryParameters) {
-        final byte precision = (byte) getLocalSettings().getPrecision().getValue();
+        final byte precision = (byte) getLocalSettings().getPrecision().getValue().intValue();
         final Period periodMain = queryParameters.getPeriodMain();
         final Collection<Group> groups = queryParameters.getGroups();
         final PaymentFilter paymentFilter = getInitializedPaymentFilter(queryParameters);
@@ -398,7 +398,7 @@ public class StatisticalKeyDevelopmentsServiceImpl extends StatisticalServiceImp
     }
 
     public StatisticalResultDTO getSinglePeriodHighestTransactionAmount(final StatisticalKeyDevelopmentsQuery queryParameters) {
-        final byte precision = (byte) getLocalSettings().getPrecision().getValue();
+        final byte precision = (byte) getLocalSettings().getPrecision().getValue().intValue();
         final PaymentFilter paymentFilter = getInitializedPaymentFilter(queryParameters);
         // Data structure to build the table
         final String baseKey = "reports.stats.keydevelopments.highestAmountPerTransaction";
@@ -710,7 +710,7 @@ public class StatisticalKeyDevelopmentsServiceImpl extends StatisticalServiceImp
     }
 
     private Number[][] getThroughTheTimeCalculation(final Period[] periods, final StatisticalKeyDevelopmentsQuery queryParameters, final int columns, final String[] rowHeaders) {
-        final byte precision = (byte) getLocalSettings().getPrecision().getValue();
+        final byte precision = (byte) getLocalSettings().getPrecision().getValue().intValue();
         final Collection<Group> groups = queryParameters.getGroups();
         final PaymentFilter paymentFilter = getInitializedPaymentFilter(queryParameters);
         final Number[][] tableCells = new Number[periods.length][columns];

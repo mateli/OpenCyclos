@@ -21,6 +21,12 @@ package nl.strohalm.cyclos.entities.access;
 
 import java.util.Calendar;
 
+import javax.persistence.Column;
+import javax.persistence.Enumerated;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
 import nl.strohalm.cyclos.entities.Entity;
 import nl.strohalm.cyclos.utils.StringValuedEnum;
 
@@ -29,6 +35,8 @@ import nl.strohalm.cyclos.utils.StringValuedEnum;
  * 
  * @author luis
  */
+@Table(name = "password_history")
+@javax.persistence.Entity
 public class PasswordHistoryLog extends Entity {
 
     public static enum PasswordType implements StringValuedEnum {
@@ -41,9 +49,17 @@ public class PasswordHistoryLog extends Entity {
 
     private static final long serialVersionUID = 6808724316036132120L;
 
-    private User              user;
+    @ManyToOne
+    @JoinColumn(nullable = false)
+	private User              user;
+
+    @Column(nullable = false)
     private Calendar          date;
-    private PasswordType      type;
+
+    @Column(length = 1, nullable = false)
+	private PasswordType      type;
+
+    @Column(length = 64, nullable = false)
     private String            password;
 
     public Calendar getDate() {

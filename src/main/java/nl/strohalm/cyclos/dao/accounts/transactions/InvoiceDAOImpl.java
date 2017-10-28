@@ -42,7 +42,7 @@ import nl.strohalm.cyclos.entities.exceptions.EntityNotFoundException;
 import nl.strohalm.cyclos.entities.groups.MemberGroup;
 import nl.strohalm.cyclos.entities.reports.InvoiceSummaryType;
 import nl.strohalm.cyclos.services.transactions.TransactionSummaryVO;
-import nl.strohalm.cyclos.utils.Period;
+import nl.strohalm.cyclos.entities.utils.Period;
 import nl.strohalm.cyclos.utils.hibernate.HibernateHelper;
 
 import org.apache.commons.collections.CollectionUtils;

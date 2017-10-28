@@ -22,10 +22,14 @@ package nl.strohalm.cyclos.entities.alerts;
 import nl.strohalm.cyclos.utils.EnumHelper;
 import nl.strohalm.cyclos.utils.StringValuedEnum;
 
+import javax.persistence.DiscriminatorValue;
+
 /**
  * An alert sent to system
  * @author luis
  */
+@DiscriminatorValue("S")
+@javax.persistence.Entity
 public class SystemAlert extends Alert {
     /**
      * Contains the possible system alerts

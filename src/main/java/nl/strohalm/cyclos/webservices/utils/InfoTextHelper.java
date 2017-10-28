@@ -23,7 +23,7 @@ import java.util.List;
 
 import nl.strohalm.cyclos.entities.infotexts.InfoText;
 import nl.strohalm.cyclos.entities.infotexts.InfoTextQuery;
-import nl.strohalm.cyclos.utils.Period;
+import nl.strohalm.cyclos.entities.utils.Period;
 import nl.strohalm.cyclos.utils.conversion.Transformer;
 import nl.strohalm.cyclos.webservices.infotexts.InfoTextResultPage;
 import nl.strohalm.cyclos.webservices.infotexts.InfoTextSearchParameters;

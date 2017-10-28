@@ -19,16 +19,25 @@
  */
 package nl.strohalm.cyclos.entities.groups;
 
-import java.util.Collection;
-
 import nl.strohalm.cyclos.entities.Entity;
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.customization.files.CustomizedFile;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import java.util.Collection;
 
 /**
  * This entity groups several related permission groups. May also be seen as a "community".
  * @author luis
  */
+@Table(name = "group_filters")
+@javax.persistence.Entity
 public class GroupFilter extends Entity {
 
     public static enum Relationships implements Relationship {
@@ -46,17 +55,44 @@ public class GroupFilter extends Entity {
     }
 
     private static final long          serialVersionUID = 2784535628459241343L;
-    private String                     name;
-    private String                     description;
-    private String                     loginPageName;
-    private String                     rootUrl;
-    private String                     containerUrl;
-    private boolean                    showInProfile;
-    private Collection<MemberGroup>    groups;
-    private Collection<MemberGroup>    viewableBy;
-    private Collection<CustomizedFile> customizedFiles;
 
-    public String getContainerUrl() {
+    @Column(name = "name", nullable = false, length = 100)
+    private String                     name;
+
+    @Column(name = "description", columnDefinition = "longtext")
+    private String                     description;
+
+    @Column(name = "login_page_name", length = 20)  // index="ix_login_page_name"
+    private String                     loginPageName;
+
+    @Column(name = "root_url", length = 100)
+    private String                     rootUrl;
+
+    @Column(name = "container_url", length = 100)
+    private String                     containerUrl;
+
+    @Column(name = "show_in_profile", nullable = false)
+    private boolean                    showInProfile;
+
+    @ManyToMany
+    @JoinTable(name = "group_filters_groups",
+            joinColumns = @JoinColumn(name = "group_filter_id"),
+            inverseJoinColumns = @JoinColumn(name = "group_id"))
+	private Collection<MemberGroup>    groups;
+
+    @ManyToMany
+    @JoinTable(name = "group_filters_viewable_by",
+            joinColumns = @JoinColumn(name = "group_filter_id"),
+            inverseJoinColumns = @JoinColumn(name = "group_id"))
+	private Collection<MemberGroup>    viewableBy;
+
+    @OneToMany(mappedBy = "groupFilter", cascade = CascadeType.REMOVE)
+	private Collection<CustomizedFile> customizedFiles;
+
+    protected GroupFilter() {
+	}
+
+	public String getContainerUrl() {
         return containerUrl;
     }
 

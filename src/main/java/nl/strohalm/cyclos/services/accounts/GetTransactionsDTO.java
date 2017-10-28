@@ -29,7 +29,7 @@ import nl.strohalm.cyclos.entities.accounts.AccountType;
 import nl.strohalm.cyclos.entities.accounts.transactions.PaymentFilter;
 import nl.strohalm.cyclos.entities.members.Element;
 import nl.strohalm.cyclos.entities.members.Member;
-import nl.strohalm.cyclos.utils.Period;
+import nl.strohalm.cyclos.entities.utils.Period;
 
 /**
  * Data Transfer Object for retrieving transaction information

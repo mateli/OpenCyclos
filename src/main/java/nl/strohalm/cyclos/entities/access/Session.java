@@ -19,17 +19,23 @@
  */
 package nl.strohalm.cyclos.entities.access;
 
-import java.util.Calendar;
-
 import nl.strohalm.cyclos.entities.Entity;
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.utils.FormatObject;
+
+import javax.persistence.Column;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import java.util.Calendar;
 
 /**
  * Represents a session for an user
  * 
  * @author luis
  */
+@Table(name = "sessions")
+@javax.persistence.Entity
 public class Session extends Entity {
 
     public static enum Relationships implements Relationship {
@@ -47,14 +53,27 @@ public class Session extends Entity {
     }
 
     private static final long serialVersionUID = 4557047760868996021L;
+
+    @Column(unique = true, nullable = false)
     private String            identifier;
+
+    @Column(name = "creation_date", nullable = false)
     private Calendar          creationDate;
+
+    @Column(name = "expiration_date", nullable = false)
     private Calendar          expirationDate;
-    private User              user;
+
+    @ManyToOne
+    @JoinColumn(nullable = false)
+	private User              user;
+
+    @Column(name = "remote_addr", length = 40, nullable = false)
     private String            remoteAddress;
+
+    @Column(name = "pos_web")
     private boolean           posWeb;
 
-    public Calendar getCreationDate() {
+	public Calendar getCreationDate() {
         return creationDate;
     }
 

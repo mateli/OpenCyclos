@@ -19,9 +19,6 @@
  */
 package nl.strohalm.cyclos.entities.accounts.transactions;
 
-import java.util.Collection;
-import java.util.Collections;
-
 import nl.strohalm.cyclos.entities.accounts.AccountOwner;
 import nl.strohalm.cyclos.entities.accounts.AccountType;
 import nl.strohalm.cyclos.entities.accounts.loans.LoanPayment;
@@ -30,10 +27,12 @@ import nl.strohalm.cyclos.entities.groups.GroupFilter;
 import nl.strohalm.cyclos.entities.groups.MemberGroup;
 import nl.strohalm.cyclos.entities.members.Element;
 import nl.strohalm.cyclos.entities.members.Member;
-import nl.strohalm.cyclos.utils.Period;
+import nl.strohalm.cyclos.entities.utils.Period;
 import nl.strohalm.cyclos.utils.query.QueryParameters;
-
 import org.apache.commons.collections.CollectionUtils;
+
+import java.util.Collection;
+import java.util.Collections;
 
 /**
  * Contains data for searching the account history

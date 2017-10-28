@@ -129,9 +129,9 @@ import nl.strohalm.cyclos.utils.DataIteratorHelper;
 import nl.strohalm.cyclos.utils.DateHelper;
 import nl.strohalm.cyclos.utils.MessageProcessingHelper;
 import nl.strohalm.cyclos.utils.MessageResolver;
-import nl.strohalm.cyclos.utils.Period;
+import nl.strohalm.cyclos.entities.utils.Period;
 import nl.strohalm.cyclos.utils.RelationshipHelper;
-import nl.strohalm.cyclos.utils.TimePeriod;
+import nl.strohalm.cyclos.entities.utils.TimePeriod;
 import nl.strohalm.cyclos.utils.TransactionHelper;
 import nl.strohalm.cyclos.utils.Transactional;
 import nl.strohalm.cyclos.utils.access.LoggedUser;
@@ -850,7 +850,7 @@ public class PaymentServiceImpl implements PaymentServiceLocal {
     @Override
     public StatisticalResultDTO getSimulateConversionGraph(final ConversionSimulationDTO input) {
         final LocalSettings localSettings = settingsService.getLocalSettings();
-        final byte precision = (byte) localSettings.getPrecision().getValue();
+        final byte precision = (byte) localSettings.getPrecision().getValue().intValue();
 
         // get series
         final TransactionFeePreviewForRatesDTO temp = simulateConversion(input);

@@ -19,12 +19,18 @@
  */
 package nl.strohalm.cyclos.entities.accounts;
 
-import java.math.BigDecimal;
-import java.util.Calendar;
-
 import nl.strohalm.cyclos.entities.Entity;
 import nl.strohalm.cyclos.entities.Relationship;
-import nl.strohalm.cyclos.utils.Period;
+import nl.strohalm.cyclos.entities.utils.Period;
+
+import javax.persistence.Cacheable;
+import javax.persistence.Column;
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import java.math.BigDecimal;
+import java.util.Calendar;
 
 /**
  * parent class for all RateParameters. These classes store the parameters of rate configuration on the currency.
@@ -32,6 +38,10 @@ import nl.strohalm.cyclos.utils.Period;
  * @author Rinke
  * 
  */
+@Cacheable
+@Table(name = "rate_parameters")
+@DiscriminatorColumn(name = "subclass", length = 1)
+@javax.persistence.Entity
 abstract public class RateParameters extends Entity {
 
     public static enum Relatonships implements Relationship {
@@ -51,14 +61,29 @@ abstract public class RateParameters extends Entity {
 
     private static final long serialVersionUID = 3436424608100999408L;
 
-    private Currency          currency;
+    @ManyToOne
+    @JoinColumn(name = "currency_id", nullable = false)
+	private Currency          currency;
+
+    @Column(name = "date", nullable = false)
     private Calendar          date;
+
+    @Column(name = "creation_value", nullable = false, updatable = false, precision = 15, scale = 6)
     private BigDecimal        creationValue;
+
+    @Column(name = "enabled_since", nullable = false)
     private Calendar          enabledSince;
+
+    @Column(name = "disabled_since")
     private Calendar          disabledSince;
+
+    @Column(name = "reinit_date")
     private Calendar          reinitDate;
 
-    public BigDecimal getCreationValue() {
+    protected RateParameters() {
+	}
+
+	public BigDecimal getCreationValue() {
         return creationValue;
     }
 

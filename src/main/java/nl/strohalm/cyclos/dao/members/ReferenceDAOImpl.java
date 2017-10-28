@@ -46,7 +46,7 @@ import nl.strohalm.cyclos.entities.members.ReferenceQuery;
 import nl.strohalm.cyclos.entities.members.TransactionFeedback;
 import nl.strohalm.cyclos.utils.DataIteratorHelper;
 import nl.strohalm.cyclos.utils.IteratorListImpl;
-import nl.strohalm.cyclos.utils.Period;
+import nl.strohalm.cyclos.entities.utils.Period;
 import nl.strohalm.cyclos.utils.ScrollableResultsIterator;
 import nl.strohalm.cyclos.utils.conversion.Transformer;
 import nl.strohalm.cyclos.utils.hibernate.HibernateHelper;

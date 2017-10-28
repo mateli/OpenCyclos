@@ -19,9 +19,6 @@
  */
 package nl.strohalm.cyclos.entities.accounts.external;
 
-import java.math.BigDecimal;
-import java.util.Calendar;
-
 import nl.strohalm.cyclos.entities.Entity;
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.accounts.external.ExternalTransferType.Action;
@@ -29,10 +26,19 @@ import nl.strohalm.cyclos.entities.members.Member;
 import nl.strohalm.cyclos.utils.FormatObject;
 import nl.strohalm.cyclos.utils.StringValuedEnum;
 
+import javax.persistence.Column;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import java.math.BigDecimal;
+import java.util.Calendar;
+
 /**
  * Represents a payment in a real bank, that backs a payment in Cyclos
  * @author luis
  */
+@Table(name = "external_transfers")
+@javax.persistence.Entity
 public class ExternalTransfer extends Entity {
 
     public static enum Relationships implements Relationship {
@@ -77,18 +83,42 @@ public class ExternalTransfer extends Entity {
     }
 
     private static final long      serialVersionUID = 8537065201842074164L;
-    private ExternalAccount        account;
-    private ExternalTransferImport transferImport;
-    private ExternalTransferType   type;
-    private Status                 status           = Status.PENDING;
+
+    @ManyToOne
+    @JoinColumn(name = "account_id", nullable = false)
+	private ExternalAccount        account;
+
+    @ManyToOne
+    @JoinColumn(name = "import_id")
+	private ExternalTransferImport transferImport;
+
+    @ManyToOne
+    @JoinColumn(name = "type_id")
+	private ExternalTransferType   type;
+
+    @Column(length = 1, nullable = false)
+	private Status                 status           = Status.PENDING;
+
     private Calendar               date;
+
+    @Column(precision = 15, scale = 6)
     private BigDecimal             amount;
+
+    @Column(columnDefinition = "text", length = Integer.MAX_VALUE)
     private String                 description;
-    private Member                 member;
+
+    @ManyToOne
+    @JoinColumn(name = "member_id")
+	private Member                 member;
+
+    @Column(name = "line_number")
     private Integer                lineNumber;
+
+    @Column(columnDefinition = "longtext", length = Integer.MAX_VALUE)
     private String                 comments;
 
-    public ExternalAccount getAccount() {
+
+	public ExternalAccount getAccount() {
         return account;
     }
 

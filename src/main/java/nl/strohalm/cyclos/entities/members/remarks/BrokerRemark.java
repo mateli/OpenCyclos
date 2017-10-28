@@ -22,10 +22,18 @@ package nl.strohalm.cyclos.entities.members.remarks;
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.members.Member;
 
+import javax.persistence.Column;
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Transient;
+
 /**
  * Records a broker change
  * @author luis
  */
+@DiscriminatorValue("B")
+@javax.persistence.Entity
 public class BrokerRemark extends Remark {
     public static enum Relationships implements Relationship {
         NEW_BROKER("newBroker"), OLD_BROKER("oldBroker");
@@ -42,11 +50,17 @@ public class BrokerRemark extends Remark {
 
     private static final long serialVersionUID = -3209648514982932525L;
 
-    private Member            newBroker;
-    private Member            oldBroker;
+    @ManyToOne
+    @JoinColumn(name = "new_broker_id")
+	private Member            newBroker;
+
+    @ManyToOne
+    @JoinColumn(name = "old_broker_id")
+	private Member            oldBroker;
+
+    @Transient
     private boolean           suspendCommission;
 
-    @Override
     public Nature getNature() {
         return Nature.BROKER;
     }

@@ -46,7 +46,7 @@ import nl.strohalm.cyclos.services.transactions.ScheduledPaymentDTO;
 import nl.strohalm.cyclos.services.transactions.TransactionContext;
 import nl.strohalm.cyclos.utils.ActionHelper;
 import nl.strohalm.cyclos.utils.EntityHelper;
-import nl.strohalm.cyclos.utils.TimePeriod;
+import nl.strohalm.cyclos.entities.utils.TimePeriod;
 import nl.strohalm.cyclos.utils.binding.BeanBinder;
 import nl.strohalm.cyclos.utils.binding.BeanCollectionBinder;
 import nl.strohalm.cyclos.utils.binding.DataBinder;

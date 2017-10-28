@@ -19,11 +19,16 @@
  */
 package nl.strohalm.cyclos.entities.accounts;
 
+
+import javax.persistence.DiscriminatorValue;
+
 /**
  * A returned amount reservation by an installment of a scheduled payment which reserved the whole amount
  * 
  * @author luis
  */
+@DiscriminatorValue("I")
+@javax.persistence.Entity
 public class InstallmentAmountReservation extends BaseTransferAmountReservation {
 
     private static final long serialVersionUID = 5884487111602941758L;

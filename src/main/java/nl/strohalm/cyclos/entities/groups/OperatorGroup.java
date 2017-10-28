@@ -19,19 +19,30 @@
  */
 package nl.strohalm.cyclos.entities.groups;
 
-import java.math.BigDecimal;
-import java.util.Collection;
-import java.util.Map;
-
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.accounts.AccountType;
 import nl.strohalm.cyclos.entities.accounts.transactions.TransferType;
 import nl.strohalm.cyclos.entities.members.Member;
 
+import javax.persistence.CollectionTable;
+import javax.persistence.Column;
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.ElementCollection;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.MapKeyJoinColumn;
+import java.math.BigDecimal;
+import java.util.Collection;
+import java.util.Map;
+
 /**
  * A group for member's operators
  * @author luis
  */
+@DiscriminatorValue("O")
+@javax.persistence.Entity
 public class OperatorGroup extends Group {
 
     public static enum Relationships implements Relationship {
@@ -48,11 +59,27 @@ public class OperatorGroup extends Group {
     }
 
     private static final long             serialVersionUID = 6092174598805612471L;
-    private Member                        member;
-    private Map<TransferType, BigDecimal> maxAmountPerDayByTransferType;
-    private Collection<AccountType>       canViewInformationOf;
 
-    @Override
+    @ManyToOne
+    @JoinColumn(name = "member_id", updatable = false)
+	private Member                        member;
+
+    @ElementCollection
+    @CollectionTable(name = "operator_groups_max_amount", joinColumns = @JoinColumn(name = "group_id"))
+    @MapKeyJoinColumn(name = "transfer_type_id")
+    @Column(name = "amount", precision = 15, scale = 6, nullable = false)
+	private Map<TransferType, BigDecimal> maxAmountPerDayByTransferType;
+
+    @ManyToMany
+    @JoinTable(name = "group_operator_account_information_permissions",
+            joinColumns = @JoinColumn(name = "owner_group_id"),
+            inverseJoinColumns = @JoinColumn(name = "account_type_id"))
+	private Collection<AccountType>       canViewInformationOf;
+
+    protected OperatorGroup() {
+	}
+
+	@Override
     public BasicGroupSettings getBasicSettings() {
         return member.getGroup().getBasicSettings();
     }

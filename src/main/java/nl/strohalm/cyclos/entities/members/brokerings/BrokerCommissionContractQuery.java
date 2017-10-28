@@ -19,17 +19,16 @@
  */
 package nl.strohalm.cyclos.entities.members.brokerings;
 
-import java.util.Collection;
-import java.util.Collections;
-
 import nl.strohalm.cyclos.entities.accounts.fees.transaction.BrokerCommission;
 import nl.strohalm.cyclos.entities.groups.MemberGroup;
 import nl.strohalm.cyclos.entities.members.Member;
 import nl.strohalm.cyclos.entities.members.brokerings.BrokerCommissionContract.Status;
-import nl.strohalm.cyclos.utils.Period;
+import nl.strohalm.cyclos.entities.utils.Period;
 import nl.strohalm.cyclos.utils.query.QueryParameters;
-
 import org.apache.commons.collections.CollectionUtils;
+
+import java.util.Collection;
+import java.util.Collections;
 
 /**
  * Parameters for broker commission contracts query

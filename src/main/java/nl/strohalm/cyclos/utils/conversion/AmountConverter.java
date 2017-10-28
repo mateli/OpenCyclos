@@ -23,7 +23,7 @@ import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 
-import nl.strohalm.cyclos.utils.Amount;
+import nl.strohalm.cyclos.entities.utils.Amount;
 
 import org.apache.commons.lang.StringUtils;
 

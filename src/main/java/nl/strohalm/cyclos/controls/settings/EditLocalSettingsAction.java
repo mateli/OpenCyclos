@@ -44,7 +44,7 @@ import nl.strohalm.cyclos.services.settings.SettingsService;
 import nl.strohalm.cyclos.utils.FileUnits;
 import nl.strohalm.cyclos.utils.RequestHelper;
 import nl.strohalm.cyclos.utils.TextFormat;
-import nl.strohalm.cyclos.utils.TimePeriod;
+import nl.strohalm.cyclos.entities.utils.TimePeriod;
 import nl.strohalm.cyclos.utils.binding.BeanBinder;
 import nl.strohalm.cyclos.utils.binding.DataBinder;
 import nl.strohalm.cyclos.utils.binding.DataBinderHelper;

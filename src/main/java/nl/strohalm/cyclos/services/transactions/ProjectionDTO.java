@@ -25,7 +25,7 @@ import java.util.Calendar;
 import nl.strohalm.cyclos.entities.accounts.AccountOwner;
 import nl.strohalm.cyclos.entities.accounts.transactions.TransferType;
 import nl.strohalm.cyclos.utils.DataObject;
-import nl.strohalm.cyclos.utils.TimePeriod;
+import nl.strohalm.cyclos.entities.utils.TimePeriod;
 
 /**
  * Helper class for holding projection data

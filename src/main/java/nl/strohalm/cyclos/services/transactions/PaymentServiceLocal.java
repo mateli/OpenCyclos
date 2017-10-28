@@ -36,7 +36,7 @@ import nl.strohalm.cyclos.entities.services.ServiceClient;
 import nl.strohalm.cyclos.services.transactions.exceptions.MaxAmountPerDayExceededException;
 import nl.strohalm.cyclos.services.transactions.exceptions.NotEnoughCreditsException;
 import nl.strohalm.cyclos.services.transactions.exceptions.UpperCreditLimitReachedException;
-import nl.strohalm.cyclos.utils.Period;
+import nl.strohalm.cyclos.entities.utils.Period;
 
 /**
  * Local interface. It must be used only from other services.

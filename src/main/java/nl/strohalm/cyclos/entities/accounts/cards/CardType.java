@@ -19,21 +19,30 @@
  */
 package nl.strohalm.cyclos.entities.accounts.cards;
 
-import java.math.BigInteger;
-
 import nl.strohalm.cyclos.entities.Entity;
-import nl.strohalm.cyclos.utils.RangeConstraint;
+import nl.strohalm.cyclos.entities.utils.RangeConstraint;
 import nl.strohalm.cyclos.utils.StringValuedEnum;
-import nl.strohalm.cyclos.utils.TimePeriod;
-import nl.strohalm.cyclos.utils.TimePeriod.Field;
+import nl.strohalm.cyclos.entities.utils.TimePeriod;
+import nl.strohalm.cyclos.entities.utils.TimePeriod.Field;
 import nl.strohalm.cyclos.utils.conversion.CardNumberConverter;
 import nl.strohalm.cyclos.utils.conversion.Converter;
+
+import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
+import javax.persistence.Cacheable;
+import javax.persistence.Column;
+import javax.persistence.Embedded;
+import javax.persistence.Table;
+import java.math.BigInteger;
 
 /**
  * Represents a card type
  * @author jefferson
  * @author rodrigo
  */
+@Cacheable
+@Table(name = "card_types")
+@javax.persistence.Entity
 public class CardType extends Entity {
 
     public static enum CardSecurityCode implements StringValuedEnum {
@@ -51,18 +60,48 @@ public class CardType extends Entity {
 
     private static final long               serialVersionUID          = 4768078304847226115L;
 
+    @Column(length = 100, nullable = false)
     private String                          name;
+
+    @Column(name = "card_format_number", length = 56)
     private String                          cardFormatNumber          = "#### #### #### ####";
-    private TimePeriod                      defaultExpiration         = new TimePeriod(1, Field.YEARS);
-    private CardSecurityCode                cardSecurityCode          = CardSecurityCode.NOT_USED;
+
+    @AttributeOverrides({
+            @AttributeOverride(name = "number", column=@Column(name="default_expiration_number")),
+            @AttributeOverride(name = "field", column=@Column(name="default_expiration_field"))
+            })
+    @Embedded
+	private TimePeriod                      defaultExpiration         = new TimePeriod(1, Field.YEARS);
+
+    @Column(name = "card_security_code", length = 1, updatable = false)
+	private CardSecurityCode                cardSecurityCode          = CardSecurityCode.NOT_USED;
+
+    @Column(name = "show_card_security_code", nullable = false, updatable = false)
     private boolean                         showCardSecurityCode      = false;
-    private boolean                         ignoreDayInExpirationDate = true;                           ;
-    private RangeConstraint                 cardSecurityCodeLength    = new RangeConstraint(4, 4);
+
+    @Column(name = "ignore_day_in_expiration_date", updatable = false)
+    private boolean                         ignoreDayInExpirationDate = true;
+
+    @AttributeOverrides({
+            @AttributeOverride(name = "min", column=@Column(name="min_card_security_code_length")),
+            @AttributeOverride(name = "max", column=@Column(name="max_card_security_code_length"))
+    })
+    @Embedded
+	private RangeConstraint                 cardSecurityCodeLength    = new RangeConstraint(4, 4);
+
+    @Column(name = "max_security_code_tries")
     private int                             maxSecurityCodeTries      = 3;
-    private TimePeriod                      securityCodeBlockTime     = new TimePeriod(1, Field.DAYS);
+
+    @AttributeOverrides({
+            @AttributeOverride(name = "number", column=@Column(name="security_code_block_time_number")),
+            @AttributeOverride(name = "field", column=@Column(name="security_code_block_time_field"))
+    })
+    @Embedded
+	private TimePeriod                      securityCodeBlockTime     = new TimePeriod(1, Field.DAYS);
+
     private transient Converter<BigInteger> converter;
 
-    public String getCardFormatNumber() {
+	public String getCardFormatNumber() {
         return cardFormatNumber;
     }
 

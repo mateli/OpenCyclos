@@ -23,6 +23,13 @@ import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.members.Member;
 import nl.strohalm.cyclos.utils.StringValuedEnum;
 
+import javax.persistence.Column;
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+
+@DiscriminatorValue("M")
+@javax.persistence.Entity
 public class MemberDocument extends StaticDocument {
 
     public static enum Relationships implements Relationship {
@@ -56,10 +63,14 @@ public class MemberDocument extends StaticDocument {
 
     private static final long serialVersionUID = -788736495660804107L;
 
-    private Member            member;
-    private Visibility        visibility;
+    @ManyToOne
+    @JoinColumn(name = "member_id")
+	private Member            member;
 
-    public Member getMember() {
+    @Column(name = "visibility", length = 1)
+	private Visibility        visibility;
+
+	public Member getMember() {
         return member;
     }
 

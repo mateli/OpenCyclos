@@ -19,20 +19,29 @@
  */
 package nl.strohalm.cyclos.entities.accounts.transactions;
 
-import java.util.Calendar;
-
 import nl.strohalm.cyclos.entities.Entity;
+
+import javax.persistence.Column;
+import javax.persistence.Table;
+import java.util.Calendar;
 
 /**
  * A trace number identifies a transfer made by a service client (client id)<br>
  * It's used to support the reverse transfer functionality.
  * @author ameyer
  */
+@Table(name = "trace_numbers")
+@javax.persistence.Entity
 public class TraceNumber extends Entity {
     private static final long serialVersionUID = 1L;
 
+    @Column(name = "date", nullable = false)
     private Calendar          date;
+
+    @Column(name = "trace_number", length = 100)
     private String            traceNumber;
+
+    @Column(name = "client_id")
     private Long              clientId;
 
     public Long getClientId() {

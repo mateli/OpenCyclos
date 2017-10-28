@@ -19,18 +19,24 @@
  */
 package nl.strohalm.cyclos.entities.accounts.transactions;
 
-import java.util.Calendar;
-
 import nl.strohalm.cyclos.entities.Entity;
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.members.Element;
 import nl.strohalm.cyclos.utils.FormatObject;
 import nl.strohalm.cyclos.utils.StringValuedEnum;
 
+import javax.persistence.Column;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import java.util.Calendar;
+
 /**
  * An authorization given to a pending authorized transfer
  * @author luis, Jefferson Magno
  */
+@Table(name = "transfer_authorizations")
+@javax.persistence.Entity
 public class TransferAuthorization extends Entity {
 
     public static enum Action implements StringValuedEnum {
@@ -61,15 +67,31 @@ public class TransferAuthorization extends Entity {
 
     private static final long  serialVersionUID = 8935717859614210717L;
 
-    private Element            by;
+    @ManyToOne
+    @JoinColumn(name = "by_id")
+	private Element            by;
+
+    @Column(name = "date", nullable = false, updatable = false)
     private Calendar           date;
-    private Action             action;
-    private Transfer           transfer;
-    private AuthorizationLevel level;
+
+    @Column(name = "action", nullable = false, updatable = false, length = 1)
+	private Action             action;
+
+    @ManyToOne
+    @JoinColumn(name = "transfer_id", nullable = false)
+	private Transfer           transfer;
+
+    @ManyToOne
+    @JoinColumn(name = "level_id", nullable = false)
+	private AuthorizationLevel level;
+
+    @Column(name = "comments", updatable = false, columnDefinition = "text")
     private String             comments;
+
+    @Column(name = "show_to_member", nullable = false, updatable = false)
     private boolean            showToMember;
 
-    public Action getAction() {
+	public Action getAction() {
         return action;
     }
 

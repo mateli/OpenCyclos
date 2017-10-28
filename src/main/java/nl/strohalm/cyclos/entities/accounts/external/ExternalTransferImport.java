@@ -19,18 +19,27 @@
  */
 package nl.strohalm.cyclos.entities.accounts.external;
 
-import java.util.Calendar;
-import java.util.Collection;
-
 import nl.strohalm.cyclos.entities.Entity;
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.members.Element;
 import nl.strohalm.cyclos.utils.FormatObject;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
+import javax.persistence.Table;
+import java.util.Calendar;
+import java.util.Collection;
+
 /**
  * Contains a set of imported transfers from a file
  * @author luis
  */
+@Table(name = "external_transfer_imports")
+@javax.persistence.Entity
 public class ExternalTransferImport extends Entity {
 
     public static enum Relationships implements Relationship {
@@ -47,12 +56,23 @@ public class ExternalTransferImport extends Entity {
     }
 
     private static final long            serialVersionUID = -8862140825847721639L;
-    private Calendar                     date;
-    private Element                      by;
-    private ExternalAccount              account;
-    private Collection<ExternalTransfer> transfers;
 
-    public ExternalAccount getAccount() {
+    @Column(nullable = false)
+    private Calendar                     date;
+
+    @ManyToOne
+    @JoinColumn(name = "by_id", nullable = false)
+	private Element                      by;
+
+    @ManyToOne
+    @JoinColumn(name = "account_id", nullable = false)
+	private ExternalAccount              account;
+
+    @OneToMany(mappedBy = "transferImport", cascade = CascadeType.REMOVE)
+    @OrderBy("date desc")
+	private Collection<ExternalTransfer> transfers;
+
+	public ExternalAccount getAccount() {
         return account;
     }
 

@@ -22,6 +22,7 @@ package nl.strohalm.cyclos.utils;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
+import nl.strohalm.cyclos.entities.utils.Period;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 

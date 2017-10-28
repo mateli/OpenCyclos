@@ -19,24 +19,42 @@
  */
 package nl.strohalm.cyclos.entities.accounts;
 
-import java.math.BigDecimal;
-import java.util.Calendar;
-
 import nl.strohalm.cyclos.entities.Entity;
 import nl.strohalm.cyclos.entities.members.Administrator;
+
+import javax.persistence.Column;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import java.math.BigDecimal;
+import java.util.Calendar;
 
 /**
  * Logs every change of either lower or upper credit limit on an account
  * 
  * @author luis
  */
+@Table(name = "account_limit_logs")
+@javax.persistence.Entity
 public class AccountLimitLog extends Entity {
 
     private static final long serialVersionUID = 5214058723063900505L;
-    private Account           account;
-    private Administrator     by;
+
+    @ManyToOne
+    @JoinColumn(name = "account_id", nullable = false) // index="ix_acctlimlog_account_date"
+	private Account           account;
+
+    @ManyToOne
+    @JoinColumn(name = "by_id")
+	private Administrator     by;
+
+    @Column(name = "date", nullable = false, updatable = false) // index="ix_acctlimlog_account_date"
     private Calendar          date;
+
+    @Column(name = "credit_limit", updatable = false, precision = 15, scale = 6)
     private BigDecimal        creditLimit;
+
+    @Column(name = "upper_credit_limit", updatable = false, precision = 15, scale = 6)
     private BigDecimal        upperCreditLimit;
 
     public Account getAccount() {

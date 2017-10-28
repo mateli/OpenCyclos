@@ -19,20 +19,28 @@
  */
 package nl.strohalm.cyclos.entities.ads.imports;
 
-import java.util.Calendar;
-import java.util.Collection;
-
 import nl.strohalm.cyclos.entities.Entity;
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.accounts.Currency;
 import nl.strohalm.cyclos.entities.members.Administrator;
 import nl.strohalm.cyclos.utils.FormatObject;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import java.util.Calendar;
+import java.util.Collection;
+
 /**
  * Contains data about a whole advertisement import
  * 
  * @author luis
  */
+@Table(name = "ad_imports")
+@javax.persistence.Entity
 public class AdImport extends Entity {
 
     public static enum Relationships implements Relationship {
@@ -50,13 +58,28 @@ public class AdImport extends Entity {
     }
 
     private static final long              serialVersionUID = 1257547309418826441L;
-    private Calendar                       date;
-    private Administrator                  by;
-    private Currency                       currency;
-    private Collection<ImportedAd>         ads;
-    private Collection<ImportedAdCategory> categories;
 
-    public Collection<ImportedAd> getAds() {
+    @Column(name = "date", nullable = false)
+    private Calendar                       date;
+
+    @ManyToOne
+    @JoinColumn(name = "by_id", nullable = false)
+	private Administrator                  by;
+
+    @ManyToOne
+    @JoinColumn(name = "currency_id", nullable = false)
+	private Currency                       currency;
+
+    @OneToMany(mappedBy = "_import", cascade = CascadeType.REMOVE)
+	private Collection<ImportedAd>         ads;
+
+    @OneToMany(mappedBy = "adImport", cascade = CascadeType.REMOVE)
+	private Collection<ImportedAdCategory> categories;
+
+    protected AdImport() {
+	}
+
+	public Collection<ImportedAd> getAds() {
         return ads;
     }
 

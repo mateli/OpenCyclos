@@ -21,12 +21,16 @@ package nl.strohalm.cyclos.entities.accounts;
 
 import nl.strohalm.cyclos.entities.Entity;
 
+import javax.persistence.Table;
+
 /**
  * AccountLocks just contains the account relationship and are used to lock accounts, independent of the account themselves, as locking accounts could
  * have several other impacts, like not allowing inserting transfers from/to that account
  * 
  * @author luis
  */
+@Table(name = "account_locks")
+@javax.persistence.Entity
 public class AccountLock extends Entity {
 
     private static final long serialVersionUID = -3528264757301419903L;

@@ -19,18 +19,24 @@
  */
 package nl.strohalm.cyclos.entities.groups;
 
-import java.util.Collection;
-
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.accounts.AccountType;
 import nl.strohalm.cyclos.entities.accounts.transactions.TransferType;
 import nl.strohalm.cyclos.entities.customization.documents.Document;
 import nl.strohalm.cyclos.entities.members.records.MemberRecordType;
 
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import java.util.Collection;
+
 /**
  * A group of members that are also brokers of other members
  * @author luis
  */
+@DiscriminatorValue("B")
+@javax.persistence.Entity
 public class BrokerGroup extends MemberGroup {
 
     public static enum Relationships implements Relationship {
@@ -49,17 +55,64 @@ public class BrokerGroup extends MemberGroup {
 
     private static final long            serialVersionUID = -7238110440943417007L;
 
-    private Collection<TransferType>     transferTypesAsMember;
-    private Collection<TransferType>     brokerConversionSimulationTTs;
-    private Collection<Document>         brokerDocuments;
-    private Collection<AccountType>      brokerCanViewInformationOf;
-    private Collection<MemberRecordType> brokerMemberRecordTypes;
-    private Collection<MemberRecordType> brokerCreateMemberRecordTypes;
-    private Collection<MemberRecordType> brokerModifyMemberRecordTypes;
-    private Collection<MemberRecordType> brokerDeleteMemberRecordTypes;
-    private Collection<MemberGroup>      possibleInitialGroups;
+    @ManyToMany
+    @JoinTable(name = "groups_transfer_types_as_member",
+            joinColumns = @JoinColumn(name = "group_id"),
+            inverseJoinColumns = @JoinColumn(name = "transfer_type_id"))
+	private Collection<TransferType>     transferTypesAsMember;
 
-    public Collection<AccountType> getBrokerCanViewInformationOf() {
+    @ManyToMany
+    @JoinTable(name = "broker_conversion_simulation_transfer_types",
+            joinColumns = @JoinColumn(name = "group_id"),
+            inverseJoinColumns = @JoinColumn(name = "transfer_type_id"))
+	private Collection<TransferType>     brokerConversionSimulationTTs;
+
+    @ManyToMany
+    @JoinTable(name = "broker_groups_documents",
+            joinColumns = @JoinColumn(name = "group_id"),
+            inverseJoinColumns = @JoinColumn(name = "document_id"))
+	private Collection<Document>         brokerDocuments;
+
+    @ManyToMany
+    @JoinTable(name = "group_broker_account_information_permissions",
+            joinColumns = @JoinColumn(name = "owner_group_id"),
+            inverseJoinColumns = @JoinColumn(name = "account_type_id"))
+	private Collection<AccountType>      brokerCanViewInformationOf;
+
+    @ManyToMany
+    @JoinTable(name = "broker_groups_member_record_types",
+            joinColumns = @JoinColumn(name = "group_id"),
+            inverseJoinColumns = @JoinColumn(name = "member_record_type_id"))
+	private Collection<MemberRecordType> brokerMemberRecordTypes;
+
+    @ManyToMany
+    @JoinTable(name = "broker_groups_create_member_record_types",
+            joinColumns = @JoinColumn(name = "group_id"),
+            inverseJoinColumns = @JoinColumn(name = "member_record_type_id"))
+	private Collection<MemberRecordType> brokerCreateMemberRecordTypes;
+
+    @ManyToMany
+    @JoinTable(name = "broker_groups_modify_member_record_types",
+            joinColumns = @JoinColumn(name = "group_id"),
+            inverseJoinColumns = @JoinColumn(name = "member_record_type_id"))
+	private Collection<MemberRecordType> brokerModifyMemberRecordTypes;
+
+    @ManyToMany
+    @JoinTable(name = "broker_groups_delete_member_record_types",
+            joinColumns = @JoinColumn(name = "group_id"),
+            inverseJoinColumns = @JoinColumn(name = "member_record_type_id"))
+	private Collection<MemberRecordType> brokerDeleteMemberRecordTypes;
+
+    @ManyToMany
+    @JoinTable(name = "broker_groups_possible_initial_groups",
+            joinColumns = @JoinColumn(name = "group_id"),
+            inverseJoinColumns = @JoinColumn(name = "possible_initial_group_id"))
+	private Collection<MemberGroup>      possibleInitialGroups;
+
+    protected BrokerGroup() {
+	}
+
+	public Collection<AccountType> getBrokerCanViewInformationOf() {
         return brokerCanViewInformationOf;
     }
 

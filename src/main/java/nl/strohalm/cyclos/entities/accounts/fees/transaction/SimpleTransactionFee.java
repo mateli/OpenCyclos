@@ -19,15 +19,21 @@
  */
 package nl.strohalm.cyclos.entities.accounts.fees.transaction;
 
-import java.math.BigDecimal;
-
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.members.Member;
+
+import javax.persistence.Column;
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import java.math.BigDecimal;
 
 /**
  * A simple fee is applied over the source or destination of a transfer
  * @author luis
  */
+@DiscriminatorValue("S")
+@javax.persistence.Entity
 public class SimpleTransactionFee extends TransactionFee {
 
     /**
@@ -52,38 +58,53 @@ public class SimpleTransactionFee extends TransactionFee {
     }
 
     private static final long serialVersionUID = -5227967083951048166L;
-    private Subject           receiver;
-    private Member            toFixedMember;
+
+    @Column(length = 3)
+	private Subject           receiver;
+
+    @ManyToOne
+    @JoinColumn(name = "to_member_id")
+	private Member            toFixedMember;
 
     /**
      * the highest (start) value of the A-rate based fast conversion tax F; null if A-rate is disabled. This is the value of the fast conversion tax
      * if conversion would take place immediately after creation.
      */
+    @Column(precision = 15, scale = 6)
     private BigDecimal        h;
     /**
      * the time in days after which the fast conversion tax F reaches zero. The fast conversion tax F is A-rate based.
      */
+    @Column(name = "a_f_is_zero", precision = 15, scale = 6)
     private BigDecimal        aFIsZero;
+
     /**
      * value of the fast conversion tax F at day 1.
      */
+    @Column(name = "f1", precision = 15, scale = 6)
     private BigDecimal        f1;
+
     /**
      * the value of the horizontal asymptote to which the fast conversion tax F diminishes.
      */
+    @Column(name = "f_infinite", precision = 15, scale = 6)
     private BigDecimal        fInfinite;
+
     /**
      * the minimal value of the fast conversion tax F. If a calculated tax is smaller than fMinimal, the fast conversion tax F will be set to
      * fMinimal. Usually, this is 0 (zero).
      */
+    @Column(name = "f_minimal", precision = 15, scale = 6)
     private BigDecimal        fMinimal;
+
     /**
      * the percentage of the total guarantee period after which the fast conversion tax F reaches 0. This is only used in case of a combined A-rate
      * and D-rate, which are both used to determine a diminishing fast conversion tax F.
      */
+    @Column(name = "g_f_is_zero", precision = 15, scale = 6)
     private BigDecimal        gFIsZero;
 
-    public BigDecimal getaFIsZero() {
+	public BigDecimal getaFIsZero() {
         return aFIsZero;
     }
 

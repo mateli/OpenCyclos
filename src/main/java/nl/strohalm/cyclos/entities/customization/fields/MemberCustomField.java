@@ -19,8 +19,6 @@
  */
 package nl.strohalm.cyclos.entities.customization.fields;
 
-import java.util.Collection;
-
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.groups.AdminGroup;
 import nl.strohalm.cyclos.entities.groups.BrokerGroup;
@@ -29,10 +27,17 @@ import nl.strohalm.cyclos.entities.groups.MemberGroup;
 import nl.strohalm.cyclos.entities.groups.OperatorGroup;
 import nl.strohalm.cyclos.utils.StringValuedEnum;
 
+import javax.persistence.Column;
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.ManyToMany;
+import java.util.Collection;
+
 /**
  * A custom field for members
  * @author luis
  */
+@DiscriminatorValue("member")
+@javax.persistence.Entity
 public class MemberCustomField extends CustomField {
 
     /**
@@ -136,17 +141,35 @@ public class MemberCustomField extends CustomField {
     }
 
     private static final long       serialVersionUID   = 8982250513905556430L;
-    private Access                  adSearchAccess     = Access.NONE;
-    private Access                  loanSearchAccess   = Access.NONE;
-    private boolean                 memberCanHide      = true;
-    private Access                  memberSearchAccess = Access.NONE;
-    private Access                  visibilityAccess   = Access.OTHER;
-    private Access                  updateAccess       = Access.MEMBER;
-    private boolean                 showInPrint        = true;
-    private Indexing                indexing           = Indexing.MEMBERS_AND_ADS;
-    private Collection<MemberGroup> groups;
 
-    public Access getAdSearchAccess() {
+    @Column(name = "member_ad_search_access", length = 1)
+	private Access                  adSearchAccess     = Access.NONE;
+
+    @Column(name = "member_loan_search_access", length = 1)
+	private Access                  loanSearchAccess   = Access.NONE;
+
+    @Column(name = "member_can_hide", nullable = false)
+    private boolean                 memberCanHide      = true;
+
+    @Column(name = "member_search_access", length = 1)
+	private Access                  memberSearchAccess = Access.NONE;
+
+    @Column(name = "member_visibility_access", length = 1)
+	private Access                  visibilityAccess   = Access.OTHER;
+
+    @Column(name = "member_update_access", length = 1)
+	private Access                  updateAccess       = Access.MEMBER;
+
+    @Column(name = "member_show_in_print", length = 1)
+    private boolean                 showInPrint        = true;
+
+    @Column(name = "member_indexing", length = 1)
+	private Indexing                indexing           = Indexing.MEMBERS_AND_ADS;
+
+    @ManyToMany(mappedBy = "customFields")
+	private Collection<MemberGroup> groups;
+
+	public Access getAdSearchAccess() {
         return adSearchAccess;
     }
 

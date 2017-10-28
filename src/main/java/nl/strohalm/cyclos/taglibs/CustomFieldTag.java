@@ -39,7 +39,7 @@ import nl.strohalm.cyclos.entities.members.Member;
 import nl.strohalm.cyclos.entities.settings.LocalSettings.MemberResultDisplay;
 import nl.strohalm.cyclos.services.settings.SettingsService;
 import nl.strohalm.cyclos.utils.MessageHelper;
-import nl.strohalm.cyclos.utils.RangeConstraint;
+import nl.strohalm.cyclos.entities.utils.RangeConstraint;
 import nl.strohalm.cyclos.utils.SpringHelper;
 import nl.strohalm.cyclos.utils.StringHelper;
 import nl.strohalm.cyclos.utils.conversion.IdConverter;

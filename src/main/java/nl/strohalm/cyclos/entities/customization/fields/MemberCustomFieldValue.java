@@ -24,10 +24,17 @@ import nl.strohalm.cyclos.entities.members.Member;
 import nl.strohalm.cyclos.entities.members.PendingMember;
 import nl.strohalm.cyclos.entities.members.imports.ImportedMember;
 
+import javax.persistence.Column;
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+
 /**
  * Custom field value of a given member
  * @author luis
  */
+@DiscriminatorValue("member")
+@javax.persistence.Entity
 public class MemberCustomFieldValue extends CustomFieldValue {
 
     public static enum Relationships implements Relationship {
@@ -45,12 +52,23 @@ public class MemberCustomFieldValue extends CustomFieldValue {
     }
 
     private static final long serialVersionUID = -2784135085280294105L;
-    private Member            member;
-    private PendingMember     pendingMember;
-    private ImportedMember    importedMember;
+
+    @ManyToOne
+    @JoinColumn(name = "member_id")
+	private Member            member;
+
+    @ManyToOne
+    @JoinColumn(name = "pending_member_id")
+	private PendingMember     pendingMember;
+
+    @ManyToOne
+    @JoinColumn(name = "imported_member_id")
+	private ImportedMember    importedMember;
+
+    @Column(name = "member_hidden", nullable = false)
     private boolean           hidden;
 
-    public ImportedMember getImportedMember() {
+	public ImportedMember getImportedMember() {
         return importedMember;
     }
 

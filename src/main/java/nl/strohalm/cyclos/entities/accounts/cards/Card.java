@@ -19,19 +19,27 @@
  */
 package nl.strohalm.cyclos.entities.accounts.cards;
 
-import java.math.BigInteger;
-import java.util.Calendar;
-import java.util.Collection;
-
 import nl.strohalm.cyclos.entities.Entity;
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.members.Member;
 import nl.strohalm.cyclos.utils.StringValuedEnum;
 
+import javax.persistence.Column;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
+import javax.persistence.Table;
+import java.math.BigInteger;
+import java.util.Calendar;
+import java.util.Collection;
+
 /**
  * Represents a card
  * @author jefferson
  */
+@Table(name = "cards")
+@javax.persistence.Entity
 public class Card extends Entity {
 
     public static enum Relationships implements Relationship {
@@ -65,18 +73,40 @@ public class Card extends Entity {
 
     private static final long   serialVersionUID = -2401825447192351066L;
 
-    private CardType            cardType;
-    private BigInteger          cardNumber;
-    private String              cardSecurityCode;
-    private Calendar            creationDate;
-    private Calendar            activationDate;
-    private Calendar            expirationDate;
-    private Calendar            cardSecurityCodeBlockedUntil;
-    private Member              owner;
-    private Status              status;
-    private Collection<CardLog> logs;
+    @ManyToOne
+    @JoinColumn(name = "card_type_id", nullable = false)
+	private CardType            cardType;
 
-    public Calendar getActivationDate() {
+    @Column(name = "card_number", unique = true, scale = 0)
+    private BigInteger          cardNumber;
+
+    @Column(name = "card_security_code", length = 64)
+    private String              cardSecurityCode;
+
+    @Column(name = "creation_date")
+    private Calendar            creationDate;
+
+    @Column(name = "activation_date")
+    private Calendar            activationDate;
+
+    @Column(name = "expiration_date")
+    private Calendar            expirationDate;
+
+    @Column(name = "card_security_code_blocked_until")
+    private Calendar            cardSecurityCodeBlockedUntil;
+
+    @ManyToOne
+    @JoinColumn(nullable = false)
+	private Member              owner;
+
+    @Column(length = 1, nullable = false)
+	private Status              status;
+
+    @OneToMany(mappedBy = "card")
+    @OrderBy("date desc")
+	private Collection<CardLog> logs;
+
+	public Calendar getActivationDate() {
         return activationDate;
     }
 

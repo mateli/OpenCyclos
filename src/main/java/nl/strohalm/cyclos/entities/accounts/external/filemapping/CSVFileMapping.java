@@ -23,10 +23,15 @@ import nl.strohalm.cyclos.utils.CustomObjectHandler;
 import nl.strohalm.cyclos.utils.MessageResolver;
 import nl.strohalm.cyclos.utils.transactionimport.TransactionFileImport;
 
+import javax.persistence.Column;
+import javax.persistence.DiscriminatorValue;
+
 /**
  * A file mapping for parsing CSV files
  * @author luis
  */
+@DiscriminatorValue("csv")
+@javax.persistence.Entity
 public class CSVFileMapping extends FileMappingWithFields {
 
     public static final Character DEFAULT_STRING_QUOTE     = new Character('"');
@@ -34,8 +39,13 @@ public class CSVFileMapping extends FileMappingWithFields {
     public static final Integer   DEFAULT_HEADER_LINES     = new Integer(0);
     private static final long     serialVersionUID         = 5121926952448162716L;
 
+    @Column(name = "string_quote", length = 1)
     private Character             stringQuote;
+
+    @Column(name = "column_separator", length = 1)
     private Character             columnSeparator;
+
+    @Column(name = "header_lines")
     private Integer               headerLines;
 
     public Character getColumnSeparator() {

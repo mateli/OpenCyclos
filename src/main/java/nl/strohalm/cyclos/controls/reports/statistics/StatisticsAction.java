@@ -58,7 +58,7 @@ import nl.strohalm.cyclos.services.transfertypes.PaymentFilterService;
 import nl.strohalm.cyclos.utils.DateHelper;
 import nl.strohalm.cyclos.utils.Month;
 import nl.strohalm.cyclos.utils.NamedPeriod;
-import nl.strohalm.cyclos.utils.Period;
+import nl.strohalm.cyclos.entities.utils.Period;
 import nl.strohalm.cyclos.utils.Quarter;
 import nl.strohalm.cyclos.utils.RequestHelper;
 import nl.strohalm.cyclos.utils.binding.BeanBinder;

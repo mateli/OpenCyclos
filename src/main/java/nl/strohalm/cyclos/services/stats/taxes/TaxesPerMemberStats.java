@@ -31,7 +31,7 @@ import nl.strohalm.cyclos.entities.members.Member;
 import nl.strohalm.cyclos.entities.reports.StatisticalDTO;
 import nl.strohalm.cyclos.entities.reports.StatisticalTaxesQuery;
 import nl.strohalm.cyclos.utils.Pair;
-import nl.strohalm.cyclos.utils.Period;
+import nl.strohalm.cyclos.entities.utils.Period;
 
 /**
  * Class with common helper functions on retrieving statistics about the (sum of) payments per member, for taxes stats. Currently only filled with

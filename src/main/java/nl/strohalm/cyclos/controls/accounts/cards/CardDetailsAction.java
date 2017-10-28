@@ -19,11 +19,6 @@
  */
 package nl.strohalm.cyclos.controls.accounts.cards;
 
-import java.util.concurrent.locks.ReadWriteLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
-
-import javax.servlet.http.HttpServletRequest;
-
 import nl.strohalm.cyclos.access.AdminMemberPermission;
 import nl.strohalm.cyclos.access.BrokerPermission;
 import nl.strohalm.cyclos.access.MemberPermission;
@@ -42,11 +37,11 @@ import nl.strohalm.cyclos.entities.members.Member;
 import nl.strohalm.cyclos.entities.settings.LocalSettings;
 import nl.strohalm.cyclos.entities.settings.events.LocalSettingsChangeListener;
 import nl.strohalm.cyclos.entities.settings.events.LocalSettingsEvent;
+import nl.strohalm.cyclos.entities.utils.RangeConstraint;
 import nl.strohalm.cyclos.services.accounts.cards.CardService;
 import nl.strohalm.cyclos.services.permissions.PermissionService;
 import nl.strohalm.cyclos.utils.ActionHelper;
 import nl.strohalm.cyclos.utils.ActionHelper.ByElementExtractor;
-import nl.strohalm.cyclos.utils.RangeConstraint;
 import nl.strohalm.cyclos.utils.access.PermissionHelper;
 import nl.strohalm.cyclos.utils.binding.BeanBinder;
 import nl.strohalm.cyclos.utils.binding.DataBinder;
@@ -54,6 +49,10 @@ import nl.strohalm.cyclos.utils.binding.DataBinderHelper;
 import nl.strohalm.cyclos.utils.binding.PropertyBinder;
 import nl.strohalm.cyclos.utils.binding.SimpleCollectionBinder;
 import nl.strohalm.cyclos.utils.validation.ValidationException;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
  * 

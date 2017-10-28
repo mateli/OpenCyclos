@@ -19,18 +19,29 @@
  */
 package nl.strohalm.cyclos.entities.accounts.transactions;
 
-import java.math.BigDecimal;
-import java.util.Calendar;
-import java.util.List;
-
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.accounts.Account;
 import nl.strohalm.cyclos.entities.accounts.AccountOwner;
+import nl.strohalm.cyclos.entities.customization.fields.PaymentCustomFieldValue;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
+import javax.persistence.Table;
+import java.math.BigDecimal;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * A scheduled payment is a set of transfers grouped in a single logical entity.
  * @author luis, Jefferson Magno
  */
+@Table(name = "scheduled_payments")
+@javax.persistence.Entity
 public class ScheduledPayment extends Payment {
 
     public static enum Relationships implements Relationship {
@@ -48,11 +59,21 @@ public class ScheduledPayment extends Payment {
     }
 
     private static final long serialVersionUID = 7335050802424888764L;
-    private boolean           reserveAmount;
-    private boolean           showToReceiver;
-    private List<Transfer>    transfers;
 
-    /**
+    @Column(name = "reserve_amount", nullable = false)
+    private boolean           reserveAmount;
+
+    @Column(name = "show_to_receiver", nullable = false)
+    private boolean           showToReceiver;
+
+    @OneToMany(mappedBy = "scheduledPayment")
+	private List<Transfer>    transfers;
+
+    @OneToMany(mappedBy = "scheduledPayment", cascade = CascadeType.REMOVE)
+    @OrderBy("date, id")
+    private Collection<PaymentCustomFieldValue> customValues;
+
+	/**
      * Returns the date of the first not processed transfer
      */
     @Override
@@ -87,6 +108,16 @@ public class ScheduledPayment extends Payment {
     @Override
     public AccountOwner getActualToOwner() {
         return getToOwner();
+    }
+
+    @Override
+    public Collection<PaymentCustomFieldValue> getCustomValues() {
+        return customValues;
+    }
+
+    @Override
+    public void setCustomValues(final Collection<PaymentCustomFieldValue> customValues) {
+        this.customValues = customValues;
     }
 
     /**

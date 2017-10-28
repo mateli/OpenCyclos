@@ -19,9 +19,6 @@
  */
 package nl.strohalm.cyclos.entities.members.imports;
 
-import java.util.Calendar;
-import java.util.Collection;
-
 import nl.strohalm.cyclos.entities.Entity;
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.accounts.MemberAccountType;
@@ -30,11 +27,22 @@ import nl.strohalm.cyclos.entities.groups.MemberGroup;
 import nl.strohalm.cyclos.entities.members.Administrator;
 import nl.strohalm.cyclos.utils.FormatObject;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import java.util.Calendar;
+import java.util.Collection;
+
 /**
  * Contains data about a whole member import
  * 
  * @author luis
  */
+@Table(name = "member_imports")
+@javax.persistence.Entity
 public class MemberImport extends Entity {
 
     public static enum Relationships implements Relationship {
@@ -52,15 +60,37 @@ public class MemberImport extends Entity {
     }
 
     private static final long          serialVersionUID = -284696929784000327L;
-    private Administrator              by;
-    private Calendar                   date;
-    private MemberGroup                group;
-    private MemberAccountType          accountType;
-    private TransferType               initialDebitTransferType;
-    private TransferType               initialCreditTransferType;
-    private Collection<ImportedMember> members;
 
-    public MemberAccountType getAccountType() {
+    @ManyToOne
+    @JoinColumn(name = "by_id", nullable = false)
+	private Administrator              by;
+
+    @Column(name = "date", nullable = false)
+    private Calendar                   date;
+
+    @ManyToOne
+    @JoinColumn(name = "group_id", nullable = false)
+	private MemberGroup                group;
+
+    @ManyToOne
+    @JoinColumn(name = "account_type_id")
+	private MemberAccountType          accountType;
+
+    @ManyToOne
+    @JoinColumn(name = "initial_debit_transfer_type_id")
+	private TransferType               initialDebitTransferType;
+
+    @ManyToOne
+    @JoinColumn(name = "initial_credit_transfer_type_id")
+	private TransferType               initialCreditTransferType;
+
+    @OneToMany(mappedBy = "_import", cascade = CascadeType.REMOVE)
+	private Collection<ImportedMember> members;
+
+    protected MemberImport() {
+	}
+
+	public MemberAccountType getAccountType() {
         return accountType;
     }
 

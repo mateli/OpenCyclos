@@ -41,7 +41,7 @@ import nl.strohalm.cyclos.services.stats.activity.GrossProductPerMemberStats;
 import nl.strohalm.cyclos.services.stats.activity.LoginTimesPerMemberStats;
 import nl.strohalm.cyclos.services.stats.activity.TransactionCountPerMemberStats;
 import nl.strohalm.cyclos.utils.Pair;
-import nl.strohalm.cyclos.utils.Period;
+import nl.strohalm.cyclos.entities.utils.Period;
 import nl.strohalm.cyclos.utils.statistics.ListOperations;
 import nl.strohalm.cyclos.utils.statistics.Median;
 

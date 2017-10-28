@@ -57,6 +57,7 @@ import nl.strohalm.cyclos.entities.members.Reference.Nature;
 import nl.strohalm.cyclos.entities.members.records.MemberRecordType;
 import nl.strohalm.cyclos.entities.members.records.MemberRecordTypeQuery;
 import nl.strohalm.cyclos.entities.settings.AccessSettings;
+import nl.strohalm.cyclos.entities.utils.TimePeriod;
 import nl.strohalm.cyclos.exceptions.AccessDeniedException;
 import nl.strohalm.cyclos.exceptions.LoggedOutException;
 import nl.strohalm.cyclos.services.access.AccessService;

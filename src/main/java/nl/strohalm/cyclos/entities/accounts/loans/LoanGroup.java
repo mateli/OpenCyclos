@@ -19,8 +19,6 @@
  */
 package nl.strohalm.cyclos.entities.accounts.loans;
 
-import java.util.Collection;
-
 import nl.strohalm.cyclos.entities.Entity;
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.customization.fields.LoanGroupCustomField;
@@ -28,11 +26,22 @@ import nl.strohalm.cyclos.entities.customization.fields.LoanGroupCustomFieldValu
 import nl.strohalm.cyclos.entities.members.Member;
 import nl.strohalm.cyclos.utils.CustomFieldsContainer;
 
+import javax.persistence.Cacheable;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import java.util.Collection;
+
 /**
  * A loan group represents a group of members that receive a loan. This is common in microcredit operations. The transfer itself is credited in the
  * responsible member account.
  * @author luis
  */
+@Cacheable
+@Table(name = "loan_groups")
+@javax.persistence.Entity
 public class LoanGroup extends Entity implements CustomFieldsContainer<LoanGroupCustomField, LoanGroupCustomFieldValue>, Comparable<LoanGroup> {
 
     public static enum Relationships implements Relationship {
@@ -49,13 +58,23 @@ public class LoanGroup extends Entity implements CustomFieldsContainer<LoanGroup
     }
 
     private static final long                     serialVersionUID = -5589958336162094616L;
-    private String                                description;
-    private Collection<Loan>                      loans;
-    private Collection<Member>                    members;
-    private String                                name;
-    private Collection<LoanGroupCustomFieldValue> customValues;
 
-    public int compareTo(final LoanGroup o) {
+    @Column(name = "description", columnDefinition = "text")
+    private String                                description;
+
+    @OneToMany(mappedBy = "loanGroup")
+	private Collection<Loan>                      loans;
+
+    @ManyToMany(mappedBy = "loanGroups")
+	private Collection<Member>                    members;
+
+    @Column(name = "name", nullable = false, length = 100)
+    private String                                name;
+
+    @OneToMany(mappedBy = "loanGroup", cascade = CascadeType.REMOVE)
+	private Collection<LoanGroupCustomFieldValue> customValues;
+
+	public int compareTo(final LoanGroup o) {
         return getName().compareTo(o.getName());
     }
 

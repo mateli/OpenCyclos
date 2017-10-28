@@ -19,8 +19,6 @@
  */
 package nl.strohalm.cyclos.entities.members.preferences;
 
-import java.util.Set;
-
 import nl.strohalm.cyclos.entities.Entity;
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.accounts.guarantees.GuaranteeType;
@@ -31,11 +29,23 @@ import nl.strohalm.cyclos.entities.groups.MemberGroup;
 import nl.strohalm.cyclos.entities.members.Administrator;
 import nl.strohalm.cyclos.entities.members.messages.MessageCategory;
 
+import javax.persistence.CollectionTable;
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import java.util.Set;
+
 /**
  * Notification Preference for an administrator
  * @author luis
  * @author Lucas Geiss
  */
+@Table(name = "admin_notification_preferences")
+@javax.persistence.Entity
 public class AdminNotificationPreference extends Entity {
 
     public static enum Relationships implements Relationship {
@@ -53,18 +63,61 @@ public class AdminNotificationPreference extends Entity {
     }
 
     private static final long       serialVersionUID = -4791497274620475610L;
-    private boolean                 applicationErrors;
-    private boolean                 systemInvoices;
-    private Administrator           admin;
-    private Set<TransferType>       transferTypes;
-    private Set<TransferType>       newPendingPayments;
-    private Set<GuaranteeType>      guaranteeTypes;
-    private Set<MessageCategory>    messageCategories;
-    private Set<SystemAlert.Alerts> systemAlerts;
-    private Set<MemberAlert.Alerts> memberAlerts;
-    private Set<MemberGroup>        newMembers;
 
-    public Administrator getAdmin() {
+    @Column(name = "application_errors", nullable = false)
+    private boolean                 applicationErrors;
+
+    @Column(name = "system_invoices", nullable = false)
+    private boolean                 systemInvoices;
+
+    @ManyToOne
+    @JoinColumn(name = "admin_id")
+	private Administrator           admin;
+
+    @ManyToMany
+    @JoinTable(name = "admin_preferences_transfer_types",
+            joinColumns = @JoinColumn(name = "preference_id"),
+            inverseJoinColumns = @JoinColumn(name = "transfer_type_id"))
+	private Set<TransferType>       transferTypes;
+
+    @ManyToMany
+    @JoinTable(name = "admin_preferences_new_pending_payments",
+            joinColumns = @JoinColumn(name = "preference_id"),
+            inverseJoinColumns = @JoinColumn(name = "transfer_type_id"))
+	private Set<TransferType>       newPendingPayments;
+
+    @ManyToMany
+    @JoinTable(name = "admin_preferences_guarantee_types",
+            joinColumns = @JoinColumn(name = "preference_id"),
+            inverseJoinColumns = @JoinColumn(name = "guarantee_type_id"))
+	private Set<GuaranteeType>      guaranteeTypes;
+
+    @ManyToMany
+    @JoinTable(name = "admin_preferences_message_categories",
+            joinColumns = @JoinColumn(name = "preference_id"),
+            inverseJoinColumns = @JoinColumn(name = "message_category_id"))
+	private Set<MessageCategory>    messageCategories;
+
+    @ElementCollection
+    @CollectionTable(name = "admin_preferences_system_alerts", joinColumns = @JoinColumn(name = "preference_id"))
+    @Column(name = "type", length = 70)
+	private Set<SystemAlert.Alerts> systemAlerts;
+
+    @ElementCollection
+    @CollectionTable(name = "admin_preferences_member_alerts", joinColumns = @JoinColumn(name = "preference_id"))
+    @Column(name = "type", length = 70)
+	private Set<MemberAlert.Alerts> memberAlerts;
+
+    @ManyToMany
+    @JoinTable(name = "admin_preferences_new_members",
+            joinColumns = @JoinColumn(name = "preference_id"),
+            inverseJoinColumns = @JoinColumn(name = "group_id"))
+	private Set<MemberGroup>        newMembers;
+
+    protected AdminNotificationPreference() {
+	}
+
+	public Administrator getAdmin() {
         return admin;
     }
 

@@ -48,7 +48,7 @@ import nl.strohalm.cyclos.services.elements.MemberService;
 import nl.strohalm.cyclos.services.transactions.PaymentService;
 import nl.strohalm.cyclos.services.transactions.ScheduledPaymentService;
 import nl.strohalm.cyclos.services.transfertypes.PaymentFilterService;
-import nl.strohalm.cyclos.utils.Period;
+import nl.strohalm.cyclos.entities.utils.Period;
 import nl.strohalm.cyclos.utils.access.LoggedUser;
 import nl.strohalm.cyclos.utils.conversion.Transformer;
 import nl.strohalm.cyclos.webservices.accounts.AccountHistoryResultPage;

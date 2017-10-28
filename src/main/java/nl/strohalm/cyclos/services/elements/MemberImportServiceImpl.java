@@ -80,7 +80,7 @@ import nl.strohalm.cyclos.utils.CacheCleaner;
 import nl.strohalm.cyclos.utils.CustomFieldHelper;
 import nl.strohalm.cyclos.utils.DateHelper;
 import nl.strohalm.cyclos.utils.HashHandler;
-import nl.strohalm.cyclos.utils.TimePeriod;
+import nl.strohalm.cyclos.entities.utils.TimePeriod;
 import nl.strohalm.cyclos.utils.access.LoggedUser;
 import nl.strohalm.cyclos.utils.conversion.CalendarConverter;
 import nl.strohalm.cyclos.utils.conversion.CoercionHelper;

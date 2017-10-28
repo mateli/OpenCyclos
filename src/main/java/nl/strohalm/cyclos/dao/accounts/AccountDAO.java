@@ -48,7 +48,7 @@ import nl.strohalm.cyclos.services.accounts.AccountDTO;
 import nl.strohalm.cyclos.services.accounts.BulkUpdateAccountDTO;
 import nl.strohalm.cyclos.services.accounts.GetTransactionsDTO;
 import nl.strohalm.cyclos.services.transactions.TransactionSummaryVO;
-import nl.strohalm.cyclos.utils.Period;
+import nl.strohalm.cyclos.entities.utils.Period;
 import nl.strohalm.cyclos.utils.query.IteratorList;
 
 /**

@@ -19,10 +19,10 @@
  */
 package nl.strohalm.cyclos.scheduling.tasks;
 
-import java.util.Calendar;
-
+import nl.strohalm.cyclos.entities.utils.Period;
 import nl.strohalm.cyclos.services.transactions.PaymentServiceLocal;
-import nl.strohalm.cyclos.utils.Period;
+
+import java.util.Calendar;
 
 /**
  * Scheduled task used to process scheduled payments

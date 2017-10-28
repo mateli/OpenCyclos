@@ -23,11 +23,18 @@ import nl.strohalm.cyclos.entities.Entity;
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.members.Member;
 
+import javax.persistence.Column;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
 /**
  * Stores settings for a local receipt printer
  * 
  * @author luis
  */
+@Table(name = "print_settings")
+@javax.persistence.Entity
 public class ReceiptPrinterSettings extends Entity {
 
     public static enum Relationships implements Relationship {
@@ -45,14 +52,27 @@ public class ReceiptPrinterSettings extends Entity {
     }
 
     private static final long serialVersionUID = 5677759942410107438L;
-    private Member            member;
+
+    @ManyToOne
+    @JoinColumn(name = "member_id")
+	private Member            member;
+
+    @Column(name = "name", nullable = false, length = 100)
     private String            name;
+
+    @Column(name = "printer_name", nullable = false, length = 100)
     private String            printerName;
+
+    @Column(name = "begin_doc_cmd", length = 100)
     private String            beginOfDocCommand;
+
+    @Column(name = "end_doc_cmd", length = 100)
     private String            endOfDocCommand;
+
+    @Column(name = "payment_message", length = 500)
     private String            paymentAdditionalMessage;
 
-    public String getBeginOfDocCommand() {
+	public String getBeginOfDocCommand() {
         return beginOfDocCommand;
     }
 

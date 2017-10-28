@@ -23,7 +23,7 @@ import java.util.Collection;
 
 import nl.strohalm.cyclos.entities.customization.fields.MemberCustomFieldValue;
 import nl.strohalm.cyclos.entities.groups.MemberGroup;
-import nl.strohalm.cyclos.utils.Period;
+import nl.strohalm.cyclos.entities.utils.Period;
 import nl.strohalm.cyclos.utils.query.QueryParameters;
 
 /**

@@ -19,11 +19,6 @@
  */
 package nl.strohalm.cyclos.entities.ads;
 
-import java.math.BigDecimal;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Map;
-
 import nl.strohalm.cyclos.entities.Entity;
 import nl.strohalm.cyclos.entities.Indexable;
 import nl.strohalm.cyclos.entities.Relationship;
@@ -33,16 +28,31 @@ import nl.strohalm.cyclos.entities.customization.fields.AdCustomFieldValue;
 import nl.strohalm.cyclos.entities.customization.images.AdImage;
 import nl.strohalm.cyclos.entities.members.Member;
 import nl.strohalm.cyclos.entities.settings.LocalSettings;
+import nl.strohalm.cyclos.entities.utils.Period;
 import nl.strohalm.cyclos.utils.CustomFieldsContainer;
-import nl.strohalm.cyclos.utils.Period;
 import nl.strohalm.cyclos.utils.StringValuedEnum;
-
 import org.apache.commons.collections.CollectionUtils;
+
+import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Embedded;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import java.math.BigDecimal;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Map;
 
 /**
  * A product / service advertisement by a member
  * @author luis
  */
+@Table(name = "ads")
+@javax.persistence.Entity
 public class Ad extends Entity implements CustomFieldsContainer<AdCustomField, AdCustomFieldValue>, Indexable {
 
     public static enum Relationships implements Relationship {
@@ -87,24 +97,63 @@ public class Ad extends Entity implements CustomFieldsContainer<AdCustomField, A
     }
 
     private static final long              serialVersionUID = 1552286239776108655L;
-    private AdCategory                     category;
-    private Collection<AdCustomFieldValue> customValues;
+
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+	private AdCategory                     category;
+
+    @OneToMany(mappedBy = "ad", cascade = CascadeType.REMOVE)
+	private Collection<AdCustomFieldValue> customValues;
+
+    @Column(name = "description", columnDefinition = "text")
     private String                         description;
+
+    @Column(name = "external_publication", nullable = false)
     private boolean                        externalPublication;
-    private Collection<AdImage>            images;
-    private Member                         owner;
+
+    @OneToMany(mappedBy = "ad", cascade = CascadeType.REMOVE)
+	private Collection<AdImage>            images;
+
+    @ManyToOne
+    @JoinColumn(name = "owner_id", nullable = false)
+	private Member                         owner;
+
+    @Column(name = "permanent", nullable = false)
     private boolean                        permanent;
-    private Currency                       currency;
+
+    @ManyToOne
+    @JoinColumn(name = "currency_id")
+	private Currency                       currency;
+
+    @Column(name = "price", precision = 15, scale = 6)
     private BigDecimal                     price;
-    private Period                         publicationPeriod;
+
+    @AttributeOverrides({
+            @AttributeOverride(name = "begin", column=@Column(name="publication_start")),
+            @AttributeOverride(name = "end", column=@Column(name="publication_end"))
+    })
+    @Embedded
+	private Period                         publicationPeriod;
+
+    @Column(name = "title", nullable = false, length = 100)
     private String                         title;
-    private TradeType                      tradeType;
+
+    @Column(name = "trade_type", nullable = false, length = 1)
+	private TradeType                      tradeType;
+
+    @Column(name = "creation_date", updatable = false)
     private Calendar                       creationDate;
+
+    @Column(name = "delete_date")
     private Calendar                       deleteDate;
+
+    @Column(name = "is_html", nullable = false)
     private boolean                        html;
+
+    @Column(name = "members_notified", nullable = false)
     private boolean                        membersNotified;
 
-    public AdCategory getCategory() {
+	public AdCategory getCategory() {
         return category;
     }
 

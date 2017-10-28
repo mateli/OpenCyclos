@@ -21,22 +21,23 @@ package nl.strohalm.cyclos.services.accounts.guarantees;
 
 import java.math.BigDecimal;
 
+import nl.strohalm.cyclos.entities.accounts.guarantees.GuaranteeFee;
 import nl.strohalm.cyclos.utils.DataObject;
-import nl.strohalm.cyclos.utils.Period;
+import nl.strohalm.cyclos.entities.utils.Period;
 
 public class GuaranteeFeeCalculationDTO extends DataObject {
     private static final long serialVersionUID = -3978088708134221686L;
 
     private Period            validity;
     private BigDecimal        amount;
-    private GuaranteeFeeVO    feeSpec;
+    private GuaranteeFee feeSpec;
     private Long              guaranteeTypeId;
 
     public BigDecimal getAmount() {
         return amount;
     }
 
-    public GuaranteeFeeVO getFeeSpec() {
+    public GuaranteeFee getFeeSpec() {
         return feeSpec;
     }
 
@@ -52,7 +53,7 @@ public class GuaranteeFeeCalculationDTO extends DataObject {
         this.amount = amount;
     }
 
-    public void setFeeSpec(final GuaranteeFeeVO feeSpec) {
+    public void setFeeSpec(final GuaranteeFee feeSpec) {
         this.feeSpec = feeSpec;
     }
 

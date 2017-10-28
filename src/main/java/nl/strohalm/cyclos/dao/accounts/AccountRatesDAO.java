@@ -28,7 +28,7 @@ import nl.strohalm.cyclos.entities.accounts.Account;
 import nl.strohalm.cyclos.entities.accounts.AccountRates;
 import nl.strohalm.cyclos.entities.accounts.Currency;
 import nl.strohalm.cyclos.services.accounts.rates.WhatRate;
-import nl.strohalm.cyclos.utils.Period;
+import nl.strohalm.cyclos.entities.utils.Period;
 
 /**
  * DAO interface for {@link AccountRates}. AccountRates are saved on daily basis. If there is already an existing AccountRates for a particular day,

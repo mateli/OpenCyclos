@@ -19,13 +19,19 @@
  */
 package nl.strohalm.cyclos.entities.accounts;
 
-import java.math.BigDecimal;
-import java.util.Calendar;
-
 import nl.strohalm.cyclos.entities.Entity;
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.accounts.transactions.Transfer;
 
+import javax.persistence.Column;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import java.math.BigDecimal;
+import java.util.Calendar;
+
+@Table(name = "account_rates")
+@javax.persistence.Entity
 public class AccountRates extends Entity implements Rated {
 
     public static enum Relationships implements Relationship {
@@ -44,18 +50,27 @@ public class AccountRates extends Entity implements Rated {
 
     private static final long serialVersionUID = 2572595440698449955L;
 
+    @Column(name = "emission_date")
     private Calendar          emissionDate;
 
+    @Column(name = "expiration_date")
     private Calendar          expirationDate;
 
+    @Column(name = "i_rate", precision = 15, scale = 6)
     private BigDecimal        iRate;
 
+    @Column(name = "rate_balance_correction", precision = 21, scale = 6)
     private BigDecimal        rateBalanceCorrection;
-    private Account           account;
 
-    private Transfer          lastTransfer;
+    @ManyToOne
+    @JoinColumn(name = "account_id", nullable = false) // index="ix_accntrts_account_date"
+	private Account           account;
 
-    public Account getAccount() {
+    @ManyToOne
+    @JoinColumn(name = "transfer_id", nullable = false) // index="ix_accntrts_transfer"
+	private Transfer          lastTransfer;
+
+	public Account getAccount() {
         return account;
     }
 

@@ -43,7 +43,7 @@ import nl.strohalm.cyclos.utils.IntValuedEnum;
 import nl.strohalm.cyclos.utils.MessageProcessingHelper;
 import nl.strohalm.cyclos.utils.StringValuedEnum;
 import nl.strohalm.cyclos.utils.TextFormat;
-import nl.strohalm.cyclos.utils.TimePeriod;
+import nl.strohalm.cyclos.entities.utils.TimePeriod;
 import nl.strohalm.cyclos.utils.conversion.AmountConverter;
 import nl.strohalm.cyclos.utils.conversion.CalendarConverter;
 import nl.strohalm.cyclos.utils.conversion.CoercionHelper;
@@ -317,7 +317,7 @@ public class LocalSettings extends DataObject {
         }
 
         @Override
-        public int getValue() {
+        public Integer getValue() {
             return value;
         }
     }

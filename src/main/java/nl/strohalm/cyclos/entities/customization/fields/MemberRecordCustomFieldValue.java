@@ -22,10 +22,16 @@ package nl.strohalm.cyclos.entities.customization.fields;
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.members.records.MemberRecord;
 
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+
 /**
  * Custom field value for a member record
  * @author Jefferson Magno
  */
+@DiscriminatorValue("record")
+@javax.persistence.Entity
 public class MemberRecordCustomFieldValue extends CustomFieldValue {
 
     public static enum Relationships implements Relationship {
@@ -45,9 +51,11 @@ public class MemberRecordCustomFieldValue extends CustomFieldValue {
 
     private static final long serialVersionUID = 2023517805492516197L;
 
-    private MemberRecord      memberRecord;
+    @ManyToOne
+    @JoinColumn(name = "member_record_id")
+	private MemberRecord      memberRecord;
 
-    public MemberRecord getMemberRecord() {
+	public MemberRecord getMemberRecord() {
         return memberRecord;
     }
 

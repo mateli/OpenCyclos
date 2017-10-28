@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.Map;
 
 import nl.strohalm.cyclos.utils.PropertyHelper;
-import nl.strohalm.cyclos.utils.RangeConstraint;
+import nl.strohalm.cyclos.entities.utils.RangeConstraint;
 
 import org.apache.commons.lang.StringUtils;
 

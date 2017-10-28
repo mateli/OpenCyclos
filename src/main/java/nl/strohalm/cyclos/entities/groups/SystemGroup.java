@@ -19,13 +19,18 @@
  */
 package nl.strohalm.cyclos.entities.groups;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.accounts.transactions.TransferType;
 import nl.strohalm.cyclos.entities.customization.documents.Document;
 import nl.strohalm.cyclos.entities.members.messages.MessageCategory;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import java.util.ArrayList;
+import java.util.Collection;
 
 /**
  * Base class for all system-wide groups, that is, the groups that are managed by a system administrator.<br>
@@ -37,6 +42,7 @@ import nl.strohalm.cyclos.entities.members.messages.MessageCategory;
  * 
  * @author ameyer
  */
+@Entity
 public abstract class SystemGroup extends Group {
     public static enum Relationships implements Relationship {
         DOCUMENTS("documents"), MESSAGE_CATEGORIES("messageCategories"), CHARGEBACK_TRANSFER_TYPES("chargebackTransferTypes");
@@ -54,12 +60,41 @@ public abstract class SystemGroup extends Group {
     }
 
     private static final long           serialVersionUID = 1L;
+
+    @Column(name = "root_url", length = 100)
     private String                      rootUrl;
+
+    @Column(name = "login_page_name", length = 20)  // index="ix_login_page_name"
     private String                      loginPageName;
+
+    @Column(name = "container_url", length = 100)
     private String                      containerUrl;
-    private Collection<Document>        documents;
-    private Collection<MessageCategory> messageCategories;
-    private Collection<TransferType>    chargebackTransferTypes;
+
+    @ManyToMany
+    @JoinTable(name = "groups_documents",
+            joinColumns = @JoinColumn(name = "group_id"),
+            inverseJoinColumns = @JoinColumn(name = "document_id"))
+	private Collection<Document>        documents;
+
+    @ManyToMany
+    @JoinTable(name = "can_view_message_categories",
+            joinColumns = @JoinColumn(name = "group_id"),
+            inverseJoinColumns = @JoinColumn(name = "category_id"))
+	private Collection<MessageCategory> messageCategories;
+
+    @ManyToMany
+    @JoinTable(name = "groups_chargeback_transfer_types",
+            joinColumns = @JoinColumn(name = "group_id"),
+            inverseJoinColumns = @JoinColumn(name = "transfer_type_id"))
+	private Collection<TransferType>    chargebackTransferTypes;
+
+    protected SystemGroup() {
+	}
+
+    @Override
+    public Nature getNature() {
+        return null;
+    }
 
     public void addDocument(final Document document) {
         if (documents == null) {

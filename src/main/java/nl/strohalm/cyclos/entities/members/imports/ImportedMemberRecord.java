@@ -19,19 +19,26 @@
  */
 package nl.strohalm.cyclos.entities.members.imports;
 
-import java.util.Collection;
-
 import nl.strohalm.cyclos.entities.Entity;
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.customization.fields.MemberRecordCustomField;
 import nl.strohalm.cyclos.entities.members.records.MemberRecordType;
 import nl.strohalm.cyclos.utils.CustomFieldsContainer;
 
+import javax.persistence.CascadeType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import java.util.Collection;
+
 /**
  * Contains aggregations for member record values on temporary imported members
  * 
  * @author luis
  */
+@Table(name = "imported_member_records")
+@javax.persistence.Entity
 public class ImportedMemberRecord extends Entity implements CustomFieldsContainer<MemberRecordCustomField, ImportedMemberRecordCustomFieldValue> {
 
     public static enum Relationships implements Relationship {
@@ -49,11 +56,19 @@ public class ImportedMemberRecord extends Entity implements CustomFieldsContaine
     }
 
     private static final long                                serialVersionUID = -2185121332687018594L;
-    private ImportedMember                                   member;
-    private MemberRecordType                                 type;
-    private Collection<ImportedMemberRecordCustomFieldValue> customValues;
 
-    public Class<MemberRecordCustomField> getCustomFieldClass() {
+    @ManyToOne
+    @JoinColumn(name = "imported_member_id")
+	private ImportedMember                                   member;
+
+    @ManyToOne
+    @JoinColumn(name = "member_record_type_id", nullable = false)
+	private MemberRecordType                                 type;
+
+    @OneToMany(mappedBy = "memberRecord", cascade = CascadeType.REMOVE)
+	private Collection<ImportedMemberRecordCustomFieldValue> customValues;
+
+	public Class<MemberRecordCustomField> getCustomFieldClass() {
         return MemberRecordCustomField.class;
     }
 

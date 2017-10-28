@@ -21,14 +21,22 @@ package nl.strohalm.cyclos.entities.customization.images;
 
 import nl.strohalm.cyclos.entities.Entity;
 
+import javax.persistence.Column;
+import javax.persistence.MappedSuperclass;
+
 /**
  * An image that has an owner and other details
  * @author luis
  */
+@MappedSuperclass
 public abstract class OwneredImage extends Image {
 
     private static final long serialVersionUID = 9164371040444804577L;
+
+    @Column(name = "order_number", columnDefinition = "smallint")
     private Integer order;
+
+    @Column(name = "caption")
     private String  caption;
 
     public String getCaption() {

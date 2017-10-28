@@ -19,9 +19,6 @@
  */
 package nl.strohalm.cyclos.entities.members.records;
 
-import java.util.Calendar;
-import java.util.Collection;
-
 import nl.strohalm.cyclos.entities.Entity;
 import nl.strohalm.cyclos.entities.Indexable;
 import nl.strohalm.cyclos.entities.Relationship;
@@ -31,10 +28,21 @@ import nl.strohalm.cyclos.entities.members.Element;
 import nl.strohalm.cyclos.entities.members.Member;
 import nl.strohalm.cyclos.utils.CustomFieldsContainer;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import java.util.Calendar;
+import java.util.Collection;
+
 /**
  * A member record is a set of values for a member record type
  * @author Jefferson Magno
  */
+@Table(name = "member_records")
+@javax.persistence.Entity
 public class MemberRecord extends Entity implements CustomFieldsContainer<MemberRecordCustomField, MemberRecordCustomFieldValue>, Indexable {
 
     public static enum Relationships implements Relationship {
@@ -52,15 +60,33 @@ public class MemberRecord extends Entity implements CustomFieldsContainer<Member
     }
 
     private static final long                        serialVersionUID = -3314730704013643086L;
-    private MemberRecordType                         type;
-    private Element                                  element;
-    private Element                                  by;
-    private Calendar                                 date;
-    private Element                                  modifiedBy;
-    private Calendar                                 lastModified;
-    private Collection<MemberRecordCustomFieldValue> customValues;
 
-    public Element getBy() {
+    @ManyToOne
+    @JoinColumn(name = "member_record_type_id", nullable = false)
+	private MemberRecordType                         type;
+
+    @ManyToOne
+    @JoinColumn(name = "element_id", nullable = false)
+	private Element                                  element;
+
+    @ManyToOne
+    @JoinColumn(name = "by_id", nullable = false)
+	private Element                                  by;
+
+    @Column(name = "date", nullable = false, updatable = false)
+    private Calendar                                 date;
+
+    @ManyToOne
+    @JoinColumn(name = "modified_by_id")
+	private Element                                  modifiedBy;
+
+    @Column(name = "last_modified")
+    private Calendar                                 lastModified;
+
+    @OneToMany(mappedBy = "memberRecord", cascade = CascadeType.REMOVE)
+	private Collection<MemberRecordCustomFieldValue> customValues;
+
+	public Element getBy() {
         return by;
     }
 

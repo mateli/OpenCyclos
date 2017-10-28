@@ -19,15 +19,21 @@
  */
 package nl.strohalm.cyclos.entities.accounts;
 
-import java.util.Collection;
-
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.accounts.fees.account.AccountFee;
+
+import javax.persistence.CascadeType;
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import java.util.Collection;
 
 /**
  * Type for member accounts
  * @author luis
  */
+@DiscriminatorValue("M")
+@javax.persistence.Entity
 public class MemberAccountType extends AccountType {
 
     public static enum Relationships implements Relationship {
@@ -44,11 +50,18 @@ public class MemberAccountType extends AccountType {
     }
 
     private static final long                      serialVersionUID = -8890748132404619378L;
-    private Collection<MemberAccount>              accounts;
-    private Collection<AccountFee>                 accountFees;
-    private Collection<MemberGroupAccountSettings> settings;
 
-    public Collection<AccountFee> getAccountFees() {
+    @OneToMany(cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "type_id")
+	private Collection<MemberAccount>              accounts;
+
+    @OneToMany(mappedBy = "accountType", cascade = CascadeType.REMOVE)
+	private Collection<AccountFee>                 accountFees;
+
+    @OneToMany(mappedBy = "accountType", cascade = CascadeType.REMOVE)
+	private Collection<MemberGroupAccountSettings> settings;
+
+	public Collection<AccountFee> getAccountFees() {
         return accountFees;
     }
 

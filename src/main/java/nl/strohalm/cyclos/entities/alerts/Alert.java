@@ -19,14 +19,20 @@
  */
 package nl.strohalm.cyclos.entities.alerts;
 
-import java.util.Calendar;
-
 import nl.strohalm.cyclos.entities.Entity;
+
+import javax.persistence.Column;
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.Table;
+import java.util.Calendar;
 
 /**
  * An alert
  * @author luis
  */
+@Table(name = "alerts")
+@DiscriminatorColumn(name = "subclass", length = 1)
+@javax.persistence.Entity
 public abstract class Alert extends Entity {
     public static enum Type {
         SYSTEM, MEMBER;
@@ -37,13 +43,28 @@ public abstract class Alert extends Entity {
 
     private static final long serialVersionUID = -9026118891761458811L;
 
+    @Column(name = "arg0")
     protected String          arg0;
+
+    @Column(name = "arg1")
     protected String          arg1;
+
+    @Column(name = "arg2")
     protected String          arg2;
+
+    @Column(name = "arg3")
     protected String          arg3;
+
+    @Column(name = "arg4")
     protected String          arg4;
+
+    @Column(name = "date", nullable = false)
     protected Calendar        date;
+
+    @Column(name = "msg_key", nullable = false)
     protected String          key;
+
+    @Column(name = "removed", nullable = false)
     protected boolean         removed;
 
     public String getArg0() {

@@ -19,16 +19,23 @@
  */
 package nl.strohalm.cyclos.entities.customization.fields;
 
-import java.util.Collection;
-
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.accounts.transactions.TransferType;
 import nl.strohalm.cyclos.utils.StringValuedEnum;
+
+import javax.persistence.Column;
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import java.util.Collection;
 
 /**
  * A custom field for payments
  * @author luis
  */
+@DiscriminatorValue("pmt")
+@javax.persistence.Entity
 public class PaymentCustomField extends CustomField {
 
     public static enum Access implements StringValuedEnum {
@@ -62,13 +69,23 @@ public class PaymentCustomField extends CustomField {
 
     private static final long        serialVersionUID = 958467435523383262L;
 
+    @Column(name = "payment_enabled", nullable = false)
     private boolean                  enabled          = true;
-    private TransferType             transferType;
-    private Access                   searchAccess     = Access.NONE;
-    private Access                   listAccess       = Access.NONE;
-    private Collection<TransferType> linkedTransferTypes;
 
-    public Collection<TransferType> getLinkedTransferTypes() {
+    @ManyToOne
+    @JoinColumn(name = "transfer_type_id")
+	private TransferType             transferType;
+
+    @Column(name = "payment_search_access", length = 1)
+	private Access                   searchAccess     = Access.NONE;
+
+    @Column(name = "payment_list_access", length = 1)
+	private Access                   listAccess       = Access.NONE;
+
+    @ManyToMany(mappedBy = "customFields")
+	private Collection<TransferType> linkedTransferTypes;
+
+	public Collection<TransferType> getLinkedTransferTypes() {
         return linkedTransferTypes;
     }
 

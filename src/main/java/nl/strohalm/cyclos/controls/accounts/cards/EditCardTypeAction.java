@@ -19,26 +19,24 @@
  */
 package nl.strohalm.cyclos.controls.accounts.cards;
 
-import java.util.Arrays;
-
-import javax.servlet.http.HttpServletRequest;
-
 import nl.strohalm.cyclos.access.AdminSystemPermission;
 import nl.strohalm.cyclos.annotations.Inject;
 import nl.strohalm.cyclos.controls.ActionContext;
 import nl.strohalm.cyclos.controls.BaseFormAction;
 import nl.strohalm.cyclos.entities.accounts.cards.CardType;
+import nl.strohalm.cyclos.entities.utils.TimePeriod;
 import nl.strohalm.cyclos.services.accounts.cards.CardTypeService;
 import nl.strohalm.cyclos.utils.ActionHelper;
 import nl.strohalm.cyclos.utils.RequestHelper;
-import nl.strohalm.cyclos.utils.TimePeriod;
 import nl.strohalm.cyclos.utils.binding.BeanBinder;
 import nl.strohalm.cyclos.utils.binding.DataBinder;
 import nl.strohalm.cyclos.utils.binding.DataBinderHelper;
 import nl.strohalm.cyclos.utils.binding.PropertyBinder;
 import nl.strohalm.cyclos.utils.conversion.IdConverter;
-
 import org.apache.struts.action.ActionForward;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.Arrays;
 
 /**
  * 

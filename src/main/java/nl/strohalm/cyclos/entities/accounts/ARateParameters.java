@@ -21,12 +21,16 @@ package nl.strohalm.cyclos.entities.accounts;
 
 import nl.strohalm.cyclos.utils.FormatObject;
 
+import javax.persistence.DiscriminatorValue;
+
 /**
  * The parameters needed for a currency when A-rate is enabled.
  * 
  * @author Rinke
  * 
  */
+@DiscriminatorValue("A")
+@javax.persistence.Entity
 public class ARateParameters extends InitializableRateParameters {
 
     private static final long serialVersionUID = -2829229672899471137L;

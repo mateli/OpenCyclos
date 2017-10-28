@@ -20,13 +20,19 @@
 package nl.strohalm.cyclos.entities.customization.documents;
 
 import nl.strohalm.cyclos.entities.Relationship;
-
 import org.apache.commons.lang.StringUtils;
+
+import javax.persistence.CascadeType;
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 /**
  * Is a customized document, that will have custom pages for (optionally) displaying a form with parameters and show a document
  * @author luis
  */
+@DiscriminatorValue("D")
+@javax.persistence.Entity
 public class DynamicDocument extends Document {
 
     public static enum Relationships implements Relationship {
@@ -43,10 +49,16 @@ public class DynamicDocument extends Document {
     }
 
     private static final long serialVersionUID = -3105332690172908757L;
-    private DocumentPage      formPage;
-    private DocumentPage      documentPage;
 
-    public DocumentPage getDocumentPage() {
+    @ManyToOne(cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "form_page_id")
+	private DocumentPage      formPage;
+
+    @ManyToOne(cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "document_page_id")
+	private DocumentPage      documentPage;
+
+	public DocumentPage getDocumentPage() {
         return documentPage;
     }
 

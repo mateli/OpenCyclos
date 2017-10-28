@@ -38,7 +38,7 @@ import nl.strohalm.cyclos.entities.accounts.transactions.TransferQuery;
 import nl.strohalm.cyclos.entities.members.Member;
 import nl.strohalm.cyclos.services.transactions.PaymentService;
 import nl.strohalm.cyclos.services.transactions.ScheduledPaymentService;
-import nl.strohalm.cyclos.utils.Period;
+import nl.strohalm.cyclos.entities.utils.Period;
 import nl.strohalm.cyclos.utils.TransformedIteratorList;
 import nl.strohalm.cyclos.utils.conversion.CalendarConverter;
 import nl.strohalm.cyclos.utils.conversion.Transformer;

@@ -19,18 +19,24 @@
  */
 package nl.strohalm.cyclos.entities.accounts.fees.account;
 
-import java.math.BigDecimal;
-import java.util.Calendar;
-
 import nl.strohalm.cyclos.entities.Entity;
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.accounts.MemberAccount;
 import nl.strohalm.cyclos.utils.FormatObject;
 
+import javax.persistence.Column;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import java.math.BigDecimal;
+import java.util.Calendar;
+
 /**
  * Holds an amount to be charged by an account fee over transactioned volume.
  * @author luis
  */
+@Table(name = "account_fee_amounts")
+@javax.persistence.Entity
 public class AccountFeeAmount extends Entity {
 
     public static enum Relationships implements Relationship {
@@ -48,13 +54,28 @@ public class AccountFeeAmount extends Entity {
     }
 
     private static final long serialVersionUID = 5536949224747161556L;
-    private Calendar          date;
-    private BigDecimal        availableBalance;
-    private BigDecimal        amount;
-    private MemberAccount     account;
-    private AccountFee        accountFee;
 
-    public MemberAccount getAccount() {
+    @Column(nullable = false)
+    private Calendar          date;
+
+    @Column(name = "available_balance", nullable = false, precision = 18, scale = 6)
+    private BigDecimal        availableBalance;
+
+    @Column(name = "amount", nullable = false, precision = 15, scale = 6)
+    private BigDecimal        amount;
+
+    @ManyToOne
+    @JoinColumn(name = "account_id", nullable = false)
+	private MemberAccount     account;
+
+    @ManyToOne
+    @JoinColumn(name = "account_fee_id", nullable = false)
+	private AccountFee        accountFee;
+
+    protected AccountFeeAmount() {
+	}
+
+	public MemberAccount getAccount() {
         return account;
     }
 

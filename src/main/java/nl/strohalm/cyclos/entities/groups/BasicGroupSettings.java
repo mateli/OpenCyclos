@@ -20,15 +20,22 @@
 package nl.strohalm.cyclos.entities.groups;
 
 import nl.strohalm.cyclos.entities.access.TransactionPassword;
+import nl.strohalm.cyclos.entities.utils.RangeConstraint;
+import nl.strohalm.cyclos.entities.utils.TimePeriod;
 import nl.strohalm.cyclos.utils.DataObject;
-import nl.strohalm.cyclos.utils.RangeConstraint;
 import nl.strohalm.cyclos.utils.StringValuedEnum;
-import nl.strohalm.cyclos.utils.TimePeriod;
+
+import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
+import javax.persistence.Embedded;
 
 /**
  * Settings of a group
  * @author luis
  */
+@Embeddable
 public class BasicGroupSettings extends DataObject {
 
     /**
@@ -85,14 +92,44 @@ public class BasicGroupSettings extends DataObject {
     }
 
     private static final long   serialVersionUID                  = 1292266261711753784L;
+
+    @AttributeOverrides({
+            @AttributeOverride(name = "min", column=@Column(name="min_password_length")),
+            @AttributeOverride(name = "max", column=@Column(name="max_password_length"))
+    })
+    @Embedded
     private RangeConstraint     passwordLength                    = new RangeConstraint(4, 12);
+
+    @Column(name = "password_policy", nullable = false, length = 1)
     private PasswordPolicy      passwordPolicy                    = PasswordPolicy.AVOID_OBVIOUS;
+
+    @Column(name = "max_password_tries")
     private int                 maxPasswordWrongTries             = 3;
+
+    @AttributeOverrides({
+            @AttributeOverride(name = "number", column=@Column(name="deactivation_number")),
+            @AttributeOverride(name = "field", column=@Column(name="deactivation_field"))
+    })
+    @Embedded
     private TimePeriod          deactivationAfterMaxPasswordTries = new TimePeriod(10, TimePeriod.Field.MINUTES);
+
+    @AttributeOverrides({
+            @AttributeOverride(name = "number", column=@Column(name="password_expiration_number")),
+            @AttributeOverride(name = "field", column=@Column(name="password_expiration_field"))
+    })
+    @Embedded
     private TimePeriod          passwordExpiresAfter              = new TimePeriod(0, TimePeriod.Field.MONTHS);
+
+    @Column(name = "transaction_password", length = 1)
     private TransactionPassword transactionPassword               = TransactionPassword.NOT_USED;
+
+    @Column(name = "transaction_password_length", nullable = false)
     private int                 transactionPasswordLength         = 4;
+
+    @Column(name = "max_tp_tries", nullable = false)
     private int                 maxTransactionPasswordWrongTries  = 3;
+
+    @Column(name = "hide_currency_on_pmt", nullable = false)
     private boolean             hideCurrencyOnPayments;
 
     public TimePeriod getDeactivationAfterMaxPasswordTries() {

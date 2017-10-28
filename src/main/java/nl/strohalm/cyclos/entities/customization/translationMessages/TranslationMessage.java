@@ -21,13 +21,22 @@ package nl.strohalm.cyclos.entities.customization.translationMessages;
 
 import nl.strohalm.cyclos.entities.Entity;
 
+import javax.persistence.Column;
+import javax.persistence.Table;
+
 /**
  * A resource bundle key
  * @author luis
  */
+@Table(name = "translation_messages")
+@javax.persistence.Entity
 public class TranslationMessage extends Entity {
     private static final long serialVersionUID = -5301317219230694326L;
+
+    @Column(name = "msg_key", unique = true, nullable = false, updatable = false, length = 100)
     private String            key;
+
+    @Column(name = "value", columnDefinition = "text")
     private String            value;
 
     public String getKey() {

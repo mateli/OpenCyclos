@@ -44,7 +44,7 @@ import nl.strohalm.cyclos.services.accounts.guarantees.CertificationService;
 import nl.strohalm.cyclos.services.accounts.guarantees.GuaranteeService;
 import nl.strohalm.cyclos.utils.ActionHelper;
 import nl.strohalm.cyclos.utils.ActionHelper.ByElementExtractor;
-import nl.strohalm.cyclos.utils.Amount;
+import nl.strohalm.cyclos.entities.utils.Amount;
 import nl.strohalm.cyclos.utils.EntityHelper;
 import nl.strohalm.cyclos.utils.RequestHelper;
 import nl.strohalm.cyclos.utils.binding.BeanBinder;

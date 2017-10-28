@@ -28,7 +28,7 @@ import nl.strohalm.cyclos.dao.InsertableDAO;
 import nl.strohalm.cyclos.dao.UpdatableDAO;
 import nl.strohalm.cyclos.entities.accounts.Currency;
 import nl.strohalm.cyclos.entities.accounts.RateParameters;
-import nl.strohalm.cyclos.utils.Period;
+import nl.strohalm.cyclos.entities.utils.Period;
 
 /**
  * DAO interface for generalized Rate parameters

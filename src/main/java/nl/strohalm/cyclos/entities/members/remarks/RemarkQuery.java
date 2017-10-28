@@ -21,7 +21,7 @@ package nl.strohalm.cyclos.entities.members.remarks;
 
 import nl.strohalm.cyclos.entities.members.Element;
 import nl.strohalm.cyclos.entities.members.remarks.Remark.Nature;
-import nl.strohalm.cyclos.utils.Period;
+import nl.strohalm.cyclos.entities.utils.Period;
 import nl.strohalm.cyclos.utils.query.QueryParameters;
 
 /**

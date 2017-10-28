@@ -22,7 +22,7 @@ package nl.strohalm.cyclos.entities.accounts.loans;
 import java.util.Collections;
 import java.util.List;
 
-import nl.strohalm.cyclos.utils.Period;
+import nl.strohalm.cyclos.entities.utils.Period;
 
 /**
  * Query parameters for loan payment search

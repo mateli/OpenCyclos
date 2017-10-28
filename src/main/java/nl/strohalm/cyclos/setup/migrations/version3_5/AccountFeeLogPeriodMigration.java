@@ -27,9 +27,9 @@ import java.util.GregorianCalendar;
 
 import nl.strohalm.cyclos.setup.UntraceableMigration;
 import nl.strohalm.cyclos.utils.JDBCWrapper;
-import nl.strohalm.cyclos.utils.Period;
-import nl.strohalm.cyclos.utils.TimePeriod;
-import nl.strohalm.cyclos.utils.TimePeriod.Field;
+import nl.strohalm.cyclos.entities.utils.Period;
+import nl.strohalm.cyclos.entities.utils.TimePeriod;
+import nl.strohalm.cyclos.entities.utils.TimePeriod.Field;
 import nl.strohalm.cyclos.utils.conversion.CoercionHelper;
 
 /**

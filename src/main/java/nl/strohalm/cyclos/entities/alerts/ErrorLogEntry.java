@@ -19,17 +19,26 @@
  */
 package nl.strohalm.cyclos.entities.alerts;
 
-import java.util.Calendar;
-import java.util.Map;
-
 import nl.strohalm.cyclos.entities.Entity;
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.access.User;
+
+import javax.persistence.CollectionTable;
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.MapKeyColumn;
+import javax.persistence.Table;
+import java.util.Calendar;
+import java.util.Map;
 
 /**
  * An application error descriptor
  * @author luis
  */
+@Table(name = "error_log_entries")
+@javax.persistence.Entity
 public class ErrorLogEntry extends Entity {
 
     public static enum Relationships implements Relationship {
@@ -46,14 +55,30 @@ public class ErrorLogEntry extends Entity {
     }
 
     private static final long   serialVersionUID = -6444236896453745675L;
+
+    @Column(name = "date", nullable = false)
     private Calendar            date;
+
+    @Column(name = "path", nullable = false, length = 200)
     private String              path;
+
+    @ElementCollection
+    @CollectionTable(name = "error_log_entry_parameters", joinColumns = @JoinColumn(name = "error_log_entry_id"))
+    @MapKeyColumn(name = "name", length = 100)
+    @Column(name = "value", columnDefinition = "longtext")
     private Map<String, String> parameters;
+
+    @Column(name = "stack_trace", columnDefinition = "longtext", length = Integer.MAX_VALUE)
     private String              stackTrace;
-    private User                loggedUser;
+
+    @ManyToOne
+    @JoinColumn(name = "logged_user_id")
+	private User                loggedUser;
+
+    @Column(name = "removed", nullable = false)
     private boolean             removed;
 
-    public Calendar getDate() {
+	public Calendar getDate() {
         return date;
     }
 

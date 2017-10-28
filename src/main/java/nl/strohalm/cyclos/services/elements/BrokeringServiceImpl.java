@@ -57,7 +57,7 @@ import nl.strohalm.cyclos.services.transfertypes.TransactionFeeServiceLocal;
 import nl.strohalm.cyclos.utils.CacheCleaner;
 import nl.strohalm.cyclos.utils.DataIteratorHelper;
 import nl.strohalm.cyclos.utils.DateHelper;
-import nl.strohalm.cyclos.utils.TimePeriod;
+import nl.strohalm.cyclos.entities.utils.TimePeriod;
 import nl.strohalm.cyclos.utils.access.LoggedUser;
 import nl.strohalm.cyclos.utils.notifications.MemberNotificationHandler;
 import nl.strohalm.cyclos.utils.query.QueryParameters.ResultType;

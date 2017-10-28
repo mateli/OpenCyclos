@@ -23,14 +23,25 @@ import nl.strohalm.cyclos.entities.Entity;
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.accounts.Currency;
 import nl.strohalm.cyclos.entities.accounts.transactions.TransferType;
-import nl.strohalm.cyclos.services.accounts.guarantees.GuaranteeTypeFeeVO;
+import nl.strohalm.cyclos.entities.utils.TimePeriod;
 import nl.strohalm.cyclos.utils.StringValuedEnum;
-import nl.strohalm.cyclos.utils.TimePeriod;
+
+import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
+import javax.persistence.Cacheable;
+import javax.persistence.Column;
+import javax.persistence.Embedded;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 /**
  * A guarantee type
  * @author Jefferson Magno
  */
+@Cacheable
+@Table(name = "guarantee_types")
+@javax.persistence.Entity
 public class GuaranteeType extends Entity {
 
     public static enum AuthorizedBy implements StringValuedEnum {
@@ -101,30 +112,88 @@ public class GuaranteeType extends Entity {
 
     private static final long  serialVersionUID = -8522901316173399683L;
 
+    @Column(name = "name", nullable = false, length = 100)
     private String             name;
+
+    @Column(name = "description", columnDefinition = "text")
     private String             description;
-    private Model              model;
-    private AuthorizedBy       authorizedBy;
+
+    @Column(name = "model", nullable = false, length = 2)
+	private Model              model;
+
+    @Column(name = "authorized_by", nullable = false, length = 1)
+	private AuthorizedBy       authorizedBy;
+
+    @Column(name = "enabled", nullable = false)
     private boolean            enabled;
+
     // TODO: the loan re-payment's setup will be supported in a second stage
     // private boolean allowLoanPaymentSetup;
-    private TimePeriod         pendingGuaranteeExpiration;
-    private TimePeriod         paymentObligationPeriod;
-    private Currency           currency;
-    private GuaranteeTypeFeeVO creditFee;
-    private GuaranteeTypeFeeVO issueFee;
-    private FeePayer           creditFeePayer;
-    private FeePayer           issueFeePayer;
-    private TransferType       loanTransferType;
-    private TransferType       creditFeeTransferType;
-    private TransferType       issueFeeTransferType;
-    private TransferType       forwardTransferType;
 
-    public AuthorizedBy getAuthorizedBy() {
+    @AttributeOverrides({
+            @AttributeOverride(name = "number", column=@Column(name="pending_guarantee_expiration_number")),
+            @AttributeOverride(name = "field", column=@Column(name="pending_guarantee_expiration_field"))
+    })
+    @Embedded
+	private TimePeriod         pendingGuaranteeExpiration;
+
+    @AttributeOverrides({
+            @AttributeOverride(name = "number", column=@Column(name="payment_obligation_period_number")),
+            @AttributeOverride(name = "field", column=@Column(name="payment_obligation_period_field"))
+    })
+    @Embedded
+	private TimePeriod         paymentObligationPeriod;
+
+    @ManyToOne
+    @JoinColumn(name = "currency_id", nullable = false)
+	private Currency           currency;
+
+    @AttributeOverrides({
+            @AttributeOverride(name = "fee", column=@Column(name="credit_fee")),
+            @AttributeOverride(name = "type", column=@Column(name="credit_fee_type")),
+            @AttributeOverride(name = "readonly", column=@Column(name="credit_fee_readonly"))
+    })
+    @Embedded
+	private GuaranteeTypeFee creditFee;
+
+    @AttributeOverrides({
+            @AttributeOverride(name = "fee", column=@Column(name="issue_fee")),
+            @AttributeOverride(name = "type", column=@Column(name="issue_fee_type")),
+            @AttributeOverride(name = "readonly", column=@Column(name="issue_fee_readonly"))
+    })
+    @Embedded
+	private GuaranteeTypeFee issueFee;
+
+    @Column(name = "credit_fee_payer", nullable = false, length = 1)
+	private FeePayer           creditFeePayer;
+
+    @Column(name = "issue_fee_payer", nullable = false, length = 1)
+	private FeePayer           issueFeePayer;
+
+    @ManyToOne
+    @JoinColumn(name = "loan_transfer_type_id", nullable = false)
+	private TransferType       loanTransferType;
+
+    @ManyToOne
+    @JoinColumn(name = "credit_fee_transfer_type_id")
+	private TransferType       creditFeeTransferType;
+
+    @ManyToOne
+    @JoinColumn(name = "issue_fee_transfer_type_id")
+	private TransferType       issueFeeTransferType;
+
+    @ManyToOne
+    @JoinColumn(name = "forward_transfer_type_id")
+	private TransferType       forwardTransferType;
+
+    protected GuaranteeType() {
+	}
+
+	public AuthorizedBy getAuthorizedBy() {
         return authorizedBy;
     }
 
-    public GuaranteeTypeFeeVO getCreditFee() {
+    public GuaranteeTypeFee getCreditFee() {
         return creditFee;
     }
 
@@ -148,7 +217,7 @@ public class GuaranteeType extends Entity {
         return forwardTransferType;
     }
 
-    public GuaranteeTypeFeeVO getIssueFee() {
+    public GuaranteeTypeFee getIssueFee() {
         return issueFee;
     }
 
@@ -188,7 +257,7 @@ public class GuaranteeType extends Entity {
         this.authorizedBy = authorizedBy;
     }
 
-    public void setCreditFee(final GuaranteeTypeFeeVO creditFee) {
+    public void setCreditFee(final GuaranteeTypeFee creditFee) {
         this.creditFee = creditFee;
     }
 
@@ -216,7 +285,7 @@ public class GuaranteeType extends Entity {
         this.forwardTransferType = forwardTransferType;
     }
 
-    public void setIssueFee(final GuaranteeTypeFeeVO issueFee) {
+    public void setIssueFee(final GuaranteeTypeFee issueFee) {
         this.issueFee = issueFee;
     }
 

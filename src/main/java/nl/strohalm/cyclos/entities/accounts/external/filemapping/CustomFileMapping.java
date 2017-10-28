@@ -22,12 +22,19 @@ package nl.strohalm.cyclos.entities.accounts.external.filemapping;
 import nl.strohalm.cyclos.utils.CustomObjectHandler;
 import nl.strohalm.cyclos.utils.transactionimport.TransactionFileImport;
 
+import javax.persistence.Column;
+import javax.persistence.DiscriminatorValue;
+
 /**
  * A file mapping that allows an arbitrary class to implement the mapping
  * @author luis
  */
+@DiscriminatorValue("cst")
+@javax.persistence.Entity
 public class CustomFileMapping extends FileMapping {
     private static final long serialVersionUID = 8965734986862937675L;
+
+    @Column(name = "classname")
     private String            className;
 
     public String getClassName() {

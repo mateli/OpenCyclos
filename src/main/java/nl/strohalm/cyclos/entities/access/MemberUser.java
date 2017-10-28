@@ -23,16 +23,25 @@ import java.util.Calendar;
 
 import nl.strohalm.cyclos.entities.members.Member;
 
+import javax.persistence.Column;
+import javax.persistence.DiscriminatorValue;
+
 /**
  * A user for regular members or brokers
  * @author luis
  */
+@DiscriminatorValue("M")
+@javax.persistence.Entity
 public class MemberUser extends User {
 
     private static final long serialVersionUID = -524317381029059040L;
 
+    @Column(length = 64)
     private String            pin;
+
+    @Column(name = "pin_blocked_until")
     private Calendar          pinBlockedUntil;
+
     private transient boolean passwordGenerated;
 
     public Member getMember() {

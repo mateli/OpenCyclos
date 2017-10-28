@@ -19,20 +19,32 @@
  */
 package nl.strohalm.cyclos.entities.accounts.guarantees;
 
+import nl.strohalm.cyclos.entities.Entity;
+import nl.strohalm.cyclos.entities.Relationship;
+import nl.strohalm.cyclos.entities.members.Element;
+import nl.strohalm.cyclos.entities.members.Member;
+import nl.strohalm.cyclos.entities.settings.LocalSettings;
+import nl.strohalm.cyclos.entities.utils.Period;
+import nl.strohalm.cyclos.utils.StringValuedEnum;
+
+import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Embedded;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
+import javax.persistence.Table;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Map;
 
-import nl.strohalm.cyclos.entities.Entity;
-import nl.strohalm.cyclos.entities.Relationship;
-import nl.strohalm.cyclos.entities.members.Element;
-import nl.strohalm.cyclos.entities.members.Member;
-import nl.strohalm.cyclos.entities.settings.LocalSettings;
-import nl.strohalm.cyclos.utils.Period;
-import nl.strohalm.cyclos.utils.StringValuedEnum;
-
+@Table(name = "certifications")
+@javax.persistence.Entity
 public class Certification extends Entity {
 
     public static enum Relationships implements Relationship {
@@ -66,15 +78,39 @@ public class Certification extends Entity {
 
     private static final long            serialVersionUID = -4782899135453104654L;
 
+    @Column(name = "amount", nullable = false, precision = 15, scale = 6)
     private BigDecimal                   amount;
-    private Period                       validity;
-    private Status                       status;
-    private GuaranteeType                guaranteeType;
-    private Collection<CertificationLog> logs;
-    private Member                       buyer;
-    private Member                       issuer;
 
-    /**
+    @AttributeOverrides({
+            @AttributeOverride(name = "begin", column=@Column(name="begin_date")),
+            @AttributeOverride(name = "end", column=@Column(name="end_date"))
+    })
+    @Embedded
+	private Period                       validity;
+
+    @Column(name = "status", nullable = false, length = 2)
+	private Status                       status;
+
+    @ManyToOne
+    @JoinColumn(name = "guarantee_type_id", nullable = false)
+	private GuaranteeType                guaranteeType;
+
+    @OneToMany(mappedBy = "certification", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("date desc")
+	private Collection<CertificationLog> logs;
+
+    @ManyToOne
+    @JoinColumn(name = "buyer_id", nullable = false)
+	private Member                       buyer;
+
+    @ManyToOne
+    @JoinColumn(name = "issuer_id", nullable = false)
+	private Member                       issuer;
+
+    protected Certification() {
+	}
+
+	/**
      * Change the certification's status and adds a new certification log to it
      * @param status the new certification's status
      * @param by the author of the change

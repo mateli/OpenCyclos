@@ -21,10 +21,17 @@ package nl.strohalm.cyclos.entities.access;
 
 import java.util.Calendar;
 
+import javax.persistence.Column;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
 import nl.strohalm.cyclos.entities.Entity;
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.utils.FormatObject;
 
+@javax.persistence.Entity
+@Table(name = "login_history")
 public class LoginHistoryLog extends Entity {
 
     public static enum Relationships implements Relationship {
@@ -42,11 +49,18 @@ public class LoginHistoryLog extends Entity {
     }
 
     private static final long serialVersionUID = -7237693213591686743L;
-    private User              user;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+	private User              user;
+
+    @Column(name = "date", nullable = false)
     private Calendar          date;
+
+    @Column(name = "remote_address", nullable = false, length = 40)
     private String            remoteAddress;
 
-    public Calendar getDate() {
+	public Calendar getDate() {
         return date;
     }
 

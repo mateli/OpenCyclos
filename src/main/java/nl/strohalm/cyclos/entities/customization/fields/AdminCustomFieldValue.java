@@ -22,10 +22,16 @@ package nl.strohalm.cyclos.entities.customization.fields;
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.members.Administrator;
 
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+
 /**
  * Custom field value for administrators
  * @author luis
  */
+@DiscriminatorValue("admin")
+@javax.persistence.Entity
 public class AdminCustomFieldValue extends CustomFieldValue {
 
     public static enum Relationships implements Relationship {
@@ -44,9 +50,14 @@ public class AdminCustomFieldValue extends CustomFieldValue {
 
     private static final long serialVersionUID = -5360132689596383745L;
 
-    private Administrator     admin;
+    @ManyToOne
+    @JoinColumn(name = "admin_id")
+	private Administrator     admin;
 
-    public Administrator getAdmin() {
+    protected AdminCustomFieldValue() {
+	}
+
+	public Administrator getAdmin() {
         return admin;
     }
 

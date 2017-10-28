@@ -19,10 +19,15 @@
  */
 package nl.strohalm.cyclos.entities.customization.images;
 
+
+import javax.persistence.DiscriminatorValue;
+
 /**
  * An image to be used in style
  * @author luis
  */
+@DiscriminatorValue("sty")
+@javax.persistence.Entity
 public class StyleImage extends Image {
 
     private static final long serialVersionUID = 5037155642703648675L;

@@ -19,10 +19,6 @@
  */
 package nl.strohalm.cyclos.entities.accounts.transactions;
 
-import java.math.BigDecimal;
-import java.util.Calendar;
-import java.util.Map;
-
 import nl.strohalm.cyclos.entities.Entity;
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.accounts.Currency;
@@ -30,12 +26,26 @@ import nl.strohalm.cyclos.entities.members.Member;
 import nl.strohalm.cyclos.entities.settings.LocalSettings;
 import nl.strohalm.cyclos.utils.StringValuedEnum;
 
+import javax.persistence.Column;
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.Inheritance;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import java.math.BigDecimal;
+import java.util.Calendar;
+import java.util.Map;
+
 /**
  * A ticket is used to validate external payments from clients not on whitelist. The web shop server (on the whitelist) must request a ticket to
  * Cyclos, and pass this ticket to the client. When the client confirms all data, that ticket is passed back to Cyclos. If the ticket is not
  * confirmed, it is marked as cancelled by the TicketExpirationListener
  * @author luis
  */
+@Inheritance
+@DiscriminatorColumn(name = "subclass", length = 1)
+@Table(name = "tickets")
+@javax.persistence.Entity
 public abstract class Ticket extends Entity {
 
     public enum Nature implements StringValuedEnum {
@@ -84,18 +94,45 @@ public abstract class Ticket extends Entity {
 
     private static final long serialVersionUID = -4036600783513490404L;
 
+    @Column(name = "amount", precision = 15, scale = 6)
     private BigDecimal        amount;
-    private Currency          currency;
-    private Calendar          creationDate;
-    private String            description;
-    private Member            from;
-    private Status            status;
-    private String            ticket;
-    private Member            to;
-    private Transfer          transfer;
-    private TransferType      transferType;
 
-    public BigDecimal getAmount() {
+    @ManyToOne
+    @JoinColumn(name = "currency_id")
+	private Currency          currency;
+
+    @Column(name = "creation_date")
+    private Calendar          creationDate;
+
+    @Column(name = "description", columnDefinition = "text")
+    private String            description;
+
+    @ManyToOne
+    @JoinColumn(name = "from_member_id")
+	private Member            from;
+
+    @Column(name = "status", nullable = false, length = 1)
+	private Status            status;
+
+    @Column(name = "ticket", nullable = false, length = 32)
+    private String            ticket;
+
+    @ManyToOne
+    @JoinColumn(name = "to_member_id")
+	private Member            to;
+
+    @ManyToOne
+    @JoinColumn(name = "transfer_id")
+	private Transfer          transfer;
+
+    @ManyToOne
+    @JoinColumn(name = "transfer_type_id")
+	private TransferType      transferType;
+
+    protected Ticket() {
+	}
+
+	public BigDecimal getAmount() {
         return amount;
     }
 

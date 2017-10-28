@@ -30,7 +30,7 @@ import nl.strohalm.cyclos.entities.accounts.AccountRates;
 import nl.strohalm.cyclos.entities.accounts.Currency;
 import nl.strohalm.cyclos.services.accounts.rates.WhatRate;
 import nl.strohalm.cyclos.utils.DateHelper;
-import nl.strohalm.cyclos.utils.Period;
+import nl.strohalm.cyclos.entities.utils.Period;
 import nl.strohalm.cyclos.utils.hibernate.HibernateHelper;
 
 /**

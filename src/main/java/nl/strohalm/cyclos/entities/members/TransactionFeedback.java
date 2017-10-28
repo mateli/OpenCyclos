@@ -19,18 +19,24 @@
  */
 package nl.strohalm.cyclos.entities.members;
 
-import java.util.Calendar;
-
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.accounts.transactions.Payment;
 import nl.strohalm.cyclos.entities.accounts.transactions.ScheduledPayment;
 import nl.strohalm.cyclos.entities.accounts.transactions.Transfer;
+
+import javax.persistence.Column;
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import java.util.Calendar;
 
 /**
  * A transaction reference represents the option about a buyer to seller or a seller to buyer on a specific transaction
  * 
  * @author luis
  */
+@DiscriminatorValue("T")
+@javax.persistence.Entity
 public class TransactionFeedback extends Reference {
 
     public static enum Relationships implements Relationship {
@@ -47,14 +53,27 @@ public class TransactionFeedback extends Reference {
     }
 
     private static final long serialVersionUID = -2759397836741489295L;
-    private Transfer          transfer;
-    private ScheduledPayment  scheduledPayment;
+    @ManyToOne
+    @JoinColumn(name = "transfer_id")
+	private Transfer          transfer;
+
+    @ManyToOne
+    @JoinColumn(name = "scheduled_payment_id")
+	private ScheduledPayment  scheduledPayment;
+
+    @Column(name = "reply_comments", columnDefinition = "text")
     private String            replyComments;
+
+    @Column(name = "reply_comments_date")
     private Calendar          replyCommentsDate;
+
+    @Column(name = "admin_comments", columnDefinition = "text")
     private String            adminComments;
+
+    @Column(name = "admin_comments_date")
     private Calendar          adminCommentsDate;
 
-    public String getAdminComments() {
+	public String getAdminComments() {
         return adminComments;
     }
 

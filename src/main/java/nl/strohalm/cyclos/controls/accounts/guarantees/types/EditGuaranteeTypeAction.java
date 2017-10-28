@@ -19,12 +19,6 @@
  */
 package nl.strohalm.cyclos.controls.accounts.guarantees.types;
 
-import java.math.BigDecimal;
-import java.util.Arrays;
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-
 import nl.strohalm.cyclos.access.AdminSystemPermission;
 import nl.strohalm.cyclos.annotations.Inject;
 import nl.strohalm.cyclos.controls.ActionContext;
@@ -36,21 +30,25 @@ import nl.strohalm.cyclos.entities.accounts.guarantees.GuaranteeType.FeeType;
 import nl.strohalm.cyclos.entities.accounts.transactions.TransferType;
 import nl.strohalm.cyclos.entities.accounts.transactions.TransferTypeQuery;
 import nl.strohalm.cyclos.entities.settings.LocalSettings;
+import nl.strohalm.cyclos.entities.utils.TimePeriod;
 import nl.strohalm.cyclos.services.accounts.CurrencyService;
-import nl.strohalm.cyclos.services.accounts.guarantees.GuaranteeTypeFeeVO;
+import nl.strohalm.cyclos.entities.accounts.guarantees.GuaranteeTypeFee;
 import nl.strohalm.cyclos.services.accounts.guarantees.GuaranteeTypeService;
 import nl.strohalm.cyclos.services.transactions.TransactionContext;
 import nl.strohalm.cyclos.services.transfertypes.TransferTypeService;
 import nl.strohalm.cyclos.utils.ActionHelper;
 import nl.strohalm.cyclos.utils.RequestHelper;
-import nl.strohalm.cyclos.utils.TimePeriod;
 import nl.strohalm.cyclos.utils.binding.BeanBinder;
 import nl.strohalm.cyclos.utils.binding.DataBinder;
 import nl.strohalm.cyclos.utils.binding.DataBinderHelper;
 import nl.strohalm.cyclos.utils.binding.PropertyBinder;
 import nl.strohalm.cyclos.utils.conversion.IdConverter;
-
 import org.apache.struts.action.ActionForward;
+
+import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.List;
 
 public class EditGuaranteeTypeAction extends BaseFormAction {
 
@@ -85,13 +83,13 @@ public class EditGuaranteeTypeAction extends BaseFormAction {
             binder.registerBinder("forwardTransferType", PropertyBinder.instance(TransferType.class, "forwardTransferType"));
             binder.registerBinder("loanTransferType", PropertyBinder.instance(TransferType.class, "loanTransferType"));
 
-            final BeanBinder<GuaranteeTypeFeeVO> issueFeeBinder = BeanBinder.instance(GuaranteeTypeFeeVO.class, "issueFee");
+            final BeanBinder<GuaranteeTypeFee> issueFeeBinder = BeanBinder.instance(GuaranteeTypeFee.class, "issueFee");
             issueFeeBinder.registerBinder("type", PropertyBinder.instance(FeeType.class, "type"));
             issueFeeBinder.registerBinder("fee", PropertyBinder.instance(BigDecimal.class, "fee", localSettings.getNumberConverter()));
             issueFeeBinder.registerBinder("readonly", PropertyBinder.instance(Boolean.TYPE, "readonly"));
             binder.registerBinder("issueFee", issueFeeBinder);
 
-            final BeanBinder<GuaranteeTypeFeeVO> creditFeeBinder = BeanBinder.instance(GuaranteeTypeFeeVO.class, "creditFee");
+            final BeanBinder<GuaranteeTypeFee> creditFeeBinder = BeanBinder.instance(GuaranteeTypeFee.class, "creditFee");
             creditFeeBinder.registerBinder("type", PropertyBinder.instance(FeeType.class, "type"));
             creditFeeBinder.registerBinder("fee", PropertyBinder.instance(BigDecimal.class, "fee", localSettings.getNumberConverter()));
             creditFeeBinder.registerBinder("readonly", PropertyBinder.instance(Boolean.TYPE, "readonly"));

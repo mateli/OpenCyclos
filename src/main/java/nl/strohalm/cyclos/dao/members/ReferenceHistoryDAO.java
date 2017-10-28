@@ -30,7 +30,7 @@ import nl.strohalm.cyclos.entities.members.Member;
 import nl.strohalm.cyclos.entities.members.Reference.Level;
 import nl.strohalm.cyclos.entities.members.ReferenceHistoryLog;
 import nl.strohalm.cyclos.entities.members.ReferenceHistoryLogQuery;
-import nl.strohalm.cyclos.utils.Period;
+import nl.strohalm.cyclos.entities.utils.Period;
 
 public interface ReferenceHistoryDAO extends BaseDAO<ReferenceHistoryLog>, InsertableDAO<ReferenceHistoryLog>, UpdatableDAO<ReferenceHistoryLog> {
 

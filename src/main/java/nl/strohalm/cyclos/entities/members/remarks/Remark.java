@@ -19,17 +19,25 @@
  */
 package nl.strohalm.cyclos.entities.members.remarks;
 
-import java.util.Calendar;
-
 import nl.strohalm.cyclos.entities.Entity;
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.members.Element;
 import nl.strohalm.cyclos.utils.StringValuedEnum;
 
+import javax.persistence.Column;
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import java.util.Calendar;
+
 /**
  * A remark is an annotation about a member, or event that happened to a member
  * @author luis
  */
+@javax.persistence.Entity
+@Table(name = "remarks")
+@DiscriminatorColumn(name = "subclass", length = 1)
 public abstract class Remark extends Entity {
 
     public static enum Nature implements StringValuedEnum {
@@ -64,12 +72,25 @@ public abstract class Remark extends Entity {
     }
 
     private static final long serialVersionUID = 3495444657368796399L;
-    private Element           writer;
-    private Element           subject;
+
+    @ManyToOne
+    @JoinColumn(name = "writer_id")
+	private Element           writer;
+
+    @ManyToOne
+    @JoinColumn(name = "subject_id", nullable = false)
+	private Element           subject;
+
+    @Column(name = "date", nullable = false)
     private Calendar          date;
+
+    @Column(name = "comments", columnDefinition = "longtext")
     private String            comments;
 
-    public String getComments() {
+    protected Remark() {
+	}
+
+	public String getComments() {
         return comments;
     }
 

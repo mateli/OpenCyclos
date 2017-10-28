@@ -23,10 +23,16 @@ import nl.strohalm.cyclos.entities.Entity;
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.members.Member;
 
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+
 /**
  * An image that belongs to a member
  * @author luis
  */
+@DiscriminatorValue("mbr")
+@javax.persistence.Entity
 public class MemberImage extends OwneredImage {
     public static enum Relationships implements Relationship {
         MEMBER("member");
@@ -43,7 +49,9 @@ public class MemberImage extends OwneredImage {
 
     private static final long serialVersionUID = 1590180946053073238L;
 
-    private Member            member;
+    @ManyToOne
+    @JoinColumn(name = "member_id")
+	private Member            member;
 
     public MemberImage() {
         super();

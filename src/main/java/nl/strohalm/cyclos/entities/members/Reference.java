@@ -19,17 +19,25 @@
  */
 package nl.strohalm.cyclos.entities.members;
 
-import java.util.Calendar;
-
 import nl.strohalm.cyclos.entities.Entity;
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.utils.IntValuedEnum;
 import nl.strohalm.cyclos.utils.StringValuedEnum;
 
+import javax.persistence.Column;
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import java.util.Calendar;
+
 /**
  * A reference is given by a member to another
  * @author luis
  */
+@javax.persistence.Entity
+@Table(name = "refs")
+@DiscriminatorColumn(name = "subclass", length = 1)
 public abstract class Reference extends Entity {
 
     public static enum Level implements IntValuedEnum {
@@ -40,7 +48,7 @@ public abstract class Reference extends Entity {
             this.value = value;
         }
 
-        public int getValue() {
+        public Integer getValue() {
             return value;
         }
     }
@@ -73,13 +81,27 @@ public abstract class Reference extends Entity {
 
     private static final long serialVersionUID = -1174939978585184311L;
 
-    private Member            from;
-    private Member            to;
-    private Level             level;
+    @ManyToOne
+    @JoinColumn(name = "from_member_id", nullable = false)
+	private Member            from;
+
+    @ManyToOne
+    @JoinColumn(name = "to_member_id", nullable = false)
+	private Member            to;
+
+    @Column(name = "level", nullable = false, columnDefinition = "tinyint")
+	private Level             level;
+
+    @Column(name = "date", nullable = false)
     private Calendar          date;
+
+    @Column(name = "comments", nullable = false, columnDefinition = "longtext")
     private String            comments;
 
-    public String getComments() {
+    protected Reference() {
+	}
+
+	public String getComments() {
         return comments;
     }
 

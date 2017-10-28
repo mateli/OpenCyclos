@@ -23,11 +23,18 @@ import nl.strohalm.cyclos.entities.Entity;
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.ads.AdCategory;
 
+import javax.persistence.Column;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
 /**
  * An imported ad category, which was still not processed
  * 
  * @author luis
  */
+@Table(name = "imported_ad_categories")
+@javax.persistence.Entity
 public class ImportedAdCategory extends Entity {
 
     public static enum Relationships implements Relationship {
@@ -46,12 +53,22 @@ public class ImportedAdCategory extends Entity {
 
     private static final long  serialVersionUID = 3881658859416912467L;
 
-    private AdImport           adImport;
-    private String             name;
-    private ImportedAdCategory importedParent;
-    private AdCategory         existingParent;
+    @ManyToOne
+    @JoinColumn(name = "ad_import_id", nullable = false)
+	private AdImport           adImport;
 
-    public AdImport getAdImport() {
+    @Column(name = "name", length = 100)
+    private String             name;
+
+    @ManyToOne
+    @JoinColumn(name = "imported_parent_id")
+	private ImportedAdCategory importedParent;
+
+    @ManyToOne
+    @JoinColumn(name = "existing_parent_id")
+	private AdCategory         existingParent;
+
+	public AdImport getAdImport() {
         return adImport;
     }
 

@@ -19,21 +19,26 @@
  */
 package nl.strohalm.cyclos.entities.sms;
 
-import java.util.Calendar;
-
 import nl.strohalm.cyclos.entities.Entity;
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.members.Member;
 import nl.strohalm.cyclos.entities.members.messages.Message;
 import nl.strohalm.cyclos.utils.FormatObject;
 import nl.strohalm.cyclos.utils.StringValuedEnum;
-
 import org.apache.commons.lang.StringUtils;
+
+import javax.persistence.Column;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import java.util.Calendar;
 
 /**
  * A log of a sent SMS message
  * @author Jefferson Magno
  */
+@Table(name = "sms_logs")
+@javax.persistence.Entity
 public class SmsLog extends Entity {
     /**
      * Possible error on sending an sms
@@ -90,25 +95,52 @@ public class SmsLog extends Entity {
 
     private static final long  serialVersionUID = -4331781757069220677L;
 
-    private static String ensureArgLength(final String arg) {
+	private static String ensureArgLength(final String arg) {
         return StringUtils.substring(arg, 0, MAX_ARG_LEN);
     }
 
-    private Member       targetMember;
-    private Member       chargedMember;
-    private Calendar     date;
-    private Message.Type messageType;
-    private SmsMailing   smsMailing;
-    private boolean      freeBaseUsed;
-    private SmsType      smsType;
+    @ManyToOne
+    @JoinColumn(name = "target_member_id", nullable = false)
+	private Member       targetMember;
 
-    private ErrorType    errorType;
+    @ManyToOne
+    @JoinColumn(name = "charged_member_id")
+	private Member       chargedMember;
+
+    @Column(name = "date", nullable = false, updatable = false)
+    private Calendar     date;
+
+    @Column(name = "message_type", updatable = false, length = 3)
+    private Message.Type messageType;
+
+    @ManyToOne
+    @JoinColumn(name = "sms_mailing_id")
+	private SmsMailing   smsMailing;
+
+    @Column(name = "free_base_used", nullable = false)
+    private boolean      freeBaseUsed;
+
+    @ManyToOne
+    @JoinColumn(name = "sms_type_id")
+	private SmsType      smsType;
+
+    @Column(name = "error_type", updatable = false, length = 3)
+	private ErrorType    errorType;
+
     /* Arguments for I18N purposes */
+    @Column(name = "arg0", length = 150)
     protected String     arg0;
+
+    @Column(name = "arg1", length = 150)
     protected String     arg1;
+
+    @Column(name = "arg2", length = 150)
     protected String     arg2;
+
+    @Column(name = "arg3", length = 150)
     protected String     arg3;
 
+    @Column(name = "arg4", length = 150)
     protected String     arg4;
 
     public String getArg0() {

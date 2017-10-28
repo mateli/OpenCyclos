@@ -93,7 +93,7 @@ import nl.strohalm.cyclos.utils.CacheCleaner;
 import nl.strohalm.cyclos.utils.CombinedIterator;
 import nl.strohalm.cyclos.utils.DataIteratorHelper;
 import nl.strohalm.cyclos.utils.DateHelper;
-import nl.strohalm.cyclos.utils.Period;
+import nl.strohalm.cyclos.entities.utils.Period;
 import nl.strohalm.cyclos.utils.TransactionHelper;
 import nl.strohalm.cyclos.utils.access.LoggedUser;
 import nl.strohalm.cyclos.utils.query.IteratorList;

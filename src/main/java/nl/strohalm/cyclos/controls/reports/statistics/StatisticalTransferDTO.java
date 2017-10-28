@@ -23,7 +23,7 @@ import java.util.Collection;
 
 import nl.strohalm.cyclos.entities.accounts.transactions.PaymentFilter;
 import nl.strohalm.cyclos.entities.groups.Group;
-import nl.strohalm.cyclos.utils.Period;
+import nl.strohalm.cyclos.entities.utils.Period;
 
 public class StatisticalTransferDTO {
 

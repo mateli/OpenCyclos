@@ -19,13 +19,6 @@
  */
 package nl.strohalm.cyclos.controls.loans;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-
 import nl.strohalm.cyclos.access.AdminMemberPermission;
 import nl.strohalm.cyclos.access.MemberPermission;
 import nl.strohalm.cyclos.access.OperatorPermission;
@@ -35,7 +28,7 @@ import nl.strohalm.cyclos.controls.BaseFormAction;
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.accounts.MemberAccount;
 import nl.strohalm.cyclos.entities.accounts.loans.Loan;
-import nl.strohalm.cyclos.entities.accounts.loans.LoanParameters;
+import nl.strohalm.cyclos.entities.accounts.loans.LoanParametersLight;
 import nl.strohalm.cyclos.entities.accounts.loans.LoanPayment;
 import nl.strohalm.cyclos.entities.accounts.loans.LoanPayment.Status;
 import nl.strohalm.cyclos.entities.accounts.loans.LoanRepaymentAmountsDTO;
@@ -53,7 +46,7 @@ import nl.strohalm.cyclos.services.customization.PaymentCustomFieldService;
 import nl.strohalm.cyclos.services.transactions.LoanPaymentDTO;
 import nl.strohalm.cyclos.services.transactions.LoanService;
 import nl.strohalm.cyclos.services.transactions.PaymentService;
-import nl.strohalm.cyclos.utils.Amount.Type;
+import nl.strohalm.cyclos.entities.utils.Amount.Type;
 import nl.strohalm.cyclos.utils.CustomFieldHelper;
 import nl.strohalm.cyclos.utils.CustomFieldHelper.Entry;
 import nl.strohalm.cyclos.utils.RelationshipHelper;
@@ -62,9 +55,14 @@ import nl.strohalm.cyclos.utils.binding.DataBinder;
 import nl.strohalm.cyclos.utils.binding.PropertyBinder;
 import nl.strohalm.cyclos.utils.validation.RequiredError;
 import nl.strohalm.cyclos.utils.validation.ValidationException;
-
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Action used to retrieve details about a loan
@@ -134,7 +132,7 @@ public class LoanDetailsAction extends BaseFormAction implements LocalSettingsCh
         request.setAttribute("showRelatedTransfer", paymentService.isVisible(loan.getTransfer()));
         request.setAttribute("currencyPattern", currencyPattern);
         if (loan.getParameters().getType() == Loan.Type.WITH_INTEREST) {
-            final LoanParameters params = loan.getParameters();
+            final LoanParametersLight params = loan.getParameters();
             if (params.getMonthlyInterestAmount() != null) {
                 request.setAttribute("monthlyInterestPattern", params.getMonthlyInterestAmount().getType() == Type.FIXED ? currencyPattern : "");
             }

@@ -23,10 +23,17 @@ import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.members.Member;
 import nl.strohalm.cyclos.utils.StringValuedEnum;
 
+import javax.persistence.Column;
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+
 /**
  * A custom field for member's operators
  * @author luis
  */
+@DiscriminatorValue("op")
+@javax.persistence.Entity
 public class OperatorCustomField extends CustomField {
 
     public static enum Relationships implements Relationship {
@@ -63,10 +70,17 @@ public class OperatorCustomField extends CustomField {
 
     private static final long serialVersionUID = 9206120840324581764L;
 
-    private Member            member;
-    private Visibility        visibility       = Visibility.EDITABLE;
+    @ManyToOne
+    @JoinColumn(name = "member_id", updatable = false)
+	private Member            member;
 
-    public Member getMember() {
+    @Column(name = "operator_visibility", length = 1)
+	private Visibility        visibility       = Visibility.EDITABLE;
+
+    protected OperatorCustomField() {
+	}
+
+	public Member getMember() {
         return member;
     }
 

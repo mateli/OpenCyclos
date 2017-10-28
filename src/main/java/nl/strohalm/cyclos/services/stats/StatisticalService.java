@@ -47,7 +47,7 @@ public interface StatisticalService extends Service {
             this.value = value;
         }
 
-        public int getValue() {
+        public Integer getValue() {
             return value;
         }
     }

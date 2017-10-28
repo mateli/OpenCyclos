@@ -23,11 +23,23 @@ import nl.strohalm.cyclos.entities.Entity;
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.members.Member;
 
+import javax.persistence.Column;
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.Inheritance;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+
 /**
  * The association between a custom field and a given entity. The value property is transient, containing one of stringValue or the value of the
  * related possibleValue. Persistent are stringValue (when the field is not enumerated) or possibleValue (when enumerated).
  * @author luis
  */
+@Inheritance
+@Table(name = "custom_field_values")
+@DiscriminatorColumn(name = "subclass", length = 10)
+@javax.persistence.Entity
 public abstract class CustomFieldValue extends Entity {
 
     public static enum Relationships implements Relationship {
@@ -46,13 +58,28 @@ public abstract class CustomFieldValue extends Entity {
 
     private static final long        serialVersionUID = -1364762150524373384L;
 
-    private CustomField              field;
-    private CustomFieldPossibleValue possibleValue;
-    private Member                   memberValue;
+    @ManyToOne
+    @JoinColumn(name = "field_id")
+	private CustomField              field;
+
+    @ManyToOne
+    @JoinColumn(name = "possible_value_id")
+	private CustomFieldPossibleValue possibleValue;
+
+    @ManyToOne
+    @JoinColumn(name = "member_value_id")
+	private Member                   memberValue;
+
+    @Transient
     private String                   value;
+
+    @Column(name = "string_value") // index="ix_string_value"
     private String                   stringValue;
 
-    public CustomField getField() {
+    protected CustomFieldValue() {
+	}
+
+	public CustomField getField() {
         return field;
     }
 

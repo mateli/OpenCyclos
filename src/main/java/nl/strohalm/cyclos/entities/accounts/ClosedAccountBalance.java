@@ -19,12 +19,16 @@
  */
 package nl.strohalm.cyclos.entities.accounts;
 
-import java.math.BigDecimal;
-import java.util.Calendar;
-
 import nl.strohalm.cyclos.entities.Entity;
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.utils.FormatObject;
+
+import javax.persistence.Column;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import java.math.BigDecimal;
+import java.util.Calendar;
 
 /**
  * Contains the pre-calculated balance and amount reservation for an account at a given date. The date is EXCLUSIVE: transfers which happened on the
@@ -32,6 +36,8 @@ import nl.strohalm.cyclos.utils.FormatObject;
  * 
  * @author luis
  */
+@Table(name = "closed_account_balances")
+@javax.persistence.Entity
 public class ClosedAccountBalance extends Entity {
 
     public static enum Relationships implements Relationship {
@@ -49,12 +55,21 @@ public class ClosedAccountBalance extends Entity {
     }
 
     private static final long serialVersionUID = -7158093358048047225L;
-    private Account           account;
+
+    @ManyToOne
+    @JoinColumn(name = "account_id", nullable = false, updatable = false) // index="ix_cldacctbal_account_date"
+	private Account           account;
+
+    @Column(name = "date", nullable = false) // index="ix_cldacctbal_account_date"
     private Calendar          date;
+
+    @Column(name = "balance", precision = 21, scale = 6, nullable = false)
     private BigDecimal        balance          = BigDecimal.ZERO;
+
+    @Column(name = "reserved", precision = 21, scale = 6, nullable = false)
     private BigDecimal        reserved         = BigDecimal.ZERO;
 
-    public Account getAccount() {
+	public Account getAccount() {
         return account;
     }
 

@@ -43,7 +43,7 @@ import nl.strohalm.cyclos.entities.members.Operator;
 import nl.strohalm.cyclos.entities.reports.StatisticalDTO;
 import nl.strohalm.cyclos.services.stats.general.KeyDevelopmentsStatsPerMonthVO;
 import nl.strohalm.cyclos.utils.Pair;
-import nl.strohalm.cyclos.utils.Period;
+import nl.strohalm.cyclos.entities.utils.Period;
 
 /**
  * Data access object interface for transfers

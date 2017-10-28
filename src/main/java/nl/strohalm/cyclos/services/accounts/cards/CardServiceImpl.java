@@ -45,7 +45,7 @@ import nl.strohalm.cyclos.services.fetch.FetchServiceLocal;
 import nl.strohalm.cyclos.utils.CacheCleaner;
 import nl.strohalm.cyclos.utils.DateHelper;
 import nl.strohalm.cyclos.utils.HashHandler;
-import nl.strohalm.cyclos.utils.RangeConstraint;
+import nl.strohalm.cyclos.entities.utils.RangeConstraint;
 import nl.strohalm.cyclos.utils.RelationshipHelper;
 import nl.strohalm.cyclos.utils.access.LoggedUser;
 import nl.strohalm.cyclos.utils.validation.LengthValidation;

@@ -25,6 +25,7 @@ import java.util.List;
 import nl.strohalm.cyclos.dao.accounts.guarantees.GuaranteeTypeDAO;
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.accounts.guarantees.GuaranteeType;
+import nl.strohalm.cyclos.entities.accounts.guarantees.GuaranteeTypeFee;
 import nl.strohalm.cyclos.entities.accounts.guarantees.GuaranteeTypeQuery;
 import nl.strohalm.cyclos.utils.validation.GeneralValidation;
 import nl.strohalm.cyclos.utils.validation.ValidationError;
@@ -153,7 +154,7 @@ public class GuaranteeTypeServiceImpl implements GuaranteeTypeServiceLocal {
      * @param feeVO guarantee type fee
      * @return true only if this guarantee type fee not generate a guarantee fee (is empty)
      */
-    private boolean isEmptyGuaranteeTypeFee(final GuaranteeTypeFeeVO feeVO) {
+    private boolean isEmptyGuaranteeTypeFee(final GuaranteeTypeFee feeVO) {
         return BigDecimal.ZERO.compareTo(feeVO.getFee()) == 0 && feeVO.isReadonly();
     }
 
@@ -178,9 +179,9 @@ public class GuaranteeTypeServiceImpl implements GuaranteeTypeServiceLocal {
         }
     }
 
-    private GuaranteeTypeFeeVO verifyFee(GuaranteeTypeFeeVO fee) {
+    private GuaranteeTypeFee verifyFee(GuaranteeTypeFee fee) {
         if (fee == null) {
-            fee = new GuaranteeTypeFeeVO();
+            fee = new GuaranteeTypeFee();
         }
         if (fee.getFee() == null) {
             fee.setFee(BigDecimal.ZERO);

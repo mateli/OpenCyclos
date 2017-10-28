@@ -19,12 +19,6 @@
  */
 package nl.strohalm.cyclos.webservices.utils;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.List;
-
 import nl.strohalm.cyclos.entities.accounts.Currency;
 import nl.strohalm.cyclos.entities.ads.AbstractAdQuery;
 import nl.strohalm.cyclos.entities.ads.Ad;
@@ -42,14 +36,14 @@ import nl.strohalm.cyclos.entities.groups.GroupFilter;
 import nl.strohalm.cyclos.entities.groups.MemberGroup;
 import nl.strohalm.cyclos.entities.members.Member;
 import nl.strohalm.cyclos.entities.settings.LocalSettings;
+import nl.strohalm.cyclos.entities.utils.TimePeriod;
 import nl.strohalm.cyclos.services.ads.AdServiceLocal;
 import nl.strohalm.cyclos.services.customization.AdCustomFieldServiceLocal;
 import nl.strohalm.cyclos.services.customization.MemberCustomFieldServiceLocal;
 import nl.strohalm.cyclos.services.settings.SettingsServiceLocal;
 import nl.strohalm.cyclos.utils.CustomFieldHelper;
 import nl.strohalm.cyclos.utils.EntityHelper;
-import nl.strohalm.cyclos.utils.Period;
-import nl.strohalm.cyclos.utils.TimePeriod;
+import nl.strohalm.cyclos.entities.utils.Period;
 import nl.strohalm.cyclos.utils.access.LoggedUser;
 import nl.strohalm.cyclos.utils.conversion.CoercionHelper;
 import nl.strohalm.cyclos.utils.conversion.Transformer;
@@ -66,6 +60,12 @@ import nl.strohalm.cyclos.webservices.model.DetailedAdCategoryVO;
 import nl.strohalm.cyclos.webservices.model.FieldValueVO;
 import nl.strohalm.cyclos.webservices.model.MyAdVO;
 import nl.strohalm.cyclos.webservices.model.TimePeriodVO;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * Utility class for ads<br>

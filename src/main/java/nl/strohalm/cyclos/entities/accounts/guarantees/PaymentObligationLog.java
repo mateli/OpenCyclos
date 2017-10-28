@@ -19,13 +19,21 @@
  */
 package nl.strohalm.cyclos.entities.accounts.guarantees;
 
-import java.util.Calendar;
-
 import nl.strohalm.cyclos.entities.Entity;
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.accounts.guarantees.PaymentObligation.Status;
 import nl.strohalm.cyclos.entities.members.Element;
 
+import javax.persistence.Cacheable;
+import javax.persistence.Column;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import java.util.Calendar;
+
+@Cacheable
+@Table(name = "payment_obligation_logs")
+@javax.persistence.Entity
 public class PaymentObligationLog extends Entity {
 
     public static enum Relationships implements Relationship {
@@ -43,10 +51,19 @@ public class PaymentObligationLog extends Entity {
 
     private static final long serialVersionUID = -377309326263071194L;
 
+    @Column(name = "date", nullable = false)
     private Calendar          date;
-    private Status            status;
-    private PaymentObligation paymentObligation;
-    private Element           by;
+
+    @Column(name = "status", nullable = false, length = 2)
+	private Status            status;
+
+    @ManyToOne
+    @JoinColumn(name = "payment_obligation_id", nullable = false)
+	private PaymentObligation paymentObligation;
+
+    @ManyToOne
+    @JoinColumn(name = "by_id")
+	private Element           by;
 
     public Element getBy() {
         return by;

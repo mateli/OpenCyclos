@@ -21,14 +21,23 @@ package nl.strohalm.cyclos.entities.customization.fields;
 
 import nl.strohalm.cyclos.entities.members.Operator;
 
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+
 /**
  * A value for an operator's custom field
  * @author luis
  */
+@DiscriminatorValue("op")
+@javax.persistence.Entity
 public class OperatorCustomFieldValue extends CustomFieldValue {
 
     private static final long serialVersionUID = 5101132462747754800L;
-    private Operator          operator;
+
+    @ManyToOne
+    @JoinColumn(name = "operator_id")
+	private Operator          operator;
 
     public Operator getOperator() {
         return operator;

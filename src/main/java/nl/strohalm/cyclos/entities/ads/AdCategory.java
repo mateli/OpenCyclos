@@ -19,21 +19,32 @@
  */
 package nl.strohalm.cyclos.entities.ads;
 
+import nl.strohalm.cyclos.entities.Entity;
+import nl.strohalm.cyclos.entities.Relationship;
+import org.apache.commons.collections.CollectionUtils;
+
+import javax.persistence.Cacheable;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
+import javax.persistence.Table;
+import javax.persistence.Transient;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import nl.strohalm.cyclos.entities.Entity;
-import nl.strohalm.cyclos.entities.Relationship;
-
-import org.apache.commons.collections.CollectionUtils;
-
 /**
  * A hierarchical ad category
  * @author luis
  */
+@Cacheable
+@Table(name = "ad_categories")
+@javax.persistence.Entity
 public class AdCategory extends Entity implements Comparable<AdCategory> {
 
     public static enum Relationships implements Relationship {
@@ -57,14 +68,28 @@ public class AdCategory extends Entity implements Comparable<AdCategory> {
     public static final int        MAX_LEVEL        = 3;
 
     private static final long      serialVersionUID = -4371587757348684782L;
+
+    @Column(name = "name", nullable = false, length = 100)
     private String                 name;
-    private AdCategory             parent;
-    private Collection<AdCategory> children;
+
+    @ManyToOne
+    @JoinColumn(name = "parent_id")
+	private AdCategory             parent;
+
+    @OneToMany(mappedBy = "parent", cascade = CascadeType.REMOVE)
+    @OrderBy("order_index, name")
+	private Collection<AdCategory> children;
+
+    @Column(name = "active", nullable = false)
     private boolean                active;
+
+    @Column(name = "order_index", nullable = false, columnDefinition = "smallint")
     private Integer                order            = 0;
+
+    @Transient
     private BigInteger             globalOrder;
 
-    @Override
+	@Override
     public int compareTo(final AdCategory other) {
         return getFullName().compareTo(other.getFullName());
     }

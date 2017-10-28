@@ -19,20 +19,30 @@
  */
 package nl.strohalm.cyclos.entities.members.brokerings;
 
-import java.util.Calendar;
-
 import nl.strohalm.cyclos.entities.Entity;
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.accounts.fees.transaction.BrokerCommission;
+import nl.strohalm.cyclos.entities.utils.Amount;
+import nl.strohalm.cyclos.entities.utils.Period;
 import nl.strohalm.cyclos.services.transactions.TransactionSummaryVO;
-import nl.strohalm.cyclos.utils.Amount;
-import nl.strohalm.cyclos.utils.Period;
+
+import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
+import javax.persistence.Column;
+import javax.persistence.Embedded;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import java.math.BigDecimal;
+import java.util.Calendar;
 
 /**
  * Status about a brokering commission. Stores data about commissions paid from system to broker or commissions paid by members to brokers.
  * Transaction related to broker commission contracts are not included in the status
  * @author Jefferson Magno
  */
+@Table(name = "brokering_commission_status")
+@javax.persistence.Entity
 public class BrokeringCommissionStatus extends Entity {
 
     public static enum Relationships implements Relationship {
@@ -51,18 +61,50 @@ public class BrokeringCommissionStatus extends Entity {
 
     private static final long     serialVersionUID = -4791497274620475610L;
 
-    private Brokering             brokering;
-    private BrokerCommission      brokerCommission;
+    @ManyToOne
+    @JoinColumn(name = "brokering_id")
+	private Brokering             brokering;
+
+    @ManyToOne
+    @JoinColumn(name = "broker_commission_id")
+	private BrokerCommission      brokerCommission;
+
+    @Column(name = "when_apply", nullable = false, length = 1)
     private BrokerCommission.When when;
-    private Amount                amount;
-    private Period                period;
+
+    @Column(name = "amount", precision = 15, scale = 6, nullable = false)
+    private BigDecimal amountValue;
+
+    @Column(name = "amount_type", length = 1)
+    private Amount.Type amountType;
+
+    @AttributeOverrides({
+            @AttributeOverride(name = "begin", column=@Column(name="start_date")),
+            @AttributeOverride(name = "end", column=@Column(name="end_date"))
+    })
+    @Embedded
+	private Period                period;
+
+    @Column(name = "creation_date")
     private Calendar              creationDate;
+
+    @Column(name = "expiry_date")
     private Calendar              expiryDate;
+
+    @Column(name = "max_count")
     private Integer               maxCount;
-    private TransactionSummaryVO  total;
+
+    @Column(name = "total_count", nullable = false)
+    private int               totalCount;
+
+    @Column(name = "total_amount", nullable = false, precision = 21, scale = 6)
+    private BigDecimal        totalAmount;
 
     public Amount getAmount() {
-        return amount;
+        if (amountType == null || amountValue == null) {
+            return null;
+        }
+        return new Amount(amountValue, amountType);
     }
 
     public BrokerCommission getBrokerCommission() {
@@ -90,7 +132,7 @@ public class BrokeringCommissionStatus extends Entity {
     }
 
     public TransactionSummaryVO getTotal() {
-        return total;
+        return new TransactionSummaryVO(totalCount, totalAmount);
     }
 
     public BrokerCommission.When getWhen() {
@@ -98,7 +140,13 @@ public class BrokeringCommissionStatus extends Entity {
     }
 
     public void setAmount(final Amount amount) {
-        this.amount = amount;
+        if (amount == null) {
+            amountValue = null;
+            amountType = null;
+        } else {
+            amountValue = amount.getValue();
+            amountType = amountType;
+        }
     }
 
     public void setBrokerCommission(final BrokerCommission brokerCommission) {
@@ -126,7 +174,13 @@ public class BrokeringCommissionStatus extends Entity {
     }
 
     public void setTotal(final TransactionSummaryVO total) {
-        this.total = total;
+        if (total == null) {
+            totalCount = 0;
+            totalAmount = null;
+        } else {
+            totalCount = total.getCount();
+            totalAmount = total.getAmount();
+        }
     }
 
     public void setWhen(final BrokerCommission.When when) {

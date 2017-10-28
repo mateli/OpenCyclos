@@ -22,10 +22,16 @@ package nl.strohalm.cyclos.entities.customization.fields;
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.accounts.loans.LoanGroup;
 
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+
 /**
  * Custom field value for loan groups
  * @author luis
  */
+@DiscriminatorValue("loan_group")
+@javax.persistence.Entity
 public class LoanGroupCustomFieldValue extends CustomFieldValue {
 
     public static enum Relationships implements Relationship {
@@ -44,9 +50,14 @@ public class LoanGroupCustomFieldValue extends CustomFieldValue {
 
     private static final long serialVersionUID = -5360132689596383745L;
 
-    private LoanGroup         loanGroup;
+    @ManyToOne
+    @JoinColumn(name = "loan_group_id")
+	private LoanGroup         loanGroup;
 
-    public LoanGroup getLoanGroup() {
+    protected LoanGroupCustomFieldValue() {
+	}
+
+	public LoanGroup getLoanGroup() {
         return loanGroup;
     }
 

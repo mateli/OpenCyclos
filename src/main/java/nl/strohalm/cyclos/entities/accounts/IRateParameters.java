@@ -19,16 +19,19 @@
  */
 package nl.strohalm.cyclos.entities.accounts;
 
+import nl.strohalm.cyclos.utils.FormatObject;
+
+import javax.persistence.DiscriminatorValue;
 import java.math.BigDecimal;
 import java.util.Calendar;
-
-import nl.strohalm.cyclos.utils.FormatObject;
 
 /**
  * Parameters for configuration of the I-rate. Contains not much parameters, except for the creationValue (which is by definition 0), and enabling
  * date and disabling date.
  * @author rinke
  */
+@DiscriminatorValue("I")
+@javax.persistence.Entity
 public class IRateParameters extends RateParameters {
 
     private static final long serialVersionUID = -6527552933018241467L;

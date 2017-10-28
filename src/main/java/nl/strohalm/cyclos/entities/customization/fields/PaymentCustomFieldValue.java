@@ -26,10 +26,17 @@ import nl.strohalm.cyclos.entities.accounts.transactions.ScheduledPayment;
 import nl.strohalm.cyclos.entities.accounts.transactions.Transfer;
 import nl.strohalm.cyclos.services.transactions.DoPaymentDTO;
 
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Transient;
+
 /**
  * Custom field value for payments
  * @author luis
  */
+@DiscriminatorValue("pmt")
+@javax.persistence.Entity
 public class PaymentCustomFieldValue extends CustomFieldValue {
 
     public static enum Relationships implements Relationship {
@@ -48,14 +55,27 @@ public class PaymentCustomFieldValue extends CustomFieldValue {
 
     private static final long serialVersionUID = -5360132689596383745L;
 
-    private ScheduledPayment  scheduledPayment;
-    private Transfer          transfer;
-    private Invoice           invoice;
-    private Guarantee         guarantee;
-    // This one is not actually stored, but needed in order to validate
-    private DoPaymentDTO      doPaymentDTO;
+    @ManyToOne
+    @JoinColumn(name = "scheduled_payment_id")
+	private ScheduledPayment  scheduledPayment;
 
-    public Guarantee getGuarantee() {
+    @ManyToOne
+    @JoinColumn(name = "transfer_id")
+	private Transfer          transfer;
+
+    @ManyToOne
+    @JoinColumn(name = "invoice_id")
+	private Invoice           invoice;
+
+    @ManyToOne
+    @JoinColumn(name = "guarantee_id")
+	private Guarantee         guarantee;
+
+    // This one is not actually stored, but needed in order to validate
+    @Transient
+	private DoPaymentDTO      doPaymentDTO;
+
+	public Guarantee getGuarantee() {
         return guarantee;
     }
 

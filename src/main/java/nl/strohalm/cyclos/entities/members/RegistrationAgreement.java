@@ -21,15 +21,26 @@ package nl.strohalm.cyclos.entities.members;
 
 import nl.strohalm.cyclos.entities.Entity;
 
+import javax.persistence.Cacheable;
+import javax.persistence.Column;
+import javax.persistence.Table;
+
 /**
  * A registration agreement is used by groups, and are displayed to members on public registration or right after confirming the e-mail
  * 
  * @author luis
  */
+@Cacheable
+@Table(name = "registration_agreements")
+@javax.persistence.Entity
 public class RegistrationAgreement extends Entity {
 
     private static final long serialVersionUID = 5487938819900951265L;
+
+    @Column(name = "name", nullable = false, length = 50)
     private String            name;
+
+    @Column(name = "contents", nullable = false, columnDefinition = "text")
     private String            contents;
 
     public String getContents() {

@@ -21,12 +21,22 @@ package nl.strohalm.cyclos.entities.members;
 
 import nl.strohalm.cyclos.entities.Entity;
 import nl.strohalm.cyclos.entities.Relationship;
-import nl.strohalm.cyclos.utils.Period;
+import nl.strohalm.cyclos.entities.utils.Period;
+
+import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
+import javax.persistence.Column;
+import javax.persistence.Embedded;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 /**
  * This is a log of given references from one member to another
  * @author jefferson
  */
+@Table(name = "reference_history")
+@javax.persistence.Entity
 public class ReferenceHistoryLog extends Entity {
 
     public static enum Relationships implements Relationship {
@@ -44,12 +54,25 @@ public class ReferenceHistoryLog extends Entity {
 
     private static final long serialVersionUID = 2003079010258584099L;
 
-    private Member            from;
-    private Member            to;
-    private Reference.Level   level;
-    private Period            period;
+    @ManyToOne
+    @JoinColumn(name = "from_member_id", nullable = false)
+	private Member            from;
 
-    public Member getFrom() {
+    @ManyToOne
+    @JoinColumn(name = "to_member_id", nullable = false)
+	private Member            to;
+
+    @Column(name = "level", nullable = false, columnDefinition = "tinyint")
+    private Reference.Level   level;
+
+    @AttributeOverrides({
+            @AttributeOverride(name = "begin", column=@Column(name="start_date")),
+            @AttributeOverride(name = "end", column=@Column(name="end_date"))
+    })
+    @Embedded
+	private Period            period;
+
+	public Member getFrom() {
         return from;
     }
 

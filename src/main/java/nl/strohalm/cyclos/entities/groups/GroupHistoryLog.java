@@ -22,8 +22,18 @@ package nl.strohalm.cyclos.entities.groups;
 import nl.strohalm.cyclos.entities.Entity;
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.members.Element;
-import nl.strohalm.cyclos.utils.Period;
+import nl.strohalm.cyclos.entities.utils.Period;
 
+import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
+import javax.persistence.Column;
+import javax.persistence.Embedded;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
+@Table(name = "group_history_logs")
+@javax.persistence.Entity
 public class GroupHistoryLog extends Entity {
 
     public static enum Relationships implements Relationship {
@@ -41,11 +51,23 @@ public class GroupHistoryLog extends Entity {
     }
 
     private static final long serialVersionUID = 6840703744916377438L;
-    private Element           element;
-    private Group             group;
-    private Period            period;
 
-    public Element getElement() {
+    @ManyToOne
+    @JoinColumn(name = "element_id", nullable = false)
+	private Element           element;
+
+    @ManyToOne
+    @JoinColumn(name = "group_id", nullable = false)
+	private Group             group;
+
+    @AttributeOverrides({
+            @AttributeOverride(name = "begin", column=@Column(name="start_date")),
+            @AttributeOverride(name = "end", column=@Column(name="end_date"))
+    })
+    @Embedded
+	private Period            period;
+
+	public Element getElement() {
         return element;
     }
 

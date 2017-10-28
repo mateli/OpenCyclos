@@ -19,14 +19,19 @@
  */
 package nl.strohalm.cyclos.entities;
 
-import java.util.Calendar;
-
 import nl.strohalm.cyclos.utils.StringValuedEnum;
+
+import javax.persistence.Column;
+import javax.persistence.Enumerated;
+import javax.persistence.Table;
+import java.util.Calendar;
 
 /**
  * Contains basic information about the Cyclos application
  * @author luis
  */
+@Table(name = "application")
+@javax.persistence.Entity
 public class Application extends Entity {
 
     /**
@@ -62,13 +67,23 @@ public class Application extends Entity {
     }
 
     private static final long serialVersionUID = -7552932556180401229L;
-    private String            version;
-    private Calendar          accountStatusEnabledSince;
-    private Calendar          lastIndexRebuidingTime;
-    private PasswordHash      passwordHash;
-    private boolean           online;
 
-    public Calendar getAccountStatusEnabledSince() {
+    @Column(length = 10)
+    private String            version;
+
+    @Column(name = "account_status_enabled_since")
+    private Calendar          accountStatusEnabledSince;
+
+    @Column(name = "last_index_rebuilding_time")
+    private Calendar          lastIndexRebuidingTime;
+
+    @Column(name = "password_hash", length = 1)
+	private PasswordHash      passwordHash;
+
+    @Column(nullable = false)
+    private boolean           online = true;
+
+	public Calendar getAccountStatusEnabledSince() {
         return accountStatusEnabledSince;
     }
 

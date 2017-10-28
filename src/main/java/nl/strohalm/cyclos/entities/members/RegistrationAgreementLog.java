@@ -19,16 +19,22 @@
  */
 package nl.strohalm.cyclos.entities.members;
 
-import java.util.Calendar;
-
 import nl.strohalm.cyclos.entities.Entity;
 import nl.strohalm.cyclos.entities.Relationship;
+
+import javax.persistence.Column;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import java.util.Calendar;
 
 /**
  * Logs when a member has accepted a given registration agreement
  * 
  * @author luis
  */
+@Table(name = "registration_agreement_logs")
+@javax.persistence.Entity
 public class RegistrationAgreementLog extends Entity {
 
     public static enum Relationships implements Relationship {
@@ -46,12 +52,21 @@ public class RegistrationAgreementLog extends Entity {
 
     private static final long     serialVersionUID = 8795634135337909851L;
 
-    private Member                member;
-    private RegistrationAgreement registrationAgreement;
+    @ManyToOne
+    @JoinColumn(name = "member_id", nullable = false)
+	private Member                member;
+
+    @ManyToOne
+    @JoinColumn(name = "registration_agreement_id", nullable = false)
+	private RegistrationAgreement registrationAgreement;
+
+    @Column(name = "date", nullable = false)
     private Calendar              date;
+
+    @Column(name = "remote_address", length = 100)
     private String                remoteAddress;
 
-    public Calendar getDate() {
+	public Calendar getDate() {
         return date;
     }
 

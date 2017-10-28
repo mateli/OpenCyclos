@@ -21,6 +21,11 @@ package nl.strohalm.cyclos.entities.access;
 
 import java.util.Calendar;
 
+import javax.persistence.Column;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
 import nl.strohalm.cyclos.entities.Entity;
 import nl.strohalm.cyclos.utils.FormatObject;
 
@@ -29,10 +34,16 @@ import nl.strohalm.cyclos.utils.FormatObject;
  * 
  * @author luis
  */
+@Table(name = "permission_denieds")
+@javax.persistence.Entity
 public class PermissionDeniedTrace extends Entity {
 
     private static final long serialVersionUID = -2818655809400309210L;
-    private User              user;
+    @ManyToOne
+    @JoinColumn(nullable = false)
+	private User              user;
+
+    @Column(nullable = false)
     private Calendar          date;
 
     public Calendar getDate() {

@@ -19,13 +19,21 @@
  */
 package nl.strohalm.cyclos.entities.accounts.guarantees;
 
-import java.util.Calendar;
-
 import nl.strohalm.cyclos.entities.Entity;
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.accounts.guarantees.Guarantee.Status;
 import nl.strohalm.cyclos.entities.members.Element;
 
+import javax.persistence.Cacheable;
+import javax.persistence.Column;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import java.util.Calendar;
+
+@Cacheable
+@Table(name = "guarantee_logs")
+@javax.persistence.Entity
 public class GuaranteeLog extends Entity {
     public static enum Relationships implements Relationship {
         GUARANTEE("guarantee"), BY("by");
@@ -42,12 +50,24 @@ public class GuaranteeLog extends Entity {
 
     private static final long serialVersionUID = 8829531390733525924L;
 
+    @Column(name = "date", nullable = false)
     private Calendar          date;
-    private Status            status;
-    private Guarantee         guarantee;
-    private Element           by;
 
-    public Element getBy() {
+    @Column(name = "status", nullable = false, length = 2)
+	private Status            status;
+
+    @ManyToOne
+    @JoinColumn(name = "guarantee_id", nullable = false)
+	private Guarantee         guarantee;
+
+    @ManyToOne
+    @JoinColumn(name = "by_id")
+	private Element           by;
+
+    protected GuaranteeLog() {
+	}
+
+	public Element getBy() {
         return by;
     }
 

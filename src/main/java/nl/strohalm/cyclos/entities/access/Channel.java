@@ -19,6 +19,20 @@
  */
 package nl.strohalm.cyclos.entities.access;
 
+import nl.strohalm.cyclos.entities.Entity;
+import nl.strohalm.cyclos.entities.Relationship;
+import nl.strohalm.cyclos.entities.customization.fields.MemberCustomField;
+import nl.strohalm.cyclos.entities.groups.MemberGroup;
+import nl.strohalm.cyclos.utils.StringValuedEnum;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
+
+import javax.persistence.Cacheable;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -26,15 +40,6 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
-
-import nl.strohalm.cyclos.entities.Entity;
-import nl.strohalm.cyclos.entities.Relationship;
-import nl.strohalm.cyclos.entities.customization.fields.MemberCustomField;
-import nl.strohalm.cyclos.entities.groups.MemberGroup;
-import nl.strohalm.cyclos.utils.StringValuedEnum;
-
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang.StringUtils;
 
 /**
  * A channel is an user interface to access cyclos functionality. There are some build-in channels, which cannot be removed, that represents the
@@ -49,11 +54,15 @@ import org.apache.commons.lang.StringUtils;
  * Other channels may be registered at will.
  * @author luis
  */
+
+@Cacheable
+@Table(name = "channels")
+@javax.persistence.Entity
 public class Channel extends Entity implements Comparable<Channel> {
 
     /**
      * Which information is used to authenticate the user in a channel
-     * 
+     *
      * @author luis
      */
     public static enum Credentials implements StringValuedEnum {
@@ -87,7 +96,7 @@ public class Channel extends Entity implements Comparable<Channel> {
 
     /**
      * Which information is used to identify the user in a channel
-     * 
+     *
      * @author luis
      */
     public static enum Principal implements StringValuedEnum {
@@ -140,7 +149,7 @@ public class Channel extends Entity implements Comparable<Channel> {
         }
     }
 
-    public static final PrincipalType DEFAULT_PRINCIPAL_TYPE = new PrincipalType(Principal.USER);
+	public static final PrincipalType DEFAULT_PRINCIPAL_TYPE = new PrincipalType(Principal.USER);
 
     public static final String        WEB                    = "web";
     public static final String        WAP1                   = "wap1";
@@ -165,19 +174,30 @@ public class Channel extends Entity implements Comparable<Channel> {
         BUILTIN_CHANNELS = Collections.unmodifiableList(channels);
     }
 
-    /**
+	/**
      * Returns a list of built-in channels
      */
     public static List<String> listBuiltin() {
         return BUILTIN_CHANNELS;
     }
 
+    @Column(name = "internal_name", nullable = false, unique = true, length = 50)
     private String                       internalName;
+
+    @Column(name = "display_name")
     private String                       displayName;
+
+    @Column(length = 1)
     private Credentials                  credentials;
+
+    @Column(name = "pmt_req_ws_url", length = 200)
     private String                       paymentRequestWebServiceUrl;
-    private Collection<ChannelPrincipal> principals;
-    private Collection<MemberGroup>      groups;
+
+    @OneToMany(mappedBy = "channel", cascade = CascadeType.REMOVE)
+	private Collection<ChannelPrincipal> principals;
+
+    @ManyToMany(mappedBy = "channels")
+	private Collection<MemberGroup>      groups;
 
     public boolean allows(final PrincipalType principalType) {
         for (final PrincipalType type : getPrincipalTypes()) {

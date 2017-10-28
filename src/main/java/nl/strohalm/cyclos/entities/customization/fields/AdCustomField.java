@@ -22,10 +22,15 @@ package nl.strohalm.cyclos.entities.customization.fields;
 import nl.strohalm.cyclos.entities.groups.Group;
 import nl.strohalm.cyclos.utils.StringValuedEnum;
 
+import javax.persistence.Column;
+import javax.persistence.DiscriminatorValue;
+
 /**
  * A custom field for advertisements
  * @author luis
  */
+@DiscriminatorValue("ad")
+@javax.persistence.Entity
 public class AdCustomField extends CustomField {
 
     public static enum Visibility implements StringValuedEnum {
@@ -55,11 +60,20 @@ public class AdCustomField extends CustomField {
     }
 
     private static final long serialVersionUID = 444181817416712379L;
-    private boolean           showInSearch;
-    private boolean           indexed;
-    private Visibility        visibility       = Visibility.MEMBER;
 
-    public Visibility getVisibility() {
+    @Column(name = "ad_show_in_search", nullable = false)
+    private boolean           showInSearch;
+
+    @Column(name = "ad_indexed", nullable = false)
+    private boolean           indexed;
+
+    @Column(name = "ad_visibility", length = 1)
+	private Visibility        visibility       = Visibility.MEMBER;
+
+    protected AdCustomField() {
+	}
+
+	public Visibility getVisibility() {
         return visibility;
     }
 

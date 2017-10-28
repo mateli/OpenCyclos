@@ -19,18 +19,12 @@
  */
 package nl.strohalm.cyclos.services.transactions;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import nl.strohalm.cyclos.entities.accounts.SystemAccountOwner;
 import nl.strohalm.cyclos.entities.accounts.loans.Loan;
 import nl.strohalm.cyclos.entities.accounts.loans.Loan.Type;
 import nl.strohalm.cyclos.entities.accounts.loans.LoanGroup;
 import nl.strohalm.cyclos.entities.accounts.loans.LoanParameters;
+import nl.strohalm.cyclos.entities.accounts.loans.LoanParametersLight;
 import nl.strohalm.cyclos.entities.accounts.loans.LoanPayment;
 import nl.strohalm.cyclos.entities.accounts.loans.LoanRepaymentAmountsDTO;
 import nl.strohalm.cyclos.entities.accounts.transactions.TransferType;
@@ -43,8 +37,14 @@ import nl.strohalm.cyclos.services.settings.SettingsServiceLocal;
 import nl.strohalm.cyclos.utils.MessageProcessingHelper;
 import nl.strohalm.cyclos.utils.access.LoggedUser;
 import nl.strohalm.cyclos.utils.conversion.UnitsConverter;
-
 import org.apache.commons.lang.StringUtils;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Base implementation for loan handler
@@ -69,7 +69,7 @@ public abstract class BaseLoanHandler implements LoanHandler {
 
         // Get some data
         final TransferType transferType = params.getTransferType();
-        final LoanParameters loanParameters = transferType.getLoan().clone();
+        final LoanParametersLight loanParameters = transferType.getLoan().clone();
         final LoanGroup loanGroup = fetchService.fetch(params.getLoanGroup(), LoanGroup.Relationships.MEMBERS);
 
         // Build the loan

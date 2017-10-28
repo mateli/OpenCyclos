@@ -20,8 +20,8 @@
 package nl.strohalm.cyclos.entities.settings;
 
 import nl.strohalm.cyclos.utils.DataObject;
-import nl.strohalm.cyclos.utils.RangeConstraint;
-import nl.strohalm.cyclos.utils.TimePeriod;
+import nl.strohalm.cyclos.entities.utils.RangeConstraint;
+import nl.strohalm.cyclos.entities.utils.TimePeriod;
 import nl.strohalm.cyclos.utils.WhitelistValidator;
 
 /**

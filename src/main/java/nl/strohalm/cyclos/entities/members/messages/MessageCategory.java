@@ -19,16 +19,23 @@
  */
 package nl.strohalm.cyclos.entities.members.messages;
 
-import java.util.Collection;
-
 import nl.strohalm.cyclos.entities.Entity;
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.groups.SystemGroup;
+
+import javax.persistence.Cacheable;
+import javax.persistence.Column;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
+import java.util.Collection;
 
 /**
  * Category for messages
  * @author jeancarlo
  */
+@Cacheable
+@Table(name = "message_categories")
+@javax.persistence.Entity
 public class MessageCategory extends Entity implements Comparable<MessageCategory> {
 
     public static enum Relationships implements Relationship {
@@ -47,10 +54,13 @@ public class MessageCategory extends Entity implements Comparable<MessageCategor
 
     private static final long                 serialVersionUID = 6167371125895203030L;
 
+    @Column(name = "name", nullable = false, length = 200)
     private String                            name;
-    private Collection< SystemGroup> groups;
 
-    @Override
+    @ManyToMany(mappedBy = "messageCategories")
+	private Collection<SystemGroup> groups;
+
+	@Override
     public int compareTo(final MessageCategory another) {
         return getName().compareTo(another.getName());
     }

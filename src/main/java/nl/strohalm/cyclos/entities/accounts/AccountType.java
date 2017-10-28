@@ -19,18 +19,32 @@
  */
 package nl.strohalm.cyclos.entities.accounts;
 
-import java.util.Collection;
-
 import nl.strohalm.cyclos.entities.Entity;
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.accounts.transactions.PaymentFilter;
 import nl.strohalm.cyclos.entities.accounts.transactions.TransferType;
 import nl.strohalm.cyclos.utils.StringValuedEnum;
 
+import javax.persistence.Cacheable;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.Inheritance;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import java.util.Collection;
+
 /**
  * Represents an account type
  * @author luis
  */
+@Inheritance
+@Cacheable
+@DiscriminatorColumn(name = "subclass", length = 1)
+@Table(name = "account_types")
+@javax.persistence.Entity
 public abstract class AccountType extends Entity implements Comparable<AccountType> {
 
     public static enum LimitType {
@@ -71,14 +85,29 @@ public abstract class AccountType extends Entity implements Comparable<AccountTy
 
     private static final long         serialVersionUID = -3362966482758151026L;
 
+    @Column(name = "description", columnDefinition = "text")
     private String                    description;
-    private String                    name;
-    private Currency                  currency;
-    private Collection<TransferType>  fromTransferTypes;
-    private Collection<TransferType>  toTransferTypes;
-    private Collection<PaymentFilter> paymentFilters;
 
-    @Override
+    @Column(name = "name", nullable = false, length = 100)
+    private String                    name;
+
+    @ManyToOne
+    @JoinColumn(name = "currency_id", nullable = false)
+	private Currency                  currency;
+
+    @OneToMany(mappedBy = "to", cascade = CascadeType.REMOVE)
+	private Collection<TransferType>  fromTransferTypes;
+
+    @OneToMany(mappedBy = "from", cascade = CascadeType.REMOVE)
+	private Collection<TransferType>  toTransferTypes;
+
+    @OneToMany(mappedBy = "accountType", cascade = CascadeType.REMOVE)
+	private Collection<PaymentFilter> paymentFilters;
+
+    protected AccountType() {
+	}
+
+	@Override
     public int compareTo(final AccountType o) {
         final int compareByName = name.compareTo(o.name);
         final int compareById = getId().compareTo(o.getId());

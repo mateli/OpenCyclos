@@ -27,7 +27,7 @@ import nl.strohalm.cyclos.entities.accounts.transactions.PaymentFilter;
 import nl.strohalm.cyclos.entities.accounts.transactions.TransferType;
 import nl.strohalm.cyclos.entities.reports.StatisticalNumber;
 import nl.strohalm.cyclos.utils.NamedPeriod;
-import nl.strohalm.cyclos.utils.Period;
+import nl.strohalm.cyclos.entities.utils.Period;
 
 /**
  * Takes care of the calculations for finance statistics for a single period.

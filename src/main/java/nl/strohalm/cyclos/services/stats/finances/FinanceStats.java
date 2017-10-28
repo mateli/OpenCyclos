@@ -31,7 +31,7 @@ import nl.strohalm.cyclos.entities.accounts.transactions.TransferQuery;
 import nl.strohalm.cyclos.entities.accounts.transactions.TransferType;
 import nl.strohalm.cyclos.entities.reports.StatisticalDTO;
 import nl.strohalm.cyclos.entities.reports.StatisticalNumber;
-import nl.strohalm.cyclos.utils.Period;
+import nl.strohalm.cyclos.entities.utils.Period;
 
 /**
  * takes care of the calculations for finance stats for one single point (bar or section) in the graphs/tables. Should be subclassed for specific sets
