@@ -8,8 +8,8 @@ buildscript {
 
     dependencies {
         classpath 'com.bmuschko:gradle-tomcat-plugin:2.2.2'
-        classpath 'de.undercouch:gradle-download-task:3.0.0'
-	classpath 'com.github.ben-manes:gradle-versions-plugin:+'
+        classpath 'de.undercouch:gradle-download-task:3.1.0'
+	    classpath 'com.github.ben-manes:gradle-versions-plugin:+'
     }
 }
 
@@ -21,7 +21,7 @@ apply plugin: 'war'
 apply plugin: 'com.bmuschko.tomcat'
 apply plugin: 'de.undercouch.download'
 
-//sourceCompatibility = 1.7 // Cyclos refuses to compile in Java 8
+sourceCompatibility = 1.8
 
 repositories {
     jcenter()
@@ -29,7 +29,7 @@ repositories {
         dirs 'libs'
     }
     maven {
-       url 'http://repository.pentaho.org/artifactory/repo/'
+       url 'http://52north.org/maven/repo/releases/'
     }
 }
 
@@ -39,16 +39,16 @@ configurations {
 
 dependencies {
     // I copied the versions from the jar file names in the Cyclos lib folder.
-    
+
     // Antlr
     // http://mvnrepository.com/artifact/antlr/antlr
     //compile group: 'antlr', name: 'antlr', version: '2.7.7'
     compile group: 'org.antlr', name: 'antlr4-runtime', version: '4.5.3'
-    
+
     // AOP Alliance
     // http://mvnrepository.com/artifact/aopalliance/aopalliance
     compile group: 'aopalliance', name: 'aopalliance', version: '1.0'
-    
+
     // Apache
     // Commons
     // http://mvnrepository.com/artifact/commons-beanutils/commons-beanutils
@@ -78,8 +78,8 @@ dependencies {
     // http://mvnrepository.com/artifact/org.apache.ws.xmlschema/xmlschema-core
     compile group: 'org.apache.ws.xmlschema', name: 'xmlschema-core', version: '2.2.1'
     // CXF
-// https://mvnrepository.com/artifact/org.apache.cxf/cxf-bundle-compatible
-compile group: 'org.apache.cxf', name: 'cxf-bundle-compatible', version: '3.1.6'
+    // https://mvnrepository.com/artifact/org.apache.cxf/cxf-bundle-compatible
+    compile group: 'org.apache.cxf', name: 'cxf-bundle-compatible', version: '3.1.6'
     // Log4j
     // http://mvnrepository.com/artifact/log4j/log4j
     //compile group: 'log4j', name: 'log4j', version: '1.2.13'
@@ -117,25 +117,25 @@ compile group: 'org.apache.cxf', name: 'cxf-bundle-compatible', version: '3.1.6'
     // XML Commons
     // http://mvnrepository.com/artifact/xml-resolver/xml-resolver
     compile group: 'xml-resolver', name: 'xml-resolver', version: '1.2'
-    
+
     // ASM (2.2.2 of util was not available, so I used 2.2.3)
     // http://mvnrepository.com/artifact/asm/asm
     compile group: 'asm', name: 'asm', version: '3.3.1'
     // http://mvnrepository.com/artifact/asm/asm-commons
-    compile group: 'asm', name: 'asm-commons', version: '4.1'
+    compile group: 'org.ow2.asm', name: 'asm-commons', version: '4.1'
     // http://mvnrepository.com/artifact/asm/asm-util
     compile group: 'asm', name: 'asm-util', version: '3.3.1'
-    
+
     // AspectJ compile (the jar file did not have a version, so I used the latest)
     // http://mvnrepository.com/artifact/org.aspectj/aspectjrt
     compile group: 'org.aspectj', name: 'aspectjrt', version: '1.8.9'
     // http://mvnrepository.com/artifact/org.aspectj/aspectjweaver
     compile group: 'org.aspectj', name: 'aspectjweaver', version: '1.8.9'
-    
+
     // Avalon Framework
     // http://mvnrepository.com/artifact/avalon-framework/avalon-framework
     compile group: 'avalon-framework', name: 'avalon-framework', version: '4.1.5'
-    
+
     // Batik
     // http://mvnrepository.com/artifact/org.apache.xmlgraphics/batik-awt-util
     compile group: 'org.apache.xmlgraphics', name: 'batik-awt-util', version: '1.8'
@@ -147,47 +147,50 @@ compile group: 'org.apache.cxf', name: 'cxf-bundle-compatible', version: '3.1.6'
     compile group: 'org.apache.xmlgraphics', name: 'batik-util', version: '1.8'
     // http://mvnrepository.com/artifact/org.apache.xmlgraphics/batik-xml
     compile group: 'org.apache.xmlgraphics', name: 'batik-xml', version: '1.8'
-    
+
     // C3P0
     // http://mvnrepository.com/artifact/com.mchange/c3p0
     compile group: 'com.mchange', name: 'c3p0', version: '0.9.5.2'
-    
+
     // Cewolf
     // http://mvnrepository.com/artifact/cewolf/cewolf
-    compile group: 'cewolf', name: 'cewolf', version: '1.0'
-    
+    compile(group: 'cewolf', name: 'cewolf', version: '1.0') {
+        exclude group: 'crimson', module: 'crimson'
+        exclude group: 'gnujaxp', module: 'gnujaxp'
+    }
+
     // Cglib
     // http://mvnrepository.com/artifact/cglib/cglib-nodep
     compile group: 'cglib', name: 'cglib-nodep', version: '3.2.2'
-    
+
     // Concurrent
     // http://mvnrepository.com/artifact/concurrent/concurrent
     compile group: 'concurrent', name: 'concurrent', version: '1.3.4'
-    
+
     // Dom4j
     // http://mvnrepository.com/artifact/dom4j/dom4j
     compile group: 'dom4j', name: 'dom4j', version: '1.6.1'
-    
+
     // Ehcache
     // http://mvnrepository.com/artifact/net.sf.ehcache/ehcache-core
     compile group: 'net.sf.ehcache', name: 'ehcache-core', version: '2.6.11'
-    
+
     // Fastinfoset
     // http://mvnrepository.com/artifact/com.sun.xml.fastinfoset/FastInfoset
     compile group: 'com.sun.xml.fastinfoset', name: 'FastInfoset', version: '1.2.13'
-    
+
     // Hazelcast
     // http://mvnrepository.com/artifact/com.hazelcast/hazelcast-all
     compile group: 'com.hazelcast', name: 'hazelcast-all', version: '3.6.3'
-    
+
     // Hibernate
     // http://mvnrepository.com/artifact/org.hibernate/hibernate-core
-    compile group: 'org.hibernate', name: 'hibernate-core', version: '5.2.0.Final'
+    compile group: 'org.hibernate', name: 'hibernate-core', version: '5.2.1.Final'
     // http://mvnrepository.com/artifact/org.hibernate.javax.persistence/hibernate-jpa-2.1-api
     compile group: 'org.hibernate.javax.persistence', name: 'hibernate-jpa-2.1-api', version: '1.0.0.Final'
     // http://mvnrepository.com/artifact/org.hibernate/hibernate-c3p0
-    compile group: 'org.hibernate', name: 'hibernate-c3p0', version: '5.2.0.Final'
-    
+    compile group: 'org.hibernate', name: 'hibernate-c3p0', version: '5.2.1.Final'
+
     //// Jackson (An -all jar is in the lib directory, but Maven doesn't have one.)
     //// http://mvnrepository.com/artifact/org.codehaus.jackson/jackson-core-asl
     //compile group: 'org.codehaus.jackson', name: 'jackson-core-asl', version: '1.9.6'
@@ -197,11 +200,11 @@ compile group: 'org.apache.cxf', name: 'cxf-bundle-compatible', version: '3.1.6'
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.7.4'
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.7.4'
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.7.4'
-    
+
     // JAMA
     // http://mvnrepository.com/artifact/gov.nist.math/jama
     compile group: 'gov.nist.math', name: 'jama', version: '1.0.3'
-    
+
     // Java Extensions
     // http://mvnrepository.com/artifact/javax.activation/activation
     compile group: 'javax.activation', name: 'activation', version: '1.1.1'
@@ -211,29 +214,31 @@ compile group: 'org.apache.cxf', name: 'cxf-bundle-compatible', version: '3.1.6'
     compile group: 'javax.mail', name: 'javax.mail-api', version: '1.5.5'
     // http://mvnrepository.com/artifact/javax.servlet.jsp/javax.servlet.jsp-api
     providedCompile group: 'javax.servlet.jsp', name: 'javax.servlet.jsp-api', version: '2.3.1' // Not in the Cyclos lib directory, but required to be compiled.
-    
+
     // Javassist
     // https://mvnrepository.com/artifact/org.javassist/javassist
 compile group: 'org.javassist', name: 'javassist', version: '3.20.0-GA'
 
-    
+
     // JavaStat
     compile name: 'javastat' // Sorry, I couldn't find JavaStat on Maven Central or jCenter. I grabbed the jar from Cyclos' lib directory.
-    
+
     // JFree
     // http://mvnrepository.com/artifact/jfree/jcommon
     compile group: 'org.jfree', name: 'jcommon', version: '1.0.23'
     // http://mvnrepository.com/artifact/jfreechart/jfreechart
     compile group: 'org.jfree', name: 'jfreechart', version: '1.0.19'
-    
+
     // JSci
     // http://mvnrepository.com/artifact/net.sf.jsci/jsci
-    compile group: 'net.sf.jsci', name: 'jsci', version: '1.2'
-    
+    compile(group: 'net.sf.jsci', name: 'jsci', version: '1.2') {
+        exclude group: 'xerces', module: 'xercesImpl'
+    }
+
     // JSON.simple
     // http://mvnrepository.com/artifact/com.googlecode.json-simple/json-simple
     compile group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1'
-    
+
     // Jstl
     // https://mvnrepository.com/artifact/javax.servlet.jsp.jstl/javax.servlet.jsp.jstl-api
     compile group: 'javax.servlet.jsp.jstl', name: 'javax.servlet.jsp.jstl-api', version: '1.2.1'
@@ -241,29 +246,30 @@ compile group: 'org.javassist', name: 'javassist', version: '3.20.0-GA'
     // JTidy
     // http://mvnrepository.com/artifact/net.sf.jtidy/jtidy
     compile group: 'net.sf.jtidy', name: 'jtidy', version: 'r938'
-    
+
     // Kaptcha
     compile name: 'kaptcha', version: '2.3' // Sorry, I couldn't find Kaptcha on Maven Central or jCenter. I grabbed the jar from Cyclos' lib directory.
-    
+
     // Logkit
     // http://mvnrepository.com/artifact/logkit/logkit
     //compile group: 'logkit', name: 'logkit', version: '1.0.1'
 
     compile group: 'org.apache.avalon.logkit', name: 'avalon-logkit', version: '2.2.1'
-    
+
     // MySQL Connector/J
     // http://mvnrepository.com/artifact/mysql/mysql-connector-java
     compile group: 'mysql', name: 'mysql-connector-java', version: '6.0.2'
-    
+
     // Mariadb Client
     // http://mvnrepository.com/artifact/org.mariadb.jdbc/mariadb-java-client
-    compile group: 'org.mariadb.jdbc', name: 'mariadb-java-client', version: '1.4.5'
-    
+    runtimeClasspath group: 'org.mariadb.jdbc', name: 'mariadb-java-client', version: '1.4.5'
+
+    // https://mvnrepository.com/artifact/com.h2database/h2
+    runtimeClasspath group: 'com.h2database', name: 'h2', version: '1.4.196'
+
     // Spring
     // http://mvnrepository.com/artifact/org.springframework/spring-aop
     compile group: 'org.springframework', name: 'spring-aop', version: '4.3.2.RELEASE'
-    // http://mvnrepository.com/artifact/org.springframework/spring-asm
-    compile group: 'org.springframework', name: 'spring-asm', version: '3.1.4.RELEASE'
     // http://mvnrepository.com/artifact/org.springframework/spring-beans
     compile group: 'org.springframework', name: 'spring-beans', version: '4.3.2.RELEASE'
     // http://mvnrepository.com/artifact/org.springframework/spring-context-support
@@ -290,13 +296,13 @@ compile group: 'org.javassist', name: 'javassist', version: '3.20.0-GA'
     compile group: 'org.springframework.security', name: 'spring-security-core', version: '4.1.0.RELEASE'
     // http://mvnrepository.com/artifact/org.springframework.security/spring-security-web
     compile group: 'org.springframework.security', name: 'spring-security-web', version: '4.1.0.RELEASE'
-    
+
     // PJA Toolkit
     compile name: 'pjatools' // Sorry, I couldn't find the PJA Toolkit on Maven Central or jCenter. I grabbed the jar from Cyclos' lib directory.
-    
+
     // Poor Man's Imaging Wrapper
     compile name: 'pmiw' // Sorry, I couldn't find the Poor Man's Imaging Wrapper on Maven Central or jCenter. This is the only artifact I could find.
-    
+
     // SLF4J (I used 1.6 because Gradle wasn't happy with 1.5.6.)
     // http://mvnrepository.com/artifact/org.slf4j/slf4j-api
     compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.21'
@@ -305,14 +311,14 @@ compile group: 'org.javassist', name: 'javassist', version: '3.20.0-GA'
 
     // SSLExt (the jar file did not have a version, and all the ones on Maven Central and jCenter are broken, so I just used the jar from Cyclos' lib directory.)
     compile name: 'sslext'
-    
+
     // Standard
     // http://mvnrepository.com/artifact/org.apache.taglibs/taglibs-standard-impl
     compile group: 'org.apache.taglibs', name: 'taglibs-standard-impl', version: '1.2.5'
-    
+
     // "toggletag.jar" (I couldn't find anything on this JAR's existance online, so I just grabbed the jar from Cyclos' lib directory)
     compile name: 'toggletag'
-    
+
     // WSDL4J
     // http://mvnrepository.com/artifact/wsdl4j/wsdl4j
     compile group: 'wsdl4j', name: 'wsdl4j', version: '1.6.3'
@@ -321,8 +327,6 @@ compile group: 'org.javassist', name: 'javassist', version: '3.20.0-GA'
        "org.apache.tomcat.embed:tomcat-embed-logging-juli:8.0.36",
        "org.apache.tomcat.embed:tomcat-embed-jasper:8.0.36"
 
-    // Xerces, not sure why this is required but it is
-    //compile group: 'xerces', name: 'xercesImpl', version: '2.11.0'
 }
 
 war {
