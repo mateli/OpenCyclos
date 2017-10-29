@@ -19,6 +19,15 @@
  */
 package nl.strohalm.cyclos.utils;
 
+import nl.strohalm.cyclos.entities.Entity;
+import nl.strohalm.cyclos.entities.EntityReference;
+import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.IteratorUtils;
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.time.DateUtils;
+
+import javax.persistence.Persistence;
 import java.beans.PropertyDescriptor;
 import java.math.BigDecimal;
 import java.text.DateFormat;
@@ -35,16 +44,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-
-import nl.strohalm.cyclos.entities.Entity;
-import nl.strohalm.cyclos.entities.EntityReference;
-
-import org.apache.commons.beanutils.PropertyUtils;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.IteratorUtils;
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.time.DateUtils;
-import org.hibernate.Hibernate;
 
 /**
  * Helper class used to format general objects
@@ -113,7 +112,7 @@ public class FormatObject {
             } else if (object instanceof Collection<?> || object instanceof Map<?, ?> || object.getClass().isArray()) {
                 if (object instanceof Iterator<?>) {
                     return "<iterator>";
-                } else if (Hibernate.isInitialized(object)) {
+                } else if (Persistence.getPersistenceUtil().isLoaded(object)) {
                     Iterator<?> iterator;
                     if (object instanceof Map<?, ?>) {
                         iterator = ((Map<?, ?>) object).entrySet().iterator();
@@ -137,7 +136,7 @@ public class FormatObject {
                 return "".equals("object") ? emptyValue : (String) object;
             } else if (object instanceof Boolean) {
                 return object.toString();
-            } else if ((object instanceof Entity) && (object instanceof EntityReference) || !Hibernate.isInitialized(object)) {
+            } else if ((object instanceof Entity) && (object instanceof EntityReference) || !Persistence.getPersistenceUtil().isLoaded(object)) {
                 return ClassHelper.getClassName(EntityHelper.getRealClass((Entity) object)) + '#' + ((Entity) object).getId();
             } else {
                 return object.toString();

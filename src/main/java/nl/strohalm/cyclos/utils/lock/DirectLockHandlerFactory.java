@@ -28,7 +28,6 @@ import nl.strohalm.cyclos.utils.ExceptionHelper;
 import nl.strohalm.cyclos.utils.transaction.CurrentTransactionData;
 import nl.strohalm.cyclos.utils.transaction.TransactionRollbackListener;
 import org.apache.commons.lang.ArrayUtils;
-import org.hibernate.JDBCException;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 import org.springframework.transaction.support.TransactionTemplate;
@@ -65,7 +64,7 @@ public class DirectLockHandlerFactory extends BaseLockHandlerFactory {
                         .setLockMode(LockModeType.PESSIMISTIC_WRITE)
                         .setParameter("ids", ids)
                         .executeUpdate();
-            } catch (JDBCException e) {
+            } catch (RuntimeException e) {
                 handleException(e);
             }
         }
@@ -99,7 +98,7 @@ public class DirectLockHandlerFactory extends BaseLockHandlerFactory {
                     });
                     throw new LockingException("First time this member sms status. Please, retry.");
                 }
-            } catch (JDBCException e) {
+            } catch (RuntimeException e) {
                 handleException(e);
             }
         }
@@ -109,7 +108,7 @@ public class DirectLockHandlerFactory extends BaseLockHandlerFactory {
             // Nothing to do, as when the current transaction ends, all locks will be released
         }
 
-        private void handleException(final JDBCException e) {
+        private void handleException(final RuntimeException e) {
             if (ExceptionHelper.isLockingException(e)) {
                 throw new LockingException(e);
             }

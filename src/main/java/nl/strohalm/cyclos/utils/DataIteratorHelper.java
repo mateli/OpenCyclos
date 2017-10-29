@@ -20,7 +20,6 @@
 package nl.strohalm.cyclos.utils;
 
 import nl.strohalm.cyclos.utils.query.IteratorList;
-import org.hibernate.Hibernate;
 
 import java.io.Closeable;
 import java.util.HashMap;
@@ -34,7 +33,6 @@ import java.util.Map;
  * @author luis
  */
 @Deprecated
-// FIXME: MIG_JPA
 public class DataIteratorHelper {
 
     private static final ThreadLocal<Map<Iterator<?>, Boolean>> OPEN_ITERATORS = new ThreadLocal<Map<Iterator<?>, Boolean>>();
@@ -117,13 +115,6 @@ public class DataIteratorHelper {
             final Closeable closeable = (Closeable) iterator;
             try {
                 closeable.close();
-            } catch (final Exception e) {
-                // Silently ignore
-            }
-        } else {
-            // Close the iterator with Hibernate
-            try {
-                Hibernate.close(iterator);
             } catch (final Exception e) {
                 // Silently ignore
             }

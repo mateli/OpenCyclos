@@ -36,7 +36,7 @@ import nl.strohalm.cyclos.entities.members.records.MemberRecordType;
 import nl.strohalm.cyclos.utils.DataIteratorHelper;
 import nl.strohalm.cyclos.utils.jpa.JpaQueryHelper;
 import nl.strohalm.cyclos.utils.query.QueryParameters.ResultType;
-import org.hibernate.annotations.common.util.StringHelper;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -133,7 +133,7 @@ public class CustomFieldDAOImpl extends BaseDAOImpl<CustomField> implements Cust
     @Override
     public PaymentCustomField loadPaymentFieldByInternalName(final String internalName, final Relationship[] fetch) {
         PaymentCustomField field = null;
-        if (StringHelper.isNotEmpty(internalName)) {
+        if (StringUtils.isNotEmpty(internalName)) {
             Map<String, Object> params = new HashMap<String, Object>();
             StringBuilder hql = JpaQueryHelper.getInitialQuery(PaymentCustomField.class, "f", Arrays.asList(fetch));
             JpaQueryHelper.addParameterToQuery(hql, params, "name", internalName);

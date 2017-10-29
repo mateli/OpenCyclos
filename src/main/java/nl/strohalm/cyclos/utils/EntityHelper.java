@@ -44,7 +44,6 @@ import nl.strohalm.cyclos.entities.EntityReference;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
-import org.hibernate.proxy.HibernateProxy;
 
 /**
  * Helper class for entities
@@ -89,10 +88,19 @@ public class EntityHelper {
     @SuppressWarnings("unchecked")
     public static Class<? extends Entity> getRealClass(final Entity entity) {
         final Class<? extends Entity> type = entity.getClass();
-        // FIXME: JPA_MIG - test if class is an instance of HibernateProxy without depending on it at compile time
-        if ((entity instanceof EntityReference) || (entity instanceof HibernateProxy)) {
+        if (entity instanceof EntityReference) {
             return (Class<? extends Entity>) type.getSuperclass();
         }
+
+        try {
+            Class<?> hibernateProxyClass = Class.forName("org.hibernate.proxy.HibernateProxy");
+            if (type.isAssignableFrom(hibernateProxyClass)) {
+                return (Class<? extends Entity>) type.getSuperclass();
+            }
+        } catch (ClassNotFoundException e) {
+            // Silently ignore: Not using Hibernate JPA provider
+        }
+
         return type;
     }
 
