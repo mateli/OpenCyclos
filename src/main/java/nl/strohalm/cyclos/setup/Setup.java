@@ -66,7 +66,6 @@ public class Setup {
      * The external entry point
      */
     public static void main(final String... args) throws IOException {
-        DataBaseConfiguration.SKIP = true;
         Locale locale = resolveLocale();
         final Setup setup = Arguments.buildSetupFromArguments(locale, args);
         setup.locale = locale;
@@ -125,7 +124,7 @@ public class Setup {
             throw new IllegalStateException("Persistence not configured");
         }
         // Execute the actions
-        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        entityManager = entityManagerFactory.createEntityManager();
         entityManager.getTransaction().begin();
         try {
             if (createDataBase) {

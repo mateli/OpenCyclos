@@ -602,7 +602,7 @@ public class CreateInitialData implements Runnable {
         entityManager.persist(account);
 
         // Save the account lock
-        entityManager.persist(new AccountLock(account));
+        entityManager.merge(new AccountLock(account));
 
         type.setAccount(account);
         return account;

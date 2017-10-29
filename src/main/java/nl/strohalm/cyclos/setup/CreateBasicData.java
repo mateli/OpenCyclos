@@ -302,13 +302,16 @@ public class CreateBasicData implements Runnable {
     static void createSetting(final EntityManager entityManager, final Setting.Type type, final String name, final String value) {
         final String newValue = StringUtils.trimToEmpty(value);
 
-        Setting setting = (Setting) entityManager.createQuery("from Setting s where s.type=:type and s.name=:name").setParameter("type", type).setParameter("name", name).getSingleResult();
+        List<Setting> settings = entityManager.createQuery("from Setting s where s.type=:type and s.name=:name", Setting.class)
+                .setParameter("type", type).setParameter("name", name).getResultList();
 
-        if (setting == null) {
+        Setting setting;
+        if (settings.isEmpty()) {
             setting = new Setting();
             setting.setType(type);
             setting.setName(name);
         } else {
+            setting = settings.iterator().next();
             if (StringUtils.isNotEmpty(setting.getValue())) {
                 // Already contains a value
                 return;
@@ -347,7 +350,7 @@ public class CreateBasicData implements Runnable {
     @Override
     public void run() {
         // Check if the basic data is already there
-        if (entityManager.createQuery("select a from Application", Application.class).getSingleResult() != null) {
+        if (!entityManager.createQuery("from Application", Application.class).getResultList().isEmpty()) {
             Setup.out.println(bundle.getString("basic-data.error.already"));
             return;
         }
