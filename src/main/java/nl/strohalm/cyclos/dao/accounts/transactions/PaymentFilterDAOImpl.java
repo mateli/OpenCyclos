@@ -36,7 +36,7 @@ import nl.strohalm.cyclos.entities.accounts.SystemAccountType;
 import nl.strohalm.cyclos.entities.accounts.transactions.PaymentFilter;
 import nl.strohalm.cyclos.entities.accounts.transactions.PaymentFilterQuery;
 import nl.strohalm.cyclos.entities.members.Element;
-import nl.strohalm.cyclos.utils.hibernate.HibernateHelper;
+import nl.strohalm.cyclos.utils.jpa.JpaQueryHelper;
 
 import org.apache.commons.collections.CollectionUtils;
 
@@ -53,9 +53,9 @@ public class PaymentFilterDAOImpl extends BaseDAOImpl<PaymentFilter> implements 
     public List<PaymentFilter> search(final PaymentFilterQuery query) {
         final Map<String, Object> namedParameters = new HashMap<String, Object>();
         final Set<Relationship> fetch = query.getFetch();
-        final StringBuilder hql = HibernateHelper.getInitialQuery(getEntityType(), "pf", fetch);
-        HibernateHelper.addLikeParameterToQuery(hql, namedParameters, "pf.description", query.getDescription());
-        HibernateHelper.addLikeParameterToQuery(hql, namedParameters, "pf.name", query.getName());
+        final StringBuilder hql = JpaQueryHelper.getInitialQuery(getEntityType(), "pf", fetch);
+        JpaQueryHelper.addLikeParameterToQuery(hql, namedParameters, "pf.description", query.getDescription());
+        JpaQueryHelper.addLikeParameterToQuery(hql, namedParameters, "pf.name", query.getName());
 
         // Account or account types
         Collection<AccountType> accountTypes = query.getAccountTypes();
@@ -64,7 +64,7 @@ public class PaymentFilterDAOImpl extends BaseDAOImpl<PaymentFilter> implements 
             final AccountType at = getFetchDao().fetch(ac, Account.Relationships.TYPE).getType();
             accountTypes = Collections.singletonList(at);
         }
-        HibernateHelper.addInParameterToQuery(hql, namedParameters, "pf.accountType", accountTypes);
+        JpaQueryHelper.addInParameterToQuery(hql, namedParameters, "pf.accountType", accountTypes);
 
         // Context
         if (query.getContext() == PaymentFilterQuery.Context.ACCOUNT_HISTORY) {
@@ -94,7 +94,7 @@ public class PaymentFilterDAOImpl extends BaseDAOImpl<PaymentFilter> implements 
             }
             hql.append(" and exists (select 1 from ").append(clazz.getName()).append(" nat where nat = pf.accountType) ");
         }
-        HibernateHelper.appendOrder(hql, "pf.accountType.name", "pf.name");
+        JpaQueryHelper.appendOrder(hql, "pf.accountType.name", "pf.name");
         return list(query, hql.toString(), namedParameters);
     }
 

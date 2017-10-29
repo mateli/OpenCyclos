@@ -29,7 +29,7 @@ import nl.strohalm.cyclos.entities.exceptions.DaoException;
 import nl.strohalm.cyclos.entities.members.Member;
 import nl.strohalm.cyclos.entities.members.brokerings.DefaultBrokerCommission;
 import nl.strohalm.cyclos.entities.members.brokerings.DefaultBrokerCommissionQuery;
-import nl.strohalm.cyclos.utils.hibernate.HibernateHelper;
+import nl.strohalm.cyclos.utils.jpa.JpaQueryHelper;
 import nl.strohalm.cyclos.utils.query.QueryParameters.ResultType;
 
 /**
@@ -44,28 +44,28 @@ public class DefaultBrokerCommissionDAOImpl extends BaseDAOImpl<DefaultBrokerCom
 
     public List<DefaultBrokerCommission> load(final Member broker, final Relationship... fetch) throws DaoException {
         final Map<String, Object> namedParameters = new HashMap<String, Object>();
-        final StringBuilder hql = HibernateHelper.getInitialQuery(getEntityType(), "dbc");
-        HibernateHelper.addParameterToQuery(hql, namedParameters, "dbc.broker", broker);
-        HibernateHelper.appendOrder(hql, "dbc.brokerCommission.name");
+        final StringBuilder hql = JpaQueryHelper.getInitialQuery(getEntityType(), "dbc");
+        JpaQueryHelper.addParameterToQuery(hql, namedParameters, "dbc.broker", broker);
+        JpaQueryHelper.appendOrder(hql, "dbc.brokerCommission.name");
         return list(ResultType.LIST, hql.toString(), namedParameters, null, fetch);
     }
 
     public List<DefaultBrokerCommission> search(final DefaultBrokerCommissionQuery query) {
-        final StringBuilder hql = HibernateHelper.getInitialQuery(getEntityType(), "dbc", query.getFetch());
+        final StringBuilder hql = JpaQueryHelper.getInitialQuery(getEntityType(), "dbc", query.getFetch());
         final Map<String, Object> namedParameters = new HashMap<String, Object>();
 
         // Broker
-        HibernateHelper.addParameterToQuery(hql, namedParameters, "dbc.broker", query.getBroker());
+        JpaQueryHelper.addParameterToQuery(hql, namedParameters, "dbc.broker", query.getBroker());
 
         // Broker commission
-        HibernateHelper.addParameterToQuery(hql, namedParameters, "dbc.brokerCommission", query.getBrokerCommission());
+        JpaQueryHelper.addParameterToQuery(hql, namedParameters, "dbc.brokerCommission", query.getBrokerCommission());
 
         // Set by broker
         if (query.isSetByBroker()) {
             hql.append(" and dbc.setByBroker = true ");
         }
 
-        HibernateHelper.appendOrder(hql, "dbc.brokerCommission.name");
+        JpaQueryHelper.appendOrder(hql, "dbc.brokerCommission.name");
         return list(query, hql.toString(), namedParameters);
     }
 }

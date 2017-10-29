@@ -36,7 +36,7 @@ import nl.strohalm.cyclos.entities.groups.GroupQuery;
 import nl.strohalm.cyclos.entities.members.records.MemberRecordType;
 import nl.strohalm.cyclos.entities.members.records.MemberRecordTypeQuery;
 import nl.strohalm.cyclos.utils.EntityHelper;
-import nl.strohalm.cyclos.utils.hibernate.HibernateHelper;
+import nl.strohalm.cyclos.utils.jpa.JpaQueryHelper;
 
 import org.apache.commons.collections.CollectionUtils;
 
@@ -103,7 +103,7 @@ public class MemberRecordTypeDAOImpl extends BaseDAOImpl<MemberRecordType> imple
     @Override
     public List<MemberRecordType> search(final MemberRecordTypeQuery query) throws DaoException {
         final Map<String, Object> namedParameters = new HashMap<String, Object>();
-        final StringBuilder hql = HibernateHelper.getInitialQuery(getEntityType(), "mrt", query.getFetch());
+        final StringBuilder hql = JpaQueryHelper.getInitialQuery(getEntityType(), "mrt", query.getFetch());
         if (query.getGroups() != null) {
             if (CollectionUtils.isNotEmpty(query.getGroups())) {
                 List<Long> groupIds = Arrays.asList(EntityHelper.toIds(query.getGroups()));

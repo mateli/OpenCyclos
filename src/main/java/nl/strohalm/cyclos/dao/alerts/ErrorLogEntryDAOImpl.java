@@ -28,7 +28,7 @@ import java.util.Map;
 import nl.strohalm.cyclos.dao.BaseDAOImpl;
 import nl.strohalm.cyclos.entities.alerts.ErrorLogEntry;
 import nl.strohalm.cyclos.entities.alerts.ErrorLogEntryQuery;
-import nl.strohalm.cyclos.utils.hibernate.HibernateHelper;
+import nl.strohalm.cyclos.utils.jpa.JpaQueryHelper;
 
 /**
  * Implementation for error log entry DAO
@@ -59,12 +59,12 @@ public class ErrorLogEntryDAOImpl extends BaseDAOImpl<ErrorLogEntry> implements 
 
     public List<ErrorLogEntry> search(final ErrorLogEntryQuery query) {
         final Map<String, Object> namedParameters = new HashMap<String, Object>();
-        final StringBuilder hql = HibernateHelper.getInitialQuery(getEntityType(), "e", query.getFetch());
-        HibernateHelper.addPeriodParameterToQuery(hql, namedParameters, "e.date", query.getPeriod());
+        final StringBuilder hql = JpaQueryHelper.getInitialQuery(getEntityType(), "e", query.getFetch());
+        JpaQueryHelper.addPeriodParameterToQuery(hql, namedParameters, "e.date", query.getPeriod());
         if (!query.isShowRemoved()) {
             hql.append(" and e.removed = false ");
         }
-        HibernateHelper.appendOrder(hql, "e.date desc");
+        JpaQueryHelper.appendOrder(hql, "e.date desc");
         return list(query, hql.toString(), namedParameters);
     }
 }

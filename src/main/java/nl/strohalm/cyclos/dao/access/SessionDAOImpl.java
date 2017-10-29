@@ -19,15 +19,6 @@
  */
 package nl.strohalm.cyclos.dao.access;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
 import nl.strohalm.cyclos.dao.BaseDAOImpl;
 import nl.strohalm.cyclos.entities.access.Session;
 import nl.strohalm.cyclos.entities.access.SessionQuery;
@@ -36,12 +27,20 @@ import nl.strohalm.cyclos.entities.exceptions.EntityNotFoundException;
 import nl.strohalm.cyclos.entities.groups.Group;
 import nl.strohalm.cyclos.entities.groups.Group.Nature;
 import nl.strohalm.cyclos.utils.IteratorListImpl;
-import nl.strohalm.cyclos.utils.hibernate.HibernateHelper;
+import nl.strohalm.cyclos.utils.jpa.JpaQueryHelper;
 import nl.strohalm.cyclos.utils.query.IteratorList;
 import nl.strohalm.cyclos.utils.query.PageParameters;
 import nl.strohalm.cyclos.utils.query.QueryParameters.ResultType;
-
 import org.apache.commons.collections.CollectionUtils;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 /**
  * DAO interface for {@link Session}
@@ -115,7 +114,7 @@ public class SessionDAOImpl extends BaseDAOImpl<Session> implements SessionDAO {
             for (Nature nature : natures) {
                 values.add(nature.getDiscriminator());
             }
-            HibernateHelper.addInParameterToQuery(hql, params, "s.user.element.group.class", values);
+            JpaQueryHelper.addInParameterToQuery(hql, params, "s.user.element.group.class", values);
         }
 
         // Apply the filter by group, which has a distinct semantic on operators
@@ -131,7 +130,7 @@ public class SessionDAOImpl extends BaseDAOImpl<Session> implements SessionDAO {
             params.put("groups", query.getGroups());
         } else {
             // Group filter will apply directly
-            HibernateHelper.addInParameterToQuery(hql, params, "s.user.element.group", query.getGroups());
+            JpaQueryHelper.addInParameterToQuery(hql, params, "s.user.element.group", query.getGroups());
         }
 
         // Filter by operator member
@@ -144,7 +143,7 @@ public class SessionDAOImpl extends BaseDAOImpl<Session> implements SessionDAO {
             hql.append(")");
             params.put("member", query.getMember());
         }
-        HibernateHelper.appendOrder(hql, "s.user.element.name");
+        JpaQueryHelper.appendOrder(hql, "s.user.element.name");
         return list(query, hql.toString(), params);
     }
 

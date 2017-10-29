@@ -35,7 +35,7 @@ import nl.strohalm.cyclos.entities.groups.Group;
 import nl.strohalm.cyclos.entities.groups.GroupFilter;
 import nl.strohalm.cyclos.entities.groups.GroupFilterQuery;
 import nl.strohalm.cyclos.entities.groups.MemberGroup;
-import nl.strohalm.cyclos.utils.hibernate.HibernateHelper;
+import nl.strohalm.cyclos.utils.jpa.JpaQueryHelper;
 
 import org.apache.commons.collections.CollectionUtils;
 
@@ -56,9 +56,9 @@ public class GroupFilterDAOImpl extends BaseDAOImpl<GroupFilter> implements Grou
     public List<GroupFilter> search(final GroupFilterQuery query) throws DaoException {
         final Map<String, Object> namedParameters = new HashMap<String, Object>();
         final Set<Relationship> fetch = query.getFetch();
-        final StringBuilder hql = HibernateHelper.getInitialQuery(getEntityType(), "gf", fetch);
-        HibernateHelper.addLikeParameterToQuery(hql, namedParameters, "gf.description", query.getDescription());
-        HibernateHelper.addLikeParameterToQuery(hql, namedParameters, "gf.name", query.getName());
+        final StringBuilder hql = JpaQueryHelper.getInitialQuery(getEntityType(), "gf", fetch);
+        JpaQueryHelper.addLikeParameterToQuery(hql, namedParameters, "gf.description", query.getDescription());
+        JpaQueryHelper.addLikeParameterToQuery(hql, namedParameters, "gf.name", query.getName());
         if (query.getGroup() != null) {
             hql.append(" and :group in elements(gf.groups) ");
             namedParameters.put("group", query.getGroup());
@@ -75,7 +75,7 @@ public class GroupFilterDAOImpl extends BaseDAOImpl<GroupFilter> implements Grou
                 namedParameters.put("adminManagedGroups", adminManagedGroups);
             }
         }
-        HibernateHelper.appendOrder(hql, "gf.name");
+        JpaQueryHelper.appendOrder(hql, "gf.name");
         return list(query, hql.toString(), namedParameters);
     }
 

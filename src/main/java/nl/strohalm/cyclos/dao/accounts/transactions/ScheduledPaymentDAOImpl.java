@@ -37,7 +37,7 @@ import nl.strohalm.cyclos.entities.accounts.transactions.Payment;
 import nl.strohalm.cyclos.entities.accounts.transactions.ScheduledPayment;
 import nl.strohalm.cyclos.entities.accounts.transactions.ScheduledPaymentQuery;
 import nl.strohalm.cyclos.entities.members.Member;
-import nl.strohalm.cyclos.utils.hibernate.HibernateHelper;
+import nl.strohalm.cyclos.utils.jpa.JpaQueryHelper;
 
 import org.apache.commons.collections.CollectionUtils;
 
@@ -75,9 +75,9 @@ public class ScheduledPaymentDAOImpl extends BaseDAOImpl<ScheduledPayment> imple
     @Override
     public List<ScheduledPayment> search(final ScheduledPaymentQuery query) {
         final Map<String, Object> namedParameters = new HashMap<String, Object>();
-        final StringBuilder hql = HibernateHelper.getInitialQuery(ScheduledPayment.class, "sp", query.getFetch());
-        HibernateHelper.addInParameterToQuery(hql, namedParameters, "sp.status", query.getStatusList());
-        HibernateHelper.addPeriodParameterToQuery(hql, namedParameters, "sp.date", query.getPeriod());
+        final StringBuilder hql = JpaQueryHelper.getInitialQuery(ScheduledPayment.class, "sp", query.getFetch());
+        JpaQueryHelper.addInParameterToQuery(hql, namedParameters, "sp.status", query.getStatusList());
+        JpaQueryHelper.addPeriodParameterToQuery(hql, namedParameters, "sp.date", query.getPeriod());
 
         // Account owner
         List<? extends Account> ownerAccounts = new ArrayList<Account>();
@@ -120,7 +120,7 @@ public class ScheduledPaymentDAOImpl extends BaseDAOImpl<ScheduledPayment> imple
             hql.append(" and sp.showToReceiver = true");
         }
 
-        HibernateHelper.appendOrder(hql, "sp.date desc");
+        JpaQueryHelper.appendOrder(hql, "sp.date desc");
 
         return list(query, hql.toString(), namedParameters);
     }

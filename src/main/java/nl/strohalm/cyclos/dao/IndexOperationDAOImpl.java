@@ -19,13 +19,13 @@
  */
 package nl.strohalm.cyclos.dao;
 
+import nl.strohalm.cyclos.entities.IndexOperation;
+import nl.strohalm.cyclos.utils.jpa.JpaQueryHelper;
+
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-
-import nl.strohalm.cyclos.entities.IndexOperation;
-import nl.strohalm.cyclos.utils.hibernate.HibernateHelper;
 
 /**
  * Implementation for {@link IndexOperationDAO}
@@ -52,13 +52,13 @@ public class IndexOperationDAOImpl extends BaseDAOImpl<IndexOperation> implement
     @Override
     public IndexOperation next(final Calendar lastTime, final Long lastId) {
         Map<String, Object> params = new HashMap<String, Object>();
-        StringBuilder hql = HibernateHelper.getInitialQuery(entityClass, "o");
+        StringBuilder hql = JpaQueryHelper.getInitialQuery(entityClass, "o");
         if (lastTime != null && lastId != null) {
             hql.append(" and (o.date > :date or (o.date = :date and o.id > :id))");
             params.put("date", lastTime);
             params.put("id", lastId);
         }
-        HibernateHelper.appendOrder(hql, "o.date", "o.id");
+        JpaQueryHelper.appendOrder(hql, "o.date", "o.id");
         return uniqueResult(hql.toString(), params);
     }
 

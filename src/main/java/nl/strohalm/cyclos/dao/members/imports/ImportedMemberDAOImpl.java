@@ -31,7 +31,7 @@ import nl.strohalm.cyclos.entities.members.imports.ImportedMemberQuery;
 import nl.strohalm.cyclos.entities.members.imports.ImportedMemberQuery.Status;
 import nl.strohalm.cyclos.entities.members.imports.MemberImport;
 import nl.strohalm.cyclos.services.transactions.TransactionSummaryVO;
-import nl.strohalm.cyclos.utils.hibernate.HibernateHelper;
+import nl.strohalm.cyclos.utils.jpa.JpaQueryHelper;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -61,20 +61,20 @@ public class ImportedMemberDAOImpl extends BaseDAOImpl<ImportedMember> implement
             return Collections.emptyList();
         }
         final Map<String, Object> namedParameters = new HashMap<String, Object>();
-        final StringBuilder hql = HibernateHelper.getInitialQuery(getEntityType(), "m", params.getFetch());
-        HibernateHelper.addParameterToQuery(hql, namedParameters, "m.import", memberImport);
+        final StringBuilder hql = JpaQueryHelper.getInitialQuery(getEntityType(), "m", params.getFetch());
+        JpaQueryHelper.addParameterToQuery(hql, namedParameters, "m.import", memberImport);
         final Status status = params.getStatus();
         if (status != null && status != Status.ALL) {
             final String operator = status == Status.ERROR ? "<>" : "=";
-            HibernateHelper.addParameterToQueryOperator(hql, namedParameters, "m.status", operator, ImportedMember.Status.SUCCESS);
+            JpaQueryHelper.addParameterToQueryOperator(hql, namedParameters, "m.status", operator, ImportedMember.Status.SUCCESS);
         }
-        HibernateHelper.addParameterToQuery(hql, namedParameters, "m.lineNumber", params.getLineNumber());
+        JpaQueryHelper.addParameterToQuery(hql, namedParameters, "m.lineNumber", params.getLineNumber());
         final String nameOrUsername = StringUtils.trimToNull(params.getNameOrUsername());
         if (nameOrUsername != null) {
             hql.append(" and (upper(m.name) like :nameOrUsername or upper(m.username) like :nameOrUsername)");
             namedParameters.put("nameOrUsername", "%" + nameOrUsername.toUpperCase() + "%");
         }
-        HibernateHelper.appendOrder(hql, "m.lineNumber");
+        JpaQueryHelper.appendOrder(hql, "m.lineNumber");
         return list(params, hql.toString(), namedParameters);
     }
 }

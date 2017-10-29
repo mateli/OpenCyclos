@@ -27,7 +27,7 @@ import nl.strohalm.cyclos.entities.exceptions.EntityNotFoundException;
 import nl.strohalm.cyclos.entities.members.Administrator;
 import nl.strohalm.cyclos.entities.members.preferences.AdminNotificationPreference;
 import nl.strohalm.cyclos.entities.members.preferences.AdminNotificationPreferenceQuery;
-import nl.strohalm.cyclos.utils.hibernate.HibernateHelper;
+import nl.strohalm.cyclos.utils.jpa.JpaQueryHelper;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.ArrayUtils;
 
@@ -65,7 +65,7 @@ public class AdminNotificationPreferenceDAOImpl extends BaseDAOImpl<AdminNotific
         final StringBuilder hql = new StringBuilder();
         hql.append(" select a");
         hql.append(" from AdminNotificationPreference p join p.admin a where 1=1");
-        HibernateHelper.addInParameterToQuery(hql, namedParameters, "a.group", query.getAdminGroups());
+        JpaQueryHelper.addInParameterToQuery(hql, namedParameters, "a.group", query.getAdminGroups());
         if (query.isApplicationErrors()) {
             hql.append(" and p.applicationErrors = true");
         }

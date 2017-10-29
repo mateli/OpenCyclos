@@ -46,7 +46,7 @@ import nl.strohalm.cyclos.services.accounts.MemberAccountTypeQuery;
 import nl.strohalm.cyclos.services.accounts.SystemAccountTypeQuery;
 import nl.strohalm.cyclos.utils.BigDecimalHelper;
 import nl.strohalm.cyclos.utils.EntityHelper;
-import nl.strohalm.cyclos.utils.hibernate.HibernateHelper;
+import nl.strohalm.cyclos.utils.jpa.JpaQueryHelper;
 
 import org.apache.commons.lang.ArrayUtils;
 
@@ -114,10 +114,10 @@ public class AccountTypeDAOImpl extends BaseDAOImpl<AccountType> implements Acco
         final Class<? extends AccountType> entityType = (query instanceof SystemAccountTypeQuery) ? SystemAccountType.class : MemberAccountType.class;
         final Map<String, Object> namedParameters = new HashMap<String, Object>();
         final Set<Relationship> fetch = query.getFetch();
-        final StringBuilder hql = HibernateHelper.getInitialQuery(entityType, "at", fetch);
-        HibernateHelper.addLikeParameterToQuery(hql, namedParameters, "at.description", query.getDescription());
-        HibernateHelper.addLikeParameterToQuery(hql, namedParameters, "at.name", query.getName());
-        HibernateHelper.addParameterToQuery(hql, namedParameters, "at.currency", query.getCurrency());
+        final StringBuilder hql = JpaQueryHelper.getInitialQuery(entityType, "at", fetch);
+        JpaQueryHelper.addLikeParameterToQuery(hql, namedParameters, "at.description", query.getDescription());
+        JpaQueryHelper.addLikeParameterToQuery(hql, namedParameters, "at.name", query.getName());
+        JpaQueryHelper.addParameterToQuery(hql, namedParameters, "at.currency", query.getCurrency());
         // Handle nature-specific parameters
         if (query instanceof SystemAccountTypeQuery) {
             // System accounts
@@ -146,7 +146,7 @@ public class AccountTypeDAOImpl extends BaseDAOImpl<AccountType> implements Acco
                 namedParameters.put("notRelatedGroups", memberQuery.getNotRelatedToGroups());
             }
         }
-        HibernateHelper.appendOrder(hql, "at.class", "at.name");
+        JpaQueryHelper.appendOrder(hql, "at.class", "at.name");
         return list(query, hql.toString(), namedParameters);
     }
 

@@ -29,7 +29,7 @@ import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.members.remarks.Remark;
 import nl.strohalm.cyclos.entities.members.remarks.Remark.Nature;
 import nl.strohalm.cyclos.entities.members.remarks.RemarkQuery;
-import nl.strohalm.cyclos.utils.hibernate.HibernateHelper;
+import nl.strohalm.cyclos.utils.jpa.JpaQueryHelper;
 
 /**
  * Implementation class for remark DAO
@@ -46,12 +46,12 @@ public class RemarkDAOImpl extends BaseDAOImpl<Remark> implements RemarkDAO {
         final Nature nature = query.getNature();
         final Map<String, Object> namedParameters = new HashMap<String, Object>();
         final Set<Relationship> fetch = query.getFetch();
-        final StringBuilder hql = HibernateHelper.getInitialQuery(nature.getType(), "r", fetch);
-        HibernateHelper.addParameterToQuery(hql, namedParameters, "r.writer", query.getWriter());
-        HibernateHelper.addParameterToQuery(hql, namedParameters, "r.subject", query.getSubject());
-        HibernateHelper.addPeriodParameterToQuery(hql, namedParameters, "r.date", query.getPeriod());
+        final StringBuilder hql = JpaQueryHelper.getInitialQuery(nature.getType(), "r", fetch);
+        JpaQueryHelper.addParameterToQuery(hql, namedParameters, "r.writer", query.getWriter());
+        JpaQueryHelper.addParameterToQuery(hql, namedParameters, "r.subject", query.getSubject());
+        JpaQueryHelper.addPeriodParameterToQuery(hql, namedParameters, "r.date", query.getPeriod());
 
-        HibernateHelper.appendOrder(hql, "r.date desc");
+        JpaQueryHelper.appendOrder(hql, "r.date desc");
         return list(query, hql.toString(), namedParameters);
     }
 }

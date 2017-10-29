@@ -28,7 +28,7 @@ import nl.strohalm.cyclos.entities.exceptions.EntityNotFoundException;
 import nl.strohalm.cyclos.entities.groups.Group;
 import nl.strohalm.cyclos.entities.members.Element;
 import nl.strohalm.cyclos.entities.members.Member;
-import nl.strohalm.cyclos.utils.hibernate.HibernateHelper;
+import nl.strohalm.cyclos.utils.jpa.JpaQueryHelper;
 import nl.strohalm.cyclos.utils.query.PageParameters;
 import nl.strohalm.cyclos.utils.query.QueryParameters.ResultType;
 
@@ -68,10 +68,10 @@ public class UserDAOImpl extends BaseDAOImpl<User> implements UserDAO {
         final Map<String, Object> namedParameters = new HashMap<String, Object>();
         final StringBuilder hql = new StringBuilder();
         hql.append("select u from OperatorUser u, Operator o ");
-        HibernateHelper.appendJoinFetch(hql, OperatorUser.class, "u", Arrays.asList(fetch));
+        JpaQueryHelper.appendJoinFetch(hql, OperatorUser.class, "u", Arrays.asList(fetch));
         hql.append(" where u.id = o.id");
-        HibernateHelper.addParameterToQuery(hql, namedParameters, "o.member", member);
-        HibernateHelper.addParameterToQuery(hql, namedParameters, "u.username", username);
+        JpaQueryHelper.addParameterToQuery(hql, namedParameters, "o.member", member);
+        JpaQueryHelper.addParameterToQuery(hql, namedParameters, "u.username", username);
         final List<User> list = list(ResultType.LIST, hql.toString(), namedParameters, PageParameters.unique(), fetch);
         if (list.isEmpty()) {
             throw new EntityNotFoundException(OperatorUser.class);

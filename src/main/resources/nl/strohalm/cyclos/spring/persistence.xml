@@ -66,7 +66,7 @@
 		<property name="idleConnectionTestPeriod" value="${hibernate.c3p0.idleConnectionTestPeriod}"/>
 	</bean>
 
-	<bean id="writeDetectEventListener" class="nl.strohalm.cyclos.utils.hibernate.WriteDetectEventListener" />
+	<bean id="writeDetectEventListener" class="nl.strohalm.cyclos.utils.jpa.WriteDetectEventListener" />
 	
 	<!-- Declared hibernate properties on the Cyclos configuration file -->
 	<util:properties id="hibernateProperties" location="classpath:/cyclos.properties" />
@@ -78,8 +78,8 @@
 	<bean id="transactionTemplate" class="org.springframework.transaction.support.TransactionTemplate"/>
 	
     <!-- Hibernate specific helpers -->
-	<bean id="hibernateQueryHandler" class="nl.strohalm.cyclos.utils.hibernate.HibernateQueryHandler"/>
-	<bean id="hibernateCustomFieldHandler" class="nl.strohalm.cyclos.utils.hibernate.HibernateCustomFieldHandler"/>
+	<bean id="jpaQueryHandler" class="nl.strohalm.cyclos.utils.jpa.JpaQueryHandler"/>
+	<bean id="jpaCustomFieldHandler" class="nl.strohalm.cyclos.utils.jpa.JpaCustomFieldHandler"/>
 
 	<!-- Lucene specific helpers -->
 	<bean id="luceneQueryHandler" class="nl.strohalm.cyclos.utils.lucene.LuceneQueryHandler"/>

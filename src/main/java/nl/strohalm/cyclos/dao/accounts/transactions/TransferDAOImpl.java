@@ -59,8 +59,8 @@ import nl.strohalm.cyclos.services.stats.general.KeyDevelopmentsStatsPerMonthVO;
 import nl.strohalm.cyclos.utils.BigDecimalHelper;
 import nl.strohalm.cyclos.utils.Pair;
 import nl.strohalm.cyclos.entities.utils.Period;
-import nl.strohalm.cyclos.utils.hibernate.HibernateCustomFieldHandler;
-import nl.strohalm.cyclos.utils.hibernate.HibernateHelper;
+import nl.strohalm.cyclos.utils.jpa.JpaCustomFieldHandler;
+import nl.strohalm.cyclos.utils.jpa.JpaQueryHelper;
 import nl.strohalm.cyclos.utils.query.PageParameters;
 import nl.strohalm.cyclos.utils.query.QueryParameters.ResultType;
 import nl.strohalm.cyclos.utils.statistics.ListOperations;
@@ -75,7 +75,7 @@ import org.apache.commons.lang.ArrayUtils;
 public class TransferDAOImpl extends BaseDAOImpl<Transfer> implements TransferDAO {
 
     private AccountDAO                  accountDao;
-    private HibernateCustomFieldHandler hibernateCustomFieldHandler;
+    private JpaCustomFieldHandler jpaCustomFieldHandler;
 
     public TransferDAOImpl() {
         super(Transfer.class);
@@ -98,7 +98,7 @@ public class TransferDAOImpl extends BaseDAOImpl<Transfer> implements TransferDA
         hql.append(" from Transfer t ");
         hql.append(" where (t.from.id = :account or t.to.id = :account) ");
         hql.append("   and t.processDate is not null ");
-        HibernateHelper.addPeriodParameterToQuery(hql, params, "t.processDate", period);
+        JpaQueryHelper.addPeriodParameterToQuery(hql, params, "t.processDate", period);
         BigDecimal diff = (BigDecimal) uniqueResult(hql.toString(), params);
         return BigDecimalHelper.nvl(diff);
     }
@@ -154,7 +154,7 @@ public class TransferDAOImpl extends BaseDAOImpl<Transfer> implements TransferDA
         hql.append(" where (t.from.id = :account or t.to.id = :account) ");
         hql.append(" and (t.chargedBackBy is not null or t.chargebackOf is not null) ");
         hql.append("   and t.processDate is not null ");
-        HibernateHelper.addPeriodParameterToQuery(hql, params, "t.processDate", period);
+        JpaQueryHelper.addPeriodParameterToQuery(hql, params, "t.processDate", period);
         BigDecimal diff = (BigDecimal) uniqueResult(hql.toString(), params);
         return BigDecimalHelper.nvl(diff);
     }
@@ -278,7 +278,7 @@ public class TransferDAOImpl extends BaseDAOImpl<Transfer> implements TransferDA
         if (excludeChargebacks) {
             hql.append(" and t.chargedBackBy is null and t.chargebackOf is null ");
         }
-        HibernateHelper.addPeriodParameterToQuery(hql, namedParameters, "t.processDate", period);
+        JpaQueryHelper.addPeriodParameterToQuery(hql, namedParameters, "t.processDate", period);
         hql.append(" order by t.processDate, t.id");
         return (Calendar) uniqueResult(hql.toString(), namedParameters);
     }
@@ -323,7 +323,7 @@ public class TransferDAOImpl extends BaseDAOImpl<Transfer> implements TransferDA
         final Map<String, Object> namedParameters = new HashMap<String, Object>();
 
         // Period
-        HibernateHelper.addPeriodParameterToQuery(hql, namedParameters, "t.processDate", query.getPeriod());
+        JpaQueryHelper.addPeriodParameterToQuery(hql, namedParameters, "t.processDate", query.getPeriod());
 
         // From AccountType
         if (query.getFromAccountType() != null) {
@@ -386,11 +386,11 @@ public class TransferDAOImpl extends BaseDAOImpl<Transfer> implements TransferDA
         }
         final Map<String, Object> namedParameters = new HashMap<String, Object>();
         StringBuilder hql = new StringBuilder("select sum(t.amount) from Transfer t where 1=1 ");
-        HibernateHelper.addInParameterToQuery(hql, namedParameters, "t.status", Payment.Status.PROCESSED, Payment.Status.PENDING, Payment.Status.SCHEDULED);
-        HibernateHelper.addParameterToQuery(hql, namedParameters, "t.from", account);
-        HibernateHelper.addParameterToQuery(hql, namedParameters, "t.type", transferType);
-        HibernateHelper.addParameterToQuery(hql, namedParameters, "t.by", operator);
-        HibernateHelper.addPeriodParameterToQuery(hql, namedParameters, "ifnull(t.processDate, t.date)", Period.day(date));
+        JpaQueryHelper.addInParameterToQuery(hql, namedParameters, "t.status", Payment.Status.PROCESSED, Payment.Status.PENDING, Payment.Status.SCHEDULED);
+        JpaQueryHelper.addParameterToQuery(hql, namedParameters, "t.from", account);
+        JpaQueryHelper.addParameterToQuery(hql, namedParameters, "t.type", transferType);
+        JpaQueryHelper.addParameterToQuery(hql, namedParameters, "t.by", operator);
+        JpaQueryHelper.addPeriodParameterToQuery(hql, namedParameters, "ifnull(t.processDate, t.date)", Period.day(date));
         BigDecimal sum = uniqueResult(hql.toString(), namedParameters);
         return BigDecimalHelper.nvl(sum);
     }
@@ -413,7 +413,7 @@ public class TransferDAOImpl extends BaseDAOImpl<Transfer> implements TransferDA
             namedParameters.put("account", account);
             hql.append(" and (t.from = :account or t.to = :account) ");
         }
-        HibernateHelper.addPeriodParameterToQuery(hql, namedParameters, "t.processDate", period);
+        JpaQueryHelper.addPeriodParameterToQuery(hql, namedParameters, "t.processDate", period);
         if (sinceTransfer != null) {
             namedParameters.put("id", sinceTransfer.getId());
             namedParameters.put("startDate", sinceTransfer.getProcessDate());
@@ -448,9 +448,9 @@ public class TransferDAOImpl extends BaseDAOImpl<Transfer> implements TransferDA
         final Map<String, Object> namedParameters = new HashMap<String, Object>();
 
         List<Relationship> toFetch = ArrayUtils.isEmpty(fetch) ? null : Arrays.asList(fetch);
-        final StringBuilder hql = HibernateHelper.getInitialQuery(getEntityType(), "t", toFetch);
-        HibernateHelper.addParameterToQuery(hql, namedParameters, "traceNumber", traceNumber);
-        HibernateHelper.addParameterToQuery(hql, namedParameters, "clientId", clientId);
+        final StringBuilder hql = JpaQueryHelper.getInitialQuery(getEntityType(), "t", toFetch);
+        JpaQueryHelper.addParameterToQuery(hql, namedParameters, "traceNumber", traceNumber);
+        JpaQueryHelper.addParameterToQuery(hql, namedParameters, "clientId", clientId);
         return uniqueResult(hql.toString(), namedParameters);
     }
 
@@ -462,7 +462,7 @@ public class TransferDAOImpl extends BaseDAOImpl<Transfer> implements TransferDA
         hql.append("select new ").append(SimpleTransferVO.class.getName()).append("(t.date, case t.from when :account then -t.amount else t.amount end)");
         hql.append(" from ").append(getEntityType().getName()).append(" t");
         hql.append(" where (t.from = :account or t.to = :account) ");
-        HibernateHelper.addPeriodParameterToQuery(hql, namedParameters, "t.date", period);
+        JpaQueryHelper.addPeriodParameterToQuery(hql, namedParameters, "t.date", period);
         hql.append(" order by t.date");
 
         return list(hql.toString(), namedParameters);
@@ -474,8 +474,8 @@ public class TransferDAOImpl extends BaseDAOImpl<Transfer> implements TransferDA
         final StringBuilder hql = new StringBuilder();
         hql.append(" select t");
         hql.append(" from Loan l right join l.transfer t ");
-        hibernateCustomFieldHandler.appendJoins(hql, "t.customValues", query.getCustomValues());
-        HibernateHelper.appendJoinFetch(hql, Transfer.class, "t", query.getFetch());
+        jpaCustomFieldHandler.appendJoins(hql, "t.customValues", query.getCustomValues());
+        JpaQueryHelper.appendJoinFetch(hql, Transfer.class, "t", query.getFetch());
         hql.append(" where 1=1");
 
         if (!buildSearchQuery(query, hql, namedParameters)) {
@@ -490,7 +490,7 @@ public class TransferDAOImpl extends BaseDAOImpl<Transfer> implements TransferDA
         final Map<String, Object> namedParameters = new HashMap<String, Object>();
         final StringBuilder hql = new StringBuilder();
         hql.append(" select t from Transfer t join t.nextAuthorizationLevel l ");
-        HibernateHelper.appendJoinFetch(hql, getEntityType(), "t", query.getFetch());
+        JpaQueryHelper.appendJoinFetch(hql, getEntityType(), "t", query.getFetch());
         hql.append(" where 1=1");
 
         Element authorizer = query.getAuthorizer();
@@ -548,14 +548,14 @@ public class TransferDAOImpl extends BaseDAOImpl<Transfer> implements TransferDA
         PaymentFilter paymentFilter = query.getPaymentFilter();
         if (paymentFilter != null) {
             paymentFilter = getFetchDao().fetch(paymentFilter, PaymentFilter.Relationships.TRANSFER_TYPES);
-            HibernateHelper.addInParameterToQuery(hql, namedParameters, "t.type", paymentFilter.getTransferTypes());
+            JpaQueryHelper.addInParameterToQuery(hql, namedParameters, "t.type", paymentFilter.getTransferTypes());
         }
 
         // Add the other filters
-        HibernateHelper.addPeriodParameterToQuery(hql, namedParameters, "t.date", query.getPeriod());
-        HibernateHelper.addParameterToQuery(hql, namedParameters, "t.type", query.getTransferType());
-        HibernateHelper.addLikeParameterToQuery(hql, namedParameters, "t.transactionNumber", query.getTransactionNumber());
-        HibernateHelper.appendOrder(hql, "t.date desc");
+        JpaQueryHelper.addPeriodParameterToQuery(hql, namedParameters, "t.date", query.getPeriod());
+        JpaQueryHelper.addParameterToQuery(hql, namedParameters, "t.type", query.getTransferType());
+        JpaQueryHelper.addLikeParameterToQuery(hql, namedParameters, "t.transactionNumber", query.getTransactionNumber());
+        JpaQueryHelper.appendOrder(hql, "t.date desc");
 
         return list(query, hql.toString(), namedParameters);
     }
@@ -564,8 +564,8 @@ public class TransferDAOImpl extends BaseDAOImpl<Transfer> implements TransferDA
         this.accountDao = accountDao;
     }
 
-    public void setHibernateCustomFieldHandler(final HibernateCustomFieldHandler hibernateCustomFieldHandler) {
-        this.hibernateCustomFieldHandler = hibernateCustomFieldHandler;
+    public void setJpaCustomFieldHandler(final JpaCustomFieldHandler jpaCustomFieldHandler) {
+        this.jpaCustomFieldHandler = jpaCustomFieldHandler;
     }
 
     @Override
@@ -626,7 +626,7 @@ public class TransferDAOImpl extends BaseDAOImpl<Transfer> implements TransferDA
      */
     private void appendGroupAndPaymentFilterAndPeriod(final StringBuilder hql, final Map<String, Object> namedParameters, final StatisticalDTO dto) {
         // Period
-        HibernateHelper.addPeriodParameterToQuery(hql, namedParameters, "t.processDate", dto.getPeriod());
+        JpaQueryHelper.addPeriodParameterToQuery(hql, namedParameters, "t.processDate", dto.getPeriod());
         // PaymentFilter
         if (dto.getPaymentFilter() != null) {
             hql.append(" and exists (select 1 from " + PaymentFilter.class.getName() + " pf where pf = :filter and t.type in elements(pf.transferTypes)) ");
@@ -652,14 +652,14 @@ public class TransferDAOImpl extends BaseDAOImpl<Transfer> implements TransferDA
     @SuppressWarnings("unchecked")
     private boolean buildSearchQuery(final TransferQuery query, final StringBuilder hql, final Map<String, Object> namedParameters) {
         // hql.append(" and not exists (select pas.id from PendingAccountStatus pas where pas.transfer = t)");
-        HibernateHelper.addParameterToQuery(hql, namedParameters, "t.type.requiresAuthorization", query.getRequiresAuthorization());
-        HibernateHelper.addParameterToQuery(hql, namedParameters, "t.status", query.getStatus());
-        HibernateHelper.addLikeParameterToQuery(hql, namedParameters, "t.description", query.getDescription());
-        HibernateHelper.addLikeParameterToQuery(hql, namedParameters, "t.transactionNumber", query.getTransactionNumber());
-        HibernateHelper.addParameterToQuery(hql, namedParameters, "t.loanPayment", query.getLoanPayment());
-        HibernateHelper.addParameterToQuery(hql, namedParameters, "t.parent", query.getParent());
-        HibernateHelper.addParameterToQuery(hql, namedParameters, "t.type", query.getTransferType());
-        HibernateHelper.addPeriodParameterToQuery(hql, namedParameters, "ifnull(t.processDate, t.date)", query.getPeriod());
+        JpaQueryHelper.addParameterToQuery(hql, namedParameters, "t.type.requiresAuthorization", query.getRequiresAuthorization());
+        JpaQueryHelper.addParameterToQuery(hql, namedParameters, "t.status", query.getStatus());
+        JpaQueryHelper.addLikeParameterToQuery(hql, namedParameters, "t.description", query.getDescription());
+        JpaQueryHelper.addLikeParameterToQuery(hql, namedParameters, "t.transactionNumber", query.getTransactionNumber());
+        JpaQueryHelper.addParameterToQuery(hql, namedParameters, "t.loanPayment", query.getLoanPayment());
+        JpaQueryHelper.addParameterToQuery(hql, namedParameters, "t.parent", query.getParent());
+        JpaQueryHelper.addParameterToQuery(hql, namedParameters, "t.type", query.getTransferType());
+        JpaQueryHelper.addPeriodParameterToQuery(hql, namedParameters, "ifnull(t.processDate, t.date)", query.getPeriod());
         if (query.isRootOnly()) {
             hql.append(" and t.parent is null");
         }
@@ -764,7 +764,7 @@ public class TransferDAOImpl extends BaseDAOImpl<Transfer> implements TransferDA
                     + " and tt in elements(pf.transferTypes))";
             final List<TransferType> transferTypes = list(ttHql, Collections.singletonMap("pfs", paymentFilters));
 
-            HibernateHelper.addInParameterToQuery(hql, namedParameters, "t.type", transferTypes);
+            JpaQueryHelper.addInParameterToQuery(hql, namedParameters, "t.type", transferTypes);
         }
 
         if (query.getExcludeTransferType() != null) {
@@ -779,7 +779,7 @@ public class TransferDAOImpl extends BaseDAOImpl<Transfer> implements TransferDA
         }
 
         // Custom fields
-        hibernateCustomFieldHandler.appendConditions(hql, namedParameters, query.getCustomValues());
+        jpaCustomFieldHandler.appendConditions(hql, namedParameters, query.getCustomValues());
 
         // Set the order
         if (!query.isUnordered()) {
@@ -799,7 +799,7 @@ public class TransferDAOImpl extends BaseDAOImpl<Transfer> implements TransferDA
             }
             orders.add(order);
 
-            HibernateHelper.appendOrder(hql, orders);
+            JpaQueryHelper.appendOrder(hql, orders);
         }
 
         return true;

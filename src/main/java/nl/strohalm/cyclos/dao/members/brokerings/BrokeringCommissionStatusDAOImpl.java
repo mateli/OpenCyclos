@@ -31,7 +31,7 @@ import nl.strohalm.cyclos.entities.accounts.fees.transaction.BrokerCommission;
 import nl.strohalm.cyclos.entities.members.brokerings.Brokering;
 import nl.strohalm.cyclos.entities.members.brokerings.BrokeringCommissionStatus;
 import nl.strohalm.cyclos.entities.members.brokerings.BrokeringCommissionStatusQuery;
-import nl.strohalm.cyclos.utils.hibernate.HibernateHelper;
+import nl.strohalm.cyclos.utils.jpa.JpaQueryHelper;
 
 import org.apache.commons.collections.CollectionUtils;
 
@@ -61,17 +61,17 @@ public class BrokeringCommissionStatusDAOImpl extends BaseDAOImpl<BrokeringCommi
 
     public BrokeringCommissionStatus load(final Brokering brokering, final BrokerCommission brokerCommission, final Relationship... fetch) {
         final List<Relationship> fetchList = Arrays.asList(fetch);
-        final StringBuilder hql = HibernateHelper.getInitialQuery(getEntityType(), "bcs", fetchList);
+        final StringBuilder hql = JpaQueryHelper.getInitialQuery(getEntityType(), "bcs", fetchList);
         final Map<String, Object> namedParameters = new HashMap<String, Object>();
 
         // Brokering
-        HibernateHelper.addParameterToQuery(hql, namedParameters, "bcs.brokering", brokering);
+        JpaQueryHelper.addParameterToQuery(hql, namedParameters, "bcs.brokering", brokering);
 
         // Broker commission
-        HibernateHelper.addParameterToQuery(hql, namedParameters, "bcs.brokerCommission", brokerCommission);
+        JpaQueryHelper.addParameterToQuery(hql, namedParameters, "bcs.brokerCommission", brokerCommission);
 
         // Order by broker commission name
-        HibernateHelper.appendOrder(hql, "bcs.brokerCommission.name");
+        JpaQueryHelper.appendOrder(hql, "bcs.brokerCommission.name");
 
         final List<BrokeringCommissionStatus> list = list(hql.toString(), namedParameters);
         if (CollectionUtils.isEmpty(list)) {
@@ -82,17 +82,17 @@ public class BrokeringCommissionStatusDAOImpl extends BaseDAOImpl<BrokeringCommi
     }
 
     public List<BrokeringCommissionStatus> search(final BrokeringCommissionStatusQuery query) {
-        final StringBuilder hql = HibernateHelper.getInitialQuery(getEntityType(), "bcs", query.getFetch());
+        final StringBuilder hql = JpaQueryHelper.getInitialQuery(getEntityType(), "bcs", query.getFetch());
         final Map<String, Object> namedParameters = new HashMap<String, Object>();
 
         // Broker
-        HibernateHelper.addParameterToQuery(hql, namedParameters, "bcs.brokering.broker", query.getBroker());
+        JpaQueryHelper.addParameterToQuery(hql, namedParameters, "bcs.brokering.broker", query.getBroker());
 
         // Brokering
-        HibernateHelper.addParameterToQuery(hql, namedParameters, "bcs.brokering", query.getBrokering());
+        JpaQueryHelper.addParameterToQuery(hql, namedParameters, "bcs.brokering", query.getBrokering());
 
         // Broker commission
-        HibernateHelper.addParameterToQuery(hql, namedParameters, "bcs.brokerCommission", query.getBrokerCommission());
+        JpaQueryHelper.addParameterToQuery(hql, namedParameters, "bcs.brokerCommission", query.getBrokerCommission());
 
         // Only active
         if (query.isOnlyActive()) {
@@ -105,7 +105,7 @@ public class BrokeringCommissionStatusDAOImpl extends BaseDAOImpl<BrokeringCommi
         }
 
         // Order by broker commission name
-        HibernateHelper.appendOrder(hql, "bcs.brokerCommission.name");
+        JpaQueryHelper.appendOrder(hql, "bcs.brokerCommission.name");
 
         return list(hql.toString(), namedParameters);
     }

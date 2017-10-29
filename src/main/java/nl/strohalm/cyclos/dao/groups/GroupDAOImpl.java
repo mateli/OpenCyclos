@@ -39,7 +39,7 @@ import nl.strohalm.cyclos.entities.groups.GroupQuery;
 import nl.strohalm.cyclos.entities.groups.MemberGroup;
 import nl.strohalm.cyclos.entities.groups.OperatorGroup;
 import nl.strohalm.cyclos.entities.groups.SystemGroup;
-import nl.strohalm.cyclos.utils.hibernate.HibernateHelper;
+import nl.strohalm.cyclos.utils.jpa.JpaQueryHelper;
 import nl.strohalm.cyclos.utils.query.QueryParameters.ResultType;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -130,10 +130,10 @@ public class GroupDAOImpl extends BaseDAOImpl<Group> implements GroupDAO {
     @Override
     public List<? extends Group> search(final GroupQuery query) throws DaoException {
         final Map<String, Object> namedParameters = new HashMap<String, Object>();
-        final StringBuilder hql = HibernateHelper.getInitialQuery(getEntityType(), "g", query.getFetch());
-        HibernateHelper.addInParameterToQuery(hql, namedParameters, "g", query.getPossibleGroups());
-        HibernateHelper.addInParameterToQuery(hql, namedParameters, "g.class", query.getNatureDiscriminators());
-        HibernateHelper.addInParameterToQuery(hql, namedParameters, "g.status", query.getStatusCollection());
+        final StringBuilder hql = JpaQueryHelper.getInitialQuery(getEntityType(), "g", query.getFetch());
+        JpaQueryHelper.addInParameterToQuery(hql, namedParameters, "g", query.getPossibleGroups());
+        JpaQueryHelper.addInParameterToQuery(hql, namedParameters, "g.class", query.getNatureDiscriminators());
+        JpaQueryHelper.addInParameterToQuery(hql, namedParameters, "g.status", query.getStatusCollection());
 
         // Active groups (member groups and broker groups)
         if (query.isOnlyActive()) {
@@ -171,7 +171,7 @@ public class GroupDAOImpl extends BaseDAOImpl<Group> implements GroupDAO {
             namedParameters.put("accountType", query.getMemberAccountType());
         }
 
-        HibernateHelper.addInElementsParameter(hql, namedParameters, "g.paymentFilters", query.getPaymentFilter());
+        JpaQueryHelper.addInElementsParameter(hql, namedParameters, "g.paymentFilters", query.getPaymentFilter());
 
         if (query.getManagedBy() != null) {
             hql.append(" and ((g.class = :adminGroup) or (g in (select mg from AdminGroup ag join ag.managesGroups mg where ag = :managedBy))) ");
@@ -185,7 +185,7 @@ public class GroupDAOImpl extends BaseDAOImpl<Group> implements GroupDAO {
             order.add("case g.class when 'A' then 1 when 'M' then 2 else 3 end");
         }
         order.add("g.name");
-        HibernateHelper.appendOrder(hql, order.toArray(new String[order.size()]));
+        JpaQueryHelper.appendOrder(hql, order.toArray(new String[order.size()]));
         return list(query, hql.toString(), namedParameters);
     }
 

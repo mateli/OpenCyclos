@@ -27,7 +27,7 @@ import nl.strohalm.cyclos.entities.exceptions.DaoException;
 import nl.strohalm.cyclos.entities.members.Element;
 import nl.strohalm.cyclos.entities.members.Member;
 import nl.strohalm.cyclos.utils.access.LoggedUser;
-import nl.strohalm.cyclos.utils.hibernate.HibernateHelper;
+import nl.strohalm.cyclos.utils.jpa.JpaQueryHelper;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -48,7 +48,7 @@ public class DocumentDAOImpl extends BaseDAOImpl<Document> implements DocumentDA
     @Override
     public List<Document> search(final DocumentQuery query) throws DaoException {
         final Map<String, Object> namedParameters = new HashMap<>();
-        final StringBuilder hql = HibernateHelper.getInitialQuery(getEntityType(), "doc", query.getFetch());
+        final StringBuilder hql = JpaQueryHelper.getInitialQuery(getEntityType(), "doc", query.getFetch());
 
         // Save named parameters values
         namedParameters.put("dynamicType", Document.Nature.DYNAMIC);
@@ -59,7 +59,7 @@ public class DocumentDAOImpl extends BaseDAOImpl<Document> implements DocumentDA
 
         // Document id
         if (query.getId() != null) {
-            HibernateHelper.addParameterToQuery(hql, namedParameters, "doc.id", query.getId());
+            JpaQueryHelper.addParameterToQuery(hql, namedParameters, "doc.id", query.getId());
         }
 
         // Nature
@@ -120,7 +120,7 @@ public class DocumentDAOImpl extends BaseDAOImpl<Document> implements DocumentDA
             namedParameters.put("member", query.getMember());
         }
 
-        HibernateHelper.appendOrder(hql, "doc.name");
+        JpaQueryHelper.appendOrder(hql, "doc.name");
         return list(query, hql.toString(), namedParameters);
     }
 }

@@ -89,6 +89,7 @@ public class EntityHelper {
     @SuppressWarnings("unchecked")
     public static Class<? extends Entity> getRealClass(final Entity entity) {
         final Class<? extends Entity> type = entity.getClass();
+        // FIXME: JPA_MIG - test if class is an instance of HibernateProxy without depending on it at compile time
         if ((entity instanceof EntityReference) || (entity instanceof HibernateProxy)) {
             return (Class<? extends Entity>) type.getSuperclass();
         }

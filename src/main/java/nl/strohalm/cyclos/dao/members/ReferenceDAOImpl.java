@@ -37,7 +37,7 @@ import nl.strohalm.cyclos.utils.DataIteratorHelper;
 import nl.strohalm.cyclos.utils.IteratorListImpl;
 import nl.strohalm.cyclos.utils.ScrollableResultsIterator;
 import nl.strohalm.cyclos.utils.conversion.Transformer;
-import nl.strohalm.cyclos.utils.hibernate.HibernateHelper;
+import nl.strohalm.cyclos.utils.jpa.JpaQueryHelper;
 import nl.strohalm.cyclos.utils.query.PageHelper;
 import nl.strohalm.cyclos.utils.query.PageImpl;
 import nl.strohalm.cyclos.utils.query.PageParameters;
@@ -85,12 +85,12 @@ public class ReferenceDAOImpl extends BaseDAOImpl<Reference> implements Referenc
         final Map<String, Object> namedParameters = new HashMap<String, Object>();
         final Class<? extends Reference> type = typeForNature(nature);
         final StringBuilder hql = new StringBuilder("select r.level, count(r.id) from ").append(type.getName()).append(" r where 1=1 ");
-        HibernateHelper.addParameterToQuery(hql, namedParameters, (received ? "r.to" : "r.from"), member);
+        JpaQueryHelper.addParameterToQuery(hql, namedParameters, (received ? "r.to" : "r.from"), member);
         if (memberGroups != null && !memberGroups.isEmpty()) {
             hql.append(" and " + (received ? "r.to" : "r.from") + ".group in (:memberGroups) ");
             namedParameters.put("memberGroups", memberGroups);
         }
-        HibernateHelper.addPeriodParameterToQuery(hql, namedParameters, "r.date", period);
+        JpaQueryHelper.addPeriodParameterToQuery(hql, namedParameters, "r.date", period);
         hql.append(" group by r.level order by r.level");
         final List<Object[]> rows = list(hql.toString(), namedParameters);
         for (final Object[] row : rows) {
@@ -105,13 +105,13 @@ public class ReferenceDAOImpl extends BaseDAOImpl<Reference> implements Referenc
         final Set<Relationship> fetch = query.getFetch();
         final Nature nature = query.getNature();
         final Class<? extends Reference> type = typeForNature(nature);
-        final StringBuilder hql = HibernateHelper.getInitialQuery(type, "r", fetch);
-        HibernateHelper.addParameterToQuery(hql, namedParameters, "r.from", query.getFrom());
-        HibernateHelper.addParameterToQuery(hql, namedParameters, "r.to", query.getTo());
-        HibernateHelper.addPeriodParameterToQuery(hql, namedParameters, "r.date", query.getPeriod());
+        final StringBuilder hql = JpaQueryHelper.getInitialQuery(type, "r", fetch);
+        JpaQueryHelper.addParameterToQuery(hql, namedParameters, "r.from", query.getFrom());
+        JpaQueryHelper.addParameterToQuery(hql, namedParameters, "r.to", query.getTo());
+        JpaQueryHelper.addPeriodParameterToQuery(hql, namedParameters, "r.date", query.getPeriod());
         if (nature == Nature.TRANSACTION) {
-            HibernateHelper.addParameterToQuery(hql, namedParameters, "r.transfer", query.getTransfer());
-            HibernateHelper.addParameterToQuery(hql, namedParameters, "r.scheduledPayment", query.getScheduledPayment());
+            JpaQueryHelper.addParameterToQuery(hql, namedParameters, "r.transfer", query.getTransfer());
+            JpaQueryHelper.addParameterToQuery(hql, namedParameters, "r.scheduledPayment", query.getScheduledPayment());
         }
 
         if (query.getGroups() != null) {
@@ -119,7 +119,7 @@ public class ReferenceDAOImpl extends BaseDAOImpl<Reference> implements Referenc
             namedParameters.put("groups", query.getGroups());
         }
 
-        HibernateHelper.appendOrder(hql, "r.id desc");
+        JpaQueryHelper.appendOrder(hql, "r.id desc");
         return list(query, hql.toString(), namedParameters);
     }
 
@@ -199,7 +199,7 @@ public class ReferenceDAOImpl extends BaseDAOImpl<Reference> implements Referenc
             return new PageImpl<>(pageParameters, count, Collections.<PaymentAwaitingFeedbackDTO> emptyList());
         } else {
             // Execute the search
-            getHibernateQueryHandler().applyPageParameters(pageParameters, nativeQuery);
+            getJpaQueryHandler().applyPageParameters(pageParameters, nativeQuery);
 
             // We'll always use an iterator, even if it is for later adding it to a list
             Iterator<PaymentAwaitingFeedbackDTO> iterator = new ScrollableResultsIterator<>(nativeQuery, new Transformer<Object[], PaymentAwaitingFeedbackDTO>() {

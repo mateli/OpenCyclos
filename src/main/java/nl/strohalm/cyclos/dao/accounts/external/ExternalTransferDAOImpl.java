@@ -30,7 +30,7 @@ import nl.strohalm.cyclos.entities.accounts.external.ExternalTransfer;
 import nl.strohalm.cyclos.entities.accounts.external.ExternalTransfer.SummaryStatus;
 import nl.strohalm.cyclos.entities.accounts.external.ExternalTransferQuery;
 import nl.strohalm.cyclos.entities.accounts.external.ExternalTransferType;
-import nl.strohalm.cyclos.utils.hibernate.HibernateHelper;
+import nl.strohalm.cyclos.utils.jpa.JpaQueryHelper;
 
 /**
  * Implementation for external transfer DAO
@@ -50,11 +50,11 @@ public class ExternalTransferDAOImpl extends BaseDAOImpl<ExternalTransfer> imple
             return Collections.emptyList();
         }
         final Map<String, Object> namedParameters = new HashMap<String, Object>();
-        final StringBuilder hql = HibernateHelper.getInitialQuery(ExternalTransfer.class, "t", query.getFetch());
-        HibernateHelper.addParameterToQuery(hql, namedParameters, "t.account", account);
-        HibernateHelper.addParameterToQuery(hql, namedParameters, "t.type", query.getType());
+        final StringBuilder hql = JpaQueryHelper.getInitialQuery(ExternalTransfer.class, "t", query.getFetch());
+        JpaQueryHelper.addParameterToQuery(hql, namedParameters, "t.account", account);
+        JpaQueryHelper.addParameterToQuery(hql, namedParameters, "t.type", query.getType());
         if (query.isOnlyWithValidTypes()) {
-            HibernateHelper.addParameterToQueryOperator(hql, namedParameters, "t.type.action", "<>", ExternalTransferType.Action.IGNORE);
+            JpaQueryHelper.addParameterToQueryOperator(hql, namedParameters, "t.type.action", "<>", ExternalTransferType.Action.IGNORE);
         }
         namedParameters.put("ignore", ExternalTransferType.Action.IGNORE);
         if (query.getStatus() != null) {
@@ -62,23 +62,23 @@ public class ExternalTransferDAOImpl extends BaseDAOImpl<ExternalTransfer> imple
                 case COMPLETE_PENDING:
                 case INCOMPLETE_PENDING:
                     boolean complete = query.getStatus() == SummaryStatus.COMPLETE_PENDING;
-                    HibernateHelper.addParameterToQuery(hql, namedParameters, "t.status", ExternalTransfer.Status.PENDING);
+                    JpaQueryHelper.addParameterToQuery(hql, namedParameters, "t.status", ExternalTransfer.Status.PENDING);
                     hql.append("and " + (complete ? "not" : "") + "(t.type is null or (t.type.action != :ignore and t.member is null) or t.date is null or t.amount is null)");
                     break;
                 case CHECKED:
-                    HibernateHelper.addParameterToQuery(hql, namedParameters, "t.status", ExternalTransfer.Status.CHECKED);
+                    JpaQueryHelper.addParameterToQuery(hql, namedParameters, "t.status", ExternalTransfer.Status.CHECKED);
                     break;
                 case PROCESSED:
-                    HibernateHelper.addParameterToQuery(hql, namedParameters, "t.status", ExternalTransfer.Status.PROCESSED);
+                    JpaQueryHelper.addParameterToQuery(hql, namedParameters, "t.status", ExternalTransfer.Status.PROCESSED);
                     break;
             }
         }
-        HibernateHelper.addParameterToQuery(hql, namedParameters, "t.transferImport", query.getTransferImport());
-        HibernateHelper.addPeriodParameterToQuery(hql, namedParameters, "t.date", query.getPeriod());
-        HibernateHelper.addParameterToQuery(hql, namedParameters, "t.member", query.getMember());
-        HibernateHelper.addParameterToQueryOperator(hql, namedParameters, "t.amount", ">=", query.getInitialAmount());
-        HibernateHelper.addParameterToQueryOperator(hql, namedParameters, "t.amount", "<=", query.getFinalAmount());
-        HibernateHelper.appendOrder(hql, "t.date desc", "t.amount");
+        JpaQueryHelper.addParameterToQuery(hql, namedParameters, "t.transferImport", query.getTransferImport());
+        JpaQueryHelper.addPeriodParameterToQuery(hql, namedParameters, "t.date", query.getPeriod());
+        JpaQueryHelper.addParameterToQuery(hql, namedParameters, "t.member", query.getMember());
+        JpaQueryHelper.addParameterToQueryOperator(hql, namedParameters, "t.amount", ">=", query.getInitialAmount());
+        JpaQueryHelper.addParameterToQueryOperator(hql, namedParameters, "t.amount", "<=", query.getFinalAmount());
+        JpaQueryHelper.appendOrder(hql, "t.date desc", "t.amount");
         return list(query, hql.toString(), namedParameters);
     }
 }

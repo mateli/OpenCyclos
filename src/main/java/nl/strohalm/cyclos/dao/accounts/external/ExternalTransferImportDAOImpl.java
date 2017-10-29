@@ -28,7 +28,7 @@ import nl.strohalm.cyclos.dao.BaseDAOImpl;
 import nl.strohalm.cyclos.entities.accounts.external.ExternalTransfer;
 import nl.strohalm.cyclos.entities.accounts.external.ExternalTransferImport;
 import nl.strohalm.cyclos.entities.accounts.external.ExternalTransferImportQuery;
-import nl.strohalm.cyclos.utils.hibernate.HibernateHelper;
+import nl.strohalm.cyclos.utils.jpa.JpaQueryHelper;
 
 /**
  * Implementation for data access object for external transfer imports
@@ -58,10 +58,10 @@ public class ExternalTransferImportDAOImpl extends BaseDAOImpl<ExternalTransferI
 
     public List<ExternalTransferImport> search(final ExternalTransferImportQuery query) {
         final Map<String, Object> namedParameters = new HashMap<String, Object>();
-        final StringBuilder hql = HibernateHelper.getInitialQuery(ExternalTransferImport.class, "i", query.getFetch());
-        HibernateHelper.addParameterToQuery(hql, namedParameters, "i.account", query.getAccount());
-        HibernateHelper.addPeriodParameterToQuery(hql, namedParameters, "i.date", query.getPeriod());
-        HibernateHelper.appendOrder(hql, "i.date desc");
+        final StringBuilder hql = JpaQueryHelper.getInitialQuery(ExternalTransferImport.class, "i", query.getFetch());
+        JpaQueryHelper.addParameterToQuery(hql, namedParameters, "i.account", query.getAccount());
+        JpaQueryHelper.addPeriodParameterToQuery(hql, namedParameters, "i.date", query.getPeriod());
+        JpaQueryHelper.appendOrder(hql, "i.date desc");
         return list(query, hql.toString(), namedParameters);
     }
 }

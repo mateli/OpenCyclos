@@ -31,7 +31,7 @@ import nl.strohalm.cyclos.entities.members.Member;
 import nl.strohalm.cyclos.entities.settings.LocalSettings.MemberResultDisplay;
 import nl.strohalm.cyclos.services.transactions.TransactionSummaryVO;
 import nl.strohalm.cyclos.utils.EntityHelper;
-import nl.strohalm.cyclos.utils.hibernate.HibernateHelper;
+import nl.strohalm.cyclos.utils.jpa.JpaQueryHelper;
 import nl.strohalm.cyclos.utils.query.PageParameters;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.ArrayUtils;
@@ -126,7 +126,7 @@ public class MemberAccountFeeLogDAOImpl extends BaseDAOImpl<MemberAccountFeeLog>
         hql.append(" where ml.success = false");
         hql.append("   and ml.rechargeAttempt < l.rechargeAttempt");
         hql.append("   and l = :log");
-        return getHibernateQueryHandler().simpleList(null, hql.toString(), parameters, PageParameters.max(count));
+        return getJpaQueryHandler().simpleList(null, hql.toString(), parameters, PageParameters.max(count));
     }
 
     @Override
@@ -198,14 +198,14 @@ public class MemberAccountFeeLogDAOImpl extends BaseDAOImpl<MemberAccountFeeLog>
     @Override
     public List<MemberAccountFeeLog> search(final MemberAccountFeeLogQuery query, final MemberResultDisplay sort) {
         Map<String, Object> params = new HashMap<String, Object>();
-        StringBuilder hql = HibernateHelper.getInitialQuery(getEntityType(), "m", query.getFetch());
-        HibernateHelper.addParameterToQuery(hql, params, "m.accountFeeLog", query.getAccountFeeLog());
-        HibernateHelper.addInParameterToQuery(hql, params, "m.member.group", query.getGroups());
-        HibernateHelper.addParameterToQuery(hql, params, "m.member", query.getMember());
+        StringBuilder hql = JpaQueryHelper.getInitialQuery(getEntityType(), "m", query.getFetch());
+        JpaQueryHelper.addParameterToQuery(hql, params, "m.accountFeeLog", query.getAccountFeeLog());
+        JpaQueryHelper.addInParameterToQuery(hql, params, "m.member.group", query.getGroups());
+        JpaQueryHelper.addParameterToQuery(hql, params, "m.member", query.getMember());
         Status status = query.getStatus();
         if (status != null) {
             // Status == ERROR will filter for success = false. All other statuses will add success = true
-            HibernateHelper.addParameterToQuery(hql, params, "m.success", status != Status.ERROR);
+            JpaQueryHelper.addParameterToQuery(hql, params, "m.success", status != Status.ERROR);
             // Status.PROCESSED will not add any other filter, as it is only success = true
             switch (status) {
                 case SKIPPED:
@@ -218,14 +218,14 @@ public class MemberAccountFeeLogDAOImpl extends BaseDAOImpl<MemberAccountFeeLog>
                     hql.append(" and m.invoice.id is not null");
                     break;
                 case ACCEPTED_INVOICE:
-                    HibernateHelper.addParameterToQuery(hql, params, "m.invoice.status", Invoice.Status.ACCEPTED);
+                    JpaQueryHelper.addParameterToQuery(hql, params, "m.invoice.status", Invoice.Status.ACCEPTED);
                     break;
                 case OPEN_INVOICE:
-                    HibernateHelper.addParameterToQueryOperator(hql, params, "m.invoice.status", "<>", Invoice.Status.ACCEPTED);
+                    JpaQueryHelper.addParameterToQueryOperator(hql, params, "m.invoice.status", "<>", Invoice.Status.ACCEPTED);
                     break;
             }
         }
-        HibernateHelper.appendOrder(hql, sort == MemberResultDisplay.NAME ? "m.member.name" : "m.member.user.username");
+        JpaQueryHelper.appendOrder(hql, sort == MemberResultDisplay.NAME ? "m.member.name" : "m.member.user.username");
         return list(query, hql.toString(), params);
     }
 

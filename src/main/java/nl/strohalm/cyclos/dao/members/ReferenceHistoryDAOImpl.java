@@ -36,7 +36,7 @@ import nl.strohalm.cyclos.entities.members.ReferenceHistoryLog;
 import nl.strohalm.cyclos.entities.members.ReferenceHistoryLogQuery;
 import nl.strohalm.cyclos.utils.DateHelper;
 import nl.strohalm.cyclos.entities.utils.Period;
-import nl.strohalm.cyclos.utils.hibernate.HibernateHelper;
+import nl.strohalm.cyclos.utils.jpa.JpaQueryHelper;
 
 public class ReferenceHistoryDAOImpl extends BaseDAOImpl<ReferenceHistoryLog> implements ReferenceHistoryDAO {
 
@@ -51,7 +51,7 @@ public class ReferenceHistoryDAOImpl extends BaseDAOImpl<ReferenceHistoryLog> im
         }
         final Map<String, Object> namedParameters = new HashMap<String, Object>();
         final StringBuilder hql = new StringBuilder("select rh.level, count(rh.id) from ReferenceHistoryLog rh where 1=1 ");
-        HibernateHelper.addParameterToQuery(hql, namedParameters, (received ? "rh.to" : "rh.from"), member);
+        JpaQueryHelper.addParameterToQuery(hql, namedParameters, (received ? "rh.to" : "rh.from"), member);
         if (memberGroups != null && !memberGroups.isEmpty()) {
             hql.append(" and " + (received ? "rh.to" : "rh.from") + ".group in (:memberGroups) ");
             namedParameters.put("memberGroups", memberGroups);
@@ -59,7 +59,7 @@ public class ReferenceHistoryDAOImpl extends BaseDAOImpl<ReferenceHistoryLog> im
         if (date != null) {
             final Calendar begin = DateHelper.truncate(date.getBegin());
             if (begin != null) {
-                HibernateHelper.addParameterToQueryOperator(hql, namedParameters, "rh.period.begin", ">=", begin);
+                JpaQueryHelper.addParameterToQueryOperator(hql, namedParameters, "rh.period.begin", ">=", begin);
             }
             final Calendar end = DateHelper.truncate(date.getEnd());
             if (end != null) {
@@ -83,9 +83,9 @@ public class ReferenceHistoryDAOImpl extends BaseDAOImpl<ReferenceHistoryLog> im
     public ReferenceHistoryLog getOpenReferenceHistoryLog(final ReferenceHistoryLogQuery query) {
         final Map<String, Object> namedParameters = new HashMap<String, Object>();
         final Set<Relationship> fetch = query.getFetch();
-        final StringBuilder hql = HibernateHelper.getInitialQuery(getEntityType(), "rhl", fetch);
-        HibernateHelper.addParameterToQuery(hql, namedParameters, "rhl.from", query.getFrom());
-        HibernateHelper.addParameterToQuery(hql, namedParameters, "rhl.to", query.getTo());
+        final StringBuilder hql = JpaQueryHelper.getInitialQuery(getEntityType(), "rhl", fetch);
+        JpaQueryHelper.addParameterToQuery(hql, namedParameters, "rhl.from", query.getFrom());
+        JpaQueryHelper.addParameterToQuery(hql, namedParameters, "rhl.to", query.getTo());
         hql.append(" and rhl.period.end is null ");
 
         return uniqueResult(hql.toString(), namedParameters);

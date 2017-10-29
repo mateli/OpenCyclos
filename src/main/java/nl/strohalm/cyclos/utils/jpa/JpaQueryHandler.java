@@ -17,13 +17,12 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 
  */
-package nl.strohalm.cyclos.utils.hibernate;
+package nl.strohalm.cyclos.utils.jpa;
 
 import nl.strohalm.cyclos.dao.FetchDAO;
 import nl.strohalm.cyclos.entities.Entity;
 import nl.strohalm.cyclos.entities.EntityReference;
 import nl.strohalm.cyclos.entities.Relationship;
-import nl.strohalm.cyclos.entities.exceptions.EntityNotFoundException;
 import nl.strohalm.cyclos.utils.ClassHelper;
 import nl.strohalm.cyclos.utils.EntityHelper;
 import nl.strohalm.cyclos.utils.FetchingIteratorListImpl;
@@ -35,11 +34,6 @@ import nl.strohalm.cyclos.utils.query.PageImpl;
 import nl.strohalm.cyclos.utils.query.PageParameters;
 import nl.strohalm.cyclos.utils.query.QueryParameters.ResultType;
 import org.apache.commons.lang.StringUtils;
-import org.hibernate.Hibernate;
-import org.hibernate.ObjectNotFoundException;
-import org.hibernate.collection.spi.PersistentCollection;
-import org.hibernate.proxy.HibernateProxy;
-import org.hibernate.proxy.LazyInitializer;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Parameter;
@@ -59,7 +53,7 @@ import java.util.regex.Pattern;
  * Handler for entity queries using Hibernate
  * @author luis
  */
-public class HibernateQueryHandler {
+public class JpaQueryHandler {
 
     private static Pattern FIRST_ALIAS     = Pattern.compile("^ *(from +[^ ]+|select(?: +distinct)?) +([^ ]+).*");
     private static Pattern LEFT_JOIN_FETCH = Pattern.compile("\\^left\\s+join\\s+fetch(\\s+[\\w\\.]+)?(\\s*[\\w]+)?");
@@ -193,7 +187,7 @@ public class HibernateQueryHandler {
             return;
         }
 
-        final ManagedType<? extends Entity> metaData = getClassMetamodel(source);
+        final ManagedType<?> metaData = getClassMetamodel(source);
         for (Attribute<?, ?> attribute : metaData.getAttributes()) {
             // Skip the collections
             if (attribute.isCollection()) {
@@ -243,7 +237,7 @@ public class HibernateQueryHandler {
     /**
      * Returns the class meta data for the given entity
      */
-    public ManagedType<? extends Entity> getClassMetamodel(final Entity entity) {
+    public ManagedType<?> getClassMetamodel(final Object entity) {
         return entityManager.getMetamodel().managedType(entity.getClass());
     }
 
@@ -251,97 +245,49 @@ public class HibernateQueryHandler {
         return fetchDao;
     }
 
-    /**
-     * Initialize an entity or collection
-     */
-    public Object initialize(final Object object) {
-        if (object instanceof HibernateProxy) {
-            // Reassociate the entity with the current session
-            Entity entity = (Entity) object;
-            entity = entityManager.find(EntityHelper.getRealClass(entity), entity.getId());
-            // Return the implementation associated with the proxy
-            if (entity instanceof HibernateProxy) {
-                final LazyInitializer lazyInitializer = ((HibernateProxy) entity).getHibernateLazyInitializer();
-                lazyInitializer.initialize();
-                return lazyInitializer.getImplementation();
-            } else {
-                return entity;
-            }
-        } else if (object instanceof PersistentCollection) {
-            // Reassociate the collection with the current session
-//            return getHibernateTemplate().execute(new HibernateCallback<Object>() {
-//                @Override
-//                public Object doInHibernate(final Session session) throws HibernateException{
-//                    final PersistentCollection persistentCollection = ((PersistentCollection) object);
-//                    Entity owner = (Entity) persistentCollection.getOwner();
-//                    final String role = persistentCollection.getRole();
-//                    if (owner == null || role == null) {
-//                        return persistentCollection;
-//                    }
-//                    // Retrieve the owner of this persistent collection, associated with the current session
-//                    owner = (Entity) entityManager.find(EntityHelper.getRealClass(owner), owner.getId());
-//                    // Retrieve the collection through it's role (property name)
-//                    final String propertyName = PropertyHelper.lastProperty(role);
-//                    final Object currentCollection = PropertyHelper.get(owner, propertyName);
-//                    if (currentCollection instanceof PersistentCollection) {
-//                        Hibernate.initialize(currentCollection);
-//                    }
-//                    return currentCollection;
-//                }
-//            });
-        }
-        try {
-            Hibernate.initialize(object);
-        } catch (final ObjectNotFoundException e) {
-            throw new EntityNotFoundException();
-        }
-        return object;
-    }
-
-    /**
-     * Initializes a lazy property
-     */
-    public Object initializeProperty(final Object bean, final String relationshipName) {
-        final String first = PropertyHelper.firstProperty(relationshipName);
-        Object value = PropertyHelper.get(bean, first);
-        value = initialize(value);
-        PropertyHelper.set(bean, first, value);
-        return value;
-    }
 
     @SuppressWarnings("unchecked")
     public void resolveReferences(final Entity entity) {
-        final ManagedType<? extends Entity> metaData = getClassMetamodel(entity);
+        final ManagedType<?> metaData = getClassMetamodel(entity);
         for (Attribute<?, ?> attribute : metaData.getAttributes()) {
-            if (attribute.isAssociation() && !Map.class.isAssignableFrom(attribute.getJavaType())) {
-                // Properties that are relationships to other entities
-                Entity rel = PropertyHelper.get(entity, attribute.getName());
-                if (rel instanceof EntityReference) {
-                    rel = entityManager.find(EntityHelper.getRealClass(rel), rel.getId());
-                    PropertyHelper.set(entity, attribute.getName(), rel);
-                }
-            } else if (attribute.isCollection() && !Map.class.isAssignableFrom(attribute.getJavaType())) {
-                // Properties that are collections of other entities
-                final Collection<?> current = PropertyHelper.get(entity, attribute.getName());
-                if (current != null && !(current instanceof PersistentCollection)) {
-                    // We must check that the collection is made of entities, since Hibernate supports collections os values
-                    boolean isEntityCollection = true;
-                    final Collection<Entity> resolved = ClassHelper.instantiate(current.getClass());
-                    for (final Object object : current) {
-                        if (object != null && !(object instanceof Entity)) {
-                            isEntityCollection = false;
-                            break;
-                        }
-                        Entity e = (Entity) object;
-                        if (object instanceof EntityReference) {
-                            e = entityManager.find(EntityHelper.getRealClass(e), e.getId());
-                        }
-                        resolved.add(e);
+            resolveReference(entity, attribute);
+        }
+    }
+
+    public void resolveReference(final Object entity, String propertyName) {
+        final ManagedType<?> metaData = getClassMetamodel(entity);
+        Attribute<?, ?> attribute = metaData.getAttribute(propertyName);
+        resolveReference(entity, attribute);
+    }
+
+    private void resolveReference(final Object entity, Attribute<?, ?> attribute) {
+         if (attribute.isCollection() && !Map.class.isAssignableFrom(attribute.getJavaType())) {
+            // Properties that are collections of other entities
+            final Collection<?> current = PropertyHelper.get(entity, attribute.getName());
+            if (current != null) {
+                boolean isEntityCollection = true;
+                final Collection<Entity> resolved = ClassHelper.instantiate(current.getClass());
+                for (final Object object : current) {
+                    if (object != null && !(object instanceof Entity)) {
+                        isEntityCollection = false;
+                        break;
                     }
-                    if (isEntityCollection) {
-                        PropertyHelper.set(entity, attribute.getName(), resolved);
+                    Entity e = (Entity) object;
+                    if (object instanceof EntityReference) {
+                        e = entityManager.find(EntityHelper.getRealClass(e), e.getId());
                     }
+                    resolved.add(e);
                 }
+                if (isEntityCollection) {
+                    PropertyHelper.set(entity, attribute.getName(), resolved);
+                }
+            }
+        } else if (attribute.isAssociation() && !Map.class.isAssignableFrom(attribute.getJavaType())) {
+            // Properties that are relationships to other entities
+            Entity rel = PropertyHelper.get(entity, attribute.getName());
+            if (rel instanceof EntityReference) {
+                rel = entityManager.find(EntityHelper.getRealClass(rel), rel.getId());
+                PropertyHelper.set(entity, attribute.getName(), rel);
             }
         }
     }

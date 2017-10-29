@@ -31,8 +31,7 @@ import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.ads.AdCategory;
 import nl.strohalm.cyclos.entities.ads.AdCategoryQuery;
 import nl.strohalm.cyclos.entities.ads.AdQuery;
-import nl.strohalm.cyclos.entities.members.Member;
-import nl.strohalm.cyclos.utils.hibernate.HibernateHelper;
+import nl.strohalm.cyclos.utils.jpa.JpaQueryHelper;
 
 import org.apache.commons.beanutils.BeanComparator;
 
@@ -56,7 +55,7 @@ public class AdCategoryDAOImpl extends BaseDAOImpl<AdCategory> implements AdCate
         hql.append("select cat.id from AdCategory cat");
         hql.append(" where 1=1");
 
-        HibernateHelper.addParameterToQuery(hql, namedParameters, "cat.active", true);
+        JpaQueryHelper.addParameterToQuery(hql, namedParameters, "cat.active", true);
 
         return list(new AdQuery(), hql.toString(), namedParameters);
     }
@@ -72,7 +71,7 @@ public class AdCategoryDAOImpl extends BaseDAOImpl<AdCategory> implements AdCate
         final Map<String, Object> namedParameters = new HashMap<String, Object>();
         final StringBuilder hql = getBasicQuery(query);
         if (query.getParent() != null) {
-            HibernateHelper.addParameterToQuery(hql, namedParameters, "c.parent", query.getParent());
+            JpaQueryHelper.addParameterToQuery(hql, namedParameters, "c.parent", query.getParent());
         } else {
             hql.append(" and c.parent is null ");
         }
@@ -82,7 +81,7 @@ public class AdCategoryDAOImpl extends BaseDAOImpl<AdCategory> implements AdCate
         } else {
             order = new String[] { "c.order", "c.name" };
         }
-        HibernateHelper.appendOrder(hql, order);
+        JpaQueryHelper.appendOrder(hql, order);
         return list(query, hql.toString(), namedParameters);
     }
 
@@ -103,7 +102,7 @@ public class AdCategoryDAOImpl extends BaseDAOImpl<AdCategory> implements AdCate
         final Set<Relationship> fetch = query.getFetch();
         hql.append(" select c");
         hql.append(" from AdCategory c left join c.parent p left join p.parent p1");
-        HibernateHelper.appendJoinFetch(hql, getEntityType(), "c", fetch);
+        JpaQueryHelper.appendJoinFetch(hql, getEntityType(), "c", fetch);
         hql.append(" where 1=1 ");
         if (!query.isReturnDisabled()) {
             hql.append(" and c.active = true ");

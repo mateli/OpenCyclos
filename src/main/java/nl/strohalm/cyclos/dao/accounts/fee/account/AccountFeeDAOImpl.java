@@ -28,7 +28,7 @@ import nl.strohalm.cyclos.dao.BaseDAOImpl;
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.accounts.fees.account.AccountFee;
 import nl.strohalm.cyclos.entities.accounts.fees.account.AccountFeeQuery;
-import nl.strohalm.cyclos.utils.hibernate.HibernateHelper;
+import nl.strohalm.cyclos.utils.jpa.JpaQueryHelper;
 
 /**
  * Implementation DAO for account fees
@@ -44,13 +44,13 @@ public class AccountFeeDAOImpl extends BaseDAOImpl<AccountFee> implements Accoun
     public List<AccountFee> search(final AccountFeeQuery query) {
         final Map<String, Object> namedParameters = new HashMap<String, Object>();
         final Set<Relationship> fetch = query.getFetch();
-        final StringBuilder hql = HibernateHelper.getInitialQuery(getEntityType(), "af", fetch);
-        HibernateHelper.addParameterToQuery(hql, namedParameters, "af.accountType", query.getAccountType());
-        HibernateHelper.addParameterToQuery(hql, namedParameters, "af.runMode", query.getType());
-        HibernateHelper.addParameterToQuery(hql, namedParameters, "af.recurrence.field", query.getRecurrence());
-        HibernateHelper.addParameterToQuery(hql, namedParameters, "af.day", query.getDay());
-        HibernateHelper.addParameterToQuery(hql, namedParameters, "af.hour", query.getHour());
-        HibernateHelper.addParameterToQueryOperator(hql, namedParameters, "af.enabledSince", "<=", query.getEnabledBefore());
+        final StringBuilder hql = JpaQueryHelper.getInitialQuery(getEntityType(), "af", fetch);
+        JpaQueryHelper.addParameterToQuery(hql, namedParameters, "af.accountType", query.getAccountType());
+        JpaQueryHelper.addParameterToQuery(hql, namedParameters, "af.runMode", query.getType());
+        JpaQueryHelper.addParameterToQuery(hql, namedParameters, "af.recurrence.field", query.getRecurrence());
+        JpaQueryHelper.addParameterToQuery(hql, namedParameters, "af.day", query.getDay());
+        JpaQueryHelper.addParameterToQuery(hql, namedParameters, "af.hour", query.getHour());
+        JpaQueryHelper.addParameterToQueryOperator(hql, namedParameters, "af.enabledSince", "<=", query.getEnabledBefore());
         if (query.getGroups() != null && !query.getGroups().isEmpty()) {
             hql.append(" and exists (select g.id from MemberGroup g where g in (:groups) and g in elements(af.groups)) ");
             namedParameters.put("groups", query.getGroups());
@@ -58,7 +58,7 @@ public class AccountFeeDAOImpl extends BaseDAOImpl<AccountFee> implements Accoun
         if (!query.isReturnDisabled()) {
             hql.append(" and af.enabled = true and af.enabledSince is not null");
         }
-        HibernateHelper.appendOrder(hql, "af.name");
+        JpaQueryHelper.appendOrder(hql, "af.name");
         return list(query, hql.toString(), namedParameters);
     }
 

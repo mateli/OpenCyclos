@@ -27,25 +27,24 @@ import nl.strohalm.cyclos.entities.exceptions.UnexpectedEntityException;
 import nl.strohalm.cyclos.utils.EntityHelper;
 import nl.strohalm.cyclos.utils.PropertyHelper;
 import nl.strohalm.cyclos.utils.binding.PropertyException;
-import nl.strohalm.cyclos.utils.hibernate.HibernateQueryHandler;
+import nl.strohalm.cyclos.utils.jpa.JpaQueryHandler;
 import org.apache.commons.lang.ArrayUtils;
-import org.hibernate.Hibernate;
-import org.hibernate.proxy.HibernateProxy;
 import org.springframework.orm.ObjectRetrievalFailureException;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceUnitUtil;
 
 /**
  * Implementation for fetch DAO
  * @author luis
  */
-public class FetchDAOImpl /* extends HibernateDaoSupport */ implements FetchDAO {
+public class FetchDAOImpl implements FetchDAO {
 
     @PersistenceContext
     protected EntityManager entityManager;
 
-    private HibernateQueryHandler hibernateQueryHandler;
+    private JpaQueryHandler jpaQueryHandler;
 
     public void clearCache() {
         entityManager.flush();
@@ -57,7 +56,8 @@ public class FetchDAOImpl /* extends HibernateDaoSupport */ implements FetchDAO 
     }
 
     public boolean isInitialized(final Object value) {
-        return !(value instanceof HibernateProxy) && Hibernate.isInitialized(value);
+        PersistenceUnitUtil persistenceUnitUtil = entityManager.getEntityManagerFactory().getPersistenceUnitUtil();
+        return persistenceUnitUtil.isLoaded(value);
     }
 
     @SuppressWarnings("unchecked")
@@ -74,8 +74,8 @@ public class FetchDAOImpl /* extends HibernateDaoSupport */ implements FetchDAO 
         entityManager.getEntityManagerFactory().getCache().evict(entity.getClass(), entity.getId());
     }
 
-    public void setHibernateQueryHandler(final HibernateQueryHandler hibernateQueryHandler) {
-        this.hibernateQueryHandler = hibernateQueryHandler;
+    public void setJpaQueryHandler(final JpaQueryHandler jpaQueryHandler) {
+        this.jpaQueryHandler = jpaQueryHandler;
     }
 
     /**
@@ -98,7 +98,6 @@ public class FetchDAOImpl /* extends HibernateDaoSupport */ implements FetchDAO 
             if (entity == null) {
                 throw new EntityNotFoundException(entityType, id);
             }
-            entity = (E) hibernateQueryHandler.initialize(entity);
         } catch (final ObjectRetrievalFailureException e) {
             throw new EntityNotFoundException(entityType, id);
         }
@@ -115,8 +114,8 @@ public class FetchDAOImpl /* extends HibernateDaoSupport */ implements FetchDAO 
                     String first = PropertyHelper.firstProperty(name);
                     String nested = PropertyHelper.nestedPath(name);
                     while (bean != null && first != null) {
-                        final Object value = hibernateQueryHandler.initializeProperty(bean, first);
-                        bean = value;
+                        jpaQueryHandler.resolveReference(bean, first);
+                        bean = PropertyHelper.get(bean, first);
                         first = PropertyHelper.firstProperty(nested);
                         nested = PropertyHelper.nestedPath(nested);
                     }

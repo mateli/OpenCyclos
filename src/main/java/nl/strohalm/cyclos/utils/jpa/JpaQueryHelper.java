@@ -17,7 +17,7 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 
  */
-package nl.strohalm.cyclos.utils.hibernate;
+package nl.strohalm.cyclos.utils.jpa;
 
 import nl.strohalm.cyclos.entities.Entity;
 import nl.strohalm.cyclos.entities.Relationship;
@@ -41,7 +41,7 @@ import java.util.Set;
  * Class with helper method to work with Hibernate
  * @author rafael
  */
-public class HibernateHelper {
+public class JpaQueryHelper {
 
     /**
      * Contains a value and an operator for use on queries

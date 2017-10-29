@@ -27,7 +27,7 @@ import nl.strohalm.cyclos.dao.BaseDAOImpl;
 import nl.strohalm.cyclos.entities.accounts.guarantees.GuaranteeLog;
 import nl.strohalm.cyclos.entities.accounts.guarantees.GuaranteeLogQuery;
 import nl.strohalm.cyclos.entities.exceptions.DaoException;
-import nl.strohalm.cyclos.utils.hibernate.HibernateHelper;
+import nl.strohalm.cyclos.utils.jpa.JpaQueryHelper;
 
 public class GuaranteeLogDAOImpl extends BaseDAOImpl<GuaranteeLog> implements GuaranteeLogDAO {
 
@@ -37,10 +37,10 @@ public class GuaranteeLogDAOImpl extends BaseDAOImpl<GuaranteeLog> implements Gu
 
     public List<GuaranteeLog> search(final GuaranteeLogQuery queryParameters) throws DaoException {
         final Map<String, Object> namedParameters = new HashMap<String, Object>();
-        final StringBuilder hql = HibernateHelper.getInitialQuery(getEntityType(), "gl", queryParameters.getFetch());
+        final StringBuilder hql = JpaQueryHelper.getInitialQuery(getEntityType(), "gl", queryParameters.getFetch());
 
         if (queryParameters.hasStatus()) {
-            HibernateHelper.addInParameterToQuery(hql, namedParameters, "gl.status", queryParameters.getStatusCollection());
+            JpaQueryHelper.addInParameterToQuery(hql, namedParameters, "gl.status", queryParameters.getStatusCollection());
         }
         return list(queryParameters, hql.toString(), null);
     }

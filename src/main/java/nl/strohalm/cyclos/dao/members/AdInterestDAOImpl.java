@@ -32,7 +32,7 @@ import nl.strohalm.cyclos.entities.exceptions.DaoException;
 import nl.strohalm.cyclos.entities.members.Member;
 import nl.strohalm.cyclos.entities.members.adInterests.AdInterest;
 import nl.strohalm.cyclos.entities.members.adInterests.AdInterestQuery;
-import nl.strohalm.cyclos.utils.hibernate.HibernateHelper;
+import nl.strohalm.cyclos.utils.jpa.JpaQueryHelper;
 
 /**
  * Implementation for ad interests dao
@@ -82,8 +82,8 @@ public class AdInterestDAOImpl extends BaseDAOImpl<AdInterest> implements AdInte
     public List<AdInterest> search(final AdInterestQuery query) throws DaoException {
         final Map<String, Object> namedParameters = new HashMap<String, Object>();
         final Set<Relationship> fetch = query.getFetch();
-        final StringBuilder hql = HibernateHelper.getInitialQuery(getEntityType(), "ai", fetch);
-        HibernateHelper.addParameterToQuery(hql, namedParameters, "ai.owner", query.getOwner());
+        final StringBuilder hql = JpaQueryHelper.getInitialQuery(getEntityType(), "ai", fetch);
+        JpaQueryHelper.addParameterToQuery(hql, namedParameters, "ai.owner", query.getOwner());
         return list(query, hql.toString(), namedParameters);
     }
 
