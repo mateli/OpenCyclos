@@ -183,12 +183,15 @@ dependencies {
     // http://mvnrepository.com/artifact/com.hazelcast/hazelcast-all
     compile group: 'com.hazelcast', name: 'hazelcast-all', version: '3.6.3'
 
-    // JPA / Hibernate
+    // JPA API
     // https://mvnrepository.com/artifact/org.eclipse.persistence/javax.persistence
     compile group: 'org.eclipse.persistence', name: 'javax.persistence', version: '2.2.0'
 
-    // http://mvnrepository.com/artifact/org.hibernate/hibernate-core
+    // Hibernate
     runtimeClasspath group: 'org.hibernate', name: 'hibernate-core', version: '5.2.1.Final'
+
+    // EcliseLink
+    runtimeClasspath group: 'org.eclipse.persistence', name: 'org.eclipse.persistence.jpa', version: '2.7.0'
 
     //// Jackson (An -all jar is in the lib directory, but Maven doesn't have one.)
     //// http://mvnrepository.com/artifact/org.codehaus.jackson/jackson-core-asl

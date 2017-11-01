@@ -19,10 +19,10 @@
  */
 package nl.strohalm.cyclos;
 
+import org.apache.commons.lang.StringUtils;
+
 import java.io.IOException;
 import java.util.Properties;
-
-import org.apache.commons.lang.StringUtils;
 
 /**
  * Returns the cyclos properties
@@ -37,9 +37,9 @@ public class CyclosConfiguration {
     private static final String TRANSACTION_QUEUE_CAPACITY           = "cyclos.transaction.queueCapacity";
     private static final String TRANSACTION_MAX_POOL_SIZE            = "cyclos.transaction.maxPoolSize";
     private static final String TRANSACTION_CORE_POOL_SIZE           = "cyclos.transaction.corePoolSize";
-    private static final String HIBERNATE_C3P0_MAX_POOL_SIZE         = "hibernate.c3p0.maxPoolSize";
+    private static final String DATASOURCE_MAX_POOL_SIZE             = "datasource.maxPoolSize";
 
-    private static final int    HIBERNATE_C3P0_MAX_POOL_SIZE_DEFAULT = 20;
+    private static final int DATASOURCE_MAX_POOL_SIZE_DEFAULT        = 20;
 
     public static final String  CYCLOS_PROPERTIES_FILE               = "/cyclos.properties";
 
@@ -51,8 +51,8 @@ public class CyclosConfiguration {
 
         properties.load(CyclosConfiguration.class.getResourceAsStream(CYCLOS_PROPERTIES_FILE));
 
-        final String dbMaxPoolSizeStr = properties.getProperty(HIBERNATE_C3P0_MAX_POOL_SIZE);
-        final Integer dbMaxPoolSize = StringUtils.isEmpty(dbMaxPoolSizeStr) ? HIBERNATE_C3P0_MAX_POOL_SIZE_DEFAULT : Integer.parseInt(dbMaxPoolSizeStr);
+        final String dbMaxPoolSizeStr = properties.getProperty(DATASOURCE_MAX_POOL_SIZE);
+        final Integer dbMaxPoolSize = StringUtils.isEmpty(dbMaxPoolSizeStr) ? DATASOURCE_MAX_POOL_SIZE_DEFAULT : Integer.parseInt(dbMaxPoolSizeStr);
 
         ensureProperty(TRANSACTION_CORE_POOL_SIZE, dbMaxPoolSize, properties);
         ensureProperty(TRANSACTION_MAX_POOL_SIZE, dbMaxPoolSize * 3, properties);
