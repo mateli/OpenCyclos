@@ -120,7 +120,7 @@ public abstract class Element extends Entity implements Indexable {
 	private User                        user;
 
     @OneToMany(mappedBy = "element", cascade = CascadeType.REMOVE)
-    @OrderBy("start_date")
+    @OrderBy("period.begin")
 	private Collection<GroupHistoryLog> groupHistoryLogs;
 
     @OneToMany(mappedBy = "subject", cascade = CascadeType.REMOVE)

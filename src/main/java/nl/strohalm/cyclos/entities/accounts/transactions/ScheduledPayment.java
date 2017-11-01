@@ -26,10 +26,7 @@ import nl.strohalm.cyclos.entities.customization.fields.PaymentCustomFieldValue;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import java.math.BigDecimal;
 import java.util.Calendar;
@@ -70,7 +67,6 @@ public class ScheduledPayment extends Payment {
 	private List<Transfer>    transfers;
 
     @OneToMany(mappedBy = "scheduledPayment", cascade = CascadeType.REMOVE)
-    @OrderBy("date, id")
     private Collection<PaymentCustomFieldValue> customValues;
 
 	/**

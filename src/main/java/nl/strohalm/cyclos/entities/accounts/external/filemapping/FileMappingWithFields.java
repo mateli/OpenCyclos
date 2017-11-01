@@ -30,7 +30,6 @@ import org.apache.commons.lang.StringUtils;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
-import javax.persistence.Enumerated;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
@@ -102,7 +101,7 @@ public abstract class FileMappingWithFields extends FileMapping {
     private String                   dateFormat;
 
     @OneToMany(mappedBy = "fileMapping", cascade = CascadeType.REMOVE)
-    @OrderBy("order_index")
+    @OrderBy("order")
 	private Collection<FieldMapping> fields;
 
 	/**

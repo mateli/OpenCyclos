@@ -72,11 +72,11 @@ public class Brokering extends Entity {
     private Calendar                              startDate;
 
     @OneToMany(mappedBy = "brokering", cascade = CascadeType.REMOVE)
-    @OrderBy("start_date desc")
+    @OrderBy("period.begin desc")
 	private Collection<BrokerCommissionContract>  contracts;
 
     @OneToMany(mappedBy = "brokering", cascade = CascadeType.REMOVE)
-    @OrderBy("start_date desc")
+    @OrderBy("period.begin desc")
 	private Collection<BrokeringCommissionStatus> statuses;
 
 	public Member getBroker() {

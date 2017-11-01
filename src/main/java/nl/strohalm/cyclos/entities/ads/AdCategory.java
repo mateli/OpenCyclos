@@ -77,7 +77,7 @@ public class AdCategory extends Entity implements Comparable<AdCategory> {
 	private AdCategory             parent;
 
     @OneToMany(mappedBy = "parent", cascade = CascadeType.REMOVE)
-    @OrderBy("order_index, name")
+    @OrderBy("order, name")
 	private Collection<AdCategory> children;
 
     @Column(name = "active", nullable = false)

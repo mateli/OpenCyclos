@@ -128,7 +128,7 @@ public class Guarantee extends Entity implements CustomFieldsContainer<PaymentCu
 	private Loan                                loan;
 
     @OneToMany(mappedBy = "guarantee")
-    @OrderBy("expiration_date asc")
+    @OrderBy("expirationDate asc")
 	private Collection<PaymentObligation>       paymentObligations;
 
     @OneToMany(mappedBy = "guarantee", cascade = CascadeType.ALL, orphanRemoval = true)
