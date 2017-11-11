@@ -19,16 +19,16 @@
  */
 package nl.strohalm.cyclos.dao.accounts.external;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import nl.strohalm.cyclos.dao.BaseDAOImpl;
 import nl.strohalm.cyclos.entities.accounts.external.ExternalTransfer;
 import nl.strohalm.cyclos.entities.accounts.external.ExternalTransferImport;
 import nl.strohalm.cyclos.entities.accounts.external.ExternalTransferImportQuery;
 import nl.strohalm.cyclos.utils.jpa.JpaQueryHelper;
+
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Implementation for data access object for external transfer imports
@@ -48,7 +48,7 @@ public class ExternalTransferImportDAOImpl extends BaseDAOImpl<ExternalTransferI
         final StringBuilder hql = new StringBuilder();
         hql.append(" select count(*)");
         hql.append(" from ").append(ExternalTransfer.class.getName()).append(" t");
-        hql.append(" where t.transferImport.id in (:ids)");
+        hql.append(" where t.transferImport.id in :ids");
         hql.append("   and t.status <> :pending");
         namedParameters.put("ids", Arrays.asList(ids));
         namedParameters.put("pending", ExternalTransfer.Status.PENDING);

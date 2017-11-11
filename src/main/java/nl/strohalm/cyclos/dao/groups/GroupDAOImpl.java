@@ -148,7 +148,7 @@ public class GroupDAOImpl extends BaseDAOImpl<Group> implements GroupDAO {
                 groups.addAll(groupFilter.getGroups());
             }
             if (CollectionUtils.isNotEmpty(groups)) {
-                hql.append(" and g in (:groups) ");
+                hql.append(" and g in :groups ");
                 namedParameters.put("groups", groups);
             }
         }

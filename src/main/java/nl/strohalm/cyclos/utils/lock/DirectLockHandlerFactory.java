@@ -60,7 +60,7 @@ public class DirectLockHandlerFactory extends BaseLockHandlerFactory {
             Long[] ids = EntityHelper.toIds(accounts);
             try {
                 entityManager
-                        .createQuery("select l.id from AccountLock l where l.id in (:ids)")
+                        .createQuery("select l.id from AccountLock l where l.id in :ids")
                         .setLockMode(LockModeType.PESSIMISTIC_WRITE)
                         .setParameter("ids", ids)
                         .executeUpdate();

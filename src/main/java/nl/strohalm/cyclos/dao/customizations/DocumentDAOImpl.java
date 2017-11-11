@@ -64,7 +64,7 @@ public class DocumentDAOImpl extends BaseDAOImpl<Document> implements DocumentDA
 
         // Nature
         if (query.getNatures() != null) {
-            hql.append(" and doc.class in (:natures) ");
+            hql.append(" and doc.class in :natures ");
             Collection<Document.Nature> natures = query.getNatures();
             Collection<String> natureValues = new ArrayList<String>();
             for (Document.Nature nature : natures) {
@@ -103,7 +103,7 @@ public class DocumentDAOImpl extends BaseDAOImpl<Document> implements DocumentDA
         if (query.getMember() != null) {
             final Member member = getFetchDao().fetch(query.getMember(), Member.Relationships.BROKER);
             hql.append(" and (doc.class in (:dynamicType, :staticType) or ");
-            hql.append(" exists (select id from MemberDocument md where md = doc and md.member = :member and md.member.group in (:groups) ");
+            hql.append(" exists (select id from MemberDocument md where md = doc and md.member = :member and md.member.group in :groups ");
             namedParameters.put("groups", query.getVisibleGroups());
             // Viewer
             if (viewer instanceof Member) {

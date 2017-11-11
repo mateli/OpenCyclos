@@ -51,7 +51,7 @@ public class BrokerCommissionContractDAOImpl extends BaseDAOImpl<BrokerCommissio
         hql.append(" and oc.brokering = :brokering ");
         hql.append(" and oc.brokerCommission = :brokerCommission ");
         hql.append(" and (oc.period.end is null or oc.period.end >= :startDate) ");
-        hql.append(" and oc.status in (:statusList) ");
+        hql.append(" and oc.status in :statusList ");
 
         final List<BrokerCommissionContract.Status> statusList = new ArrayList<BrokerCommissionContract.Status>();
         statusList.add(BrokerCommissionContract.Status.PENDING);
@@ -95,7 +95,7 @@ public class BrokerCommissionContractDAOImpl extends BaseDAOImpl<BrokerCommissio
         JpaQueryHelper.addInParameterToQuery(hql, namedParameters, "bcc.status", query.getStatusList());
 
         if (CollectionUtils.isNotEmpty(query.getManagedMemberGroups())) {
-            hql.append(" and (bcc.brokering.broker.group in (:groups_) or bcc.brokering.brokered.group in (:groups_))");
+            hql.append(" and (bcc.brokering.broker.group in :groups_ or bcc.brokering.brokered.group in :groups_)");
             namedParameters.put("groups_", query.getManagedMemberGroups());
 
         }

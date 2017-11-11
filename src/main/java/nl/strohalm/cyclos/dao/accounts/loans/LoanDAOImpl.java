@@ -183,7 +183,7 @@ public class LoanDAOImpl extends BaseDAOImpl<Loan> implements LoanDAO {
             hql.append(')');
         }
         if (query.getGroups() != null && !query.getGroups().isEmpty()) {
-            hql.append(" and a.member.group in (:groups) ");
+            hql.append(" and a.member.group in :groups ");
             namedParameters.put("groups", query.getGroups());
         }
         jpaCustomFieldHandler.appendConditions(hql, namedParameters, query.getMemberCustomValues());

@@ -82,7 +82,7 @@ public class PaymentFilterDAOImpl extends BaseDAOImpl<PaymentFilter> implements 
 
         // Member groups
         if (!CollectionUtils.isEmpty(query.getMemberGroups())) {
-            hql.append(" and exists (select mgas.id from ").append(MemberGroupAccountSettings.class.getName()).append(" mgas where mgas.group in (:memberGroups) and pf.accountType = mgas.accountType ) ");
+            hql.append(" and exists (select mgas.id from ").append(MemberGroupAccountSettings.class.getName()).append(" mgas where mgas.group in :memberGroups and pf.accountType = mgas.accountType ) ");
             namedParameters.put("memberGroups", query.getMemberGroups());
         }
 

@@ -96,7 +96,7 @@ public class PosDAOImpl extends BaseDAOImpl<Pos> implements PosDAO {
         hql.append(" where 1 = 1");
         JpaQueryHelper.addParameterToQuery(hql, namedParameters, "p.posId", query.getPosId());
         if (!posStatuses.isEmpty() && !memberPosStatuses.isEmpty()) {
-            hql.append(" and (p.status in (:posStatuses) or (mp.status in (:memberPosStatuses)))");
+            hql.append(" and (p.status in :posStatuses or (mp.status in :memberPosStatuses))");
             namedParameters.put("posStatuses", posStatuses);
             namedParameters.put("memberPosStatuses", memberPosStatuses);
         } else if (posStatuses.isEmpty() && !memberPosStatuses.isEmpty()) {

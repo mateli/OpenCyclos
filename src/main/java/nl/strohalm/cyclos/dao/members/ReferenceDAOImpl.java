@@ -87,7 +87,7 @@ public class ReferenceDAOImpl extends BaseDAOImpl<Reference> implements Referenc
         final StringBuilder hql = new StringBuilder("select r.level, count(r.id) from ").append(type.getName()).append(" r where 1=1 ");
         JpaQueryHelper.addParameterToQuery(hql, namedParameters, (received ? "r.to" : "r.from"), member);
         if (memberGroups != null && !memberGroups.isEmpty()) {
-            hql.append(" and " + (received ? "r.to" : "r.from") + ".group in (:memberGroups) ");
+            hql.append(" and " + (received ? "r.to" : "r.from") + ".group in :memberGroups ");
             namedParameters.put("memberGroups", memberGroups);
         }
         JpaQueryHelper.addPeriodParameterToQuery(hql, namedParameters, "r.date", period);
@@ -115,7 +115,7 @@ public class ReferenceDAOImpl extends BaseDAOImpl<Reference> implements Referenc
         }
 
         if (query.getGroups() != null) {
-            hql.append(" and (r.from.group in (:groups) or r.to.group in (:groups)) ");
+            hql.append(" and (r.from.group in :groups or r.to.group in :groups) ");
             namedParameters.put("groups", query.getGroups());
         }
 

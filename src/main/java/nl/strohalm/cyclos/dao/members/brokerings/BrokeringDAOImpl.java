@@ -55,7 +55,7 @@ public class BrokeringDAOImpl extends BaseDAOImpl<Brokering> implements Brokerin
         JpaQueryHelper.addLikeParameterToQuery(hql, namedParameters, "b.brokered.user.username", query.getUsername());
         JpaQueryHelper.addParameterToQueryOperator(hql, namedParameters, "b.startDate", "<", DateHelper.truncate(query.getStartExpirationDate()));
         if (CollectionUtils.isNotEmpty(query.getGroups())) {
-            hql.append(" and b.brokered.group in (:groups) ");
+            hql.append(" and b.brokered.group in :groups ");
             namedParameters.put("groups", query.getGroups());
         }
         if (query.getStatus() != null) {

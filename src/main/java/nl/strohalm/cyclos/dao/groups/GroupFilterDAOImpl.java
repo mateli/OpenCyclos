@@ -71,7 +71,7 @@ public class GroupFilterDAOImpl extends BaseDAOImpl<GroupFilter> implements Grou
             final AdminGroup adminGroup = getFetchDao().fetch(query.getAdminGroup(), AdminGroup.Relationships.MANAGES_GROUPS);
             final Collection<MemberGroup> adminManagedGroups = adminGroup.getManagesGroups();
             if (CollectionUtils.isNotEmpty(adminManagedGroups)) {
-                hql.append(" and exists (select g.id from Group g where g member of gf.groups and g in (:adminManagedGroups)) ");
+                hql.append(" and exists (select g.id from Group g where g member of gf.groups and g in :adminManagedGroups) ");
                 namedParameters.put("adminManagedGroups", adminManagedGroups);
             }
         }

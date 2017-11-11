@@ -53,7 +53,7 @@ public class ReferenceHistoryDAOImpl extends BaseDAOImpl<ReferenceHistoryLog> im
         final StringBuilder hql = new StringBuilder("select rh.level, count(rh.id) from ReferenceHistoryLog rh where 1=1 ");
         JpaQueryHelper.addParameterToQuery(hql, namedParameters, (received ? "rh.to" : "rh.from"), member);
         if (memberGroups != null && !memberGroups.isEmpty()) {
-            hql.append(" and " + (received ? "rh.to" : "rh.from") + ".group in (:memberGroups) ");
+            hql.append(" and " + (received ? "rh.to" : "rh.from") + ".group in :memberGroups ");
             namedParameters.put("memberGroups", memberGroups);
         }
         if (date != null) {

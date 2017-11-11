@@ -52,7 +52,7 @@ public class SettingDAOImpl extends BaseDAOImpl<Setting> implements SettingDAO {
         if (types == null || types.length == 0) {
             return;
         }
-        bulkUpdate("delete from " + getEntityType().getName() + " e where e.type in (:types)", Collections.singletonMap("types", Arrays.asList(types)));
+        bulkUpdate("delete from " + getEntityType().getName() + " e where e.type in :types", Collections.singletonMap("types", Arrays.asList(types)));
     }
 
     public void importNew(final Locale locale) {

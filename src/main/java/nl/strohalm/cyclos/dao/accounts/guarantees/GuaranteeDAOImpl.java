@@ -151,7 +151,7 @@ public class GuaranteeDAOImpl extends BaseDAOImpl<Guarantee> implements Guarante
         }
 
         if (CollectionUtils.isNotEmpty(queryParameters.getManagedMemberGroups())) {
-            hql.append(" and (buyer.group in (:groups_) and (seller is null or seller.group in (:groups_)))");
+            hql.append(" and (buyer.group in :groups_ and (seller is null or seller.group in :groups_))");
             namedParameters.put("groups_", queryParameters.getManagedMemberGroups());
         }
 

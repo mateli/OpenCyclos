@@ -121,11 +121,11 @@ public class SessionDAOImpl extends BaseDAOImpl<Session> implements SessionDAO {
         boolean hasOperator = CollectionUtils.isEmpty(natures) || natures.contains(Group.Nature.OPERATOR);
         if (hasOperator) {
             // The groups may be for either the group or, if operators, the member group
-            hql.append("and (s.user.element.group in (:groups) or exists (");
+            hql.append("and (s.user.element.group in :groups or exists (");
             hql.append("    select o.id");
             hql.append("    from Operator o");
             hql.append("    where o = s.user.element");
-            hql.append("      and o.member.group in (:groups)");
+            hql.append("      and o.member.group in :groups");
             hql.append("))");
             params.put("groups", query.getGroups());
         } else {

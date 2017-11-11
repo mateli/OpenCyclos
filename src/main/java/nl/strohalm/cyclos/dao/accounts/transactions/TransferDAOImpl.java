@@ -345,7 +345,7 @@ public class TransferDAOImpl extends BaseDAOImpl<Transfer> implements TransferDA
             for (final PaymentFilter paymentFilter : paymentFilters) {
                 transferTypesSet.addAll(paymentFilter.getTransferTypes());
             }
-            hql.append(" and t.type not in (:transferTypes) ");
+            hql.append(" and t.type not in :transferTypes ");
             namedParameters.put("transferTypes", transferTypesSet);
         }
 
@@ -638,7 +638,7 @@ public class TransferDAOImpl extends BaseDAOImpl<Transfer> implements TransferDA
             hql.append("    ( select ghl.id ");
             hql.append("      from GroupHistoryLog ghl ");
             hql.append("      where ghl.element = m ");
-            hql.append("      and ghl.group in (:groups) ");
+            hql.append("      and ghl.group in :groups ");
             hql.append("      and ghl.period.begin < :end ");
             hql.append("      and (ghl.period.end is null or ghl.period.end >= :begin) ");
             hql.append("      and t.processDate between ghl.period.begin and ifnull(ghl.period.end, t.processDate) ");
@@ -699,11 +699,11 @@ public class TransferDAOImpl extends BaseDAOImpl<Transfer> implements TransferDA
                     // No accounts - ensure nothing will be returned
                     return false;
                 } else {
-                    hql.append(" and ((t.from in (:accounts) and t.to in (:relatedAccounts)) or (t.to in (:accounts) and t.from in (:relatedAccounts)))");
+                    hql.append(" and ((t.from in :accounts and t.to in :relatedAccounts) or (t.to in :accounts and t.from in :relatedAccounts))");
                     namedParameters.put("relatedAccounts", otherAccounts);
                 }
             } else {
-                hql.append(" and (t.from in (:accounts) or t.to in (:accounts))");
+                hql.append(" and (t.from in :accounts or t.to in :accounts)");
             }
 
             // Use the groups / group filters
@@ -729,8 +729,8 @@ public class TransferDAOImpl extends BaseDAOImpl<Transfer> implements TransferDA
             }
 
             if (!groups.isEmpty()) {
-                hql.append(" and ((t.to in (:accounts) and exists (select ma.id from MemberAccount ma where ma = t.from and ma.member.group in (:groups)))");
-                hql.append("   or (t.from in (:accounts) and exists (select ma.id from MemberAccount ma where ma = t.to and ma.member.group in (:groups))))");
+                hql.append(" and ((t.to in :accounts and exists (select ma.id from MemberAccount ma where ma = t.from and ma.member.group in :groups))");
+                hql.append("   or (t.from in :accounts and exists (select ma.id from MemberAccount ma where ma = t.to and ma.member.group in :groups)))");
                 namedParameters.put("groups", groups);
             }
         }
@@ -740,7 +740,7 @@ public class TransferDAOImpl extends BaseDAOImpl<Transfer> implements TransferDA
             final AccountQuery accountQuery = new AccountQuery();
             accountQuery.setOwner(query.getFromAccountOwner());
             final List<? extends Account> fromAccounts = accountDao.search(accountQuery);
-            hql.append(" and t.from in (:fromAccounts) ");
+            hql.append(" and t.from in :fromAccounts ");
             namedParameters.put("fromAccounts", fromAccounts);
         }
 
@@ -749,7 +749,7 @@ public class TransferDAOImpl extends BaseDAOImpl<Transfer> implements TransferDA
             final AccountQuery accountQuery = new AccountQuery();
             accountQuery.setOwner(query.getToAccountOwner());
             final List<? extends Account> toAccounts = accountDao.search(accountQuery);
-            hql.append(" and t.to in (:toAccounts) ");
+            hql.append(" and t.to in :toAccounts ");
             namedParameters.put("toAccounts", toAccounts);
         }
 
@@ -760,7 +760,7 @@ public class TransferDAOImpl extends BaseDAOImpl<Transfer> implements TransferDA
             final String ttHql = "from TransferType tt where exists ("
                     + " select 1"
                     + " from PaymentFilter pf"
-                    + " where pf in (:pfs)"
+                    + " where pf in :pfs"
                     + " and tt member of pf.transferTypes)";
             final List<TransferType> transferTypes = list(ttHql, Collections.singletonMap("pfs", paymentFilters));
 

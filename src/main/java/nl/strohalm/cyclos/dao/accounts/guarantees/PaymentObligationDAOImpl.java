@@ -79,7 +79,7 @@ public class PaymentObligationDAOImpl extends BaseDAOImpl<PaymentObligation> imp
         }
 
         if (CollectionUtils.isNotEmpty(queryParameters.getManagedMemberGroups())) {
-            hql.append(" and (po.buyer.group in (:groups_) and po.seller.group in (:groups_))");
+            hql.append(" and (po.buyer.group in :groups_ and po.seller.group in :groups_)");
             namedParameters.put("groups_", queryParameters.getManagedMemberGroups());
         }
 

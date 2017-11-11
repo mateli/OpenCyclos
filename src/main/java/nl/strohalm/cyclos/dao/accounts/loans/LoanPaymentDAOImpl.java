@@ -19,10 +19,6 @@
  */
 package nl.strohalm.cyclos.dao.accounts.loans;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import nl.strohalm.cyclos.dao.BaseDAOImpl;
 import nl.strohalm.cyclos.entities.accounts.loans.LoanPayment;
 import nl.strohalm.cyclos.entities.accounts.loans.LoanPayment.Status;
@@ -31,6 +27,10 @@ import nl.strohalm.cyclos.entities.exceptions.DaoException;
 import nl.strohalm.cyclos.services.transactions.TransactionSummaryVO;
 import nl.strohalm.cyclos.utils.jpa.JpaCustomFieldHandler;
 import nl.strohalm.cyclos.utils.jpa.JpaQueryHelper;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Implementation DAO for loan payments
@@ -97,7 +97,7 @@ public class LoanPaymentDAOImpl extends BaseDAOImpl<LoanPayment> implements Loan
         JpaQueryHelper.addPeriodParameterToQuery(hql, namedParameters, "lp.expirationDate", query.getExpirationPeriod());
         JpaQueryHelper.addPeriodParameterToQuery(hql, namedParameters, "lp.repaymentDate", query.getRepaymentPeriod());
         if (query.getGroups() != null && !query.getGroups().isEmpty()) {
-            hql.append(" and a.member.group in (:groups) ");
+            hql.append(" and a.member.group in :groups ");
             namedParameters.put("groups", query.getGroups());
         }
         jpaCustomFieldHandler.appendConditions(hql, namedParameters, query.getMemberCustomValues());

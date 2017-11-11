@@ -202,7 +202,7 @@ public class AccountDAOImpl extends BaseDAOImpl<Account> implements AccountDAO {
 
     @Override
     public int delete(final boolean flush, final Long... ids) {
-        this.bulkUpdate("delete from AccountLock l where l.id in (:ids)", Collections.singletonMap("ids", ids));
+        this.bulkUpdate("delete from AccountLock l where l.id in :ids", Collections.singletonMap("ids", ids));
         return super.delete(flush, ids);
     };
 
@@ -493,7 +493,7 @@ public class AccountDAOImpl extends BaseDAOImpl<Account> implements AccountDAO {
         sql.append(" where m.id = h.member_id");
         if (groupIds != null) {
             parameters.put("groupIds", groupIds);
-            sql.append(" and m.group_id in (:groupIds)");
+            sql.append(" and m.group_id in :groupIds");
         }
         sql.append(" order by m.name, u.username, h.account_type_name, h.date desc, h.transfer_id desc");
 
@@ -624,7 +624,7 @@ public class AccountDAOImpl extends BaseDAOImpl<Account> implements AccountDAO {
         sql.append(" where t.status = :processed");
         sql.append("   and t.chargeback_of_id is ").append(notChargeBack ? "" : "not ").append("null");
         if (useTT) {
-            sql.append("   and t.type_id in (:ttIds)");
+            sql.append("   and t.type_id in :ttIds");
         }
         if (beginParameter != null) {
             sql.append("   and t.process_date " + beginParameter.getOperator() + " :beginDate");
@@ -643,10 +643,10 @@ public class AccountDAOImpl extends BaseDAOImpl<Account> implements AccountDAO {
         sql.append(" where t.status = :processed");
         sql.append("   and t.chargeback_of_id is ").append(notChargeBack ? "null" : "not null");
         if (useGroups) {
-            sql.append("   and m.group_id in (:groupIds)");
+            sql.append("   and m.group_id in :groupIds");
         }
         if (useTT) {
-            sql.append("   and t.type_id in (:ttIds)");
+            sql.append("   and t.type_id in :ttIds");
         }
         if (beginParameter != null) {
             sql.append("   and t.process_date " + beginParameter.getOperator() + " :beginDate");
@@ -708,7 +708,7 @@ public class AccountDAOImpl extends BaseDAOImpl<Account> implements AccountDAO {
                 }
             }
             if (CollectionUtils.isNotEmpty(transferTypes)) {
-                hql.append(" and t.type in (:transferTypes) ");
+                hql.append(" and t.type in :transferTypes ");
                 namedParams.put("transferTypes", transferTypes);
             }
         }

@@ -138,7 +138,7 @@ public class SmsMailingDAOImpl extends BaseDAOImpl<SmsMailing> implements SmsMai
             hql.append(" or exists (");
             hql.append("     select g.id");
             hql.append("     from MemberGroup g");
-            hql.append("     where (g member of m.groups and g in (:_groups_)) or m.by.group in (:_groups_)");
+            hql.append("     where (g member of m.groups and g in :_groups_) or m.by.group in :_groups_");
             namedParameters.put("_groups_", query.getGroups());
             hql.append(" ))");
         }

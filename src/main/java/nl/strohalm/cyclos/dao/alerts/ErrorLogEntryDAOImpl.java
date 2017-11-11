@@ -48,7 +48,7 @@ public class ErrorLogEntryDAOImpl extends BaseDAOImpl<ErrorLogEntry> implements 
         if (ids == null || ids.length == 0) {
             return 0;
         }
-        final String hql = "update " + getEntityType().getName() + " e set e.removed=true where e.id in (:ids)";
+        final String hql = "update " + getEntityType().getName() + " e set e.removed=true where e.id in :ids";
         final Map<String, ?> namedParameters = Collections.singletonMap("ids", Arrays.asList(ids));
         final int results = bulkUpdate(hql.toString(), namedParameters);
         if (flush) {

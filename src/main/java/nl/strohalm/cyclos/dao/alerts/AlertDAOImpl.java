@@ -53,7 +53,7 @@ public class AlertDAOImpl extends BaseDAOImpl<Alert> implements AlertDAO {
         if (ids == null || ids.length == 0) {
             return 0;
         }
-        final String hql = "update " + getEntityType().getName() + " a set a.removed=true where a.id in (:ids)";
+        final String hql = "update " + getEntityType().getName() + " a set a.removed=true where a.id in :ids";
         final Map<String, ?> namedParameters = Collections.singletonMap("ids", Arrays.asList(ids));
         final int results = bulkUpdate(hql.toString(), namedParameters);
         if (flush) {
@@ -86,7 +86,7 @@ public class AlertDAOImpl extends BaseDAOImpl<Alert> implements AlertDAO {
             JpaQueryHelper.addParameterToQuery(hql, namedParameters, "a.member", query.getMember());
 
             if (query.getGroups() != null && !query.getGroups().isEmpty()) {
-                hql.append(" and a.member.group in (:groups) ");
+                hql.append(" and a.member.group in :groups ");
                 namedParameters.put("groups", query.getGroups());
             }
         }

@@ -19,11 +19,6 @@
  */
 package nl.strohalm.cyclos.dao.access;
 
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import nl.strohalm.cyclos.dao.BaseDAOImpl;
 import nl.strohalm.cyclos.entities.access.LoginHistoryLog;
 import nl.strohalm.cyclos.entities.access.User;
@@ -32,8 +27,12 @@ import nl.strohalm.cyclos.entities.exceptions.EntityNotFoundException;
 import nl.strohalm.cyclos.entities.reports.StatisticalDTO;
 import nl.strohalm.cyclos.utils.DateHelper;
 import nl.strohalm.cyclos.utils.Pair;
-
 import org.apache.commons.collections.CollectionUtils;
+
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class LoginHistoryDAOImpl extends BaseDAOImpl<LoginHistoryLog> implements LoginHistoryDAO {
 
@@ -81,7 +80,7 @@ public class LoginHistoryDAOImpl extends BaseDAOImpl<LoginHistoryLog> implements
             hql.append(" ( ");
             hql.append("    select ghl.id from GroupHistoryLog ghl ");
             hql.append("    where ghl.element.id = m.id ");
-            hql.append("    and ghl.group in (:groups) ");
+            hql.append("    and ghl.group in :groups ");
             hql.append("    and ghl.period.begin < :end ");
             hql.append("    and (ghl.period.end is null or ghl.period.end >= :begin) ");
             hql.append("    and (lhl.date is null or lhl.date between ghl.period.begin and ifnull(ghl.period.end, lhl.date)) ");

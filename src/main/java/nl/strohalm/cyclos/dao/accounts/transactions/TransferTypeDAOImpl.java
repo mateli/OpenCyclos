@@ -172,15 +172,15 @@ public class TransferTypeDAOImpl extends BaseDAOImpl<TransferType> implements Tr
 
         // Groups
         if (CollectionUtils.isNotEmpty(query.getFromGroups())) {
-            hql.append(" and exists (select mgas.id from MemberGroupAccountSettings mgas where mgas.group in (:fromGroups) and mgas.accountType = tt.from) ");
+            hql.append(" and exists (select mgas.id from MemberGroupAccountSettings mgas where mgas.group in :fromGroups and mgas.accountType = tt.from) ");
             namedParameters.put("fromGroups", query.getFromGroups());
         }
         if (CollectionUtils.isNotEmpty(query.getToGroups())) {
-            hql.append(" and exists (select mgas.id from MemberGroupAccountSettings mgas where mgas.group in (:toGroups) and mgas.accountType = tt.to) ");
+            hql.append(" and exists (select mgas.id from MemberGroupAccountSettings mgas where mgas.group in :toGroups and mgas.accountType = tt.to) ");
             namedParameters.put("toGroups", query.getToGroups());
         }
         if (CollectionUtils.isNotEmpty(query.getFromOrToGroups())) {
-            hql.append(" and exists (select mgas.id from MemberGroupAccountSettings mgas where mgas.group in (:fromOrToGroups) and (mgas.accountType = tt.from or mgas.accountType = tt.to)) ");
+            hql.append(" and exists (select mgas.id from MemberGroupAccountSettings mgas where mgas.group in :fromOrToGroups and (mgas.accountType = tt.from or mgas.accountType = tt.to)) ");
             namedParameters.put("fromOrToGroups", query.getFromOrToGroups());
         }
 
@@ -219,7 +219,7 @@ public class TransferTypeDAOImpl extends BaseDAOImpl<TransferType> implements Tr
         JpaQueryHelper.addInParameterToQuery(hql, namedParameters, "tt.to", query.getToAccountTypes());
         final Collection<? extends AccountType> accountTypes = query.getFromOrToAccountTypes();
         if (accountTypes != null && !accountTypes.isEmpty()) {
-            hql.append(" and (tt.to in (:fromOrToAT) or tt.from in (:fromOrToAT))");
+            hql.append(" and (tt.to in :fromOrToAT or tt.from in :fromOrToAT)");
             namedParameters.put("fromOrToAT", accountTypes);
         }
 
@@ -262,7 +262,7 @@ public class TransferTypeDAOImpl extends BaseDAOImpl<TransferType> implements Tr
         }
 
         if (CollectionUtils.isNotEmpty(query.getPossibleTransferTypes())) {
-            hql.append(" and tt in (:_possible)");
+            hql.append(" and tt in :_possible");
             namedParameters.put("_possible", query.getPossibleTransferTypes());
         }
 

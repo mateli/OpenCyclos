@@ -86,9 +86,9 @@ public class InvoiceDAOImpl extends BaseDAOImpl<Invoice> implements InvoiceDAO {
 
         if (CollectionUtils.isNotEmpty(dto.getTypes())) {
             hql.append(" and ( ");
-            hql.append("    e.destinationAccountType in (:types) or ");
-            hql.append("    exists(select i.id from Invoice i where i.transferType.from in (:types) and i = e) or ");
-            hql.append("    exists(select i.id from Invoice i where i.transferType.to in (:types) and i = e) ");
+            hql.append("    e.destinationAccountType in :types or ");
+            hql.append("    exists(select i.id from Invoice i where i.transferType.from in :types and i = e) or ");
+            hql.append("    exists(select i.id from Invoice i where i.transferType.to in :types and i = e) ");
             hql.append(" ) ");
             namedParameters.put("types", dto.getTypes());
         }
@@ -128,13 +128,13 @@ public class InvoiceDAOImpl extends BaseDAOImpl<Invoice> implements InvoiceDAO {
         if (memberGroups != null && !memberGroups.isEmpty()) {
             switch (invoiceSummaryType) {
                 case SYSTEM_INCOMING:
-                    hql.append(" and i.fromMember.group in (:memberGroups) ");
+                    hql.append(" and i.fromMember.group in :memberGroups ");
                     break;
                 case SYSTEM_OUTGOING:
-                    hql.append(" and i.toMember.group in (:memberGroups) ");
+                    hql.append(" and i.toMember.group in :memberGroups ");
                     break;
                 case MEMBER:
-                    hql.append(" and (i.fromMember.group in (:memberGroups) or i.toMember.group in (:memberGroups)) ");
+                    hql.append(" and (i.fromMember.group in :memberGroups or i.toMember.group in :memberGroups) ");
                     break;
             }
             namedParameters.put("memberGroups", memberGroups);
@@ -201,7 +201,7 @@ public class InvoiceDAOImpl extends BaseDAOImpl<Invoice> implements InvoiceDAO {
             }
         }
         if (query.getGroups() != null && !query.getGroups().isEmpty()) {
-            hql.append(" and (fmg in (:groups) or tmg in (:groups)) ");
+            hql.append(" and (fmg in :groups or tmg in :groups) ");
             namedParameters.put("groups", query.getGroups());
         }
 

@@ -62,11 +62,11 @@ public class ScheduledPaymentDAOImpl extends BaseDAOImpl<ScheduledPayment> imple
 
         final StringBuilder hql = new StringBuilder("SELECT sp from ");
         hql.append(ScheduledPayment.class.getName()).append(" ");
-        hql.append("sp WHERE sp.status in (:_pending_) ");
+        hql.append("sp WHERE sp.status in :_pending_ ");
         if (accountTypes.isEmpty()) {
             hql.append("AND (sp.from.member = :_member_ OR sp.to.member = :_member_) ");
         } else {
-            hql.append("AND (sp.from.member = :_member_ AND sp.from.type NOT IN (:_accountTypes_) OR sp.to.member = :_member_ AND sp.to.type NOT IN (:_accountTypes_)) ");
+            hql.append("AND (sp.from.member = :_member_ AND sp.from.type NOT in :_accountTypes_ OR sp.to.member = :_member_ AND sp.to.type NOT in :_accountTypes_) ");
         }
 
         return list(hql.toString(), namedParameters);
@@ -108,14 +108,14 @@ public class ScheduledPaymentDAOImpl extends BaseDAOImpl<ScheduledPayment> imple
 
         // Search type
         if (query.getSearchType() == ScheduledPaymentQuery.SearchType.OUTGOING) {
-            hql.append(" and sp.from in (:ownerAccounts) ");
+            hql.append(" and sp.from in :ownerAccounts ");
             if (CollectionUtils.isNotEmpty(otherAccounts)) {
-                hql.append(" and sp.to in (:otherAccounts) ");
+                hql.append(" and sp.to in :otherAccounts ");
             }
         } else {
-            hql.append(" and sp.to in (:ownerAccounts) ");
+            hql.append(" and sp.to in :ownerAccounts ");
             if (CollectionUtils.isNotEmpty(otherAccounts)) {
-                hql.append(" and sp.from in (:otherAccounts) ");
+                hql.append(" and sp.from in :otherAccounts ");
             }
             hql.append(" and sp.showToReceiver = true");
         }

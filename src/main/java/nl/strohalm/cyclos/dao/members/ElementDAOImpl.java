@@ -173,7 +173,7 @@ public class ElementDAOImpl extends IndexedDAOImpl<Element> implements ElementDA
         StringBuilder hql = new StringBuilder();
         hql.append(" select g.id, count(m.id) ");
         hql.append(" from Member m join m.group g ");
-        hql.append(" where g in (:groups) ");
+        hql.append(" where g in :groups ");
         hql.append(" group by g.id ");
         return this.<Long, Integer> map(hql.toString(), params);
     }
@@ -186,7 +186,7 @@ public class ElementDAOImpl extends IndexedDAOImpl<Element> implements ElementDA
         StringBuilder hql = new StringBuilder();
         hql.append(" select g.id, count(m.id) ");
         hql.append(" from GroupHistoryLog l join l.element m join l.group g ");
-        hql.append(" where g in (:groups) ");
+        hql.append(" where g in :groups ");
         hql.append("  and l.period.begin <= :timePoint ");
         hql.append("  and (l.period.end is null or l.period.end > :timePoint)");
         hql.append(" group by g.id");
@@ -256,27 +256,27 @@ public class ElementDAOImpl extends IndexedDAOImpl<Element> implements ElementDA
             namedParameters.put("groups", groups);
 
             // First condition: it has been in one of the selected groups
-            hql.append(" and ( (m.group in (:groups) and m.creationDate < :endDate and not exists ");
+            hql.append(" and ( (m.group in :groups and m.creationDate < :endDate and not exists ");
             hql.append(" (select gr1.id from GroupRemark gr1 where gr1.subject = m)) or ");
 
             // Second: Changed the member's group inside the period.
             hql.append(" (m.creationDate < :endDate and exists (select gr.id from GroupRemark gr where gr.subject=m and (gr.oldGroup in ");
-            hql.append(" (:groups) or gr.newGroup in (:groups)) and gr.date > :beginDate and gr.date <= :endDate)) or ");
+            hql.append(" (:groups) or gr.newGroup in :groups) and gr.date > :beginDate and gr.date <= :endDate)) or ");
 
             // Third condition: the group remark right before the period put the member in one
             // of the selected groups
             hql.append(" exists (select gr2.id from GroupRemark gr2 where gr2.subject=m and ");
-            hql.append(" gr2.newGroup in (:groups) and gr2.date=(select max(gr3.date) from GroupRemark ");
+            hql.append(" gr2.newGroup in :groups and gr2.date=(select max(gr3.date) from GroupRemark ");
             hql.append(" gr3 where gr3.subject=m and gr3.date < :beginDate)) or ");
 
             // Fourth condition: the group remark right after the begin period: the member was created
             // then the group was changed in the period, we must use oldGroup.
             hql.append(" (m.creationDate <= :endDate and exists (select gr2.id from GroupRemark gr2 where ");
-            hql.append(" gr2.subject=m and gr2.oldGroup in (:groups) and gr2.date = (select min(gr3.date) ");
+            hql.append(" gr2.subject=m and gr2.oldGroup in :groups and gr2.date = (select min(gr3.date) ");
             hql.append(" from GroupRemark gr3 where gr3.subject=m and gr3.date > :endDate))) ");
             hql.append(" ) ");
         } else if (!CollectionUtils.isEmpty(groups)) {
-            hql.append(" and m.group in (:groups) ");
+            hql.append(" and m.group in :groups ");
             namedParameters.put("groups", groups);
         }
         final Number count = uniqueResult(hql.toString(), namedParameters);
@@ -303,7 +303,7 @@ public class ElementDAOImpl extends IndexedDAOImpl<Element> implements ElementDA
             JpaQueryHelper.addPeriodParameterToQuery(hql, namedParameters, "gr.date", period);
         }
         if (groups != null && !groups.isEmpty()) {
-            hql.append("        and gr.oldGroup in (:groups) ");
+            hql.append("        and gr.oldGroup in :groups ");
             namedParameters.put("groups", groups);
         } else {
             return new ArrayList<Number[]>();
@@ -351,7 +351,7 @@ public class ElementDAOImpl extends IndexedDAOImpl<Element> implements ElementDA
             return Collections.<Member> emptyList().iterator();
         }
         final Map<String, List<MemberGroup>> parameters = Collections.singletonMap("groups", Arrays.asList(groups));
-        return iterate("from Member m left join fetch m.user where m.group in (:groups) " + (ordered ? "order by m.name, m.user.username" : ""), parameters);
+        return iterate("from Member m left join fetch m.user where m.group in :groups " + (ordered ? "order by m.name, m.user.username" : ""), parameters);
     }
 
     @Override
@@ -413,7 +413,7 @@ public class ElementDAOImpl extends IndexedDAOImpl<Element> implements ElementDA
             parameters.put("channelIds", channelIds);
             parameters.put("groupId", group.getId());
             final String statement = " delete from members_channels " +
-                    " where channel_id in (:channelIds) " +
+                    " where channel_id in :channelIds " +
                     " and member_id in (select id from members where group_id = :groupId) ";
             runNative(statement, parameters);
         }
@@ -450,7 +450,7 @@ public class ElementDAOImpl extends IndexedDAOImpl<Element> implements ElementDA
             hql.append(" and exists (select 1 from " + BrokerGroup.class.getName() + " bg where bg = e.group) ");
         }
         if (query.getExcludeElements() != null && !query.getExcludeElements().isEmpty()) {
-            hql.append(" and e not in (:excludeElements) ");
+            hql.append(" and e not in :excludeElements ");
             namedParameters.put("excludeElements", query.getExcludeElements());
         }
         if (query.isExcludeRemoved()) {
@@ -516,7 +516,7 @@ public class ElementDAOImpl extends IndexedDAOImpl<Element> implements ElementDA
             }
             // Group filters
             if (CollectionUtils.isNotEmpty(memberQuery.getGroupFilters())) {
-                hql.append(" and exists (select gf.id from GroupFilter gf where gf in (:groupFilters) and e.group member of gf.groups)");
+                hql.append(" and exists (select gf.id from GroupFilter gf where gf in :groupFilters and e.group member of gf.groups)");
                 namedParameters.put("groupFilters", memberQuery.getGroupFilters());
             }
         } else if (query instanceof OperatorQuery) {
@@ -562,21 +562,21 @@ public class ElementDAOImpl extends IndexedDAOImpl<Element> implements ElementDA
             namedParameters.put("broker", query.getBroker());
         }
         if (date == null) {
-            hql.append(" and m.group in (:groups) ");
+            hql.append(" and m.group in :groups ");
             namedParameters.put("groups", query.getGroups());
         } else {
             if (!CollectionUtils.isEmpty(query.getGroups())) {
                 hql.append(" and ( m.creationDate <= :date ");
-                hql.append(" and (m.group in (:groups) and not exists ");
+                hql.append(" and (m.group in :groups and not exists ");
                 hql.append(" (select gr1.id from GroupRemark gr1 where gr1.subject=m)) ");
 
                 hql.append(" or exists (select gr2.id from GroupRemark gr2 where gr2.subject=m and ");
-                hql.append(" gr2.newGroup in (:groups) and gr2.date= ");
+                hql.append(" gr2.newGroup in :groups and gr2.date= ");
                 hql.append(" (select max(gr3.date) from GroupRemark gr3 ");
                 hql.append(" where gr3.subject=m and gr3.date <= :date)) ");
 
                 hql.append(" or (m.creationDate <= :date and exists (select gr2.id from ");
-                hql.append(" GroupRemark gr2 where gr2.subject=m and gr2.oldGroup in (:groups) ");
+                hql.append(" GroupRemark gr2 where gr2.subject=m and gr2.oldGroup in :groups ");
                 hql.append(" and gr2.date = (select min(gr3.date) from GroupRemark gr3 ");
                 hql.append("  where gr3.subject=m and gr3.date > :date)) ))");
                 namedParameters.put("groups", query.getGroups());
@@ -636,7 +636,7 @@ public class ElementDAOImpl extends IndexedDAOImpl<Element> implements ElementDA
                 }
                 hql.append(" and ((not exists ");
                 hql.append(" (select gr.id from GroupRemark gr where gr.subject = e) ");
-                hql.append(" and e.group in (:groups) )");
+                hql.append(" and e.group in :groups )");
 
                 namedParameters.put("groups", groups);
 
@@ -647,7 +647,7 @@ public class ElementDAOImpl extends IndexedDAOImpl<Element> implements ElementDA
                 hql.append("        gr.subject = e ");
 
                 if (groups != null && !groups.isEmpty()) {
-                    hql.append("        and gr.oldGroup in (:groups) ) ");
+                    hql.append("        and gr.oldGroup in :groups ) ");
                 }
                 hql.append(")) or ");
 
@@ -662,8 +662,8 @@ public class ElementDAOImpl extends IndexedDAOImpl<Element> implements ElementDA
                     JpaQueryHelper.addPeriodParameterToQuery(hql, namedParameters, "gr.date", creationPeriod);
                 }
                 if (groups != null && !groups.isEmpty()) {
-                    // hql.append(" and (gr.newGroup in (:groups) ");
-                    hql.append("        and gr.newGroup in (:groups) and gr.oldGroup not in (:groups) ");
+                    // hql.append(" and (gr.newGroup in :groups ");
+                    hql.append("        and gr.newGroup in :groups and gr.oldGroup not in :groups ");
                     namedParameters.put("groups", groups);
                 }
                 hql.append("    )");
@@ -733,7 +733,7 @@ public class ElementDAOImpl extends IndexedDAOImpl<Element> implements ElementDA
             // the members from and to those groups, because they are the 'same group' in this case.
             final Collection<? extends Group> groups = query.getGroups();
             if (groups != null && !groups.isEmpty()) {
-                hql.append("     and gr.oldGroup in (:groups) and gr.newGroup not in (:groups) ");
+                hql.append("     and gr.oldGroup in :groups and gr.newGroup not in :groups ");
                 namedParameters.put("groups", groups);
             }
             // no group was chosen, no disappears members is returned;

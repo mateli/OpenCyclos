@@ -111,9 +111,9 @@ public class AdDAOImpl extends IndexedDAOImpl<Ad> implements AdDAO {
         if (ids != null && ids.length > 0) {
             final Map<String, Object> namedParameters = new HashMap<String, Object>();
             namedParameters.put("ids", Arrays.asList(ids));
-            bulkUpdate("delete from " + AdCustomFieldValue.class.getName() + " v where v.ad.id in (:ids)", namedParameters);
-            bulkUpdate("delete from " + AdImage.class.getName() + " ai where ai.ad.id in (:ids)", namedParameters);
-            final Integer results = CoercionHelper.coerce(Integer.TYPE, bulkUpdate("update Ad ad set ad.deleteDate = current_date(), ad.description = null where ad.id in (:ids)", namedParameters));
+            bulkUpdate("delete from " + AdCustomFieldValue.class.getName() + " v where v.ad.id in :ids", namedParameters);
+            bulkUpdate("delete from " + AdImage.class.getName() + " ai where ai.ad.id in :ids", namedParameters);
+            final Integer results = CoercionHelper.coerce(Integer.TYPE, bulkUpdate("update Ad ad set ad.deleteDate = current_date(), ad.description = null where ad.id in :ids", namedParameters));
             if (flush) {
                 flush();
             }
@@ -182,7 +182,7 @@ public class AdDAOImpl extends IndexedDAOImpl<Ad> implements AdDAO {
         final StringBuilder hql = new StringBuilder("select count(ad.id) from Ad ad where 1=1");
         JpaQueryHelper.addPeriodParameterToQuery(hql, namedParameters, "ad.creationDate", period);
         if (!CollectionUtils.isEmpty(groups)) {
-            hql.append(" and ad.owner.group in (:groups) ");
+            hql.append(" and ad.owner.group in :groups ");
             namedParameters.put("groups", groups);
         }
         return uniqueResult(hql.toString(), namedParameters);
@@ -293,7 +293,7 @@ public class AdDAOImpl extends IndexedDAOImpl<Ad> implements AdDAO {
         JpaQueryHelper.addParameterToQueryOperator(hql, namedParameters, "ad.creationDate", "<=", date);
         hql.append(" and (ad.deleteDate is null or ad.deleteDate > :date)");
         if (!CollectionUtils.isEmpty(groups)) {
-            hql.append(" and ad.owner.group in (:groups) ");
+            hql.append(" and ad.owner.group in :groups ");
             namedParameters.put("groups", groups);
         }
         switch (status) {

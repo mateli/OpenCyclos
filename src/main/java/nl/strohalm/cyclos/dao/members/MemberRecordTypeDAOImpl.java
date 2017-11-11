@@ -107,7 +107,7 @@ public class MemberRecordTypeDAOImpl extends BaseDAOImpl<MemberRecordType> imple
         if (query.getGroups() != null) {
             if (CollectionUtils.isNotEmpty(query.getGroups())) {
                 List<Long> groupIds = Arrays.asList(EntityHelper.toIds(query.getGroups()));
-                hql.append(" and exists (select g from Group g where g member of mrt.groups and g.id in (:groupIds)) ");
+                hql.append(" and exists (select g from Group g where g member of mrt.groups and g.id in :groupIds) ");
                 namedParameters.put("groupIds", groupIds);
             } else {
                 return Collections.emptyList();

@@ -81,7 +81,7 @@ public class CertificationDAOImpl extends BaseDAOImpl<Certification> implements 
         JpaQueryHelper.addPeriodParameterToQuery(hql, namedParameters, "cert.validity.end", queryParameters.getEndIn());
 
         if (CollectionUtils.isNotEmpty(queryParameters.getManagedMemberGroups())) {
-            hql.append(" and (cert.buyer.group in (:groups_) and cert.issuer.group in (:groups_))");
+            hql.append(" and (cert.buyer.group in :groups_ and cert.issuer.group in :groups_)");
             namedParameters.put("groups_", queryParameters.getManagedMemberGroups());
         }
         JpaQueryHelper.appendOrder(hql, "cert.validity.end asc");

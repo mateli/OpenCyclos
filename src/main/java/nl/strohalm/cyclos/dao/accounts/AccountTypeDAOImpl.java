@@ -138,11 +138,11 @@ public class AccountTypeDAOImpl extends BaseDAOImpl<AccountType> implements Acco
                 memberQuery.setRelatedToGroup(member.getMemberGroup());
             }
             if (memberQuery.getRelatedToGroups() != null && !memberQuery.getRelatedToGroups().isEmpty()) {
-                hql.append(" and exists (select mgaso.id from " + MemberGroupAccountSettings.class.getName() + " mgaso where mgaso.group in (:relatedGroups) and mgaso.accountType = at)");
+                hql.append(" and exists (select mgaso.id from " + MemberGroupAccountSettings.class.getName() + " mgaso where mgaso.group in :relatedGroups and mgaso.accountType = at)");
                 namedParameters.put("relatedGroups", memberQuery.getRelatedToGroups());
             }
             if (memberQuery.getNotRelatedToGroups() != null && !memberQuery.getNotRelatedToGroups().isEmpty()) {
-                hql.append(" and not exists (select mgaso.id from " + MemberGroupAccountSettings.class.getName() + " mgaso where mgaso.group in (:notRelatedGroups) and mgaso.accountType = at)");
+                hql.append(" and not exists (select mgaso.id from " + MemberGroupAccountSettings.class.getName() + " mgaso where mgaso.group in :notRelatedGroups and mgaso.accountType = at)");
                 namedParameters.put("notRelatedGroups", memberQuery.getNotRelatedToGroups());
             }
         }
@@ -177,7 +177,7 @@ public class AccountTypeDAOImpl extends BaseDAOImpl<AccountType> implements Acco
             hql.append(" and exists (");
             hql.append("     select 1");
             hql.append("     from MemberAccount ma");
-            hql.append("     where ma.member.group in (:groups)");
+            hql.append("     where ma.member.group in :groups");
             hql.append("     and (ma = t.from or ma = t.to)");
             hql.append(" )");
             namedParams.put("groups", groups);
