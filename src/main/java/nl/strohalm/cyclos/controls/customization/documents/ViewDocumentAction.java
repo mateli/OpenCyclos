@@ -19,8 +19,6 @@
  */
 package nl.strohalm.cyclos.controls.customization.documents;
 
-import javax.servlet.http.HttpServletResponse;
-
 import nl.strohalm.cyclos.annotations.Inject;
 import nl.strohalm.cyclos.controls.ActionContext;
 import nl.strohalm.cyclos.controls.BaseAction;
@@ -29,9 +27,9 @@ import nl.strohalm.cyclos.entities.customization.documents.StaticDocument;
 import nl.strohalm.cyclos.services.customization.DocumentService;
 import nl.strohalm.cyclos.utils.ResponseHelper;
 import nl.strohalm.cyclos.utils.validation.ValidationException;
-
-import org.apache.commons.io.IOUtils;
 import org.apache.struts.action.ActionForward;
+
+import javax.servlet.http.HttpServletResponse;
 
 public class ViewDocumentAction extends BaseAction {
 
@@ -62,7 +60,7 @@ public class ViewDocumentAction extends BaseAction {
         response.setContentType(binaryFile.getContentType());
         response.setContentLength(binaryFile.getSize());
         response.setDateHeader("Last-Modified", binaryFile.getLastModified().getTimeInMillis());
-        IOUtils.copy(binaryFile.getContents().getBinaryStream(), response.getOutputStream());
+        response.getOutputStream().write(binaryFile.getContents());
         response.flushBuffer();
         return null;
     }

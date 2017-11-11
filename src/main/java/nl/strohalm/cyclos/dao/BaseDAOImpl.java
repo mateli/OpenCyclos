@@ -44,11 +44,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import javax.sql.rowset.serial.SerialBlob;
 import java.io.IOException;
 import java.io.InputStream;
-import java.sql.Blob;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -81,11 +78,9 @@ public abstract class BaseDAOImpl<E extends Entity> implements BaseDAO<E>, Inser
     }
 
     @Override
-    public Blob createBlob(final InputStream stream, final int length) {
+    public byte[] createBlob(final InputStream stream, final int length) {
         try {
-            return new SerialBlob(IOUtils.toByteArray(stream));
-        } catch (SQLException e) {
-            e.printStackTrace();
+            return IOUtils.toByteArray(stream);
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -19,12 +19,6 @@
  */
 package nl.strohalm.cyclos.services.customization;
 
-import java.io.InputStream;
-import java.sql.Blob;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.List;
-
 import nl.strohalm.cyclos.access.AdminMemberPermission;
 import nl.strohalm.cyclos.access.BrokerPermission;
 import nl.strohalm.cyclos.dao.customizations.BinaryFileDAO;
@@ -47,6 +41,11 @@ import nl.strohalm.cyclos.utils.validation.PropertyValidation;
 import nl.strohalm.cyclos.utils.validation.RequiredError;
 import nl.strohalm.cyclos.utils.validation.ValidationError;
 import nl.strohalm.cyclos.utils.validation.Validator;
+
+import java.io.InputStream;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * Implementation for document service
@@ -266,7 +265,7 @@ public class DocumentServiceImpl implements DocumentServiceLocal {
     private BinaryFile retrieveBinaryFile(final InputStream stream, final int size, final String fileName, final String contentType) {
         if (stream != null && size > 0) {
             // Generate blob contents for the binary file
-            final Blob contents = documentDao.createBlob(stream, size);
+            final byte[] contents = documentDao.createBlob(stream, size);
 
             // Create binary file and set in the static document
             final BinaryFile binaryFile = new BinaryFile();

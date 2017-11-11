@@ -28,7 +28,6 @@ import javax.persistence.Column;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.Lob;
 import javax.persistence.Table;
-import java.sql.Blob;
 import java.util.Calendar;
 
 /**
@@ -105,7 +104,7 @@ public abstract class Image extends Entity {
 
     @Lob
     @Column(name = "image", nullable = false, length = 16000000) // index="ix_subclass_name"
-    private Blob              image;
+    private byte[] image;
 
     @Column(name = "image_size", nullable = false)
     private Integer           imageSize;
@@ -118,7 +117,7 @@ public abstract class Image extends Entity {
 
     @Lob
     @Column(name = "thumbnail", length = 16000000)
-    private Blob              thumbnail;
+    private byte[] thumbnail;
 
     @Column(name = "thumbnail_size", nullable = false)
     private Integer           thumbnailSize;
@@ -127,7 +126,7 @@ public abstract class Image extends Entity {
         return contentType;
     }
 
-    public Blob getImage() {
+    public byte[] getImage() {
         return image;
     }
 
@@ -156,7 +155,7 @@ public abstract class Image extends Entity {
         return name.substring(0, pos);
     }
 
-    public Blob getThumbnail() {
+    public byte[] getThumbnail() {
         return thumbnail;
     }
 
@@ -168,7 +167,7 @@ public abstract class Image extends Entity {
         this.contentType = contentType;
     }
 
-    public void setImage(final Blob image) {
+    public void setImage(final byte[] image) {
         this.image = image;
     }
 
@@ -184,7 +183,7 @@ public abstract class Image extends Entity {
         this.name = name;
     }
 
-    public void setThumbnail(final Blob thumbnail) {
+    public void setThumbnail(final byte[] thumbnail) {
         this.thumbnail = thumbnail;
     }
 

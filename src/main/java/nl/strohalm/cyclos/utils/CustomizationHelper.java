@@ -19,17 +19,6 @@
  */
 package nl.strohalm.cyclos.utils;
 
-import java.io.File;
-import java.io.FileFilter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.Callable;
-
-import javax.servlet.ServletContext;
-
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.customization.binaryfiles.BinaryFile;
 import nl.strohalm.cyclos.entities.customization.documents.DynamicDocument;
@@ -47,10 +36,19 @@ import nl.strohalm.cyclos.services.settings.SettingsService;
 import nl.strohalm.cyclos.utils.access.LoggedUser;
 import nl.strohalm.cyclos.utils.conversion.LocaleConverter;
 import nl.strohalm.cyclos.utils.customizedfile.CustomizedFileHandler;
-
 import org.apache.commons.io.filefilter.DirectoryFileFilter;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.web.context.ServletContextAware;
+
+import javax.servlet.ServletContext;
+import java.io.File;
+import java.io.FileFilter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.Callable;
 
 /**
  * Helper class for customizations
@@ -504,12 +502,7 @@ public class CustomizationHelper implements ServletContextAware {
      * Update a binary file
      */
     public void updateBinaryFile(final java.io.File file, final BinaryFile binaryFile) {
-        byte[] contents;
-        try {
-            contents = binaryFile.getContents().getBytes(1, binaryFile.getSize());
-        } catch (final Exception e) {
-            throw new IllegalStateException(e);
-        }
+        byte[] contents = binaryFile.getContents();
         final Long lastModified = binaryFile.getLastModified() == null ? System.currentTimeMillis() : binaryFile.getLastModified().getTimeInMillis();
         customizedFileHandler.write(getRelativePath(file), lastModified, contents);
     }

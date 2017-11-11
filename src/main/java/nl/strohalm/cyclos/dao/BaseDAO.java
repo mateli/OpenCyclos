@@ -19,14 +19,13 @@
  */
 package nl.strohalm.cyclos.dao;
 
-import java.io.InputStream;
-import java.sql.Blob;
-import java.util.Collection;
-
 import nl.strohalm.cyclos.entities.Entity;
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.exceptions.DaoException;
 import nl.strohalm.cyclos.entities.exceptions.EntityNotFoundException;
+
+import java.io.InputStream;
+import java.util.Collection;
 
 /**
  * Base Data Access Object which all DAO interface should extend. Specialized interfaces should define which Entity should replace generic type
@@ -37,7 +36,7 @@ import nl.strohalm.cyclos.entities.exceptions.EntityNotFoundException;
  */
 public interface BaseDAO<E extends Entity> {
 
-    Blob createBlob(final InputStream stream, final int length);
+    byte[] createBlob(final InputStream stream, final int length);
 
     /**
      * Duplicates the entity, without copying collections

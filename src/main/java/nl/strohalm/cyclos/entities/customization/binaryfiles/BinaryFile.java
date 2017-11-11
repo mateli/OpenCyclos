@@ -24,7 +24,6 @@ import nl.strohalm.cyclos.entities.Entity;
 import javax.persistence.Column;
 import javax.persistence.Lob;
 import javax.persistence.Table;
-import java.sql.Blob;
 import java.util.Calendar;
 
 /**
@@ -51,9 +50,9 @@ public class BinaryFile extends Entity {
 
     @Lob
     @Column(name = "contents", nullable = false, length = 10000000)
-    private Blob              contents;
+    private byte[] contents;
 
-    public Blob getContents() {
+    public byte[] getContents() {
         return contents;
     }
 
@@ -73,7 +72,7 @@ public class BinaryFile extends Entity {
         return size;
     }
 
-    public void setContents(final Blob contents) {
+    public void setContents(final byte[] contents) {
         this.contents = contents;
     }
 
