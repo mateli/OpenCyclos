@@ -19,15 +19,6 @@
  */
 package nl.strohalm.cyclos.dao.groups;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import nl.strohalm.cyclos.dao.BaseDAOImpl;
 import nl.strohalm.cyclos.entities.accounts.MemberGroupAccountSettings;
 import nl.strohalm.cyclos.entities.exceptions.DaoException;
@@ -41,8 +32,16 @@ import nl.strohalm.cyclos.entities.groups.OperatorGroup;
 import nl.strohalm.cyclos.entities.groups.SystemGroup;
 import nl.strohalm.cyclos.utils.jpa.JpaQueryHelper;
 import nl.strohalm.cyclos.utils.query.QueryParameters.ResultType;
-
 import org.apache.commons.collections.CollectionUtils;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Implementation class for group DAO
@@ -102,8 +101,8 @@ public class GroupDAOImpl extends BaseDAOImpl<Group> implements GroupDAO {
 
     @Override
     public Map<String, Integer> getGroupMemberCount() {
-        final List<Object[]> list = list("select g.name, count(e.id) from MemberGroup g left join g.elements e group by g.class, g.name order by g.class desc, g.name", null);
-        final Map<String, Integer> map = new LinkedHashMap<String, Integer>();
+        final List<Object[]> list = list("select g.name, count(e.id) from MemberGroup g left join g.elements e group by TYPE(g), g.name order by TYPE(g) desc, g.name", null);
+        final Map<String, Integer> map = new LinkedHashMap<>();
         for (final Object[] row : list) {
             map.put((String) row[0], (Integer) row[1]);
         }
@@ -132,7 +131,7 @@ public class GroupDAOImpl extends BaseDAOImpl<Group> implements GroupDAO {
         final Map<String, Object> namedParameters = new HashMap<String, Object>();
         final StringBuilder hql = JpaQueryHelper.getInitialQuery(getEntityType(), "g", query.getFetch());
         JpaQueryHelper.addInParameterToQuery(hql, namedParameters, "g", query.getPossibleGroups());
-        JpaQueryHelper.addInParameterToQuery(hql, namedParameters, "g.class", query.getNatureDiscriminators());
+        JpaQueryHelper.addInParameterToQuery(hql, namedParameters, "TYPE(g)", query.getNatureGroupClasses());
         JpaQueryHelper.addInParameterToQuery(hql, namedParameters, "g.status", query.getStatusCollection());
 
         // Active groups (member groups and broker groups)
@@ -174,15 +173,17 @@ public class GroupDAOImpl extends BaseDAOImpl<Group> implements GroupDAO {
         JpaQueryHelper.addMemberOfParameter(hql, namedParameters, "g.paymentFilters", query.getPaymentFilter());
 
         if (query.getManagedBy() != null) {
-            hql.append(" and ((g.class = :adminGroup) or (g in (select mg from AdminGroup ag join ag.managesGroups mg where ag = :managedBy))) ");
-            namedParameters.put("adminGroup", Group.Nature.ADMIN.getDiscriminator());
+            hql.append(" and ((TYPE(g) = :adminGroup) or (g in (select mg from AdminGroup ag join ag.managesGroups mg where ag = :managedBy))) ");
+            namedParameters.put("adminGroup", Group.Nature.ADMIN.getGroupClass());
             namedParameters.put("managedBy", query.getManagedBy());
         }
 
         // The order is dinamically determined
         final List<String> order = new ArrayList<String>();
         if (query.isSortByNature()) {
-            order.add("case g.class when 'A' then 1 when 'M' then 2 else 3 end");
+            order.add("case TYPE(g) when :adminGroup then 1 when :memberGroup then 2 else 3 end");
+            namedParameters.put("adminGroup", Group.Nature.ADMIN.getGroupClass());
+            namedParameters.put("memberGroup", Group.Nature.MEMBER.getGroupClass());
         }
         order.add("g.name");
         JpaQueryHelper.appendOrder(hql, order.toArray(new String[order.size()]));

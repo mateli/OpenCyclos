@@ -109,13 +109,13 @@ public class SmsLogDAOImpl extends BaseDAOImpl<SmsLog> implements SmsLogDAO {
                     if (CollectionUtils.isEmpty(mailingTypes)) {
                         hql.append(" and l.smsMailing is not null");
                     } else {
-                        namedParameters.put("admin", Element.Nature.ADMIN);
+                        namedParameters.put("admin", Element.Nature.ADMIN.getElementClass());
                         final StringBuilder expr = new StringBuilder();
                         expr.append("(case when m.member is not null then 'INDIVIDUAL' ");
-                        expr.append("      when b.class =  :admin and m.free =  true then 'FREE_TO_GROUP' ");
-                        expr.append("      when b.class =  :admin and m.free <> true then 'PAID_TO_GROUP' ");
-                        expr.append("      when b.class <> :admin and m.free =  true then 'FREE_FROM_BROKER' ");
-                        expr.append("      when b.class <> :admin and m.free <> true then 'PAID_FROM_BROKER' ");
+                        expr.append("      when TYPE(b) =  :admin and m.free =  true then 'FREE_TO_GROUP' ");
+                        expr.append("      when TYPE(b) =  :admin and m.free <> true then 'PAID_TO_GROUP' ");
+                        expr.append("      when TYPE(b) <> :admin and m.free =  true then 'FREE_FROM_BROKER' ");
+                        expr.append("      when TYPE(b) <> :admin and m.free <> true then 'PAID_FROM_BROKER' ");
                         expr.append("      else 'UNKNOWN' end)");
                         // The expression is string, so we must convert the mailing types to string
                         final Collection<String> mailingTypesStr = new ArrayList<String>(mailingTypes.size());

@@ -51,9 +51,9 @@ public class DocumentDAOImpl extends BaseDAOImpl<Document> implements DocumentDA
         final StringBuilder hql = JpaQueryHelper.getInitialQuery(getEntityType(), "doc", query.getFetch());
 
         // Save named parameters values
-        namedParameters.put("dynamicType", Document.Nature.DYNAMIC);
-        namedParameters.put("memberType", Document.Nature.MEMBER);
-        namedParameters.put("staticType", Document.Nature.STATIC);
+        namedParameters.put("dynamicType", Document.Nature.DYNAMIC.getType());
+        namedParameters.put("memberType", Document.Nature.MEMBER.getType());
+        namedParameters.put("staticType", Document.Nature.STATIC.getType());
         namedParameters.put("memberVisibility", MemberDocument.Visibility.MEMBER);
         namedParameters.put("brokerVisibility", MemberDocument.Visibility.BROKER);
 
@@ -64,11 +64,11 @@ public class DocumentDAOImpl extends BaseDAOImpl<Document> implements DocumentDA
 
         // Nature
         if (query.getNatures() != null) {
-            hql.append(" and doc.class in :natures ");
+            hql.append(" and TYPE(doc) in :natures ");
             Collection<Document.Nature> natures = query.getNatures();
-            Collection<String> natureValues = new ArrayList<String>();
+            Collection<Class> natureValues = new ArrayList<>();
             for (Document.Nature nature : natures) {
-                natureValues.add(nature.getValue());
+                natureValues.add(nature.getType());
             }
             namedParameters.put("natures", natureValues);
         }
@@ -86,14 +86,14 @@ public class DocumentDAOImpl extends BaseDAOImpl<Document> implements DocumentDA
                     searchingForABrokeredMemberDocuments = true;
                     hql.append(" and ( ");
                     if (query.isBrokerCanViewMemberDocuments()) {
-                        hql.append(" (doc.class = :memberType) or ");
+                        hql.append(" (TYPE(doc) = :memberType) or ");
                     }
                     hql.append(" exists (select g.id from BrokerGroup g where doc member of g.brokerDocuments and g = :group)) ");
                 }
             }
 
             if (!searchingForABrokeredMemberDocuments) {
-                hql.append(" and (doc.class = :memberType or exists (select g.id from Group g where doc member of g.documents and g = :group)) ");
+                hql.append(" and (TYPE(doc) = :memberType or exists (select g.id from Group g where doc member of g.documents and g = :group)) ");
             }
 
             namedParameters.put("group", viewer.getGroup());
@@ -102,7 +102,7 @@ public class DocumentDAOImpl extends BaseDAOImpl<Document> implements DocumentDA
         // The allowed member documents
         if (query.getMember() != null) {
             final Member member = getFetchDao().fetch(query.getMember(), Member.Relationships.BROKER);
-            hql.append(" and (doc.class in (:dynamicType, :staticType) or ");
+            hql.append(" and (TYPE(doc) in (:dynamicType, :staticType) or ");
             hql.append(" exists (select id from MemberDocument md where md = doc and md.member = :member and md.member.group in :groups ");
             namedParameters.put("groups", query.getVisibleGroups());
             // Viewer

@@ -186,16 +186,16 @@ public class TransferTypeDAOImpl extends BaseDAOImpl<TransferType> implements Tr
 
         // Nature
         if (query.getFromNature() != null) {
-            hql.append(" and tt.from.class = :fromNature");
-            namedParameters.put("fromNature", query.getFromNature());
+            hql.append(" and TYPE(tt.from) = :fromNature");
+            namedParameters.put("fromNature", query.getFromNature().getType());
         }
         if (query.getToNature() != null) {
-            hql.append(" and tt.to.class = :toNature");
-            namedParameters.put("toNature", query.getToNature());
+            hql.append(" and TYPE(tt.to) = :toNature");
+            namedParameters.put("toNature", query.getToNature().getType());
         }
         if (query.getFromOrToNature() != null) {
-            hql.append(" and (tt.from.class = :fromOrToNature or tt.to.class = :fromOrToNature)");
-            namedParameters.put("fromOrToNature", query.getFromOrToNature());
+            hql.append(" and (TYPE(tt.from) = :fromOrToNature or TYPE(tt.to) = :fromOrToNature)");
+            namedParameters.put("fromOrToNature", query.getFromOrToNature().getType());
         }
 
         // LimitType

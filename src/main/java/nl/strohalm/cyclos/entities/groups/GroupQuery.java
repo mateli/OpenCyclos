@@ -19,17 +19,16 @@
  */
 package nl.strohalm.cyclos.entities.groups;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-
 import nl.strohalm.cyclos.entities.accounts.MemberAccountType;
 import nl.strohalm.cyclos.entities.accounts.transactions.PaymentFilter;
 import nl.strohalm.cyclos.entities.members.Member;
 import nl.strohalm.cyclos.utils.query.QueryParameters;
-
 import org.apache.commons.collections.CollectionUtils;
+
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
 
 /**
  * Query parameters for user groups. All parameters are optional. They are:
@@ -87,13 +86,13 @@ public class GroupQuery extends QueryParameters {
         return natures[0];
     }
 
-    public Collection<String> getNatureDiscriminators() {
+    public Collection<Class> getNatureGroupClasses() {
         if (natures == null || natures.length == 0) {
             return null;
         }
-        final Collection<String> discriminators = new HashSet<String>();
+        final Collection<Class> discriminators = new HashSet<>();
         for (final Group.Nature nature : natures) {
-            discriminators.add(nature.getDiscriminator());
+            discriminators.add(nature.getGroupClass());
         }
         return discriminators;
     }

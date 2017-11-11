@@ -43,8 +43,8 @@ public class TransferAuthorizationDAOImpl extends BaseDAOImpl<TransferAuthorizat
         final Map<String, Object> namedParameters = new HashMap<String, Object>();
         final StringBuilder hql = JpaQueryHelper.getInitialQuery(getEntityType(), "a", query.getFetch());
         if (query.isByAdministration()) {
-            hql.append(" and a.by.class = :admin");
-            namedParameters.put("admin", Element.Nature.ADMIN);
+            hql.append(" and TYPE(a.by) = :admin");
+            namedParameters.put("admin", Element.Nature.ADMIN.getElementClass());
         }
         if (query.getBy() != null) {
             hql.append(" and (a.by = :by or exists (select op.id from Operator op where op = a.by and op.member = :by))");
