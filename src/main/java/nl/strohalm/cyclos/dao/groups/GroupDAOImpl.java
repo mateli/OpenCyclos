@@ -171,7 +171,7 @@ public class GroupDAOImpl extends BaseDAOImpl<Group> implements GroupDAO {
             namedParameters.put("accountType", query.getMemberAccountType());
         }
 
-        JpaQueryHelper.addInElementsParameter(hql, namedParameters, "g.paymentFilters", query.getPaymentFilter());
+        JpaQueryHelper.addMemberOfParameter(hql, namedParameters, "g.paymentFilters", query.getPaymentFilter());
 
         if (query.getManagedBy() != null) {
             hql.append(" and ((g.class = :adminGroup) or (g in (select mg from AdminGroup ag join ag.managesGroups mg where ag = :managedBy))) ");

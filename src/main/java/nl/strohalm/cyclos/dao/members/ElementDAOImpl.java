@@ -516,7 +516,7 @@ public class ElementDAOImpl extends IndexedDAOImpl<Element> implements ElementDA
             }
             // Group filters
             if (CollectionUtils.isNotEmpty(memberQuery.getGroupFilters())) {
-                hql.append(" and exists (select gf.id from GroupFilter gf where gf in (:groupFilters) and e.group in elements(gf.groups))");
+                hql.append(" and exists (select gf.id from GroupFilter gf where gf in (:groupFilters) and e.group member of gf.groups)");
                 namedParameters.put("groupFilters", memberQuery.getGroupFilters());
             }
         } else if (query instanceof OperatorQuery) {
@@ -528,7 +528,7 @@ public class ElementDAOImpl extends IndexedDAOImpl<Element> implements ElementDA
         }
 
         if (query.getViewableGroup() != null) {
-            hql.append(" and :mg in elements(e.group.canViewProfileOfGroups)");
+            hql.append(" and :mg member of e.group.canViewProfileOfGroups");
             namedParameters.put("mg", query.getViewableGroup());
         }
         jpaCustomFieldHandler.appendConditions(hql, namedParameters, query.getCustomValues());

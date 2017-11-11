@@ -121,7 +121,7 @@ public class CustomFieldDAOImpl extends BaseDAOImpl<CustomField> implements Cust
         final Map<String, Object> namedParameters = new HashMap<String, Object>();
         namedParameters.put("transferType", transferType);
         final StringBuilder hql = JpaQueryHelper.getInitialQuery(PaymentCustomField.class, "f", Arrays.asList(fetch));
-        hql.append(" and (f.transferType = :transferType or exists (select tt.id from TransferType tt where tt = :transferType and f in elements(tt.linkedCustomFields)))");
+        hql.append(" and (f.transferType = :transferType or exists (select tt.id from TransferType tt where tt = :transferType and f member of tt.linkedCustomFields))");
         if (!includeDisabled) {
             hql.append(" and f.enabled = true");
         }

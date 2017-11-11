@@ -516,7 +516,7 @@ public class TransferDAOImpl extends BaseDAOImpl<Transfer> implements TransferDA
         if (authorizer instanceof Administrator) {
             final Administrator administrator = (Administrator) authorizer;
             hql.append(" and l.authorizer in (:ADMIN, :BROKER)");
-            hql.append(" and :adminGroup in elements(l.adminGroups)");
+            hql.append(" and :adminGroup member of l.adminGroups");
             namedParameters.put("adminGroup", administrator.getAdminGroup());
         } else if (authorizer instanceof Operator) {
             hql.append(" and ((l.authorizer = :RECEIVER and exists (");
@@ -629,7 +629,7 @@ public class TransferDAOImpl extends BaseDAOImpl<Transfer> implements TransferDA
         JpaQueryHelper.addPeriodParameterToQuery(hql, namedParameters, "t.processDate", dto.getPeriod());
         // PaymentFilter
         if (dto.getPaymentFilter() != null) {
-            hql.append(" and exists (select 1 from " + PaymentFilter.class.getName() + " pf where pf = :filter and t.type in elements(pf.transferTypes)) ");
+            hql.append(" and exists (select 1 from " + PaymentFilter.class.getName() + " pf where pf = :filter and t.type member of pf.transferTypes) ");
             namedParameters.put("filter", dto.getPaymentFilter());
         }
         // Members groups
@@ -761,7 +761,7 @@ public class TransferDAOImpl extends BaseDAOImpl<Transfer> implements TransferDA
                     + " select 1"
                     + " from PaymentFilter pf"
                     + " where pf in (:pfs)"
-                    + " and tt in elements(pf.transferTypes))";
+                    + " and tt member of pf.transferTypes)";
             final List<TransferType> transferTypes = list(ttHql, Collections.singletonMap("pfs", paymentFilters));
 
             JpaQueryHelper.addInParameterToQuery(hql, namedParameters, "t.type", transferTypes);

@@ -19,16 +19,16 @@
  */
 package nl.strohalm.cyclos.dao.accounts.fee.account;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import nl.strohalm.cyclos.dao.BaseDAOImpl;
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.accounts.fees.account.AccountFee;
 import nl.strohalm.cyclos.entities.accounts.fees.account.AccountFeeQuery;
 import nl.strohalm.cyclos.utils.jpa.JpaQueryHelper;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Implementation DAO for account fees
@@ -52,7 +52,7 @@ public class AccountFeeDAOImpl extends BaseDAOImpl<AccountFee> implements Accoun
         JpaQueryHelper.addParameterToQuery(hql, namedParameters, "af.hour", query.getHour());
         JpaQueryHelper.addParameterToQueryOperator(hql, namedParameters, "af.enabledSince", "<=", query.getEnabledBefore());
         if (query.getGroups() != null && !query.getGroups().isEmpty()) {
-            hql.append(" and exists (select g.id from MemberGroup g where g in (:groups) and g in elements(af.groups)) ");
+            hql.append(" and exists (select g.id from MemberGroup g where g in (:groups) and g member of af.groups) ");
             namedParameters.put("groups", query.getGroups());
         }
         if (!query.isReturnDisabled()) {

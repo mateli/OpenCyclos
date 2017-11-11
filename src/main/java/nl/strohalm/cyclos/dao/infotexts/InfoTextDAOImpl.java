@@ -45,7 +45,7 @@ public class InfoTextDAOImpl extends BaseDAOImpl<InfoText> implements InfoTextDA
 
         final String alias = StringUtils.trimToNull(query.getAlias());
         if (alias != null) {
-            hql.append(" and :alias in elements(info.aliases) ");
+            hql.append(" and :alias member of info.aliases ");
             namedParameters.put("alias", alias);
         }
 

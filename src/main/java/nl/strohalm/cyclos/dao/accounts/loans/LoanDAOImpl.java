@@ -156,7 +156,7 @@ public class LoanDAOImpl extends BaseDAOImpl<Loan> implements LoanDAO {
             member = getFetchDao().fetch(member, Element.Relationships.GROUP);
             final MemberGroup group = member.getMemberGroup();
             if (group.getMemberSettings().isViewLoansByGroup()) {
-                hql.append(" and (a.member = :member or :member in elements(l.toMembers))");
+                hql.append(" and (a.member = :member or :member member of l.toMembers)");
                 namedParameters.put("member", member);
             } else {
                 JpaQueryHelper.addParameterToQuery(hql, namedParameters, "a.member", member);

@@ -19,11 +19,6 @@
  */
 package nl.strohalm.cyclos.dao.accounts.guarantees;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import nl.strohalm.cyclos.dao.BaseDAOImpl;
 import nl.strohalm.cyclos.entities.accounts.guarantees.Guarantee;
 import nl.strohalm.cyclos.entities.accounts.guarantees.GuaranteeQuery;
@@ -35,8 +30,12 @@ import nl.strohalm.cyclos.entities.groups.MemberGroup;
 import nl.strohalm.cyclos.entities.members.Member;
 import nl.strohalm.cyclos.utils.jpa.JpaCustomFieldHandler;
 import nl.strohalm.cyclos.utils.jpa.JpaQueryHelper;
-
 import org.apache.commons.collections.CollectionUtils;
+
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class GuaranteeDAOImpl extends BaseDAOImpl<Guarantee> implements GuaranteeDAO {
 
@@ -51,7 +50,7 @@ public class GuaranteeDAOImpl extends BaseDAOImpl<Guarantee> implements Guarante
         final Map<String, Object> namedParameters = new HashMap<String, Object>();
 
         final StringBuilder hql = JpaQueryHelper.getInitialQuery(Group.class, "buyer");
-        JpaQueryHelper.addInElementsParameter(hql, namedParameters, "buyer.canBuyWithPaymentObligationsFromGroups", seller);
+        JpaQueryHelper.addMemberOfParameter(hql, namedParameters, "buyer.canBuyWithPaymentObligationsFromGroups", seller);
 
         return list(hql.toString(), namedParameters);
     }
@@ -61,7 +60,7 @@ public class GuaranteeDAOImpl extends BaseDAOImpl<Guarantee> implements Guarante
         final Map<String, Object> namedParameters = new HashMap<String, Object>();
 
         final StringBuilder hql = JpaQueryHelper.getInitialQuery(Group.class, "issuer");
-        JpaQueryHelper.addInElementsParameter(hql, namedParameters, "issuer.guaranteeTypes", guaranteeType);
+        JpaQueryHelper.addMemberOfParameter(hql, namedParameters, "issuer.guaranteeTypes", guaranteeType);
 
         return list(hql.toString(), namedParameters);
 
@@ -82,7 +81,7 @@ public class GuaranteeDAOImpl extends BaseDAOImpl<Guarantee> implements Guarante
         final Map<String, Object> namedParameters = new HashMap<String, Object>();
         namedParameters.put("issuer_", issuer);
 
-        final StringBuilder hql = new StringBuilder("select distinct(seller) from Group seller, Group buyer, Group issuer where buyer in elements(issuer.canIssueCertificationToGroups) and seller in elements(buyer.canBuyWithPaymentObligationsFromGroups) and issuer = :issuer_");
+        final StringBuilder hql = new StringBuilder("select distinct(seller) from Group seller, Group buyer, Group issuer where buyer member of issuer.canIssueCertificationToGroups and seller member of buyer.canBuyWithPaymentObligationsFromGroups and issuer = :issuer_");
 
         return list(hql.toString(), namedParameters);
     }

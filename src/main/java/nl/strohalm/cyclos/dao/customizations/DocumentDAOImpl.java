@@ -88,12 +88,12 @@ public class DocumentDAOImpl extends BaseDAOImpl<Document> implements DocumentDA
                     if (query.isBrokerCanViewMemberDocuments()) {
                         hql.append(" (doc.class = :memberType) or ");
                     }
-                    hql.append(" exists (select g.id from BrokerGroup g where doc in elements(g.brokerDocuments) and g = :group)) ");
+                    hql.append(" exists (select g.id from BrokerGroup g where doc member of g.brokerDocuments and g = :group)) ");
                 }
             }
 
             if (!searchingForABrokeredMemberDocuments) {
-                hql.append(" and (doc.class = :memberType or exists (select g.id from Group g where doc in elements(g.documents) and g = :group)) ");
+                hql.append(" and (doc.class = :memberType or exists (select g.id from Group g where doc member of g.documents and g = :group)) ");
             }
 
             namedParameters.put("group", viewer.getGroup());

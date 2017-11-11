@@ -76,7 +76,7 @@ public class PaymentFilterDAOImpl extends BaseDAOImpl<PaymentFilter> implements 
 
         // Element
         if (query.getElement() != null) {
-            hql.append(" and exists (select e.id from ").append(Element.class.getName()).append(" e where e = :element and pf in elements(e.group.paymentFilters)) ");
+            hql.append(" and exists (select e.id from ").append(Element.class.getName()).append(" e where e = :element and pf member of e.group.paymentFilters) ");
             namedParameters.put("element", query.getElement());
         }
 

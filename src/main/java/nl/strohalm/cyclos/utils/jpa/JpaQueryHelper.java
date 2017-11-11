@@ -72,13 +72,13 @@ public class JpaQueryHelper {
     private static Map<Class<? extends Entity>, Set<String>> directPropertiesCache = new HashMap<Class<? extends Entity>, Set<String>>();
 
     /**
-     * Adds an "in elements()" operator parameter to the HQL query, if the given value is not empty, appending the values to the named parameters map
+     * Adds an "member of" operator parameter to the HQL query, if the given value is not empty, appending the values to the named parameters map
      * Used to search on associated relations
      */
-    public static void addInElementsParameter(final StringBuilder hql, final Map<String, Object> namedParameters, final String path, final Entity value) {
+    public static void addMemberOfParameter(final StringBuilder hql, final Map<String, Object> namedParameters, final String path, final Entity value) {
         if (value != null && value.isPersistent()) {
             final String parameterName = getParameterName(namedParameters, path);
-            hql.append(" and :").append(parameterName).append(" in elements(").append(path).append(") ");
+            hql.append(" and :").append(parameterName).append(" member of ").append(path).append(" ");
             namedParameters.put(parameterName, value);
         }
     }
@@ -89,7 +89,7 @@ public class JpaQueryHelper {
     public static void addInParameterToQuery(final StringBuilder hql, final Map<String, Object> namedParameters, final String path, final Collection<?> values) {
         if (values != null && !values.isEmpty()) {
             final String parameterName = getParameterName(namedParameters, path);
-            hql.append(" and ").append(path).append(" in (:").append(parameterName).append(") ");
+            hql.append(" and ").append(path).append(" in :").append(parameterName).append(" ");
             namedParameters.put(parameterName, values);
         }
     }

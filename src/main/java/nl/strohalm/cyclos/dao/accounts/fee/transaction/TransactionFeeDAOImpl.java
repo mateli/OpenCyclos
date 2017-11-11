@@ -70,14 +70,14 @@ public class TransactionFeeDAOImpl extends BaseDAOImpl<TransactionFee> implement
 
         // Broker group
         if (entityType == BrokerCommission.class && query.getBrokerGroup() != null) {
-            hql.append(" and (f.allBrokerGroups = true or :brokerGroup in elements (f.brokerGroups) ) ");
+            hql.append(" and (f.allBrokerGroups = true or :brokerGroup member of f.brokerGroups ) ");
             namedParameters.put("brokerGroup", query.getBrokerGroup());
         }
         // Member group
         if (query.getBrokerGroup() != null) {
             hql.append(" and (");
-            hql.append("  (f.fromAllGroups = true or :memberGroup in elements (f.fromGroups)) or ");
-            hql.append("  (f.toAllGroups = true or :memberGroup in elements (f.toGroups)) ");
+            hql.append("  (f.fromAllGroups = true or :memberGroup member of f.fromGroups) or ");
+            hql.append("  (f.toAllGroups = true or :memberGroup member of f.toGroups) ");
             hql.append(" ) ");
             namedParameters.put("memberGroup", query.getMemberGroup());
         }
