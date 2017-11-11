@@ -28,6 +28,7 @@ import nl.strohalm.cyclos.utils.EntityHelper;
 import nl.strohalm.cyclos.utils.FetchingIteratorListImpl;
 import nl.strohalm.cyclos.utils.IteratorListImpl;
 import nl.strohalm.cyclos.utils.PropertyHelper;
+import nl.strohalm.cyclos.utils.binding.PropertyException;
 import nl.strohalm.cyclos.utils.query.IteratorList;
 import nl.strohalm.cyclos.utils.query.Page;
 import nl.strohalm.cyclos.utils.query.PageImpl;
@@ -256,6 +257,9 @@ public class JpaQueryHandler {
 
     public void resolveReference(final Object entity, String propertyName) {
         final ManagedType<?> metaData = getClassMetamodel(entity);
+        if (!metaData.getAttributes().contains(propertyName)) {
+            throw new PropertyException(entity, propertyName);
+        }
         Attribute<?, ?> attribute = metaData.getAttribute(propertyName);
         resolveReference(entity, attribute);
     }

@@ -37,7 +37,7 @@ public class ApplicationDAOImpl extends BaseDAOImpl<Application> implements Appl
 
     @Override
     public Application read() {
-        return uniqueResult("from " + getEntityType().getName(), null);
+        return uniqueResult("from " + getEntityType().getName() + " a", null);
     }
 
 }

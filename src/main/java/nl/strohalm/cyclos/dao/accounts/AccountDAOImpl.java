@@ -266,8 +266,8 @@ public class AccountDAOImpl extends BaseDAOImpl<Account> implements AccountDAO {
     @Override
     public MemberAccount getNextPendingProcessing() {
         final StringBuilder hql = new StringBuilder();
-        hql.append("from MemberAccount ");
-        hql.append(" where action is not null");
+        hql.append("from MemberAccount m ");
+        hql.append(" where m.action is not null");
         return (MemberAccount) uniqueResult(hql.toString(), null);
     }
 
