@@ -19,18 +19,6 @@
  */
 package nl.strohalm.cyclos.dao.accounts.transactions;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import nl.strohalm.cyclos.dao.BaseDAOImpl;
 import nl.strohalm.cyclos.dao.accounts.AccountDAO;
 import nl.strohalm.cyclos.entities.Relationship;
@@ -55,18 +43,29 @@ import nl.strohalm.cyclos.entities.members.Element;
 import nl.strohalm.cyclos.entities.members.Member;
 import nl.strohalm.cyclos.entities.members.Operator;
 import nl.strohalm.cyclos.entities.reports.StatisticalDTO;
+import nl.strohalm.cyclos.entities.utils.Period;
 import nl.strohalm.cyclos.services.stats.general.KeyDevelopmentsStatsPerMonthVO;
 import nl.strohalm.cyclos.utils.BigDecimalHelper;
 import nl.strohalm.cyclos.utils.Pair;
-import nl.strohalm.cyclos.entities.utils.Period;
 import nl.strohalm.cyclos.utils.jpa.JpaCustomFieldHandler;
 import nl.strohalm.cyclos.utils.jpa.JpaQueryHelper;
 import nl.strohalm.cyclos.utils.query.PageParameters;
 import nl.strohalm.cyclos.utils.query.QueryParameters.ResultType;
 import nl.strohalm.cyclos.utils.statistics.ListOperations;
-
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.ArrayUtils;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Implementation class for transfer DAO
@@ -473,7 +472,7 @@ public class TransferDAOImpl extends BaseDAOImpl<Transfer> implements TransferDA
         final Map<String, Object> namedParameters = new HashMap<String, Object>();
         final StringBuilder hql = new StringBuilder();
         hql.append(" select t");
-        hql.append(" from Loan l right join l.transfer t ");
+        hql.append(" from Transfer t left join t.loans l ");
         jpaCustomFieldHandler.appendJoins(hql, "t.customValues", query.getCustomValues());
         JpaQueryHelper.appendJoinFetch(hql, Transfer.class, "t", query.getFetch());
         hql.append(" where 1=1");

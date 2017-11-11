@@ -27,6 +27,7 @@ import nl.strohalm.cyclos.entities.accounts.SystemAccountOwner;
 import nl.strohalm.cyclos.entities.accounts.external.ExternalTransfer;
 import nl.strohalm.cyclos.entities.accounts.fees.account.AccountFeeLog;
 import nl.strohalm.cyclos.entities.accounts.fees.transaction.TransactionFee;
+import nl.strohalm.cyclos.entities.accounts.loans.Loan;
 import nl.strohalm.cyclos.entities.accounts.loans.LoanPayment;
 import nl.strohalm.cyclos.entities.customization.fields.PaymentCustomFieldValue;
 import nl.strohalm.cyclos.entities.members.Element;
@@ -149,6 +150,9 @@ public class Transfer extends Payment implements Rated {
 
     @OneToMany(mappedBy = "transfer", cascade = CascadeType.REMOVE)
     private Collection<PaymentCustomFieldValue> customValues;
+
+    @OneToMany(mappedBy = "transfer")
+    private Collection<Loan> loans;
 
 	private transient Transfer                root;
 
