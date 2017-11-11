@@ -389,7 +389,7 @@ public class TransferDAOImpl extends BaseDAOImpl<Transfer> implements TransferDA
         JpaQueryHelper.addParameterToQuery(hql, namedParameters, "t.from", account);
         JpaQueryHelper.addParameterToQuery(hql, namedParameters, "t.type", transferType);
         JpaQueryHelper.addParameterToQuery(hql, namedParameters, "t.by", operator);
-        JpaQueryHelper.addPeriodParameterToQuery(hql, namedParameters, "ifnull(t.processDate, t.date)", Period.day(date));
+        JpaQueryHelper.addPeriodParameterToQuery(hql, namedParameters, "coalesce(t.processDate, t.date)", Period.day(date));
         BigDecimal sum = uniqueResult(hql.toString(), namedParameters);
         return BigDecimalHelper.nvl(sum);
     }
@@ -472,7 +472,7 @@ public class TransferDAOImpl extends BaseDAOImpl<Transfer> implements TransferDA
         final Map<String, Object> namedParameters = new HashMap<String, Object>();
         final StringBuilder hql = new StringBuilder();
         hql.append(" select t");
-        hql.append(" from Transfer t left join t.loans l ");
+        hql.append(" from Transfer t left join t.loans l");
         jpaCustomFieldHandler.appendJoins(hql, "t.customValues", query.getCustomValues());
         JpaQueryHelper.appendJoinFetch(hql, Transfer.class, "t", query.getFetch());
         hql.append(" where 1=1");
@@ -640,7 +640,7 @@ public class TransferDAOImpl extends BaseDAOImpl<Transfer> implements TransferDA
             hql.append("      and ghl.group in :groups ");
             hql.append("      and ghl.period.begin < :end ");
             hql.append("      and (ghl.period.end is null or ghl.period.end >= :begin) ");
-            hql.append("      and t.processDate between ghl.period.begin and ifnull(ghl.period.end, t.processDate) ");
+            hql.append("      and t.processDate between ghl.period.begin and coalesce(ghl.period.end, t.processDate) ");
             hql.append("    ) ");
             namedParameters.put("groups", dto.getGroups());
             namedParameters.put("begin", dto.getPeriod().getBegin());
@@ -658,7 +658,7 @@ public class TransferDAOImpl extends BaseDAOImpl<Transfer> implements TransferDA
         JpaQueryHelper.addParameterToQuery(hql, namedParameters, "t.loanPayment", query.getLoanPayment());
         JpaQueryHelper.addParameterToQuery(hql, namedParameters, "t.parent", query.getParent());
         JpaQueryHelper.addParameterToQuery(hql, namedParameters, "t.type", query.getTransferType());
-        JpaQueryHelper.addPeriodParameterToQuery(hql, namedParameters, "ifnull(t.processDate, t.date)", query.getPeriod());
+        JpaQueryHelper.addPeriodParameterToQuery(hql, namedParameters, "coalesce(t.processDate, t.date)", query.getPeriod());
         if (query.isRootOnly()) {
             hql.append(" and t.parent is null");
         }
@@ -785,7 +785,7 @@ public class TransferDAOImpl extends BaseDAOImpl<Transfer> implements TransferDA
             final List<String> orders = new ArrayList<String>();
 
             // Order by date ...
-            String order = "ifnull(t.processDate, t.date)";
+            String order = "coalesce(t.processDate, t.date)";
             if (query.isReverseOrder()) {
                 order += " desc";
             }

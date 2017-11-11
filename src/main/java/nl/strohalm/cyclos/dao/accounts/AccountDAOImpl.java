@@ -226,7 +226,7 @@ public class AccountDAOImpl extends BaseDAOImpl<Account> implements AccountDAO {
         }
         hql.append("   and t.to = :account ");
         namedParams.put("account", account);
-        JpaQueryHelper.addPeriodParameterToQuery(hql, namedParams, "ifnull(t.processDate, t.date)", period);
+        JpaQueryHelper.addPeriodParameterToQuery(hql, namedParams, "coalesce(t.processDate, t.date)", period);
         return buildSummary(uniqueResult(hql.toString(), namedParams));
     }
 
@@ -259,7 +259,7 @@ public class AccountDAOImpl extends BaseDAOImpl<Account> implements AccountDAO {
             }
         }
         namedParams.put("account", account);
-        JpaQueryHelper.addPeriodParameterToQuery(hql, namedParams, "ifnull(t.processDate, t.date)", period);
+        JpaQueryHelper.addPeriodParameterToQuery(hql, namedParams, "coalesce(t.processDate, t.date)", period);
         return buildSummary(uniqueResult(hql.toString(), namedParams));
     }
 
@@ -719,7 +719,7 @@ public class AccountDAOImpl extends BaseDAOImpl<Account> implements AccountDAO {
             namedParams.put("by", by);
         }
 
-        JpaQueryHelper.addPeriodParameterToQuery(hql, namedParams, "ifnull(t.processDate,t.date)", period);
+        JpaQueryHelper.addPeriodParameterToQuery(hql, namedParams, "coalesce(t.processDate,t.date)", period);
         return buildSummary(uniqueResult(hql.toString(), namedParams));
     }
 }

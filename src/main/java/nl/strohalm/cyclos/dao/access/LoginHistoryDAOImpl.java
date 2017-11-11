@@ -83,7 +83,7 @@ public class LoginHistoryDAOImpl extends BaseDAOImpl<LoginHistoryLog> implements
             hql.append("    and ghl.group in :groups ");
             hql.append("    and ghl.period.begin < :end ");
             hql.append("    and (ghl.period.end is null or ghl.period.end >= :begin) ");
-            hql.append("    and (lhl.date is null or lhl.date between ghl.period.begin and ifnull(ghl.period.end, lhl.date)) ");
+            hql.append("    and (lhl.date is null or lhl.date between ghl.period.begin and coalesce(ghl.period.end, lhl.date)) ");
             hql.append(" ) ");
             namedParameters.put("groups", dto.getGroups());
         }
