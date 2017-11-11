@@ -19,13 +19,6 @@
  */
 package nl.strohalm.cyclos.dao.members;
 
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
 import nl.strohalm.cyclos.dao.BaseDAOImpl;
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.exceptions.EntityNotFoundException;
@@ -34,8 +27,14 @@ import nl.strohalm.cyclos.entities.members.PendingMemberQuery;
 import nl.strohalm.cyclos.utils.DataIteratorHelper;
 import nl.strohalm.cyclos.utils.jpa.JpaCustomFieldHandler;
 import nl.strohalm.cyclos.utils.jpa.JpaQueryHelper;
-
 import org.apache.commons.lang.StringUtils;
+
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Implementation for PendingMemberDAO
@@ -70,7 +69,7 @@ public class PendingMemberDAOImpl extends BaseDAOImpl<PendingMember> implements 
         }
         final Map<String, Object> namedParameters = new HashMap<String, Object>();
         final StringBuilder hql = new StringBuilder();
-        hql.append(" select count(*)");
+        hql.append(" select count(pm)");
         hql.append(" from PendingMember pm");
         hql.append(" where 1 = 1");
         JpaQueryHelper.addParameterToQuery(hql, namedParameters, "upper(pm.email)", email.toUpperCase());

@@ -19,12 +19,6 @@
  */
 package nl.strohalm.cyclos.dao.members.imports;
 
-import java.math.BigDecimal;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import nl.strohalm.cyclos.dao.BaseDAOImpl;
 import nl.strohalm.cyclos.entities.members.imports.ImportedMember;
 import nl.strohalm.cyclos.entities.members.imports.ImportedMemberQuery;
@@ -32,8 +26,13 @@ import nl.strohalm.cyclos.entities.members.imports.ImportedMemberQuery.Status;
 import nl.strohalm.cyclos.entities.members.imports.MemberImport;
 import nl.strohalm.cyclos.services.transactions.TransactionSummaryVO;
 import nl.strohalm.cyclos.utils.jpa.JpaQueryHelper;
-
 import org.apache.commons.lang.StringUtils;
+
+import java.math.BigDecimal;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class ImportedMemberDAOImpl extends BaseDAOImpl<ImportedMember> implements ImportedMemberDAO {
 
@@ -43,7 +42,7 @@ public class ImportedMemberDAOImpl extends BaseDAOImpl<ImportedMember> implement
 
     public TransactionSummaryVO getTransactions(final MemberImport memberImport, final boolean credits) {
         final StringBuilder hql = new StringBuilder();
-        hql.append(" select new nl.strohalm.cyclos.services.transactions.NegativeAllowedTransactionSummaryVO(count(*), sum(m.initialBalance))");
+        hql.append(" select new nl.strohalm.cyclos.services.transactions.NegativeAllowedTransactionSummaryVO(count(m), sum(m.initialBalance))");
         hql.append(" from " + getEntityType().getName() + " m");
         hql.append(" where m.status = :success");
         hql.append("   and m.import = :import");

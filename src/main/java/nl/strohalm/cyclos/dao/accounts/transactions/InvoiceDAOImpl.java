@@ -19,13 +19,6 @@
  */
 package nl.strohalm.cyclos.dao.accounts.transactions;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import nl.strohalm.cyclos.dao.BaseDAOImpl;
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.accounts.AccountOwner;
@@ -41,11 +34,17 @@ import nl.strohalm.cyclos.entities.accounts.transactions.Transfer;
 import nl.strohalm.cyclos.entities.exceptions.EntityNotFoundException;
 import nl.strohalm.cyclos.entities.groups.MemberGroup;
 import nl.strohalm.cyclos.entities.reports.InvoiceSummaryType;
-import nl.strohalm.cyclos.services.transactions.TransactionSummaryVO;
 import nl.strohalm.cyclos.entities.utils.Period;
+import nl.strohalm.cyclos.services.transactions.TransactionSummaryVO;
 import nl.strohalm.cyclos.utils.jpa.JpaQueryHelper;
-
 import org.apache.commons.collections.CollectionUtils;
+
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Implementation class for invoice DAO
@@ -67,7 +66,7 @@ public class InvoiceDAOImpl extends BaseDAOImpl<Invoice> implements InvoiceDAO {
 
         final HashMap<String, Object> namedParameters = new HashMap<String, Object>();
 
-        final StringBuilder hql = new StringBuilder("select new " + TransactionSummaryVO.class.getName() + "(count(*), sum(e.amount)) from " + getEntityType().getName() + " e ");
+        final StringBuilder hql = new StringBuilder("select new " + TransactionSummaryVO.class.getName() + "(count(e), sum(e.amount)) from " + getEntityType().getName() + " e ");
 
         hql.append(" where e." + (direction == Direction.INCOMING ? "to" : "from") + "Member" + (owner instanceof SystemAccountOwner ? " is null " : " = :owner"));
         namedParameters.put("owner", owner);
@@ -121,7 +120,7 @@ public class InvoiceDAOImpl extends BaseDAOImpl<Invoice> implements InvoiceDAO {
                 break;
         }
 
-        final StringBuilder hql = new StringBuilder("select new " + TransactionSummaryVO.class.getName() + "(count(*), sum(i.amount)) from Invoice i ");
+        final StringBuilder hql = new StringBuilder("select new " + TransactionSummaryVO.class.getName() + "(count(i), sum(i.amount)) from Invoice i ");
         hql.append(" where i.fromMember " + fromMember + " and i.toMember " + toMember);
         hql.append(" and (exists (select tt.id from TransferType tt where tt = i.transferType and tt.from.currency = :currency) or exists (select at.id from AccountType at where at = i.destinationAccountType and at.currency = :currency))");
         namedParameters.put("currency", currency);

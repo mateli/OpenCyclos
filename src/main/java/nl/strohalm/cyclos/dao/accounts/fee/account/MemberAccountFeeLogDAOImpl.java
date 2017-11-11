@@ -64,7 +64,7 @@ public class MemberAccountFeeLogDAOImpl extends BaseDAOImpl<MemberAccountFeeLog>
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("log", log);
         StringBuilder hql = new StringBuilder();
-        hql.append(" select count(*) ");
+        hql.append(" select count(l) ");
         hql.append(" from MemberAccountFeeLog l");
         hql.append(" where l.accountFeeLog = :log");
         hql.append("   and l.success = true");
@@ -96,7 +96,7 @@ public class MemberAccountFeeLogDAOImpl extends BaseDAOImpl<MemberAccountFeeLog>
     public TransactionSummaryVO getTransfersSummary(final AccountFeeLog log) {
         Map<String, ?> params = Collections.singletonMap("log", log);
         StringBuilder hql = new StringBuilder();
-        hql.append(" select new nl.strohalm.cyclos.services.transactions.TransactionSummaryVO(count(*), sum(l.amount)) ");
+        hql.append(" select new nl.strohalm.cyclos.services.transactions.TransactionSummaryVO(count(l), sum(l.amount)) ");
         hql.append(" from MemberAccountFeeLog l");
         hql.append(" where l.accountFeeLog = :log");
         hql.append(" and l.transfer.id is not null");
@@ -233,7 +233,7 @@ public class MemberAccountFeeLogDAOImpl extends BaseDAOImpl<MemberAccountFeeLog>
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("log", log);
         StringBuilder hql = new StringBuilder();
-        hql.append(" select new nl.strohalm.cyclos.services.transactions.TransactionSummaryVO(count(*), sum(l.amount)) ");
+        hql.append(" select new nl.strohalm.cyclos.services.transactions.TransactionSummaryVO(count(l), sum(l.amount)) ");
         hql.append(" from MemberAccountFeeLog l");
         if (accepted) {
             hql.append(" join l.invoice i ");

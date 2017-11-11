@@ -62,7 +62,7 @@ public class CustomFieldDAOImpl extends BaseDAOImpl<CustomField> implements Cust
     public boolean isInternalNameUsed(final CustomField field) {
         final Map<String, Object> namedParameters = new HashMap<String, Object>();
         namedParameters.put("_field_", field);
-        final StringBuilder hql = new StringBuilder("select count(*) from ");
+        final StringBuilder hql = new StringBuilder("select count(cf) from ");
         hql.append(field.getNature().getEntityType().getName());
         hql.append(" cf where " + (field.isPersistent() ? "cf <> :_field_" : "1=1"));
 

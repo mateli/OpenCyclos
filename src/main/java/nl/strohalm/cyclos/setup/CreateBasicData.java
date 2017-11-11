@@ -168,7 +168,7 @@ public class CreateBasicData implements Runnable {
     public static void createChannels(final EntityManager entityManager, final ResourceBundle bundle) {
         final List<Channel> builtinChannels = getBuiltinChannels(bundle);
         for (final Channel channel : builtinChannels) {
-            Number count = (Number) entityManager.createQuery("select count(*) from Channel c where c.internalName = :name").setParameter("name", channel.getInternalName()).getSingleResult();
+            Number count = (Number) entityManager.createQuery("select count(c) from Channel c where c.internalName = :name").setParameter("name", channel.getInternalName()).getSingleResult();
             if (count.intValue() == 0) {
                 entityManager.persist(channel);
             }

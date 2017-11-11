@@ -19,17 +19,17 @@
  */
 package nl.strohalm.cyclos.dao.access;
 
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-
 import nl.strohalm.cyclos.dao.BaseDAOImpl;
 import nl.strohalm.cyclos.entities.access.Channel.Credentials;
 import nl.strohalm.cyclos.entities.access.User;
 import nl.strohalm.cyclos.entities.access.WrongCredentialAttempt;
 import nl.strohalm.cyclos.entities.accounts.cards.Card;
 import nl.strohalm.cyclos.entities.accounts.pos.MemberPos;
+
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Implementation for {@link WrongCredentialAttemptsDAO}
@@ -72,7 +72,7 @@ public class WrongCredentialAttemptsDAOImpl extends BaseDAOImpl<WrongCredentialA
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("limit", limit);
         params.put("card", card);
-        return this.<Integer> uniqueResult("select count(*) from WrongCredentialAttempt a where a.date >= :limit and a.card = :card", params);
+        return this.<Integer> uniqueResult("select count(a) from WrongCredentialAttempt a where a.date >= :limit and a.card = :card", params);
     }
 
     @Override
@@ -80,7 +80,7 @@ public class WrongCredentialAttemptsDAOImpl extends BaseDAOImpl<WrongCredentialA
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("limit", limit);
         params.put("memberPos", memberPos);
-        return this.<Integer> uniqueResult("select count(*) from WrongCredentialAttempt a where a.date >= :limit and a.memberPos = :memberPos", params);
+        return this.<Integer> uniqueResult("select count(a) from WrongCredentialAttempt a where a.date >= :limit and a.memberPos = :memberPos", params);
     }
 
     @Override
@@ -89,7 +89,7 @@ public class WrongCredentialAttemptsDAOImpl extends BaseDAOImpl<WrongCredentialA
         params.put("limit", limit);
         params.put("user", user);
         params.put("credentialType", credentialType);
-        return this.<Integer> uniqueResult("select count(*) from WrongCredentialAttempt a where a.date >= :limit and a.user = :user and a.credentialType = :credentialType", params);
+        return this.<Integer> uniqueResult("select count(a) from WrongCredentialAttempt a where a.date >= :limit and a.user = :user and a.credentialType = :credentialType", params);
     }
 
     @Override

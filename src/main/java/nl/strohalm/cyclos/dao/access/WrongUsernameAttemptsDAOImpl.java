@@ -19,13 +19,13 @@
  */
 package nl.strohalm.cyclos.dao.access;
 
+import nl.strohalm.cyclos.dao.BaseDAOImpl;
+import nl.strohalm.cyclos.entities.access.WrongUsernameAttempt;
+
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-
-import nl.strohalm.cyclos.dao.BaseDAOImpl;
-import nl.strohalm.cyclos.entities.access.WrongUsernameAttempt;
 
 /**
  * Implementation for {@link WrongUsernameAttemptsDAO}
@@ -54,7 +54,7 @@ public class WrongUsernameAttemptsDAOImpl extends BaseDAOImpl<WrongUsernameAttem
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("limit", limit);
         params.put("remoteAddress", remoteAddress);
-        return this.<Integer> uniqueResult("select count(*) from WrongUsernameAttempt a where a.date >= :limit and a.remoteAddress = :remoteAddress", params);
+        return this.<Integer> uniqueResult("select count(a) from WrongUsernameAttempt a where a.date >= :limit and a.remoteAddress = :remoteAddress", params);
     }
 
     @Override

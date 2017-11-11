@@ -191,7 +191,7 @@ public class AccountDAOImpl extends BaseDAOImpl<Account> implements AccountDAO {
         params.put("action", action);
 
         StringBuilder hql = new StringBuilder();
-        hql.append(" select count(*) ");
+        hql.append(" select count(ma) ");
         hql.append(" from MemberAccount ma");
         hql.append(" where ma.member.group = :group ");
         hql.append(" and ma.type = :type ");
@@ -212,7 +212,7 @@ public class AccountDAOImpl extends BaseDAOImpl<Account> implements AccountDAO {
         final Period period = dto.getPeriod();
         final StringBuilder hql = new StringBuilder();
         final Map<String, Object> namedParams = new HashMap<String, Object>();
-        hql.append(" select count(*), sum(t.amount)");
+        hql.append(" select count(t), sum(t.amount)");
         hql.append(" from " + Transfer.class.getName() + " t, " + BrokerCommission.class.getName() + " f");
         hql.append(" where t.accountFeeLog.accountFee = f ");
         // Here we use just one payment filter
@@ -246,7 +246,7 @@ public class AccountDAOImpl extends BaseDAOImpl<Account> implements AccountDAO {
         final Period period = dto.getPeriod();
         final StringBuilder hql = new StringBuilder();
         final Map<String, Object> namedParams = new HashMap<String, Object>();
-        hql.append(" select count(*), sum(t.amount)");
+        hql.append(" select count(l), sum(t.amount)");
         hql.append(" from " + Loan.class.getName() + " l join l.transfer t");
         hql.append(" where t.to = :account ");
         // Here we use just one payment filter
@@ -673,7 +673,7 @@ public class AccountDAOImpl extends BaseDAOImpl<Account> implements AccountDAO {
 
         final StringBuilder hql = new StringBuilder();
         final Map<String, Object> namedParams = new HashMap<String, Object>();
-        hql.append(" select count(*), sum(abs(t.amount))");
+        hql.append(" select count(t), sum(abs(t.amount))");
         hql.append(" from " + Transfer.class.getName() + " t");
         hql.append(" where ((t.amount > 0 and t.").append(credits ? "to" : "from").append(" = :account) ");
         hql.append("  or (t.amount < 0 and t.").append(credits ? "from" : "to").append(" = :account)) ");

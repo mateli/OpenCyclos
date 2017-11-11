@@ -19,14 +19,14 @@
  */
 package nl.strohalm.cyclos.dao.access;
 
+import nl.strohalm.cyclos.dao.BaseDAOImpl;
+import nl.strohalm.cyclos.entities.access.PermissionDeniedTrace;
+import nl.strohalm.cyclos.entities.access.User;
+
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-
-import nl.strohalm.cyclos.dao.BaseDAOImpl;
-import nl.strohalm.cyclos.entities.access.PermissionDeniedTrace;
-import nl.strohalm.cyclos.entities.access.User;
 
 /**
  * Implementation for {@link PermissionDeniedTraceDAO}
@@ -56,7 +56,7 @@ public class PermissionDeniedTraceDAOImpl extends BaseDAOImpl<PermissionDeniedTr
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("limit", limit);
         params.put("user", user);
-        return this.<Integer> uniqueResult("select count(*) from PermissionDeniedTrace t where t.date >= :limit and t.user = :user", params);
+        return this.<Integer> uniqueResult("select count(t) from PermissionDeniedTrace t where t.date >= :limit and t.user = :user", params);
     }
 
     @Override

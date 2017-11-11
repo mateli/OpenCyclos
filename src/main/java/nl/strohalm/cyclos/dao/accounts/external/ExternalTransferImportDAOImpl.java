@@ -46,7 +46,7 @@ public class ExternalTransferImportDAOImpl extends BaseDAOImpl<ExternalTransferI
         }
         final Map<String, Object> namedParameters = new HashMap<String, Object>();
         final StringBuilder hql = new StringBuilder();
-        hql.append(" select count(*)");
+        hql.append(" select count(t)");
         hql.append(" from ").append(ExternalTransfer.class.getName()).append(" t");
         hql.append(" where t.transferImport.id in :ids");
         hql.append("   and t.status <> :pending");

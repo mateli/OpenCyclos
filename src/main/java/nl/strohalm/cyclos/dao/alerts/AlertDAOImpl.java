@@ -19,19 +19,19 @@
  */
 package nl.strohalm.cyclos.dao.alerts;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import nl.strohalm.cyclos.dao.BaseDAOImpl;
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.alerts.Alert;
 import nl.strohalm.cyclos.entities.alerts.Alert.Type;
 import nl.strohalm.cyclos.entities.alerts.AlertQuery;
 import nl.strohalm.cyclos.utils.jpa.JpaQueryHelper;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Implementation class for AlertDAO component. It delegates basic operations to a InsertableDAO and a BaseDAO. Extends Spring's Hibernate Support.
@@ -64,7 +64,7 @@ public class AlertDAOImpl extends BaseDAOImpl<Alert> implements AlertDAO {
 
     @Override
     public int getCount(final Type type) {
-        final Integer count = uniqueResult("select count(*) from " + type.getEntityType().getName() + " a where a.removed=false", null);
+        final Integer count = uniqueResult("select count(a) from " + type.getEntityType().getName() + " a where a.removed=false", null);
         return count;
     }
 

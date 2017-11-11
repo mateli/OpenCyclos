@@ -19,14 +19,6 @@
  */
 package nl.strohalm.cyclos.dao.accounts.cards;
 
-import java.math.BigInteger;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import nl.strohalm.cyclos.dao.BaseDAOImpl;
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.accounts.cards.Card;
@@ -36,8 +28,15 @@ import nl.strohalm.cyclos.entities.exceptions.DaoException;
 import nl.strohalm.cyclos.entities.exceptions.EntityNotFoundException;
 import nl.strohalm.cyclos.entities.members.Member;
 import nl.strohalm.cyclos.utils.jpa.JpaQueryHelper;
-
 import org.apache.commons.lang.ArrayUtils;
+
+import java.math.BigInteger;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Implementation DAO for Cards
@@ -63,7 +62,7 @@ public class CardDAOImpl extends BaseDAOImpl<Card> implements CardDAO {
     public boolean existsNumber(final BigInteger cardNumber) throws DaoException {
         final StringBuilder hql = new StringBuilder();
         final Map<String, Object> namedParameters = new HashMap<String, Object>();
-        hql.append(" select count(*)");
+        hql.append(" select count(c)");
         hql.append(" from " + Card.class.getName() + " c");
         hql.append(" where c.cardNumber = :cardNumber ");
         namedParameters.put("cardNumber", cardNumber);

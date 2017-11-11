@@ -19,13 +19,13 @@
  */
 package nl.strohalm.cyclos.dao.accounts.cards;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import nl.strohalm.cyclos.dao.BaseDAOImpl;
 import nl.strohalm.cyclos.entities.accounts.cards.Card;
 import nl.strohalm.cyclos.entities.accounts.cards.CardType;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 
@@ -44,7 +44,7 @@ public class CardTypeDAOImpl extends BaseDAOImpl<CardType> implements CardTypeDA
     public boolean searchWithCardType(final long cardTypeId) {
         final Map<String, Object> namedParameters = new HashMap<String, Object>();
         final StringBuilder hql = new StringBuilder();
-        hql.append(" select count(*)");
+        hql.append(" select count(c)");
         hql.append(" from " + Card.class.getName() + " c");
         hql.append(" left join c.cardType ct");
         hql.append(" where ct.id = :cardTypeId ");
