@@ -22,6 +22,7 @@ package nl.strohalm.cyclos.entities.accounts.guarantees;
 import nl.strohalm.cyclos.utils.DataObject;
 
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Embeddable;
 import java.math.BigDecimal;
 
@@ -30,6 +31,7 @@ public class GuaranteeTypeFee extends DataObject {
 
     private static final long serialVersionUID = 4259992289841136740L;
 
+    @Convert(converter = FeeTypeAttributeConverter.class)
     @Column(name = "type", length = 1)
     private GuaranteeType.FeeType type;
 

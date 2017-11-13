@@ -24,6 +24,7 @@ import nl.strohalm.cyclos.entities.members.Member;
 import nl.strohalm.cyclos.utils.StringValuedEnum;
 
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -67,6 +68,7 @@ public class MemberDocument extends StaticDocument {
     @JoinColumn(name = "member_id")
 	private Member            member;
 
+    @Convert(converter = MemberDocumentVisibilityAttributeConverter.class)
     @Column(name = "visibility", length = 1)
 	private Visibility        visibility;
 

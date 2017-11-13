@@ -20,6 +20,7 @@
 package nl.strohalm.cyclos.entities;
 
 import nl.strohalm.cyclos.entities.ads.Ad;
+import nl.strohalm.cyclos.entities.converters.OperationTypeAttributeConverter;
 import nl.strohalm.cyclos.entities.members.Administrator;
 import nl.strohalm.cyclos.entities.members.Member;
 import nl.strohalm.cyclos.entities.members.Operator;
@@ -28,6 +29,7 @@ import nl.strohalm.cyclos.utils.FormatObject;
 import nl.strohalm.cyclos.utils.StringValuedEnum;
 
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Table;
 import java.util.Calendar;
 
@@ -103,9 +105,11 @@ public class IndexOperation extends Entity {
     @Column(nullable = false) // index="ix_indexops_date"
     private Calendar          date;
 
+    @Convert(converter = EntityTypeAttributeConverter.class)
     @Column(name = "entity_type", length = 3, nullable = false)
 	private EntityType        entityType;
 
+    @Convert(converter = OperationTypeAttributeConverter.class)
     @Column(name = "operation_type", length = 3, nullable = false)
 	private OperationType     operationType;
 

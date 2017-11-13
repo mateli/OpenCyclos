@@ -30,6 +30,7 @@ import nl.strohalm.cyclos.utils.StringValuedEnum;
 import javax.persistence.Cacheable;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
@@ -116,6 +117,7 @@ public class MemberRecordType extends Entity {
     @ManyToMany(mappedBy = "brokerDeleteMemberRecordTypes")
 	private Collection<BrokerGroup>             deletableByBrokerGroups;
 
+    @Convert(converter = MemberRecordTypeLayoutAttributeConverter.class)
     @Column(name = "layout", nullable = false, length = 1)
 	private Layout                              layout;
 

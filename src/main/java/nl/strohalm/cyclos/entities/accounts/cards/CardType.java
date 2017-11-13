@@ -21,9 +21,9 @@ package nl.strohalm.cyclos.entities.accounts.cards;
 
 import nl.strohalm.cyclos.entities.Entity;
 import nl.strohalm.cyclos.entities.utils.RangeConstraint;
-import nl.strohalm.cyclos.utils.StringValuedEnum;
 import nl.strohalm.cyclos.entities.utils.TimePeriod;
 import nl.strohalm.cyclos.entities.utils.TimePeriod.Field;
+import nl.strohalm.cyclos.utils.StringValuedEnum;
 import nl.strohalm.cyclos.utils.conversion.CardNumberConverter;
 import nl.strohalm.cyclos.utils.conversion.Converter;
 
@@ -31,6 +31,7 @@ import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
 import javax.persistence.Cacheable;
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Embedded;
 import javax.persistence.Table;
 import java.math.BigInteger;
@@ -73,6 +74,7 @@ public class CardType extends Entity {
     @Embedded
 	private TimePeriod                      defaultExpiration         = new TimePeriod(1, Field.YEARS);
 
+    @Convert(converter = CardSecurityCodeAttributeConverter.class)
     @Column(name = "card_security_code", length = 1, updatable = false)
 	private CardSecurityCode                cardSecurityCode          = CardSecurityCode.NOT_USED;
 

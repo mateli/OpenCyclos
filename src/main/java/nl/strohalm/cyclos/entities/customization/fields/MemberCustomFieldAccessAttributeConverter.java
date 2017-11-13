@@ -2,8 +2,9 @@ package nl.strohalm.cyclos.entities.customization.fields;
 
 import nl.strohalm.cyclos.entities.converters.StringValuedEnumAttributeConverter;
 
+import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
 
 @Converter(autoApply = true)
-public class MemberCustomFieldAccessAttributeConverter extends StringValuedEnumAttributeConverter<MemberCustomField.Access> {
+public class MemberCustomFieldAccessAttributeConverter extends StringValuedEnumAttributeConverter<MemberCustomField.Access> implements AttributeConverter<MemberCustomField.Access, String> {
 }

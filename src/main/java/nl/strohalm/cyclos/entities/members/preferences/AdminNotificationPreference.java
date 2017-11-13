@@ -24,13 +24,16 @@ import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.accounts.guarantees.GuaranteeType;
 import nl.strohalm.cyclos.entities.accounts.transactions.TransferType;
 import nl.strohalm.cyclos.entities.alerts.MemberAlert;
+import nl.strohalm.cyclos.entities.alerts.MemberAlertsAttributeConverter;
 import nl.strohalm.cyclos.entities.alerts.SystemAlert;
+import nl.strohalm.cyclos.entities.alerts.SystemAlertsAttributeConverter;
 import nl.strohalm.cyclos.entities.groups.MemberGroup;
 import nl.strohalm.cyclos.entities.members.Administrator;
 import nl.strohalm.cyclos.entities.members.messages.MessageCategory;
 
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.ElementCollection;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -98,11 +101,13 @@ public class AdminNotificationPreference extends Entity {
             inverseJoinColumns = @JoinColumn(name = "message_category_id"))
 	private Set<MessageCategory>    messageCategories;
 
+    @Convert(converter = SystemAlertsAttributeConverter.class)
     @ElementCollection
     @CollectionTable(name = "admin_preferences_system_alerts", joinColumns = @JoinColumn(name = "preference_id"))
     @Column(name = "type", length = 70)
 	private Set<SystemAlert.Alerts> systemAlerts;
 
+    @Convert(converter = MemberAlertsAttributeConverter.class)
     @ElementCollection
     @CollectionTable(name = "admin_preferences_member_alerts", joinColumns = @JoinColumn(name = "preference_id"))
     @Column(name = "type", length = 70)

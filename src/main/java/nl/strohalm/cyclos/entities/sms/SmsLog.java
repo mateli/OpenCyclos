@@ -28,6 +28,7 @@ import nl.strohalm.cyclos.utils.StringValuedEnum;
 import org.apache.commons.lang.StringUtils;
 
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -124,6 +125,7 @@ public class SmsLog extends Entity {
     @JoinColumn(name = "sms_type_id")
 	private SmsType      smsType;
 
+    @Convert(converter = SmsLogErrorTypeAttributeConverter.class)
     @Column(name = "error_type", updatable = false, length = 3)
 	private ErrorType    errorType;
 

@@ -28,6 +28,7 @@ import nl.strohalm.cyclos.entities.members.Member;
 
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.ElementCollection;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -92,6 +93,7 @@ public class ServiceClient extends Entity {
     @JoinColumn(name = "channel_id")
 	private Channel               channel;
 
+    @Convert(converter = ServiceOperationAttributeConverter.class)
     @ElementCollection
     @CollectionTable(name = "service_client_permissions", joinColumns = @JoinColumn(name = "service_client_id"))
     @Column(name = "operation", length = 50, nullable = false)

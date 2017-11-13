@@ -23,6 +23,7 @@ import nl.strohalm.cyclos.entities.groups.Group;
 import nl.strohalm.cyclos.utils.StringValuedEnum;
 
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.DiscriminatorValue;
 
 /**
@@ -67,6 +68,7 @@ public class AdCustomField extends CustomField {
     @Column(name = "ad_indexed")
     private boolean           indexed;
 
+    @Convert(converter = AdCustomFieldVisibilityAttributeConverter.class)
     @Column(name = "ad_visibility", length = 1)
 	private Visibility        visibility       = Visibility.MEMBER;
 

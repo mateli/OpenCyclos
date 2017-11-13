@@ -26,7 +26,7 @@ import nl.strohalm.cyclos.utils.StringValuedEnum;
 
 import javax.persistence.Cacheable;
 import javax.persistence.Column;
-import javax.persistence.Enumerated;
+import javax.persistence.Convert;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -114,6 +114,7 @@ public class FieldMapping extends Entity {
     @Column(name = "name", nullable = false, length = 50)
     private String            name;
 
+    @Convert(converter = FieldAttributeConverter.class)
     @Column(length = 2, nullable = false)
 	private Field             field;
 

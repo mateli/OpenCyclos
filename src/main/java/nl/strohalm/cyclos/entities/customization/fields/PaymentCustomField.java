@@ -24,6 +24,7 @@ import nl.strohalm.cyclos.entities.accounts.transactions.TransferType;
 import nl.strohalm.cyclos.utils.StringValuedEnum;
 
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
@@ -76,9 +77,11 @@ public class PaymentCustomField extends CustomField {
     @JoinColumn(name = "transfer_type_id")
 	private TransferType             transferType;
 
+    @Convert(converter = PaymentCustomFieldAccessAttributeConverter.class)
     @Column(name = "payment_search_access", length = 1)
 	private Access                   searchAccess     = Access.NONE;
 
+    @Convert(converter = PaymentCustomFieldAccessAttributeConverter.class)
     @Column(name = "payment_list_access", length = 1)
 	private Access                   listAccess       = Access.NONE;
 

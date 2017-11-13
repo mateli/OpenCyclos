@@ -24,6 +24,7 @@ import nl.strohalm.cyclos.entities.members.Member;
 import nl.strohalm.cyclos.utils.StringValuedEnum;
 
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -74,6 +75,7 @@ public class OperatorCustomField extends CustomField {
     @JoinColumn(name = "member_id", updatable = false)
 	private Member            member;
 
+    @Convert(converter = OperatorCustomFieldVisibilityAttributeConverter.class)
     @Column(name = "operator_visibility", length = 1)
 	private Visibility        visibility       = Visibility.EDITABLE;
 

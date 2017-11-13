@@ -33,6 +33,7 @@ import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Embedded;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -81,6 +82,7 @@ public class ImportedAd extends Entity implements CustomFieldsContainer<AdCustom
     @Column(name = "line_number")
     private Integer                                lineNumber;
 
+    @Convert(converter = ImportedAdStatusAttributeConverter.class)
     @Column(name = "status", nullable = false, length = 50)
 	private Status                                 status;
 

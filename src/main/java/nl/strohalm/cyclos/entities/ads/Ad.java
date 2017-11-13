@@ -37,6 +37,7 @@ import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Embedded;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -138,6 +139,7 @@ public class Ad extends Entity implements CustomFieldsContainer<AdCustomField, A
     @Column(name = "title", nullable = false, length = 100)
     private String                         title;
 
+    @Convert(converter = AdTradeTypeAttributeConverter.class)
     @Column(name = "trade_type", nullable = false, length = 1)
 	private TradeType                      tradeType;
 

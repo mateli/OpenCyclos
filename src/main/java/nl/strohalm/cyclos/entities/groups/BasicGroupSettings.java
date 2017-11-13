@@ -20,6 +20,7 @@
 package nl.strohalm.cyclos.entities.groups;
 
 import nl.strohalm.cyclos.entities.access.TransactionPassword;
+import nl.strohalm.cyclos.entities.access.TransactionPasswordAttributeConverter;
 import nl.strohalm.cyclos.entities.utils.RangeConstraint;
 import nl.strohalm.cyclos.entities.utils.TimePeriod;
 import nl.strohalm.cyclos.utils.DataObject;
@@ -28,6 +29,7 @@ import nl.strohalm.cyclos.utils.StringValuedEnum;
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Embeddable;
 import javax.persistence.Embedded;
 
@@ -100,6 +102,7 @@ public class BasicGroupSettings extends DataObject {
     @Embedded
     private RangeConstraint     passwordLength                    = new RangeConstraint(4, 12);
 
+    @Convert(converter = PasswordPolicyAttributeConverter.class)
     @Column(name = "password_policy", nullable = false, length = 1)
     private PasswordPolicy      passwordPolicy                    = PasswordPolicy.AVOID_OBVIOUS;
 
@@ -120,6 +123,7 @@ public class BasicGroupSettings extends DataObject {
     @Embedded
     private TimePeriod          passwordExpiresAfter              = new TimePeriod(0, TimePeriod.Field.MONTHS);
 
+    @Convert(converter = TransactionPasswordAttributeConverter.class)
     @Column(name = "transaction_password", length = 1)
     private TransactionPassword transactionPassword               = TransactionPassword.NOT_USED;
 

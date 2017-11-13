@@ -30,6 +30,7 @@ import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
 import javax.persistence.Cacheable;
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Embedded;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -118,9 +119,11 @@ public class GuaranteeType extends Entity {
     @Column(name = "description", columnDefinition = "text")
     private String             description;
 
+    @Convert(converter = ModelAttributeConverter.class)
     @Column(name = "model", nullable = false, length = 2)
 	private Model              model;
 
+    @Convert(converter = AuthorizedByAttributeConverter.class)
     @Column(name = "authorized_by", nullable = false, length = 1)
 	private AuthorizedBy       authorizedBy;
 
@@ -164,9 +167,11 @@ public class GuaranteeType extends Entity {
     @Embedded
 	private GuaranteeTypeFee issueFee;
 
+    @Convert(converter = FeePayerAttributeConverter.class)
     @Column(name = "credit_fee_payer", nullable = false, length = 1)
 	private FeePayer           creditFeePayer;
 
+    @Convert(converter = FeePayerAttributeConverter.class)
     @Column(name = "issue_fee_payer", nullable = false, length = 1)
 	private FeePayer           issueFeePayer;
 

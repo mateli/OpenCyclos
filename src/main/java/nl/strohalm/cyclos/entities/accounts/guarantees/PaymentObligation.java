@@ -30,6 +30,7 @@ import nl.strohalm.cyclos.utils.StringValuedEnum;
 import javax.persistence.Cacheable;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -77,6 +78,7 @@ public class PaymentObligation extends Entity {
 
     private static final long                serialVersionUID = -3493507277972263881L;
 
+    @Convert(converter = PaymentObligationStatusAttributeConverter.class)
     @Column(name = "status", nullable = false, length = 2)
 	private Status                           status;
 

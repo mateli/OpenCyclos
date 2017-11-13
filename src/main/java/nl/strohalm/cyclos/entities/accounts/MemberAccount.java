@@ -26,6 +26,7 @@ import nl.strohalm.cyclos.utils.FormatObject;
 import nl.strohalm.cyclos.utils.StringValuedEnum;
 
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -88,9 +89,11 @@ public class MemberAccount extends Account {
     @JoinColumn(name = "member_id", updatable = false)
 	private Member            member;
 
+    @Convert(converter = MemberAccountStatusAttributeConverter.class)
     @Column(name = "member_status", length = 1)
 	private Status            status           = Status.ACTIVE;
 
+    @Convert(converter = MemberAccountActionAttributeConverter.class)
     @Column(name = "member_action", length = 1)
 	private Action            action;
 

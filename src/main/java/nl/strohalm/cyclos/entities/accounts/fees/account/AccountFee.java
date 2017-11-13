@@ -25,10 +25,10 @@ import nl.strohalm.cyclos.entities.accounts.MemberAccountType;
 import nl.strohalm.cyclos.entities.accounts.transactions.TransferType;
 import nl.strohalm.cyclos.entities.groups.MemberGroup;
 import nl.strohalm.cyclos.entities.settings.LocalSettings;
-import nl.strohalm.cyclos.entities.utils.TimePeriod;
 import nl.strohalm.cyclos.entities.utils.Amount;
-import nl.strohalm.cyclos.utils.DateHelper;
 import nl.strohalm.cyclos.entities.utils.Period;
+import nl.strohalm.cyclos.entities.utils.TimePeriod;
+import nl.strohalm.cyclos.utils.DateHelper;
 import nl.strohalm.cyclos.utils.StringValuedEnum;
 import nl.strohalm.cyclos.utils.WeekDay;
 
@@ -36,6 +36,7 @@ import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
 import javax.persistence.Cacheable;
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Embedded;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
@@ -161,6 +162,7 @@ public class AccountFee extends Entity {
     @Column(name = "description", columnDefinition = "text")
     private String                    description;
 
+    @Convert(converter = ChargeModeAttributeConverter.class)
     @Column(name = "charge_mode", nullable = false, updatable = false, length = 2)
 	private ChargeMode                chargeMode;
 
@@ -170,6 +172,7 @@ public class AccountFee extends Entity {
     @Column(name = "enabled_since")
     private Calendar                  enabledSince;
 
+    @Convert(converter = RunModeAttributeConverter.class)
     @Column(name = "run_mode", nullable = false, updatable = false, length = 1)
 	private RunMode                   runMode;
 
@@ -186,9 +189,11 @@ public class AccountFee extends Entity {
     @Column(name = "hour", length = 2)
     private Byte                      hour;
 
+    @Convert(converter = InvoiceModeAttributeConverter.class)
     @Column(name = "invoice_mode", length = 1)
 	private InvoiceMode               invoiceMode;
 
+    @Convert(converter = PaymentDirectionAttributeConverter.class)
     @Column(name = "payment_direction", nullable = false, length = 1)
 	private PaymentDirection          paymentDirection;
 

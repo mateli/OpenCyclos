@@ -30,6 +30,7 @@ import nl.strohalm.cyclos.utils.StringValuedEnum;
 
 import javax.persistence.Cacheable;
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.Inheritance;
 import javax.persistence.JoinColumn;
@@ -154,6 +155,7 @@ public abstract class TransactionFee extends Entity {
     @Column(name = "description", columnDefinition = "text")
     private String                  description;
 
+    @Convert(converter = SubjectAttributeConverter.class)
     @Column(name = "payer", nullable = false, length = 3)
 	private Subject                 payer;
 
@@ -168,6 +170,7 @@ public abstract class TransactionFee extends Entity {
     @JoinColumn(name = "generated_type_id", nullable = false)
 	private TransferType            generatedTransferType;
 
+    @Convert(converter = ChargeTypeAttributeConverter.class)
     @Column(name = "amount_type", nullable = false, length = 1)
 	private ChargeType              chargeType;
 

@@ -28,6 +28,7 @@ import org.apache.commons.io.filefilter.SuffixFileFilter;
 import org.apache.commons.lang.StringUtils;
 
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -79,6 +80,7 @@ public class CustomizedFile extends File {
 
     private static final long serialVersionUID = 3264704140933610339L;
 
+    @Convert(converter = CustomizedFileTypeAttributeConverter.class)
     @Column(name = "type", length = 1)
 	private Type              type;
 
