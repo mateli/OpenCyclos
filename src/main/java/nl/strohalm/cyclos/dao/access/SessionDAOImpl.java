@@ -78,11 +78,6 @@ public class SessionDAOImpl extends BaseDAOImpl<Session> implements SessionDAO {
         StringBuilder hql = new StringBuilder();
         hql.append(" select s");
         hql.append(" from Session s");
-        hql.append("   left join fetch s.user u");
-        hql.append("   left join fetch u.element e");
-        hql.append("   left join fetch e.group g");
-        hql.append("   left join fetch e.member m");
-        hql.append("   left join fetch m.group mg");
         hql.append(" where s.identifier = :identifier");
         if (!allowExpired) {
             hql.append(" and s.expirationDate > CURRENT_TIMESTAMP");
