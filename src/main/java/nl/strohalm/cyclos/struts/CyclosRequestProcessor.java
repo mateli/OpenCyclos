@@ -511,8 +511,9 @@ public class CyclosRequestProcessor extends SecureTilesRequestProcessor {
 
         final EntityManagerHolder holder = getEntityManagerHolder();
         holder.getEntityManager().setFlushMode(FlushModeType.COMMIT);
-        holder.getEntityManager().getTransaction().setRollbackOnly();
-
+        if (holder.getEntityManager().getTransaction().isActive()) {
+            holder.getEntityManager().getTransaction().setRollbackOnly();
+        }
         TransactionSynchronizationManager.setCurrentTransactionReadOnly(true);
     }
 
