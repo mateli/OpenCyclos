@@ -52,7 +52,7 @@
 		<prop key="eclipselink.target-database">${eclipselink.target-database}</prop>
 		<prop key="eclipselink.weaving">false</prop>
 		<!-- used for debug -->
-		<!--<prop key="eclipselink.logging.level">FINE</prop>-->
+		<prop key="eclipselink.logging.level">INFO</prop>
 	</util:properties>
 
 	<util:properties id="openjpaJpaProperties">
