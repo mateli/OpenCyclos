@@ -112,7 +112,7 @@ public class Loan extends Entity {
     private static final long  serialVersionUID = 7890624598546777599L;
 
     @OneToMany(mappedBy = "loan", cascade = CascadeType.REMOVE)
-    @OrderBy("payment_index")
+    @OrderBy("index")
 	private List<LoanPayment>  payments;
 
     @ManyToOne

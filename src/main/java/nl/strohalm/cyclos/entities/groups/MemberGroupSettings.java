@@ -29,6 +29,7 @@ import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.ElementCollection;
 import javax.persistence.Embeddable;
 import javax.persistence.Embedded;
@@ -104,6 +105,7 @@ public class MemberGroupSettings extends DataObject {
     private static final long     serialVersionUID             = -5279193799739646568L;
 
     // Access and external access
+    @Convert(converter = EmailValidationAttributeConverter.class)
     @ElementCollection
     @CollectionTable(name = "member_groups_email_validation",
             joinColumns = @JoinColumn(name = "group_id"))
@@ -194,6 +196,7 @@ public class MemberGroupSettings extends DataObject {
     @Embedded
     private TimePeriod            maxAdPublicationTime         = new TimePeriod(3, TimePeriod.Field.MONTHS);
 
+    @Convert(converter = ExternalAdPublicationAttributeConverter.class)
     @Column(name = "member_external_ad_publication", length = 1)
     private ExternalAdPublication externalAdPublication        = ExternalAdPublication.ENABLED;
 

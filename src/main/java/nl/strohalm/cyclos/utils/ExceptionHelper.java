@@ -19,13 +19,11 @@
  */
 package nl.strohalm.cyclos.utils;
 
-import java.sql.SQLException;
-
 import nl.strohalm.cyclos.entities.exceptions.LockingException;
-
 import org.apache.commons.lang.exception.ExceptionUtils;
-import org.hibernate.PessimisticLockException;
-import org.hibernate.exception.LockAcquisitionException;
+
+import javax.persistence.PessimisticLockException;
+import java.sql.SQLException;
 
 /**
  * Contains helper methods for exceptions
@@ -45,7 +43,7 @@ public class ExceptionHelper {
     }
 
     private static boolean isLockingException(final Throwable t, final boolean recurse) {
-        if (t instanceof LockingException || t instanceof LockAcquisitionException || t instanceof PessimisticLockException) {
+        if (t instanceof LockingException || t instanceof PessimisticLockException) {
             return true;
         }
         if (t instanceof SQLException) {

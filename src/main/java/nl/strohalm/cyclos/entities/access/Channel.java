@@ -30,6 +30,7 @@ import org.apache.commons.lang.StringUtils;
 import javax.persistence.Cacheable;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -187,6 +188,7 @@ public class Channel extends Entity implements Comparable<Channel> {
     @Column(name = "display_name")
     private String                       displayName;
 
+    @Convert(converter = CredentialsAttributeConverter.class)
     @Column(length = 1)
     private Credentials                  credentials;
 

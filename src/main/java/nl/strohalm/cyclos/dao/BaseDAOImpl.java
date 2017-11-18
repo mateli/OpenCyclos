@@ -28,8 +28,8 @@ import nl.strohalm.cyclos.exceptions.ApplicationException;
 import nl.strohalm.cyclos.utils.ClassHelper;
 import nl.strohalm.cyclos.utils.DataIteratorHelper;
 import nl.strohalm.cyclos.utils.EntityHelper;
-import nl.strohalm.cyclos.utils.hibernate.HibernateHelper;
-import nl.strohalm.cyclos.utils.hibernate.HibernateQueryHandler;
+import nl.strohalm.cyclos.utils.jpa.JpaQueryHandler;
+import nl.strohalm.cyclos.utils.jpa.JpaQueryHelper;
 import nl.strohalm.cyclos.utils.query.PageParameters;
 import nl.strohalm.cyclos.utils.query.QueryParameters;
 import nl.strohalm.cyclos.utils.query.QueryParameters.ResultType;
@@ -44,11 +44,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import javax.sql.rowset.serial.SerialBlob;
 import java.io.IOException;
 import java.io.InputStream;
-import java.sql.Blob;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -68,7 +65,7 @@ import java.util.Map;
 public abstract class BaseDAOImpl<E extends Entity> implements BaseDAO<E>, InsertableDAO<E>, UpdatableDAO<E>, DeletableDAO<E> {
 
     private FetchDAO              fetchDao;
-    private HibernateQueryHandler hibernateQueryHandler;
+    private JpaQueryHandler jpaQueryHandler;
     private boolean               hasCache;
     protected Class<E>            entityClass;
     private String                queryCacheRegion;
@@ -81,11 +78,9 @@ public abstract class BaseDAOImpl<E extends Entity> implements BaseDAO<E>, Inser
     }
 
     @Override
-    public Blob createBlob(final InputStream stream, final int length) {
+    public byte[] createBlob(final InputStream stream, final int length) {
         try {
-            return new SerialBlob(IOUtils.toByteArray(stream));
-        } catch (SQLException e) {
-            e.printStackTrace();
+            return IOUtils.toByteArray(stream);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -133,7 +128,7 @@ public abstract class BaseDAOImpl<E extends Entity> implements BaseDAO<E>, Inser
             return null;
         }
         final T duplicate = (T) ClassHelper.instantiate(entity.getClass());
-        getHibernateQueryHandler().copyProperties(entity, duplicate);
+        getJpaQueryHandler().copyProperties(entity, duplicate);
         return duplicate;
     }
 
@@ -146,8 +141,8 @@ public abstract class BaseDAOImpl<E extends Entity> implements BaseDAO<E>, Inser
         return fetchDao;
     }
 
-    public HibernateQueryHandler getHibernateQueryHandler() {
-        return hibernateQueryHandler;
+    public JpaQueryHandler getJpaQueryHandler() {
+        return jpaQueryHandler;
     }
 
     @Override
@@ -161,7 +156,7 @@ public abstract class BaseDAOImpl<E extends Entity> implements BaseDAO<E>, Inser
             if (entity == null || entity.isPersistent()) {
                 throw new UnexpectedEntityException();
             }
-            getHibernateQueryHandler().resolveReferences(entity);
+            getJpaQueryHandler().resolveReferences(entity);
             entityManager.persist(entity);
             if (flush) {
                 flush();
@@ -205,8 +200,8 @@ public abstract class BaseDAOImpl<E extends Entity> implements BaseDAO<E>, Inser
             if (!hasCache && !ArrayUtils.isEmpty(fetch)) {
                 // Perform a query
                 final Map<String, Object> namedParams = new HashMap<>();
-                final StringBuilder hql = HibernateHelper.getInitialQuery(getEntityType(), "e", Arrays.asList(fetch));
-                HibernateHelper.addParameterToQuery(hql, namedParams, "e.id", id);
+                final StringBuilder hql = JpaQueryHelper.getInitialQuery(getEntityType(), "e", Arrays.asList(fetch));
+                JpaQueryHelper.addParameterToQuery(hql, namedParams, "e.id", id);
                 final List<E> list = list(ResultType.LIST, hql.toString(), namedParams, PageParameters.unique(), fetch);
                 if (list.isEmpty()) {
                     throw new EntityNotFoundException(this.getEntityType(), id);
@@ -247,8 +242,8 @@ public abstract class BaseDAOImpl<E extends Entity> implements BaseDAO<E>, Inser
         this.fetchDao = fetchDao;
     }
 
-    public void setHibernateQueryHandler(final HibernateQueryHandler hibernateQueryHandler) {
-        this.hibernateQueryHandler = hibernateQueryHandler;
+    public void setJpaQueryHandler(final JpaQueryHandler jpaQueryHandler) {
+        this.jpaQueryHandler = jpaQueryHandler;
     }
 
     @Override
@@ -263,7 +258,7 @@ public abstract class BaseDAOImpl<E extends Entity> implements BaseDAO<E>, Inser
             throw new UnexpectedEntityException();
         }
         try {
-            hibernateQueryHandler.resolveReferences(entity);
+            jpaQueryHandler.resolveReferences(entity);
             try {
                 entityManager.persist(entity);
             } catch (final EntityExistsException e) {
@@ -293,7 +288,7 @@ public abstract class BaseDAOImpl<E extends Entity> implements BaseDAO<E>, Inser
     protected int bulkUpdate(final String hql, final Object namedParameters) {
         try {
             final Query query = entityManager.createQuery(hql);
-            hibernateQueryHandler.setQueryParameters(query, namedParameters);
+            jpaQueryHandler.setQueryParameters(query, namedParameters);
             int rows = query.executeUpdate();
             if (rows > 0) {
                 CurrentTransactionData.setWrite();
@@ -353,7 +348,7 @@ public abstract class BaseDAOImpl<E extends Entity> implements BaseDAO<E>, Inser
      */
     protected <T> Iterator<T> iterate(final String hql, final Object namedParameters) {
         try {
-            return hibernateQueryHandler.simpleIterator(hql, namedParameters, null);
+            return jpaQueryHandler.simpleIterator(hql, namedParameters, null);
         } catch (final ApplicationException e) {
             throw e;
         } catch (final Exception e) {
@@ -366,7 +361,7 @@ public abstract class BaseDAOImpl<E extends Entity> implements BaseDAO<E>, Inser
      * @param query The query parameters contains the result type, named parameters as bean properties, the pagination parameters and the properties
      * to fetch
      * @param hql The HQL query
-     * @return A list, as returned by {@link HibernateQueryHandler}
+     * @return A list, as returned by {@link JpaQueryHandler}
      */
     protected <T> List<T> list(final QueryParameters query, final String hql) {
         return list(query, hql, query);
@@ -376,7 +371,7 @@ public abstract class BaseDAOImpl<E extends Entity> implements BaseDAO<E>, Inser
      * Executes a query with a query parameters and a separate named parameters object
      * @param query The query parameters contains the result type, the pagination parameters and the properties to fetch
      * @param hql The HQL query
-     * @return A list, as returned by {@link HibernateQueryHandler}
+     * @return A list, as returned by {@link JpaQueryHandler}
      */
     protected <T> List<T> list(final QueryParameters query, final String hql, final Object namedParameters) {
         return list(query.getResultType(), hql, namedParameters, query.getPageParameters(), fetchArray(query));
@@ -389,11 +384,11 @@ public abstract class BaseDAOImpl<E extends Entity> implements BaseDAO<E>, Inser
      * @param namedParameters The HQL named parameters - May be a Map or a Bean
      * @param pageParameters The pagination parameters, if any. It affects any ResultType, by limiting the number of results the same way as pages
      * @param fetch The relationships to fetch
-     * @return A list, as returned by {@link HibernateQueryHandler}
+     * @return A list, as returned by {@link JpaQueryHandler}
      */
     protected <T> List<T> list(final ResultType resultType, final String hql, final Object namedParameters, final PageParameters pageParameters, final Relationship... fetch) {
         try {
-            return hibernateQueryHandler.executeQuery(queryCacheRegion, resultType, hql, namedParameters, pageParameters, fetch);
+            return jpaQueryHandler.executeQuery(queryCacheRegion, resultType, hql, namedParameters, pageParameters, fetch);
         } catch (final ApplicationException e) {
             throw e;
         } catch (final Exception e) {
@@ -504,7 +499,7 @@ public abstract class BaseDAOImpl<E extends Entity> implements BaseDAO<E>, Inser
     }
 
     private void process(final Query query, final Object namedParameters) {
-        hibernateQueryHandler.setQueryParameters(query, namedParameters);
+        jpaQueryHandler.setQueryParameters(query, namedParameters);
         if (queryCacheRegion != null) {
             query.setHint("org.hibernate.cacheable", true);
             query.setHint("org.hibernate.cacheRegion", queryCacheRegion);

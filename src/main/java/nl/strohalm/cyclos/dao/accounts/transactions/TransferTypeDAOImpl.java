@@ -34,7 +34,7 @@ import nl.strohalm.cyclos.entities.groups.Group;
 import nl.strohalm.cyclos.entities.members.Element;
 import nl.strohalm.cyclos.entities.members.Member;
 import nl.strohalm.cyclos.services.transactions.TransactionContext;
-import nl.strohalm.cyclos.utils.hibernate.HibernateHelper;
+import nl.strohalm.cyclos.utils.jpa.JpaQueryHelper;
 import org.apache.commons.collections.CollectionUtils;
 
 import java.util.Collection;
@@ -86,9 +86,9 @@ public class TransferTypeDAOImpl extends BaseDAOImpl<TransferType> implements Tr
         final Map<String, Object> namedParameters = new HashMap<String, Object>();
         namedParameters.put("system", AccountType.Nature.SYSTEM);
         final Set<Relationship> fetch = query.getFetch();
-        final StringBuilder hql = HibernateHelper.getInitialQuery(getEntityType(), "tt", fetch);
-        HibernateHelper.addLikeParameterToQuery(hql, namedParameters, "tt.description", query.getDescription());
-        HibernateHelper.addLikeParameterToQuery(hql, namedParameters, "tt.name", query.getName());
+        final StringBuilder hql = JpaQueryHelper.getInitialQuery(getEntityType(), "tt", fetch);
+        JpaQueryHelper.addLikeParameterToQuery(hql, namedParameters, "tt.description", query.getDescription());
+        JpaQueryHelper.addLikeParameterToQuery(hql, namedParameters, "tt.name", query.getName());
 
         // Context
         final TransactionContext context = query.getContext();
@@ -114,7 +114,7 @@ public class TransferTypeDAOImpl extends BaseDAOImpl<TransferType> implements Tr
 
         // Channel
         if (query.getChannel() != null) {
-            hql.append(" and exists (select c.id from Channel c where c in elements(tt.channels) and c.internalName = :channel) ");
+            hql.append(" and exists (select c.id from Channel c where c member of tt.channels and c.internalName = :channel) ");
             namedParameters.put("channel", query.getChannel());
         }
 
@@ -172,30 +172,30 @@ public class TransferTypeDAOImpl extends BaseDAOImpl<TransferType> implements Tr
 
         // Groups
         if (CollectionUtils.isNotEmpty(query.getFromGroups())) {
-            hql.append(" and exists (select mgas.id from MemberGroupAccountSettings mgas where mgas.group in (:fromGroups) and mgas.accountType = tt.from) ");
+            hql.append(" and exists (select mgas.id from MemberGroupAccountSettings mgas where mgas.group in :fromGroups and mgas.accountType = tt.from) ");
             namedParameters.put("fromGroups", query.getFromGroups());
         }
         if (CollectionUtils.isNotEmpty(query.getToGroups())) {
-            hql.append(" and exists (select mgas.id from MemberGroupAccountSettings mgas where mgas.group in (:toGroups) and mgas.accountType = tt.to) ");
+            hql.append(" and exists (select mgas.id from MemberGroupAccountSettings mgas where mgas.group in :toGroups and mgas.accountType = tt.to) ");
             namedParameters.put("toGroups", query.getToGroups());
         }
         if (CollectionUtils.isNotEmpty(query.getFromOrToGroups())) {
-            hql.append(" and exists (select mgas.id from MemberGroupAccountSettings mgas where mgas.group in (:fromOrToGroups) and (mgas.accountType = tt.from or mgas.accountType = tt.to)) ");
+            hql.append(" and exists (select mgas.id from MemberGroupAccountSettings mgas where mgas.group in :fromOrToGroups and (mgas.accountType = tt.from or mgas.accountType = tt.to)) ");
             namedParameters.put("fromOrToGroups", query.getFromOrToGroups());
         }
 
         // Nature
         if (query.getFromNature() != null) {
-            hql.append(" and tt.from.class = :fromNature");
-            namedParameters.put("fromNature", query.getFromNature());
+            hql.append(" and TYPE(tt.from) = :fromNature");
+            namedParameters.put("fromNature", query.getFromNature().getType());
         }
         if (query.getToNature() != null) {
-            hql.append(" and tt.to.class = :toNature");
-            namedParameters.put("toNature", query.getToNature());
+            hql.append(" and TYPE(tt.to) = :toNature");
+            namedParameters.put("toNature", query.getToNature().getType());
         }
         if (query.getFromOrToNature() != null) {
-            hql.append(" and (tt.from.class = :fromOrToNature or tt.to.class = :fromOrToNature)");
-            namedParameters.put("fromOrToNature", query.getFromOrToNature());
+            hql.append(" and (TYPE(tt.from) = :fromOrToNature or TYPE(tt.to) = :fromOrToNature)");
+            namedParameters.put("fromOrToNature", query.getFromOrToNature().getType());
         }
 
         // LimitType
@@ -215,17 +215,17 @@ public class TransferTypeDAOImpl extends BaseDAOImpl<TransferType> implements Tr
         }
 
         // Account types
-        HibernateHelper.addInParameterToQuery(hql, namedParameters, "tt.from", query.getFromAccountTypes());
-        HibernateHelper.addInParameterToQuery(hql, namedParameters, "tt.to", query.getToAccountTypes());
+        JpaQueryHelper.addInParameterToQuery(hql, namedParameters, "tt.from", query.getFromAccountTypes());
+        JpaQueryHelper.addInParameterToQuery(hql, namedParameters, "tt.to", query.getToAccountTypes());
         final Collection<? extends AccountType> accountTypes = query.getFromOrToAccountTypes();
         if (accountTypes != null && !accountTypes.isEmpty()) {
-            hql.append(" and (tt.to in (:fromOrToAT) or tt.from in (:fromOrToAT))");
+            hql.append(" and (tt.to in :fromOrToAT or tt.from in :fromOrToAT)");
             namedParameters.put("fromOrToAT", accountTypes);
         }
 
         // Group
         if (query.getGroup() != null) {
-            hql.append(" and :group in elements(tt.groups)");
+            hql.append(" and :group member of tt.groups");
             namedParameters.put("group", query.getGroup());
         }
 
@@ -249,7 +249,7 @@ public class TransferTypeDAOImpl extends BaseDAOImpl<TransferType> implements Tr
                     hql.append(" or exists (select l.id from AuthorizationLevel l where l.transferType = tt and l.authorizer = :" + name);
                     // It may also have an admin group for authorizations
                     if (authorizerGroup != null) {
-                        hql.append(" and :authorizerGroup in elements(l.adminGroups)");
+                        hql.append(" and :authorizerGroup member of l.adminGroups");
                     }
                     hql.append(")");
                     namedParameters.put(name, authorizer);
@@ -262,11 +262,11 @@ public class TransferTypeDAOImpl extends BaseDAOImpl<TransferType> implements Tr
         }
 
         if (CollectionUtils.isNotEmpty(query.getPossibleTransferTypes())) {
-            hql.append(" and tt in (:_possible)");
+            hql.append(" and tt in :_possible");
             namedParameters.put("_possible", query.getPossibleTransferTypes());
         }
 
-        HibernateHelper.appendOrder(hql, "tt.name");
+        JpaQueryHelper.appendOrder(hql, "tt.name");
         return list(query, hql.toString(), namedParameters);
     }
 }

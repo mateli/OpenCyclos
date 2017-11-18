@@ -17,11 +17,7 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 
  */
-package nl.strohalm.cyclos.utils.hibernate;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Map;
+package nl.strohalm.cyclos.utils.jpa;
 
 import nl.strohalm.cyclos.dao.FetchDAO;
 import nl.strohalm.cyclos.dao.customizations.CustomFieldPossibleValueDAO;
@@ -31,14 +27,17 @@ import nl.strohalm.cyclos.entities.customization.fields.CustomFieldValue;
 import nl.strohalm.cyclos.utils.StringHelper;
 import nl.strohalm.cyclos.utils.access.LoggedUser;
 import nl.strohalm.cyclos.utils.conversion.IdConverter;
-
 import org.apache.commons.lang.StringUtils;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Map;
 
 /**
  * Helper class used to handle custom fields
  * @author luis
  */
-public class HibernateCustomFieldHandler {
+public class JpaCustomFieldHandler {
     private FetchDAO                    fetchDao;
     private CustomFieldPossibleValueDAO customFieldPossibleValueDao;
 

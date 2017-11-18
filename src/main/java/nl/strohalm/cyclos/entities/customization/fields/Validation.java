@@ -38,10 +38,10 @@ public class Validation implements Serializable, Cloneable {
 
     private static final long serialVersionUID = -5712666847395055720L;
 
-    @Column(name="val_required")
+    @Column(name="val_required", nullable = false)
     private boolean           required;
 
-    @Column(name="val_unique")
+    @Column(name="val_unique", nullable = false)
     private boolean           unique;
 
     @AttributeOverrides({
@@ -51,7 +51,7 @@ public class Validation implements Serializable, Cloneable {
     @Embedded
 	private RangeConstraint   lengthConstraint;
 
-    @Column(name="val_class")
+    @Column(name="val_class", length = 256)
     private String            validatorClass;
 
     public Validation() {
@@ -81,26 +81,18 @@ public class Validation implements Serializable, Cloneable {
         }
     }
 
-    @Basic
-    @Column(name = "val_min_length")
     public RangeConstraint getLengthConstraint() {
         return lengthConstraint;
     }
 
-    @Basic
-    @Column(name = "val_class", length = 256)
     public String getValidatorClass() {
         return validatorClass;
     }
 
-    @Basic
-    @Column(name = "val_required", nullable = false)
     public boolean isRequired() {
         return required;
     }
 
-    @Basic
-    @Column(name = "val_unique", nullable = false)
     public boolean isUnique() {
         return unique;
     }

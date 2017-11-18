@@ -41,6 +41,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
+import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 import java.util.Calendar;
 import java.util.Collection;
@@ -116,11 +117,11 @@ public abstract class Element extends Entity implements Indexable {
     private String                      name;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "id")
+    @PrimaryKeyJoinColumn(name = "id")
 	private User                        user;
 
     @OneToMany(mappedBy = "element", cascade = CascadeType.REMOVE)
-    @OrderBy("start_date")
+    @OrderBy("period.begin")
 	private Collection<GroupHistoryLog> groupHistoryLogs;
 
     @OneToMany(mappedBy = "subject", cascade = CascadeType.REMOVE)

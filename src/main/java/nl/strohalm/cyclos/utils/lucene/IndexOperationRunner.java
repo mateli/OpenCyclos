@@ -33,6 +33,7 @@ import java.util.Map;
 import java.util.Properties;
 
 import nl.strohalm.cyclos.dao.IndexOperationDAO;
+import nl.strohalm.cyclos.entities.Entity;
 import nl.strohalm.cyclos.entities.IndexOperation;
 import nl.strohalm.cyclos.entities.IndexOperation.EntityType;
 import nl.strohalm.cyclos.entities.IndexOperation.OperationType;
@@ -66,9 +67,6 @@ import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.store.Directory;
-import org.hibernate.ObjectNotFoundException;
-import org.hibernate.ScrollMode;
-import org.hibernate.ScrollableResults;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -242,6 +240,9 @@ public class IndexOperationRunner implements Runnable, InitializingBean, Disposa
                 public Document doInTransaction(final TransactionStatus status) {
                     try {
                         Indexable entity = entityManager.find(entityType, id);
+                        if (entity == null) {
+                            throw new EntityNotFoundException((Class<? extends Entity>) entityType, id);
+                        }
                         DocumentMapper documentMapper = indexHandler.getDocumentMapper(entityType);
                         if (entityType.equals(Member.class)) {
                             rebuildMemberAds(id, analyzer, entityManager);
@@ -250,8 +251,6 @@ public class IndexOperationRunner implements Runnable, InitializingBean, Disposa
                             rebuildMemberRecords(id, analyzer, entityManager);
                         }
                         return documentMapper.map(entity);
-                    } catch (ObjectNotFoundException e) {
-                        return null;
                     } catch (EntityNotFoundException e) {
                         return null;
                     }

@@ -19,18 +19,6 @@
  */
 package nl.strohalm.cyclos.dao.members;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import nl.strohalm.cyclos.dao.IndexedDAOImpl;
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.access.Channel;
@@ -59,17 +47,16 @@ import nl.strohalm.cyclos.entities.members.RegistrationAgreement;
 import nl.strohalm.cyclos.entities.settings.LocalSettings;
 import nl.strohalm.cyclos.entities.settings.LocalSettings.MemberResultDisplay;
 import nl.strohalm.cyclos.entities.settings.LocalSettings.SortOrder;
+import nl.strohalm.cyclos.entities.utils.Period;
 import nl.strohalm.cyclos.services.elements.BrokerQuery;
 import nl.strohalm.cyclos.services.settings.SettingsServiceLocal;
 import nl.strohalm.cyclos.utils.EntityHelper;
-import nl.strohalm.cyclos.entities.utils.Period;
-import nl.strohalm.cyclos.utils.hibernate.HibernateCustomFieldHandler;
-import nl.strohalm.cyclos.utils.hibernate.HibernateHelper;
+import nl.strohalm.cyclos.utils.jpa.JpaCustomFieldHandler;
+import nl.strohalm.cyclos.utils.jpa.JpaQueryHelper;
 import nl.strohalm.cyclos.utils.lucene.Filters;
 import nl.strohalm.cyclos.utils.lucene.LuceneUtils;
 import nl.strohalm.cyclos.utils.query.PageParameters;
 import nl.strohalm.cyclos.utils.query.QueryParameters.ResultType;
-
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.analysis.Analyzer;
@@ -79,7 +66,18 @@ import org.apache.lucene.search.MatchAllDocsQuery;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.Sort;
 import org.apache.lucene.search.SortField;
-import org.hibernate.SQLQuery;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Implementation class for element DAO
@@ -89,7 +87,7 @@ import org.hibernate.SQLQuery;
 public class ElementDAOImpl extends IndexedDAOImpl<Element> implements ElementDAO {
 
     private static final String[]       FIELDS_FULL_TEXT = { "name", "username", "email", "customValues" };
-    private HibernateCustomFieldHandler hibernateCustomFieldHandler;
+    private JpaCustomFieldHandler jpaCustomFieldHandler;
     private SettingsServiceLocal        settingsService;
 
     public ElementDAOImpl() {
@@ -175,7 +173,7 @@ public class ElementDAOImpl extends IndexedDAOImpl<Element> implements ElementDA
         StringBuilder hql = new StringBuilder();
         hql.append(" select g.id, count(m.id) ");
         hql.append(" from Member m join m.group g ");
-        hql.append(" where g in (:groups) ");
+        hql.append(" where g in :groups ");
         hql.append(" group by g.id ");
         return this.<Long, Integer> map(hql.toString(), params);
     }
@@ -188,7 +186,7 @@ public class ElementDAOImpl extends IndexedDAOImpl<Element> implements ElementDA
         StringBuilder hql = new StringBuilder();
         hql.append(" select g.id, count(m.id) ");
         hql.append(" from GroupHistoryLog l join l.element m join l.group g ");
-        hql.append(" where g in (:groups) ");
+        hql.append(" where g in :groups ");
         hql.append("  and l.period.begin <= :timePoint ");
         hql.append("  and (l.period.end is null or l.period.end > :timePoint)");
         hql.append(" group by g.id");
@@ -201,8 +199,8 @@ public class ElementDAOImpl extends IndexedDAOImpl<Element> implements ElementDA
         return uniqueResult(hql, new HashMap<String, Object>());
     }
 
-    public HibernateCustomFieldHandler getHibernateCustomFieldHandler() {
-        return hibernateCustomFieldHandler;
+    public JpaCustomFieldHandler getJpaCustomFieldHandler() {
+        return jpaCustomFieldHandler;
     }
 
     @Override
@@ -212,10 +210,10 @@ public class ElementDAOImpl extends IndexedDAOImpl<Element> implements ElementDA
         hql.append(" where 1=1 ");
         final Map<String, Object> namedParameters = new HashMap<String, Object>();
         if (groups != null && !groups.isEmpty()) {
-            HibernateHelper.addInParameterToQuery(hql, namedParameters, "m.group", groups);
+            JpaQueryHelper.addInParameterToQuery(hql, namedParameters, "m.group", groups);
         }
         if (period != null) {
-            HibernateHelper.addPeriodParameterToQuery(hql, namedParameters, "m.creationDate", period);
+            JpaQueryHelper.addPeriodParameterToQuery(hql, namedParameters, "m.creationDate", period);
         }
         hql.append(" group by month(m.creationDate), year(m.creationDate) ");
         hql.append(" order by year(m.creationDate), month(m.creationDate) ");
@@ -258,27 +256,27 @@ public class ElementDAOImpl extends IndexedDAOImpl<Element> implements ElementDA
             namedParameters.put("groups", groups);
 
             // First condition: it has been in one of the selected groups
-            hql.append(" and ( (m.group in (:groups) and m.creationDate < :endDate and not exists ");
+            hql.append(" and ( (m.group in :groups and m.creationDate < :endDate and not exists ");
             hql.append(" (select gr1.id from GroupRemark gr1 where gr1.subject = m)) or ");
 
             // Second: Changed the member's group inside the period.
             hql.append(" (m.creationDate < :endDate and exists (select gr.id from GroupRemark gr where gr.subject=m and (gr.oldGroup in ");
-            hql.append(" (:groups) or gr.newGroup in (:groups)) and gr.date > :beginDate and gr.date <= :endDate)) or ");
+            hql.append(" (:groups) or gr.newGroup in :groups) and gr.date > :beginDate and gr.date <= :endDate)) or ");
 
             // Third condition: the group remark right before the period put the member in one
             // of the selected groups
             hql.append(" exists (select gr2.id from GroupRemark gr2 where gr2.subject=m and ");
-            hql.append(" gr2.newGroup in (:groups) and gr2.date=(select max(gr3.date) from GroupRemark ");
+            hql.append(" gr2.newGroup in :groups and gr2.date=(select max(gr3.date) from GroupRemark ");
             hql.append(" gr3 where gr3.subject=m and gr3.date < :beginDate)) or ");
 
             // Fourth condition: the group remark right after the begin period: the member was created
             // then the group was changed in the period, we must use oldGroup.
             hql.append(" (m.creationDate <= :endDate and exists (select gr2.id from GroupRemark gr2 where ");
-            hql.append(" gr2.subject=m and gr2.oldGroup in (:groups) and gr2.date = (select min(gr3.date) ");
+            hql.append(" gr2.subject=m and gr2.oldGroup in :groups and gr2.date = (select min(gr3.date) ");
             hql.append(" from GroupRemark gr3 where gr3.subject=m and gr3.date > :endDate))) ");
             hql.append(" ) ");
         } else if (!CollectionUtils.isEmpty(groups)) {
-            hql.append(" and m.group in (:groups) ");
+            hql.append(" and m.group in :groups ");
             namedParameters.put("groups", groups);
         }
         final Number count = uniqueResult(hql.toString(), namedParameters);
@@ -302,10 +300,10 @@ public class ElementDAOImpl extends IndexedDAOImpl<Element> implements ElementDA
 
         // Deactivation period
         if (period != null) {
-            HibernateHelper.addPeriodParameterToQuery(hql, namedParameters, "gr.date", period);
+            JpaQueryHelper.addPeriodParameterToQuery(hql, namedParameters, "gr.date", period);
         }
         if (groups != null && !groups.isEmpty()) {
-            hql.append("        and gr.oldGroup in (:groups) ");
+            hql.append("        and gr.oldGroup in :groups ");
             namedParameters.put("groups", groups);
         } else {
             return new ArrayList<Number[]>();
@@ -353,7 +351,7 @@ public class ElementDAOImpl extends IndexedDAOImpl<Element> implements ElementDA
             return Collections.<Member> emptyList().iterator();
         }
         final Map<String, List<MemberGroup>> parameters = Collections.singletonMap("groups", Arrays.asList(groups));
-        return iterate("from Member m left join fetch m.user where m.group in (:groups) " + (ordered ? "order by m.name, m.user.username" : ""), parameters);
+        return iterate("from Member m left join fetch m.user where m.group in :groups " + (ordered ? "order by m.name, m.user.username" : ""), parameters);
     }
 
     @Override
@@ -394,7 +392,7 @@ public class ElementDAOImpl extends IndexedDAOImpl<Element> implements ElementDA
     @Override
     public Element loadByEmail(final String email, final Relationship... fetch) throws EntityNotFoundException {
         final Map<String, Object> namedParameters = new HashMap<String, Object>();
-        final StringBuilder hql = HibernateHelper.getInitialQuery(Member.class, "m", Arrays.asList(fetch));
+        final StringBuilder hql = JpaQueryHelper.getInitialQuery(Member.class, "m", Arrays.asList(fetch));
         hql.append(" and m.group.status <> :removed");
         hql.append(" and m.email = :email");
         namedParameters.put("removed", Group.Status.REMOVED);
@@ -415,7 +413,7 @@ public class ElementDAOImpl extends IndexedDAOImpl<Element> implements ElementDA
             parameters.put("channelIds", channelIds);
             parameters.put("groupId", group.getId());
             final String statement = " delete from members_channels " +
-                    " where channel_id in (:channelIds) " +
+                    " where channel_id in :channelIds " +
                     " and member_id in (select id from members where group_id = :groupId) ";
             runNative(statement, parameters);
         }
@@ -445,28 +443,28 @@ public class ElementDAOImpl extends IndexedDAOImpl<Element> implements ElementDA
             hql.append(" select e");
             hql.append(" from ").append(entityType.getName()).append(" e ");
         }
-        hibernateCustomFieldHandler.appendJoins(hql, "e.customValues", query.getCustomValues());
-        HibernateHelper.appendJoinFetch(hql, entityType, "e", fetch);
+        jpaCustomFieldHandler.appendJoins(hql, "e.customValues", query.getCustomValues());
+        JpaQueryHelper.appendJoinFetch(hql, entityType, "e", fetch);
         hql.append(" where 1=1 ");
         if (query instanceof BrokerQuery) {
             hql.append(" and exists (select 1 from " + BrokerGroup.class.getName() + " bg where bg = e.group) ");
         }
         if (query.getExcludeElements() != null && !query.getExcludeElements().isEmpty()) {
-            hql.append(" and e not in (:excludeElements) ");
+            hql.append(" and e not in :excludeElements ");
             namedParameters.put("excludeElements", query.getExcludeElements());
         }
         if (query.isExcludeRemoved()) {
             hql.append(" and e.group.status <> :removedStatus");
             namedParameters.put("removedStatus", Group.Status.REMOVED);
         }
-        HibernateHelper.addRightLikeParameterToQuery(hql, namedParameters, "e.user.username", query.getUsername());
-        HibernateHelper.addLikeParameterToQuery(hql, namedParameters, "e.name", query.getName());
-        HibernateHelper.addRightLikeParameterToQuery(hql, namedParameters, "e.email", query.getEmail());
+        JpaQueryHelper.addRightLikeParameterToQuery(hql, namedParameters, "e.user.username", query.getUsername());
+        JpaQueryHelper.addLikeParameterToQuery(hql, namedParameters, "e.name", query.getName());
+        JpaQueryHelper.addRightLikeParameterToQuery(hql, namedParameters, "e.email", query.getEmail());
         // Group filters are handled at service level
         if (query.getGroups() != null && !query.getGroups().isEmpty()) {
-            HibernateHelper.addInParameterToQuery(hql, namedParameters, "e.group", query.getGroups());
+            JpaQueryHelper.addInParameterToQuery(hql, namedParameters, "e.group", query.getGroups());
         }
-        HibernateHelper.addPeriodParameterToQuery(hql, namedParameters, "e.creationDate", query.getCreationPeriod());
+        JpaQueryHelper.addPeriodParameterToQuery(hql, namedParameters, "e.creationDate", query.getCreationPeriod());
 
         final Boolean enabled = query.getEnabled();
         // Specific tests for admins and members
@@ -474,17 +472,17 @@ public class ElementDAOImpl extends IndexedDAOImpl<Element> implements ElementDA
             if (enabled != null) {
                 // If searching for admins, enabled means normal groups, while disabled means removed admins
                 final Group.Status groupStatus = enabled ? Group.Status.NORMAL : Group.Status.REMOVED;
-                HibernateHelper.addParameterToQuery(hql, namedParameters, "e.group.status", groupStatus);
+                JpaQueryHelper.addParameterToQuery(hql, namedParameters, "e.group.status", groupStatus);
             }
         } else if (query instanceof MemberQuery) {
             final MemberQuery memberQuery = (MemberQuery) query;
-            HibernateHelper.addPeriodParameterToQuery(hql, namedParameters, "e.activationDate", memberQuery.getActivationPeriod());
+            JpaQueryHelper.addPeriodParameterToQuery(hql, namedParameters, "e.activationDate", memberQuery.getActivationPeriod());
             if (enabled != null) {
                 // For members enabled means the activationData must be not null / null for Enable / Disabled
                 hql.append(" and e.activationDate is " + (enabled ? "not" : "") + " null ");
                 if (enabled) {
                     // Enabled also has a normal group
-                    HibernateHelper.addParameterToQuery(hql, namedParameters, "e.group.status", Group.Status.NORMAL);
+                    JpaQueryHelper.addParameterToQuery(hql, namedParameters, "e.group.status", Group.Status.NORMAL);
                 }
             }
             // With images only
@@ -500,7 +498,7 @@ public class ElementDAOImpl extends IndexedDAOImpl<Element> implements ElementDA
                 hql.append("    where ");
                 hql.append("        gr.subject = e ");
                 hql.append("        and gr.newGroup.status = :removed ");
-                HibernateHelper.addPeriodParameterToQuery(hql, namedParameters, "gr.date", deactivationPeriod);
+                JpaQueryHelper.addPeriodParameterToQuery(hql, namedParameters, "gr.date", deactivationPeriod);
                 hql.append(" )");
                 namedParameters.put("removed", Group.Status.REMOVED);
             }
@@ -514,11 +512,11 @@ public class ElementDAOImpl extends IndexedDAOImpl<Element> implements ElementDA
             }
             // Broker
             if (memberQuery.getBroker() != null) {
-                HibernateHelper.addParameterToQuery(hql, namedParameters, "e.broker", memberQuery.getBroker());
+                JpaQueryHelper.addParameterToQuery(hql, namedParameters, "e.broker", memberQuery.getBroker());
             }
             // Group filters
             if (CollectionUtils.isNotEmpty(memberQuery.getGroupFilters())) {
-                hql.append(" and exists (select gf.id from GroupFilter gf where gf in (:groupFilters) and e.group in elements(gf.groups))");
+                hql.append(" and exists (select gf.id from GroupFilter gf where gf in :groupFilters and e.group member of gf.groups)");
                 namedParameters.put("groupFilters", memberQuery.getGroupFilters());
             }
         } else if (query instanceof OperatorQuery) {
@@ -530,19 +528,19 @@ public class ElementDAOImpl extends IndexedDAOImpl<Element> implements ElementDA
         }
 
         if (query.getViewableGroup() != null) {
-            hql.append(" and :mg in elements(e.group.canViewProfileOfGroups)");
+            hql.append(" and :mg member of e.group.canViewProfileOfGroups");
             namedParameters.put("mg", query.getViewableGroup());
         }
-        hibernateCustomFieldHandler.appendConditions(hql, namedParameters, query.getCustomValues());
+        jpaCustomFieldHandler.appendConditions(hql, namedParameters, query.getCustomValues());
         if (query.isRandomOrder()) {
-            HibernateHelper.appendOrder(hql, "rand()");
+            JpaQueryHelper.appendOrder(hql, "rand()");
         } else if (query.getOrder() != null) {
             switch (query.getOrder()) {
                 case USERNAME:
-                    HibernateHelper.appendOrder(hql, "e.user.username");
+                    JpaQueryHelper.appendOrder(hql, "e.user.username");
                     break;
                 case NAME:
-                    HibernateHelper.appendOrder(hql, "e.name", "e.id");
+                    JpaQueryHelper.appendOrder(hql, "e.name", "e.id");
                     break;
             }
         }
@@ -557,28 +555,28 @@ public class ElementDAOImpl extends IndexedDAOImpl<Element> implements ElementDA
 
     @Override
     public List<Element> searchAtDate(final MemberQuery query, final Calendar date) {
-        final StringBuilder hql = HibernateHelper.getInitialQuery(Member.class, "m", query.getFetch());
+        final StringBuilder hql = JpaQueryHelper.getInitialQuery(Member.class, "m", query.getFetch());
         final Map<String, Object> namedParameters = new HashMap<String, Object>();
         if (query.getBroker() != null) {
             hql.append(" and m.broker = :broker ");
             namedParameters.put("broker", query.getBroker());
         }
         if (date == null) {
-            hql.append(" and m.group in (:groups) ");
+            hql.append(" and m.group in :groups ");
             namedParameters.put("groups", query.getGroups());
         } else {
             if (!CollectionUtils.isEmpty(query.getGroups())) {
                 hql.append(" and ( m.creationDate <= :date ");
-                hql.append(" and (m.group in (:groups) and not exists ");
+                hql.append(" and (m.group in :groups and not exists ");
                 hql.append(" (select gr1.id from GroupRemark gr1 where gr1.subject=m)) ");
 
                 hql.append(" or exists (select gr2.id from GroupRemark gr2 where gr2.subject=m and ");
-                hql.append(" gr2.newGroup in (:groups) and gr2.date= ");
+                hql.append(" gr2.newGroup in :groups and gr2.date= ");
                 hql.append(" (select max(gr3.date) from GroupRemark gr3 ");
                 hql.append(" where gr3.subject=m and gr3.date <= :date)) ");
 
                 hql.append(" or (m.creationDate <= :date and exists (select gr2.id from ");
-                hql.append(" GroupRemark gr2 where gr2.subject=m and gr2.oldGroup in (:groups) ");
+                hql.append(" GroupRemark gr2 where gr2.subject=m and gr2.oldGroup in :groups ");
                 hql.append(" and gr2.date = (select min(gr3.date) from GroupRemark gr3 ");
                 hql.append("  where gr3.subject=m and gr3.date > :date)) ))");
                 namedParameters.put("groups", query.getGroups());
@@ -605,11 +603,11 @@ public class ElementDAOImpl extends IndexedDAOImpl<Element> implements ElementDA
         final StringBuilder hql = new StringBuilder();
         hql.append(" select e");
         hql.append(" from ").append(entityType.getName()).append(" e ");
-        hibernateCustomFieldHandler.appendJoins(hql, "e.customValues", query.getCustomValues());
-        HibernateHelper.appendJoinFetch(hql, entityType, "e", fetch);
+        jpaCustomFieldHandler.appendJoins(hql, "e.customValues", query.getCustomValues());
+        JpaQueryHelper.appendJoinFetch(hql, entityType, "e", fetch);
         hql.append(" where 1=1");
-        HibernateHelper.addRightLikeParameterToQuery(hql, namedParameters, "e.user.username", query.getUsername());
-        HibernateHelper.addLikeParameterToQuery(hql, namedParameters, "e.name", query.getName());
+        JpaQueryHelper.addRightLikeParameterToQuery(hql, namedParameters, "e.user.username", query.getUsername());
+        JpaQueryHelper.addLikeParameterToQuery(hql, namedParameters, "e.name", query.getName());
 
         final Collection<? extends Group> groups = query.getGroups();
 
@@ -617,16 +615,16 @@ public class ElementDAOImpl extends IndexedDAOImpl<Element> implements ElementDA
         // Specific tests for admins and members
         if (query instanceof AdminQuery) {
 
-            HibernateHelper.addPeriodParameterToQuery(hql, namedParameters, "e.creationDate", query.getCreationPeriod());
+            JpaQueryHelper.addPeriodParameterToQuery(hql, namedParameters, "e.creationDate", query.getCreationPeriod());
 
             if (groups != null && !groups.isEmpty()) {
-                HibernateHelper.addInParameterToQuery(hql, namedParameters, "e.group", groups);
+                JpaQueryHelper.addInParameterToQuery(hql, namedParameters, "e.group", groups);
             }
 
             if (enabled != null) {
                 // If searching for admins, enabled means normal groups, while disabled means removed admins
                 final Group.Status groupStatus = enabled ? Group.Status.NORMAL : Group.Status.REMOVED;
-                HibernateHelper.addParameterToQuery(hql, namedParameters, "e.group.status", groupStatus);
+                JpaQueryHelper.addParameterToQuery(hql, namedParameters, "e.group.status", groupStatus);
             }
         } else {
             if (groups != null && !groups.isEmpty()) {
@@ -634,11 +632,11 @@ public class ElementDAOImpl extends IndexedDAOImpl<Element> implements ElementDA
 
                 final Period creationPeriod = query.getCreationPeriod();
                 if (creationPeriod != null) {
-                    HibernateHelper.addPeriodParameterToQuery(hql, namedParameters, "e.creationDate", creationPeriod);
+                    JpaQueryHelper.addPeriodParameterToQuery(hql, namedParameters, "e.creationDate", creationPeriod);
                 }
                 hql.append(" and ((not exists ");
                 hql.append(" (select gr.id from GroupRemark gr where gr.subject = e) ");
-                hql.append(" and e.group in (:groups) )");
+                hql.append(" and e.group in :groups )");
 
                 namedParameters.put("groups", groups);
 
@@ -649,7 +647,7 @@ public class ElementDAOImpl extends IndexedDAOImpl<Element> implements ElementDA
                 hql.append("        gr.subject = e ");
 
                 if (groups != null && !groups.isEmpty()) {
-                    hql.append("        and gr.oldGroup in (:groups) ) ");
+                    hql.append("        and gr.oldGroup in :groups ) ");
                 }
                 hql.append(")) or ");
 
@@ -661,11 +659,11 @@ public class ElementDAOImpl extends IndexedDAOImpl<Element> implements ElementDA
 
                 // using 'creation period'
                 if (creationPeriod != null) {
-                    HibernateHelper.addPeriodParameterToQuery(hql, namedParameters, "gr.date", creationPeriod);
+                    JpaQueryHelper.addPeriodParameterToQuery(hql, namedParameters, "gr.date", creationPeriod);
                 }
                 if (groups != null && !groups.isEmpty()) {
-                    // hql.append(" and (gr.newGroup in (:groups) ");
-                    hql.append("        and gr.newGroup in (:groups) and gr.oldGroup not in (:groups) ");
+                    // hql.append(" and (gr.newGroup in :groups ");
+                    hql.append("        and gr.newGroup in :groups and gr.oldGroup not in :groups ");
                     namedParameters.put("groups", groups);
                 }
                 hql.append("    )");
@@ -674,14 +672,14 @@ public class ElementDAOImpl extends IndexedDAOImpl<Element> implements ElementDA
             } else {
                 final Period creationPeriod = query.getCreationPeriod();
                 if (creationPeriod != null) {
-                    HibernateHelper.addPeriodParameterToQuery(hql, namedParameters, "e.creationDate", creationPeriod);
+                    JpaQueryHelper.addPeriodParameterToQuery(hql, namedParameters, "e.creationDate", creationPeriod);
                 }
             }
         }
         // Custom Values
-        hibernateCustomFieldHandler.appendConditions(hql, namedParameters, query.getCustomValues());
+        jpaCustomFieldHandler.appendConditions(hql, namedParameters, query.getCustomValues());
 
-        HibernateHelper.appendOrder(hql, "e.user.username");
+        JpaQueryHelper.appendOrder(hql, "e.user.username");
         return list(query, hql.toString(), namedParameters);
     }
 
@@ -699,14 +697,14 @@ public class ElementDAOImpl extends IndexedDAOImpl<Element> implements ElementDA
         final StringBuilder hql = new StringBuilder();
         hql.append(" select e");
         hql.append(" from ").append(entityType.getName()).append(" e ");
-        hibernateCustomFieldHandler.appendJoins(hql, "e.customValues", query.getCustomValues());
-        HibernateHelper.appendJoinFetch(hql, entityType, "e", fetch);
+        jpaCustomFieldHandler.appendJoins(hql, "e.customValues", query.getCustomValues());
+        JpaQueryHelper.appendJoinFetch(hql, entityType, "e", fetch);
         hql.append(" where 1=1");
         if (query instanceof BrokerQuery) {
             hql.append(" and exists (select 1 from " + BrokerGroup.class.getName() + " bg where bg = e.group) ");
         }
-        HibernateHelper.addRightLikeParameterToQuery(hql, namedParameters, "e.user.username", query.getUsername());
-        HibernateHelper.addLikeParameterToQuery(hql, namedParameters, "e.name", query.getName());
+        JpaQueryHelper.addRightLikeParameterToQuery(hql, namedParameters, "e.user.username", query.getUsername());
+        JpaQueryHelper.addLikeParameterToQuery(hql, namedParameters, "e.name", query.getName());
         final MemberQuery memberQuery = (MemberQuery) query;
 
         final Boolean enabled = query.getEnabled();
@@ -715,7 +713,7 @@ public class ElementDAOImpl extends IndexedDAOImpl<Element> implements ElementDA
             if (enabled != null) {
                 // If searching for admins, enabled means normal groups, while disabled means removed admins
                 final Group.Status groupStatus = enabled ? Group.Status.NORMAL : Group.Status.REMOVED;
-                HibernateHelper.addParameterToQuery(hql, namedParameters, "e.group.status", groupStatus);
+                JpaQueryHelper.addParameterToQuery(hql, namedParameters, "e.group.status", groupStatus);
             }
         } else {
 
@@ -728,14 +726,14 @@ public class ElementDAOImpl extends IndexedDAOImpl<Element> implements ElementDA
             // Deactivation period
             final Period deactivationPeriod = memberQuery.getDeactivationPeriod();
             if (deactivationPeriod != null) {
-                HibernateHelper.addPeriodParameterToQuery(hql, namedParameters, "gr.date", deactivationPeriod);
+                JpaQueryHelper.addPeriodParameterToQuery(hql, namedParameters, "gr.date", deactivationPeriod);
             }
             // if at least one group was chosen.
             // if more than one group is selected, it should not count moving
             // the members from and to those groups, because they are the 'same group' in this case.
             final Collection<? extends Group> groups = query.getGroups();
             if (groups != null && !groups.isEmpty()) {
-                hql.append("     and gr.oldGroup in (:groups) and gr.newGroup not in (:groups) ");
+                hql.append("     and gr.oldGroup in :groups and gr.newGroup not in :groups ");
                 namedParameters.put("groups", groups);
             }
             // no group was chosen, no disappears members is returned;
@@ -745,14 +743,14 @@ public class ElementDAOImpl extends IndexedDAOImpl<Element> implements ElementDA
             hql.append(" 	)");
         }
         // Custom Values
-        hibernateCustomFieldHandler.appendConditions(hql, namedParameters, query.getCustomValues());
+        jpaCustomFieldHandler.appendConditions(hql, namedParameters, query.getCustomValues());
 
-        HibernateHelper.appendOrder(hql, "e.user.username");
+        JpaQueryHelper.appendOrder(hql, "e.user.username");
         return list(query, hql.toString(), namedParameters);
     }
 
-    public void setHibernateCustomFieldHandler(final HibernateCustomFieldHandler hibernateCustomFieldHandler) {
-        this.hibernateCustomFieldHandler = hibernateCustomFieldHandler;
+    public void setJpaCustomFieldHandler(final JpaCustomFieldHandler jpaCustomFieldHandler) {
+        this.jpaCustomFieldHandler = jpaCustomFieldHandler;
     }
 
     public void setSettingsServiceLocal(final SettingsServiceLocal settingsService) {

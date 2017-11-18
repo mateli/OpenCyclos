@@ -57,7 +57,6 @@ import nl.strohalm.cyclos.entities.members.messages.MessageCategory;
 import nl.strohalm.cyclos.entities.members.records.MemberRecordType;
 import nl.strohalm.cyclos.entities.utils.Amount;
 import nl.strohalm.cyclos.entities.utils.TimePeriod;
-import org.hibernate.criterion.Restrictions;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
@@ -603,7 +602,7 @@ public class CreateInitialData implements Runnable {
         entityManager.persist(account);
 
         // Save the account lock
-        entityManager.persist(new AccountLock(account));
+        entityManager.merge(new AccountLock(account));
 
         type.setAccount(account);
         return account;

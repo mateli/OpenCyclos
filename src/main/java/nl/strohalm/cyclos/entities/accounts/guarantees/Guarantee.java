@@ -31,13 +31,13 @@ import nl.strohalm.cyclos.entities.utils.Period;
 import nl.strohalm.cyclos.utils.CustomFieldsContainer;
 import nl.strohalm.cyclos.utils.StringValuedEnum;
 import nl.strohalm.cyclos.utils.guarantees.GuaranteesHelper;
-import org.springframework.core.annotation.Order;
 
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
 import javax.persistence.Cacheable;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Embedded;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -85,6 +85,7 @@ public class Guarantee extends Entity implements CustomFieldsContainer<PaymentCu
 
     private static final long                   serialVersionUID = 3906916142405683801L;
 
+    @Convert(converter = GuaranteeStatusAttributeConverter.class)
     @Column(name = "status", nullable = false, length = 2)
 	private Status                              status;
 
@@ -128,7 +129,7 @@ public class Guarantee extends Entity implements CustomFieldsContainer<PaymentCu
 	private Loan                                loan;
 
     @OneToMany(mappedBy = "guarantee")
-    @OrderBy("expiration_date asc")
+    @OrderBy("expirationDate asc")
 	private Collection<PaymentObligation>       paymentObligations;
 
     @OneToMany(mappedBy = "guarantee", cascade = CascadeType.ALL, orphanRemoval = true)

@@ -22,6 +22,7 @@ package nl.strohalm.cyclos.entities.utils;
 import java.io.Serializable;
 import java.util.Calendar;
 
+import nl.strohalm.cyclos.entities.converters.TimePeriodFieldAttributeConverter;
 import nl.strohalm.cyclos.utils.DateHelper;
 import nl.strohalm.cyclos.utils.IntValuedEnum;
 import org.apache.commons.lang.ArrayUtils;
@@ -29,6 +30,7 @@ import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.apache.commons.lang.time.DateUtils;
 
+import javax.persistence.Convert;
 import javax.persistence.Embeddable;
 
 /**
@@ -88,6 +90,7 @@ public class TimePeriod implements Serializable, Cloneable {
 
     private int                    number;
 
+    @Convert(converter = TimePeriodFieldAttributeConverter.class)
     private Field                  field;
 
     public TimePeriod() {

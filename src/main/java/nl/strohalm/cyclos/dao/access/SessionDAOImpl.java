@@ -19,15 +19,6 @@
  */
 package nl.strohalm.cyclos.dao.access;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
 import nl.strohalm.cyclos.dao.BaseDAOImpl;
 import nl.strohalm.cyclos.entities.access.Session;
 import nl.strohalm.cyclos.entities.access.SessionQuery;
@@ -36,12 +27,20 @@ import nl.strohalm.cyclos.entities.exceptions.EntityNotFoundException;
 import nl.strohalm.cyclos.entities.groups.Group;
 import nl.strohalm.cyclos.entities.groups.Group.Nature;
 import nl.strohalm.cyclos.utils.IteratorListImpl;
-import nl.strohalm.cyclos.utils.hibernate.HibernateHelper;
+import nl.strohalm.cyclos.utils.jpa.JpaQueryHelper;
 import nl.strohalm.cyclos.utils.query.IteratorList;
 import nl.strohalm.cyclos.utils.query.PageParameters;
 import nl.strohalm.cyclos.utils.query.QueryParameters.ResultType;
-
 import org.apache.commons.collections.CollectionUtils;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 /**
  * DAO interface for {@link Session}
@@ -63,13 +62,13 @@ public class SessionDAOImpl extends BaseDAOImpl<Session> implements SessionDAO {
     @Override
     public boolean isLoggedIn(final User user) {
         Map<String, ?> params = Collections.singletonMap("user", user);
-        List<?> list = list(ResultType.LIST, "select s.id from Session s where s.user = :user and s.expirationDate > now()", params, PageParameters.max(1));
+        List<?> list = list(ResultType.LIST, "select s.id from Session s where s.user = :user and s.expirationDate > CURRENT_TIMESTAMP", params, PageParameters.max(1));
         return !list.isEmpty();
     }
 
     @Override
     public IteratorList<User> listLoggedUsers() {
-        Iterator<User> iterator = this.iterate("select distinct s.user from Session s where s.expirationDate > now()", null);
+        Iterator<User> iterator = this.iterate("select distinct s.user from Session s where s.expirationDate > CURRENT_TIMESTAMP", null);
         return new IteratorListImpl<User>(iterator);
     }
 
@@ -79,14 +78,9 @@ public class SessionDAOImpl extends BaseDAOImpl<Session> implements SessionDAO {
         StringBuilder hql = new StringBuilder();
         hql.append(" select s");
         hql.append(" from Session s");
-        hql.append("   left join fetch s.user u");
-        hql.append("   left join fetch u.element e");
-        hql.append("   left join fetch e.group g");
-        hql.append("   left join fetch e.member m");
-        hql.append("   left join fetch m.group mg");
         hql.append(" where s.identifier = :identifier");
         if (!allowExpired) {
-            hql.append(" and s.expirationDate > now()");
+            hql.append(" and s.expirationDate > CURRENT_TIMESTAMP");
         }
         Session session = uniqueResult(hql.toString(), params);
         if (session == null) {
@@ -97,7 +91,7 @@ public class SessionDAOImpl extends BaseDAOImpl<Session> implements SessionDAO {
 
     @Override
     public void purgeExpired() {
-        bulkUpdate("delete from Session where expirationDate <= now()", null);
+        bulkUpdate("delete from Session where expirationDate <= CURRENT_TIMESTAMP", null);
     }
 
     @Override
@@ -106,7 +100,7 @@ public class SessionDAOImpl extends BaseDAOImpl<Session> implements SessionDAO {
         StringBuilder hql = new StringBuilder();
         hql.append(" select s ");
         hql.append(" from Session s left join fetch s.user u left join fetch u.element e left join fetch e.group g ");
-        hql.append(" where s.expirationDate > now() ");
+        hql.append(" where s.expirationDate > CURRENT_TIMESTAMP ");
 
         // Filter by nature - use the discriminator directly
         Collection<Nature> natures = query.getNatures();
@@ -115,23 +109,23 @@ public class SessionDAOImpl extends BaseDAOImpl<Session> implements SessionDAO {
             for (Nature nature : natures) {
                 values.add(nature.getDiscriminator());
             }
-            HibernateHelper.addInParameterToQuery(hql, params, "s.user.element.group.class", values);
+            JpaQueryHelper.addInParameterToQuery(hql, params, "s.user.element.group.class", values);
         }
 
         // Apply the filter by group, which has a distinct semantic on operators
         boolean hasOperator = CollectionUtils.isEmpty(natures) || natures.contains(Group.Nature.OPERATOR);
         if (hasOperator) {
             // The groups may be for either the group or, if operators, the member group
-            hql.append("and (s.user.element.group in (:groups) or exists (");
+            hql.append("and (s.user.element.group in :groups or exists (");
             hql.append("    select o.id");
             hql.append("    from Operator o");
             hql.append("    where o = s.user.element");
-            hql.append("      and o.member.group in (:groups)");
+            hql.append("      and o.member.group in :groups");
             hql.append("))");
             params.put("groups", query.getGroups());
         } else {
             // Group filter will apply directly
-            HibernateHelper.addInParameterToQuery(hql, params, "s.user.element.group", query.getGroups());
+            JpaQueryHelper.addInParameterToQuery(hql, params, "s.user.element.group", query.getGroups());
         }
 
         // Filter by operator member
@@ -144,7 +138,7 @@ public class SessionDAOImpl extends BaseDAOImpl<Session> implements SessionDAO {
             hql.append(")");
             params.put("member", query.getMember());
         }
-        HibernateHelper.appendOrder(hql, "s.user.element.name");
+        JpaQueryHelper.appendOrder(hql, "s.user.element.name");
         return list(query, hql.toString(), params);
     }
 

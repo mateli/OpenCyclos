@@ -19,16 +19,16 @@
  */
 package nl.strohalm.cyclos.dao.accounts.loans;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import nl.strohalm.cyclos.dao.BaseDAOImpl;
 import nl.strohalm.cyclos.entities.accounts.loans.Loan;
 import nl.strohalm.cyclos.entities.accounts.loans.LoanGroup;
 import nl.strohalm.cyclos.entities.accounts.loans.LoanGroupQuery;
-import nl.strohalm.cyclos.utils.hibernate.HibernateCustomFieldHandler;
-import nl.strohalm.cyclos.utils.hibernate.HibernateHelper;
+import nl.strohalm.cyclos.utils.jpa.JpaCustomFieldHandler;
+import nl.strohalm.cyclos.utils.jpa.JpaQueryHelper;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Implamentation DAO class for Loan Groups
@@ -36,7 +36,7 @@ import nl.strohalm.cyclos.utils.hibernate.HibernateHelper;
  */
 public class LoanGroupDAOImpl extends BaseDAOImpl<LoanGroup> implements LoanGroupDAO {
 
-    private HibernateCustomFieldHandler hibernateCustomFieldHandler;
+    private JpaCustomFieldHandler jpaCustomFieldHandler;
 
     public LoanGroupDAOImpl() {
         super(LoanGroup.class);
@@ -48,17 +48,17 @@ public class LoanGroupDAOImpl extends BaseDAOImpl<LoanGroup> implements LoanGrou
         final StringBuilder hql = new StringBuilder();
         hql.append(" select lg");
         hql.append(" from ").append(getEntityType().getName()).append(" lg ");
-        hibernateCustomFieldHandler.appendJoins(hql, "lg.customValues", query.getCustomValues());
-        HibernateHelper.appendJoinFetch(hql, getEntityType(), "lg", query.getFetch());
+        jpaCustomFieldHandler.appendJoins(hql, "lg.customValues", query.getCustomValues());
+        JpaQueryHelper.appendJoinFetch(hql, getEntityType(), "lg", query.getFetch());
         hql.append(" where 1=1");
-        HibernateHelper.addLikeParameterToQuery(hql, namedParameters, "lg.description", query.getDescription());
-        HibernateHelper.addLikeParameterToQuery(hql, namedParameters, "lg.name", query.getName());
+        JpaQueryHelper.addLikeParameterToQuery(hql, namedParameters, "lg.description", query.getDescription());
+        JpaQueryHelper.addLikeParameterToQuery(hql, namedParameters, "lg.name", query.getName());
         if (query.getMember() != null) {
             if (query.isNotOfMember()) {
-                hql.append(" and :notMember not in elements(lg.members) ");
+                hql.append(" and :notMember not member of lg.members ");
             } else {
-                hql.append(" and (:member in elements(lg.members) or exists ( ");
-                hql.append("     select 1 from Member m where m.broker = :member and m in elements(lg.members) ");
+                hql.append(" and (:member member of lg.members or exists ( ");
+                hql.append("     select 1 from Member m where m.broker = :member and m member of lg.members ");
                 hql.append("))");
             }
             namedParameters.put("member", query.getMember());
@@ -70,13 +70,13 @@ public class LoanGroupDAOImpl extends BaseDAOImpl<LoanGroup> implements LoanGrou
                 hql.append(" and exists (select 1 from " + Loan.class.getName() + " l where l.loanGroup = lg) ");
             }
         }
-        hibernateCustomFieldHandler.appendConditions(hql, namedParameters, query.getCustomValues());
-        HibernateHelper.appendOrder(hql, "lg.name");
+        jpaCustomFieldHandler.appendConditions(hql, namedParameters, query.getCustomValues());
+        JpaQueryHelper.appendOrder(hql, "lg.name");
         return list(query, hql.toString(), namedParameters);
     }
 
-    public void setHibernateCustomFieldHandler(final HibernateCustomFieldHandler hibernateCustomFieldHandler) {
-        this.hibernateCustomFieldHandler = hibernateCustomFieldHandler;
+    public void setJpaCustomFieldHandler(final JpaCustomFieldHandler jpaCustomFieldHandler) {
+        this.jpaCustomFieldHandler = jpaCustomFieldHandler;
     }
 
 }

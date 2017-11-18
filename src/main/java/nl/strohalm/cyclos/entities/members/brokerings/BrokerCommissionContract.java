@@ -25,12 +25,14 @@ import nl.strohalm.cyclos.entities.accounts.fees.transaction.BrokerCommission;
 import nl.strohalm.cyclos.entities.members.Element;
 import nl.strohalm.cyclos.entities.settings.LocalSettings;
 import nl.strohalm.cyclos.entities.utils.Amount;
+import nl.strohalm.cyclos.entities.utils.AmountTypeAttributeConverter;
 import nl.strohalm.cyclos.entities.utils.Period;
 import nl.strohalm.cyclos.utils.StringValuedEnum;
 
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Embedded;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -96,12 +98,15 @@ public class BrokerCommissionContract extends Entity {
     @Column(name = "amount_value", precision = 15, scale = 6, nullable = false)
     private BigDecimal amountValue;
 
+    @Convert(converter = AmountTypeAttributeConverter.class)
     @Column(name = "amount_type", length = 1)
     private Amount.Type amountType;
 
+    @Convert(converter = BrokerCommissionContractStatusAttributeConverter.class)
     @Column(name = "status", nullable = false, length = 1)
 	private Status            status;
 
+    @Convert(converter = BrokerCommissionContractStatusAttributeConverter.class)
     @Column(name = "status_before_suspension", length = 1)
 	private Status            statusBeforeSuspension;
 

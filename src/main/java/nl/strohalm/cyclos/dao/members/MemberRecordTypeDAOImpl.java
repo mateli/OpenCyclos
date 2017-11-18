@@ -36,7 +36,7 @@ import nl.strohalm.cyclos.entities.groups.GroupQuery;
 import nl.strohalm.cyclos.entities.members.records.MemberRecordType;
 import nl.strohalm.cyclos.entities.members.records.MemberRecordTypeQuery;
 import nl.strohalm.cyclos.utils.EntityHelper;
-import nl.strohalm.cyclos.utils.hibernate.HibernateHelper;
+import nl.strohalm.cyclos.utils.jpa.JpaQueryHelper;
 
 import org.apache.commons.collections.CollectionUtils;
 
@@ -103,22 +103,22 @@ public class MemberRecordTypeDAOImpl extends BaseDAOImpl<MemberRecordType> imple
     @Override
     public List<MemberRecordType> search(final MemberRecordTypeQuery query) throws DaoException {
         final Map<String, Object> namedParameters = new HashMap<String, Object>();
-        final StringBuilder hql = HibernateHelper.getInitialQuery(getEntityType(), "mrt", query.getFetch());
+        final StringBuilder hql = JpaQueryHelper.getInitialQuery(getEntityType(), "mrt", query.getFetch());
         if (query.getGroups() != null) {
             if (CollectionUtils.isNotEmpty(query.getGroups())) {
                 List<Long> groupIds = Arrays.asList(EntityHelper.toIds(query.getGroups()));
-                hql.append(" and exists (select g from Group g where g in elements(mrt.groups) and g.id in (:groupIds)) ");
+                hql.append(" and exists (select g from Group g where g member of mrt.groups and g.id in :groupIds) ");
                 namedParameters.put("groupIds", groupIds);
             } else {
                 return Collections.emptyList();
             }
         }
         if (query.getViewableByAdminGroup() != null) {
-            hql.append(" and exists (select ag.id from AdminGroup ag where ag = :adminGroup and mrt in elements(ag.viewMemberRecordTypes) or mrt in elements(ag.viewAdminRecordTypes)) ");
+            hql.append(" and exists (select ag.id from AdminGroup ag where ag = :adminGroup and mrt member of ag.viewMemberRecordTypes or mrt member of ag.viewAdminRecordTypes) ");
             namedParameters.put("adminGroup", query.getViewableByAdminGroup());
         }
         if (query.getViewableByBrokerGroup() != null) {
-            hql.append(" and exists (select bg.id from BrokerGroup bg where bg = :brokerGroup and mrt in elements(bg.brokerMemberRecordTypes)) ");
+            hql.append(" and exists (select bg.id from BrokerGroup bg where bg = :brokerGroup and mrt member of bg.brokerMemberRecordTypes) ");
             namedParameters.put("brokerGroup", query.getViewableByBrokerGroup());
         }
         if (query.isShowMenuItem()) {

@@ -41,7 +41,7 @@ public class FixedAccountStatusRecreationMigration implements UntraceableMigrati
 
     public void execute(final JDBCWrapper jdbc) throws SQLException {
         final String accountQuery = "select id, subclass, credit_limit, upper_credit_limit from accounts";
-        final String transferQuery = "select id, ifnull(process_date, date) as date, amount, status, from_account_id, to_account_id, parent_id, account_fee_log_id, chargeback_of_id from transfers where status in ('O', 'P') and (from_account_id = ? or to_account_id = ?) order by ifnull(process_date, date), id";
+        final String transferQuery = "select id, coalesce(process_date, date) as date, amount, status, from_account_id, to_account_id, parent_id, account_fee_log_id, chargeback_of_id from transfers where status in ('O', 'P') and (from_account_id = ? or to_account_id = ?) order by coalesce(process_date, date), id";
         final String initialStatusInsert = "insert into account_status (subclass, account_id, date, credit_limit, upper_credit_limit) select subclass, id, creation_date, credit_limit, upper_credit_limit from accounts";
         final String statusInsert = "insert into account_status (subclass, account_id, date, root_credits_count, root_credits_amount, root_debits_count, root_debits_amount, nested_credits_count, nested_credits_amount, nested_debits_count, nested_debits_amount, pending_credits_amount, pending_credits_count, pending_debits_amount, pending_debits_count, credit_limit, upper_credit_limit, transfer_id) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         final ResultSet rsAccounts = jdbc.query(accountQuery);

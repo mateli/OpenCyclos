@@ -19,13 +19,6 @@
  */
 package nl.strohalm.cyclos.dao.accounts.transactions;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import nl.strohalm.cyclos.dao.BaseDAOImpl;
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.accounts.AccountOwner;
@@ -41,11 +34,17 @@ import nl.strohalm.cyclos.entities.accounts.transactions.Transfer;
 import nl.strohalm.cyclos.entities.exceptions.EntityNotFoundException;
 import nl.strohalm.cyclos.entities.groups.MemberGroup;
 import nl.strohalm.cyclos.entities.reports.InvoiceSummaryType;
-import nl.strohalm.cyclos.services.transactions.TransactionSummaryVO;
 import nl.strohalm.cyclos.entities.utils.Period;
-import nl.strohalm.cyclos.utils.hibernate.HibernateHelper;
-
+import nl.strohalm.cyclos.services.transactions.TransactionSummaryVO;
+import nl.strohalm.cyclos.utils.jpa.JpaQueryHelper;
 import org.apache.commons.collections.CollectionUtils;
+
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Implementation class for invoice DAO
@@ -67,7 +66,7 @@ public class InvoiceDAOImpl extends BaseDAOImpl<Invoice> implements InvoiceDAO {
 
         final HashMap<String, Object> namedParameters = new HashMap<String, Object>();
 
-        final StringBuilder hql = new StringBuilder("select new " + TransactionSummaryVO.class.getName() + "(count(*), sum(e.amount)) from " + getEntityType().getName() + " e ");
+        final StringBuilder hql = new StringBuilder("select new " + TransactionSummaryVO.class.getName() + "(count(e), sum(e.amount)) from " + getEntityType().getName() + " e ");
 
         hql.append(" where e." + (direction == Direction.INCOMING ? "to" : "from") + "Member" + (owner instanceof SystemAccountOwner ? " is null " : " = :owner"));
         namedParameters.put("owner", owner);
@@ -86,9 +85,9 @@ public class InvoiceDAOImpl extends BaseDAOImpl<Invoice> implements InvoiceDAO {
 
         if (CollectionUtils.isNotEmpty(dto.getTypes())) {
             hql.append(" and ( ");
-            hql.append("    e.destinationAccountType in (:types) or ");
-            hql.append("    exists(select i.id from Invoice i where i.transferType.from in (:types) and i = e) or ");
-            hql.append("    exists(select i.id from Invoice i where i.transferType.to in (:types) and i = e) ");
+            hql.append("    e.destinationAccountType in :types or ");
+            hql.append("    exists(select i.id from Invoice i where i.transferType.from in :types and i = e) or ");
+            hql.append("    exists(select i.id from Invoice i where i.transferType.to in :types and i = e) ");
             hql.append(" ) ");
             namedParameters.put("types", dto.getTypes());
         }
@@ -98,11 +97,11 @@ public class InvoiceDAOImpl extends BaseDAOImpl<Invoice> implements InvoiceDAO {
             namedParameters.put("status", status);
         }
 
-        HibernateHelper.addPeriodParameterToQuery(hql, namedParameters, "e.date", period);
+        JpaQueryHelper.addPeriodParameterToQuery(hql, namedParameters, "e.date", period);
 
         if (filter != null) {
             filter = getFetchDao().fetch(filter, PaymentFilter.Relationships.TRANSFER_TYPES);
-            HibernateHelper.addInParameterToQuery(hql, namedParameters, "e.transferType", filter.getTransferTypes());
+            JpaQueryHelper.addInParameterToQuery(hql, namedParameters, "e.transferType", filter.getTransferTypes());
         }
         return uniqueResult(hql.toString(), namedParameters);
     }
@@ -121,20 +120,20 @@ public class InvoiceDAOImpl extends BaseDAOImpl<Invoice> implements InvoiceDAO {
                 break;
         }
 
-        final StringBuilder hql = new StringBuilder("select new " + TransactionSummaryVO.class.getName() + "(count(*), sum(i.amount)) from Invoice i ");
+        final StringBuilder hql = new StringBuilder("select new " + TransactionSummaryVO.class.getName() + "(count(i), sum(i.amount)) from Invoice i ");
         hql.append(" where i.fromMember " + fromMember + " and i.toMember " + toMember);
         hql.append(" and (exists (select tt.id from TransferType tt where tt = i.transferType and tt.from.currency = :currency) or exists (select at.id from AccountType at where at = i.destinationAccountType and at.currency = :currency))");
         namedParameters.put("currency", currency);
         if (memberGroups != null && !memberGroups.isEmpty()) {
             switch (invoiceSummaryType) {
                 case SYSTEM_INCOMING:
-                    hql.append(" and i.fromMember.group in (:memberGroups) ");
+                    hql.append(" and i.fromMember.group in :memberGroups ");
                     break;
                 case SYSTEM_OUTGOING:
-                    hql.append(" and i.toMember.group in (:memberGroups) ");
+                    hql.append(" and i.toMember.group in :memberGroups ");
                     break;
                 case MEMBER:
-                    hql.append(" and (i.fromMember.group in (:memberGroups) or i.toMember.group in (:memberGroups)) ");
+                    hql.append(" and (i.fromMember.group in :memberGroups or i.toMember.group in :memberGroups) ");
                     break;
             }
             namedParameters.put("memberGroups", memberGroups);
@@ -168,18 +167,18 @@ public class InvoiceDAOImpl extends BaseDAOImpl<Invoice> implements InvoiceDAO {
         hql.append(" left join fm.group fmg");
         hql.append(" left join i.toMember tm");
         hql.append(" left join tm.group tmg");
-        HibernateHelper.appendJoinFetch(hql, getEntityType(), "i", fetch);
+        JpaQueryHelper.appendJoinFetch(hql, getEntityType(), "i", fetch);
         hql.append(" where 1 = 1");
-        HibernateHelper.addLikeParameterToQuery(hql, namedParameters, "i.description", query.getDescription());
-        HibernateHelper.addParameterToQuery(hql, namedParameters, "i.status", query.getStatus());
-        HibernateHelper.addParameterToQuery(hql, namedParameters, "i.transferType", query.getTransferType());
-        HibernateHelper.addParameterToQuery(hql, namedParameters, "i.transfer.transactionNumber", query.getTransactionNumber());
-        HibernateHelper.addPeriodParameterToQuery(hql, namedParameters, "i.date", query.getPeriod());
+        JpaQueryHelper.addLikeParameterToQuery(hql, namedParameters, "i.description", query.getDescription());
+        JpaQueryHelper.addParameterToQuery(hql, namedParameters, "i.status", query.getStatus());
+        JpaQueryHelper.addParameterToQuery(hql, namedParameters, "i.transferType", query.getTransferType());
+        JpaQueryHelper.addParameterToQuery(hql, namedParameters, "i.transfer.transactionNumber", query.getTransactionNumber());
+        JpaQueryHelper.addPeriodParameterToQuery(hql, namedParameters, "i.date", query.getPeriod());
 
         // With payments scheduled for inside the period
         if (query.getPaymentPeriod() != null) {
             hql.append(" and exists (select ip.id from InvoicePayment ip where ip.invoice = i");
-            HibernateHelper.addPeriodParameterToQuery(hql, namedParameters, "ip.date", query.getPaymentPeriod());
+            JpaQueryHelper.addPeriodParameterToQuery(hql, namedParameters, "ip.date", query.getPaymentPeriod());
             hql.append(" ) ");
         }
 
@@ -190,18 +189,18 @@ public class InvoiceDAOImpl extends BaseDAOImpl<Invoice> implements InvoiceDAO {
             if (query.getOwner() instanceof SystemAccountOwner) {
                 hql.append(" and i." + owner + "Member is null ");
             } else {
-                HibernateHelper.addParameterToQuery(hql, namedParameters, "i." + owner + "Member", query.getOwner());
+                JpaQueryHelper.addParameterToQuery(hql, namedParameters, "i." + owner + "Member", query.getOwner());
             }
         }
         if (query.getRelatedOwner() != null) {
             if (query.getRelatedOwner() instanceof SystemAccountOwner) {
                 hql.append(" and i." + related + "Member is null ");
             } else {
-                HibernateHelper.addParameterToQuery(hql, namedParameters, "i." + related + "Member", query.getRelatedOwner());
+                JpaQueryHelper.addParameterToQuery(hql, namedParameters, "i." + related + "Member", query.getRelatedOwner());
             }
         }
         if (query.getGroups() != null && !query.getGroups().isEmpty()) {
-            hql.append(" and (fmg in (:groups) or tmg in (:groups)) ");
+            hql.append(" and (fmg in :groups or tmg in :groups) ");
             namedParameters.put("groups", query.getGroups());
         }
 
@@ -211,7 +210,7 @@ public class InvoiceDAOImpl extends BaseDAOImpl<Invoice> implements InvoiceDAO {
             namedParameters.put("by", query.getBy());
         }
 
-        HibernateHelper.appendOrder(hql, "i.date desc");
+        JpaQueryHelper.appendOrder(hql, "i.date desc");
         return list(query, hql.toString(), namedParameters);
     }
 

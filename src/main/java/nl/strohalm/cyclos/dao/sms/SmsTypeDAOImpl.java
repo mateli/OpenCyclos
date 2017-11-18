@@ -25,7 +25,7 @@ import java.util.Map;
 
 import nl.strohalm.cyclos.dao.BaseDAOImpl;
 import nl.strohalm.cyclos.entities.sms.SmsType;
-import nl.strohalm.cyclos.utils.hibernate.HibernateHelper;
+import nl.strohalm.cyclos.utils.jpa.JpaQueryHelper;
 
 public class SmsTypeDAOImpl extends BaseDAOImpl<SmsType> implements SmsTypeDAO {
     public SmsTypeDAOImpl() {
@@ -35,8 +35,8 @@ public class SmsTypeDAOImpl extends BaseDAOImpl<SmsType> implements SmsTypeDAO {
     @Override
     public Collection<SmsType> list() {
         final Map<String, Object> namedParameters = new HashMap<String, Object>();
-        final StringBuilder hql = HibernateHelper.getInitialQuery(getEntityType(), "type");
-        HibernateHelper.appendOrder(hql, "type.order asc");
+        final StringBuilder hql = JpaQueryHelper.getInitialQuery(getEntityType(), "type");
+        JpaQueryHelper.appendOrder(hql, "type.order asc");
 
         return list(hql.toString(), namedParameters);
     }
@@ -44,8 +44,8 @@ public class SmsTypeDAOImpl extends BaseDAOImpl<SmsType> implements SmsTypeDAO {
     @Override
     public SmsType loadByCode(final String code) {
         final Map<String, Object> namedParameters = new HashMap<String, Object>();
-        final StringBuilder hql = HibernateHelper.getInitialQuery(getEntityType(), "type");
-        HibernateHelper.addParameterToQuery(hql, namedParameters, "code", code);
+        final StringBuilder hql = JpaQueryHelper.getInitialQuery(getEntityType(), "type");
+        JpaQueryHelper.addParameterToQuery(hql, namedParameters, "code", code);
 
         return uniqueResult(hql.toString(), namedParameters);
     }

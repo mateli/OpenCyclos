@@ -101,7 +101,7 @@ public class MessageCategoryDAOImpl extends BaseDAOImpl<MessageCategory> impleme
         if (!CollectionUtils.isEmpty(groups)) {
             for (int i = 0; i < groups.size(); i++) {
                 final Group group = groups.get(i);
-                hql.append("and exists (select g.id from Group g where mc in elements(g.messageCategories) and g = :group" + i + ") ");
+                hql.append("and exists (select g.id from Group g where mc member of g.messageCategories and g = :group" + i + ") ");
                 namedParameters.put("group" + i, group);
             }
         }

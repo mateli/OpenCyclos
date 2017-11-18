@@ -131,6 +131,8 @@
 			<item>ALTER TABLE notification_preferences CHANGE member member_id BIGINT;</item>
 			<item>ALTER TABLE print_settings CHANGE member member_id BIGINT;</item>
 			<item>ALTER TABLE pos_logs MODIFY assigned_to BIGINT;</item>
+			<item>ALTER TABLE CUSTOM_FIELDS ALTER COLUMN VAL_REQUIRED TINYINT(1);</item>
+			<item>ALTER TABLE CUSTOM_FIELDS ALTER COLUMN VAL_UNIQUE TINYINT(1);</item>
 		</statements>
 	</version>
 

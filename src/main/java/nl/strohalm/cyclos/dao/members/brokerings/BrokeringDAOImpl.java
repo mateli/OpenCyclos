@@ -31,7 +31,7 @@ import nl.strohalm.cyclos.entities.members.BrokeringQuery;
 import nl.strohalm.cyclos.entities.members.brokerings.BrokerCommissionContract;
 import nl.strohalm.cyclos.entities.members.brokerings.Brokering;
 import nl.strohalm.cyclos.utils.DateHelper;
-import nl.strohalm.cyclos.utils.hibernate.HibernateHelper;
+import nl.strohalm.cyclos.utils.jpa.JpaQueryHelper;
 
 import org.apache.commons.collections.CollectionUtils;
 
@@ -48,14 +48,14 @@ public class BrokeringDAOImpl extends BaseDAOImpl<Brokering> implements Brokerin
     public List<Brokering> search(final BrokeringQuery query) {
         final Map<String, Object> namedParameters = new HashMap<String, Object>();
         final Set<Relationship> fetch = query.getFetch();
-        final StringBuilder hql = HibernateHelper.getInitialQuery(getEntityType(), "b", fetch);
-        HibernateHelper.addParameterToQuery(hql, namedParameters, "b.broker", query.getBroker());
-        HibernateHelper.addParameterToQuery(hql, namedParameters, "b.brokered", query.getBrokered());
-        HibernateHelper.addLikeParameterToQuery(hql, namedParameters, "b.brokered.name", query.getName());
-        HibernateHelper.addLikeParameterToQuery(hql, namedParameters, "b.brokered.user.username", query.getUsername());
-        HibernateHelper.addParameterToQueryOperator(hql, namedParameters, "b.startDate", "<", DateHelper.truncate(query.getStartExpirationDate()));
+        final StringBuilder hql = JpaQueryHelper.getInitialQuery(getEntityType(), "b", fetch);
+        JpaQueryHelper.addParameterToQuery(hql, namedParameters, "b.broker", query.getBroker());
+        JpaQueryHelper.addParameterToQuery(hql, namedParameters, "b.brokered", query.getBrokered());
+        JpaQueryHelper.addLikeParameterToQuery(hql, namedParameters, "b.brokered.name", query.getName());
+        JpaQueryHelper.addLikeParameterToQuery(hql, namedParameters, "b.brokered.user.username", query.getUsername());
+        JpaQueryHelper.addParameterToQueryOperator(hql, namedParameters, "b.startDate", "<", DateHelper.truncate(query.getStartExpirationDate()));
         if (CollectionUtils.isNotEmpty(query.getGroups())) {
-            hql.append(" and b.brokered.group in (:groups) ");
+            hql.append(" and b.brokered.group in :groups ");
             namedParameters.put("groups", query.getGroups());
         }
         if (query.getStatus() != null) {
@@ -75,7 +75,7 @@ public class BrokeringDAOImpl extends BaseDAOImpl<Brokering> implements Brokerin
         if (!query.isReturnFinished()) {
             hql.append(" and b.endDate is null");
         }
-        HibernateHelper.appendOrder(hql, "b.brokered.user.username");
+        JpaQueryHelper.appendOrder(hql, "b.brokered.user.username");
         return list(query, hql.toString(), namedParameters);
     }
 }

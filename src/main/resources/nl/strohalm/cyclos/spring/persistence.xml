@@ -24,49 +24,59 @@
 		<property name="packagesToScan" value="nl.strohalm.cyclos.entities" />
 		<property name="dataSource" ref="dataSource" />
 		<property name="jpaVendorAdapter">
-			<bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"/>
+			<bean class="${jpa.vendor.adapter}"/>
 		</property>
-		<property name="jpaProperties">
-			<props>
-				<prop key="javax.persistence.sharedCache.mode">ENABLE_SELECTIVE</prop>
-				<prop key="hibernate.hbm2ddl.auto">${hibernate.hbm2ddl.auto}</prop>
-				<prop key="hibernate.dialect">${hibernate.dialect}</prop>
-				<prop key="current_session_context_class">thread</prop>
-				<prop key="hibernate.cache.provider_class">org.hibernate.cache.internal.NoCacheProvider</prop>
-				<!-- used for debug -->
-				<prop key="hibernate.show_sql">true</prop>
-				<!-- EhCache -->
-				<prop key="hibernate.cache.provider_configuration_file_resource_path">classpath:ehcache.xml</prop>
-				<prop key="hibernate.cache.region.factory_class">org.hibernate.cache.ehcache.EhCacheRegionFactory</prop>
-				<prop key="hibernate.cache.provider_class">org.hibernate.cache.SingletonEhCacheProvider</prop>
-				<prop key="hibernate.cache.use_second_level_cache">${hibernate.cache.use_second_level_cache}</prop>
-				<prop key="hibernate.cache.use_query_cache">${hibernate.cache.use_query_cache}</prop>
-				<prop key="hibernate.generate_statistics">true</prop>
-				<!-- configuration pool via c3p0, see https://community.jboss.org/wiki/HowToConfigureTheC3P0ConnectionPool -->
-				<!--<prop key="hibernate.connection.provider_class">${hibernate.connection.provider_class}</prop>-->
-				<!--<prop key="hibernate.c3p0.min_size">${hibernate.c3p0.minPoolSize}</prop>-->
-				<!--<prop key="hibernate.c3p0.max_size">${hibernate.c3p0.maxPoolSize}</prop>-->
-				<!--<prop key="hibernate.c3p0.acquire_increment">${hibernate.c3p0.acquire_increment}</prop>-->
-				<!--<prop key="hibernate.c3p0.max_statements">${hibernate.c3p0.max_statements}</prop>-->
-				<!--<prop key="hibernate.c3p0.timeout">${hibernate.c3p0.timeout}</prop>-->
-				<!--<prop key="hibernate.c3p0.checkoutTimeout">${hibernate.c3p0.checkoutTimeout}</prop>-->
-				<!--<prop key="hibernate.c3p0.idleConnectionTestPeriod">${hibernate.c3p0.idleConnectionTestPeriod}</prop>-->
-				<!--<prop key="hibernate.c3p0.preferredTestQuery">${hibernate.c3p0.preferredTestQuery}</prop>-->
-			</props>
-		</property>
+		<property name="jpaProperties" ref="${jpa.properties}" />
 	</bean>
+
+	<util:properties id="hibernateJpaProperties">
+		<prop key="javax.persistence.sharedCache.mode">ENABLE_SELECTIVE</prop>
+		<prop key="current_session_context_class">thread</prop>
+		<prop key="hibernate.hbm2ddl.auto">${hibernate.hbm2ddl.auto}</prop>
+		<prop key="hibernate.dialect">${hibernate.dialect}</prop>
+		<prop key="hibernate.cache.provider_class">org.hibernate.cache.internal.NoCacheProvider</prop>
+		<!-- used for debug -->
+		<prop key="hibernate.show_sql">true</prop>
+		<!-- 2nd level cache -->
+		<prop key="hibernate.cache.provider_configuration_file_resource_path">classpath:ehcache.xml</prop>
+		<prop key="hibernate.cache.region.factory_class">org.hibernate.cache.ehcache.EhCacheRegionFactory</prop>
+		<prop key="hibernate.cache.provider_class">org.hibernate.cache.SingletonEhCacheProvider</prop>
+		<prop key="hibernate.cache.use_second_level_cache">${hibernate.cache.use_second_level_cache}</prop>
+		<prop key="hibernate.cache.use_query_cache">${hibernate.cache.use_query_cache}</prop>
+		<prop key="hibernate.generate_statistics">true</prop>
+	</util:properties>
+
+	<util:properties id="eclipselinkJpaProperties">
+		<prop key="javax.persistence.sharedCache.mode">ENABLE_SELECTIVE</prop>
+		<prop key="current_session_context_class">thread</prop>
+		<prop key="eclipselink.target-database">${eclipselink.target-database}</prop>
+		<prop key="eclipselink.weaving">false</prop>
+		<!-- used for debug -->
+		<prop key="eclipselink.logging.level">INFO</prop>
+	</util:properties>
+
+	<util:properties id="openjpaJpaProperties">
+		<prop key="javax.persistence.sharedCache.mode">ENABLE_SELECTIVE</prop>
+		<prop key="current_session_context_class">thread</prop>
+		<prop key="openjpa.jdbc.DBDictionary">${openjpa.jdbc.DBDictionary}</prop>
+		<!-- used for debug -->
+		<prop key="openjpa.Log">DefaultLevel=WARN, Runtime=INFO, Tool=INFO, SQL=TRACE</prop>
+		<!-- 2nd level cache -->
+		<prop key="openjpa.DataCache">${hibernate.cache.use_second_level_cache}</prop>
+		<prop key="openjpa.QueryCache">${hibernate.cache.use_query_cache}</prop>
+	</util:properties>
 
 	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
-		<property name="driverClass" value="${hibernate.connection.driver_class}" />
-		<property name="jdbcUrl" value="${hibernate.connection.url}" />
-		<property name="user" value="${hibernate.connection.username}" />
-		<property name="password" value="${hibernate.connection.password}" />
-		<property name="maxPoolSize" value="${hibernate.c3p0.maxPoolSize}"/>
-		<property name="minPoolSize" value="${hibernate.c3p0.minPoolSize}"/>
-		<property name="idleConnectionTestPeriod" value="${hibernate.c3p0.idleConnectionTestPeriod}"/>
+		<property name="driverClass" value="${datasource.driver-class-name}" />
+		<property name="jdbcUrl" value="${datasource.url}" />
+		<property name="user" value="${datasource.username}" />
+		<property name="password" value="${datasource.password}" />
+		<property name="maxPoolSize" value="${datasource.maxPoolSize}"/>
+		<property name="minPoolSize" value="${datasource.minPoolSize}"/>
+		<property name="idleConnectionTestPeriod" value="${datasource.idleConnectionTestPeriod}"/>
 	</bean>
 
-	<bean id="writeDetectEventListener" class="nl.strohalm.cyclos.utils.hibernate.WriteDetectEventListener" />
+	<bean id="writeDetectEventListener" class="nl.strohalm.cyclos.utils.jpa.WriteDetectEventListener" />
 	
 	<!-- Declared hibernate properties on the Cyclos configuration file -->
 	<util:properties id="hibernateProperties" location="classpath:/cyclos.properties" />
@@ -77,9 +87,9 @@
 	</bean>
 	<bean id="transactionTemplate" class="org.springframework.transaction.support.TransactionTemplate"/>
 	
-    <!-- Hibernate specific helpers -->
-	<bean id="hibernateQueryHandler" class="nl.strohalm.cyclos.utils.hibernate.HibernateQueryHandler"/>
-	<bean id="hibernateCustomFieldHandler" class="nl.strohalm.cyclos.utils.hibernate.HibernateCustomFieldHandler"/>
+    <!-- JPA specific helpers -->
+	<bean id="jpaQueryHandler" class="nl.strohalm.cyclos.utils.jpa.JpaQueryHandler"/>
+	<bean id="jpaCustomFieldHandler" class="nl.strohalm.cyclos.utils.jpa.JpaCustomFieldHandler"/>
 
 	<!-- Lucene specific helpers -->
 	<bean id="luceneQueryHandler" class="nl.strohalm.cyclos.utils.lucene.LuceneQueryHandler"/>

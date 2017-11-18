@@ -19,13 +19,6 @@
  */
 package nl.strohalm.cyclos.dao.customizations;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
 import nl.strohalm.cyclos.dao.BaseDAOImpl;
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.accounts.Account;
@@ -41,9 +34,16 @@ import nl.strohalm.cyclos.entities.exceptions.EntityNotFoundException;
 import nl.strohalm.cyclos.entities.members.Member;
 import nl.strohalm.cyclos.entities.members.records.MemberRecordType;
 import nl.strohalm.cyclos.utils.DataIteratorHelper;
-import nl.strohalm.cyclos.utils.hibernate.HibernateHelper;
+import nl.strohalm.cyclos.utils.jpa.JpaQueryHelper;
 import nl.strohalm.cyclos.utils.query.QueryParameters.ResultType;
-import org.hibernate.annotations.common.util.StringHelper;
+import org.apache.commons.lang3.StringUtils;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Implementation class for custom field DAO
@@ -62,47 +62,47 @@ public class CustomFieldDAOImpl extends BaseDAOImpl<CustomField> implements Cust
     public boolean isInternalNameUsed(final CustomField field) {
         final Map<String, Object> namedParameters = new HashMap<String, Object>();
         namedParameters.put("_field_", field);
-        final StringBuilder hql = new StringBuilder("select count(*) from ");
+        final StringBuilder hql = new StringBuilder("select count(cf) from ");
         hql.append(field.getNature().getEntityType().getName());
         hql.append(" cf where " + (field.isPersistent() ? "cf <> :_field_" : "1=1"));
 
         switch (field.getNature()) {
             case OPERATOR:
-                HibernateHelper.addParameterToQuery(hql, namedParameters, "cf.member", ((OperatorCustomField) field).getMember());
+                JpaQueryHelper.addParameterToQuery(hql, namedParameters, "cf.member", ((OperatorCustomField) field).getMember());
                 break;
             case MEMBER_RECORD:
-                HibernateHelper.addParameterToQuery(hql, namedParameters, "cf.memberRecordType", ((MemberRecordCustomField) field).getMemberRecordType());
+                JpaQueryHelper.addParameterToQuery(hql, namedParameters, "cf.memberRecordType", ((MemberRecordCustomField) field).getMemberRecordType());
                 break;
             default:
                 // global search
         }
-        HibernateHelper.addParameterToQuery(hql, namedParameters, "cf.internalName", field.getInternalName());
+        JpaQueryHelper.addParameterToQuery(hql, namedParameters, "cf.internalName", field.getInternalName());
         final Integer count = uniqueResult(hql.toString(), namedParameters);
         return count > 0;
     }
 
     @Override
     public List<? extends CustomField> listByNature(final Nature nature, final Relationship... fetch) {
-        final StringBuilder hql = HibernateHelper.getInitialQuery(nature.getEntityType(), "f");
-        HibernateHelper.appendOrder(hql, "f.order");
+        final StringBuilder hql = JpaQueryHelper.getInitialQuery(nature.getEntityType(), "f");
+        JpaQueryHelper.appendOrder(hql, "f.order");
         return list(ResultType.LIST, hql.toString(), null, null, fetch);
     }
 
     @Override
     public List<MemberRecordCustomField> listMemberRecordFields(final MemberRecordType memberRecordType) {
         final Map<String, Object> namedParameters = new HashMap<String, Object>();
-        final StringBuilder hql = HibernateHelper.getInitialQuery(MemberRecordCustomField.class, "f");
-        HibernateHelper.addParameterToQuery(hql, namedParameters, "f.memberRecordType", memberRecordType);
-        HibernateHelper.appendOrder(hql, "f.order");
+        final StringBuilder hql = JpaQueryHelper.getInitialQuery(MemberRecordCustomField.class, "f");
+        JpaQueryHelper.addParameterToQuery(hql, namedParameters, "f.memberRecordType", memberRecordType);
+        JpaQueryHelper.appendOrder(hql, "f.order");
         return list(ResultType.LIST, hql.toString(), namedParameters, null, CustomField.Relationships.POSSIBLE_VALUES, CustomField.Relationships.CHILDREN);
     }
 
     @Override
     public List<OperatorCustomField> listOperatorFields(final Member member) {
         final Map<String, Object> namedParameters = new HashMap<String, Object>();
-        final StringBuilder hql = HibernateHelper.getInitialQuery(OperatorCustomField.class, "f");
-        HibernateHelper.addParameterToQuery(hql, namedParameters, "f.member", member);
-        HibernateHelper.appendOrder(hql, "f.order");
+        final StringBuilder hql = JpaQueryHelper.getInitialQuery(OperatorCustomField.class, "f");
+        JpaQueryHelper.addParameterToQuery(hql, namedParameters, "f.member", member);
+        JpaQueryHelper.appendOrder(hql, "f.order");
         return list(ResultType.LIST, hql.toString(), namedParameters, null, CustomField.Relationships.POSSIBLE_VALUES, MemberCustomField.Relationships.GROUPS, CustomField.Relationships.CHILDREN);
     }
 
@@ -120,23 +120,23 @@ public class CustomFieldDAOImpl extends BaseDAOImpl<CustomField> implements Cust
     public List<PaymentCustomField> listPaymentFields(final TransferType transferType, final boolean includeDisabled, final Relationship... fetch) {
         final Map<String, Object> namedParameters = new HashMap<String, Object>();
         namedParameters.put("transferType", transferType);
-        final StringBuilder hql = HibernateHelper.getInitialQuery(PaymentCustomField.class, "f", Arrays.asList(fetch));
-        hql.append(" and (f.transferType = :transferType or exists (select tt.id from TransferType tt where tt = :transferType and f in elements(tt.linkedCustomFields)))");
+        final StringBuilder hql = JpaQueryHelper.getInitialQuery(PaymentCustomField.class, "f", Arrays.asList(fetch));
+        hql.append(" and (f.transferType = :transferType or exists (select tt.id from TransferType tt where tt = :transferType and f member of tt.linkedCustomFields))");
         if (!includeDisabled) {
             hql.append(" and f.enabled = true");
         }
         // Ensure the owned fields will have lowest order. The others will have a very high order
-        HibernateHelper.appendOrder(hql, "case f.transferType.id when " + transferType.getId() + " then f.order else (999999999 * f.order) end");
+        JpaQueryHelper.appendOrder(hql, "case f.transferType.id when " + transferType.getId() + " then f.order else (999999999 * f.order) end");
         return list(ResultType.LIST, hql.toString(), namedParameters, null, fetch);
     }
 
     @Override
     public PaymentCustomField loadPaymentFieldByInternalName(final String internalName, final Relationship[] fetch) {
         PaymentCustomField field = null;
-        if (StringHelper.isNotEmpty(internalName)) {
+        if (StringUtils.isNotEmpty(internalName)) {
             Map<String, Object> params = new HashMap<String, Object>();
-            StringBuilder hql = HibernateHelper.getInitialQuery(PaymentCustomField.class, "f", Arrays.asList(fetch));
-            HibernateHelper.addParameterToQuery(hql, params, "name", internalName);
+            StringBuilder hql = JpaQueryHelper.getInitialQuery(PaymentCustomField.class, "f", Arrays.asList(fetch));
+            JpaQueryHelper.addParameterToQuery(hql, params, "name", internalName);
             field = uniqueResult(hql.toString(), params);
         }
         if (field == null) {
@@ -165,7 +165,7 @@ public class CustomFieldDAOImpl extends BaseDAOImpl<CustomField> implements Cust
         hql.append(" or (f." + accessProperty + " = :DESTINATION_MEMBER and f.transferType.fixedDestinationMember = :ownerMember)");
         hql.append(" ) ");
         hql.append(" and f.transferType.loan.type is " + (loan ? "not null" : "null"));
-        HibernateHelper.appendOrder(hql, "f.transferType.name", "f.order");
+        JpaQueryHelper.appendOrder(hql, "f.transferType.name", "f.order");
 
         // We need this as HSQLDB doesn't support order by columns which are not in select, so, se need to select the TT name and discard it
         Iterator<Object[]> iterator = this.<Object[]> iterate(hql.toString(), namedParameters);

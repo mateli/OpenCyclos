@@ -27,6 +27,7 @@ import nl.strohalm.cyclos.utils.FormatObject;
 import nl.strohalm.cyclos.utils.StringValuedEnum;
 
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -96,6 +97,7 @@ public class ExternalTransfer extends Entity {
     @JoinColumn(name = "type_id")
 	private ExternalTransferType   type;
 
+    @Convert(converter = ExternalTransferStatusAttributeConverter.class)
     @Column(length = 1, nullable = false)
 	private Status                 status           = Status.PENDING;
 

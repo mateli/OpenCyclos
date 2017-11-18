@@ -35,7 +35,7 @@ import nl.strohalm.cyclos.entities.groups.Group;
 import nl.strohalm.cyclos.entities.groups.GroupFilter;
 import nl.strohalm.cyclos.entities.groups.GroupFilterQuery;
 import nl.strohalm.cyclos.entities.groups.MemberGroup;
-import nl.strohalm.cyclos.utils.hibernate.HibernateHelper;
+import nl.strohalm.cyclos.utils.jpa.JpaQueryHelper;
 
 import org.apache.commons.collections.CollectionUtils;
 
@@ -56,26 +56,26 @@ public class GroupFilterDAOImpl extends BaseDAOImpl<GroupFilter> implements Grou
     public List<GroupFilter> search(final GroupFilterQuery query) throws DaoException {
         final Map<String, Object> namedParameters = new HashMap<String, Object>();
         final Set<Relationship> fetch = query.getFetch();
-        final StringBuilder hql = HibernateHelper.getInitialQuery(getEntityType(), "gf", fetch);
-        HibernateHelper.addLikeParameterToQuery(hql, namedParameters, "gf.description", query.getDescription());
-        HibernateHelper.addLikeParameterToQuery(hql, namedParameters, "gf.name", query.getName());
+        final StringBuilder hql = JpaQueryHelper.getInitialQuery(getEntityType(), "gf", fetch);
+        JpaQueryHelper.addLikeParameterToQuery(hql, namedParameters, "gf.description", query.getDescription());
+        JpaQueryHelper.addLikeParameterToQuery(hql, namedParameters, "gf.name", query.getName());
         if (query.getGroup() != null) {
-            hql.append(" and :group in elements(gf.groups) ");
+            hql.append(" and :group member of gf.groups ");
             namedParameters.put("group", query.getGroup());
         }
         if (query.getViewableBy() != null) {
-            hql.append(" and :viewerGroup in elements(gf.viewableBy) ");
+            hql.append(" and :viewerGroup member of gf.viewableBy ");
             namedParameters.put("viewerGroup", query.getViewableBy());
         }
         if (query.getAdminGroup() != null) {
             final AdminGroup adminGroup = getFetchDao().fetch(query.getAdminGroup(), AdminGroup.Relationships.MANAGES_GROUPS);
             final Collection<MemberGroup> adminManagedGroups = adminGroup.getManagesGroups();
             if (CollectionUtils.isNotEmpty(adminManagedGroups)) {
-                hql.append(" and exists (select g.id from Group g where g in elements(gf.groups) and g in (:adminManagedGroups)) ");
+                hql.append(" and exists (select g.id from Group g where g member of gf.groups and g in :adminManagedGroups) ");
                 namedParameters.put("adminManagedGroups", adminManagedGroups);
             }
         }
-        HibernateHelper.appendOrder(hql, "gf.name");
+        JpaQueryHelper.appendOrder(hql, "gf.name");
         return list(query, hql.toString(), namedParameters);
     }
 

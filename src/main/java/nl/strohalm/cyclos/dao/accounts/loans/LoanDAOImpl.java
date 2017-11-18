@@ -19,10 +19,6 @@
  */
 package nl.strohalm.cyclos.dao.accounts.loans;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import nl.strohalm.cyclos.dao.BaseDAOImpl;
 import nl.strohalm.cyclos.entities.accounts.loans.Loan;
 import nl.strohalm.cyclos.entities.accounts.loans.LoanPayment;
@@ -34,8 +30,12 @@ import nl.strohalm.cyclos.entities.groups.MemberGroup;
 import nl.strohalm.cyclos.entities.members.Element;
 import nl.strohalm.cyclos.entities.members.Member;
 import nl.strohalm.cyclos.entities.utils.Period;
-import nl.strohalm.cyclos.utils.hibernate.HibernateCustomFieldHandler;
-import nl.strohalm.cyclos.utils.hibernate.HibernateHelper;
+import nl.strohalm.cyclos.utils.jpa.JpaCustomFieldHandler;
+import nl.strohalm.cyclos.utils.jpa.JpaQueryHelper;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Implementation DAO for loans
@@ -45,7 +45,7 @@ import nl.strohalm.cyclos.utils.hibernate.HibernateHelper;
  */
 public class LoanDAOImpl extends BaseDAOImpl<Loan> implements LoanDAO {
 
-    private HibernateCustomFieldHandler hibernateCustomFieldHandler;
+    private JpaCustomFieldHandler jpaCustomFieldHandler;
 
     public LoanDAOImpl() {
         super(Loan.class);
@@ -62,8 +62,8 @@ public class LoanDAOImpl extends BaseDAOImpl<Loan> implements LoanDAO {
         return uniqueResult(hql.toString(), params);
     }
 
-    public HibernateCustomFieldHandler getHibernateCustomFieldHandler() {
-        return hibernateCustomFieldHandler;
+    public JpaCustomFieldHandler getJpaCustomFieldHandler() {
+        return jpaCustomFieldHandler;
     }
 
     @Override
@@ -82,10 +82,10 @@ public class LoanDAOImpl extends BaseDAOImpl<Loan> implements LoanDAO {
         final StringBuilder hql = new StringBuilder();
         hql.append(" select l ");
         hql.append(" from Loan l inner join l.transfer t ");
-        hibernateCustomFieldHandler.appendJoins(hql, "t.customValues", query.getLoanCustomValues());
-        HibernateHelper.appendJoinFetch(hql, getEntityType(), "l", query.getFetch());
+        jpaCustomFieldHandler.appendJoins(hql, "t.customValues", query.getLoanCustomValues());
+        JpaQueryHelper.appendJoinFetch(hql, getEntityType(), "l", query.getFetch());
         hql.append(", MemberAccount a inner join a.member m ");
-        hibernateCustomFieldHandler.appendJoins(hql, "m.customValues", query.getMemberCustomValues());
+        jpaCustomFieldHandler.appendJoins(hql, "m.customValues", query.getMemberCustomValues());
         hql.append(" where t.to = a ");
 
         // Translate the status into the query status
@@ -156,43 +156,43 @@ public class LoanDAOImpl extends BaseDAOImpl<Loan> implements LoanDAO {
             member = getFetchDao().fetch(member, Element.Relationships.GROUP);
             final MemberGroup group = member.getMemberGroup();
             if (group.getMemberSettings().isViewLoansByGroup()) {
-                hql.append(" and (a.member = :member or :member in elements(l.toMembers))");
+                hql.append(" and (a.member = :member or :member member of l.toMembers)");
                 namedParameters.put("member", member);
             } else {
-                HibernateHelper.addParameterToQuery(hql, namedParameters, "a.member", member);
+                JpaQueryHelper.addParameterToQuery(hql, namedParameters, "a.member", member);
             }
         }
-        HibernateHelper.addParameterToQuery(hql, namedParameters, "a.member.broker", query.getBroker());
-        HibernateHelper.addParameterToQuery(hql, namedParameters, "l.loanGroup", query.getLoanGroup());
-        HibernateHelper.addParameterToQuery(hql, namedParameters, "t.status", query.getTransferStatus());
-        HibernateHelper.addParameterToQuery(hql, namedParameters, "t.type", query.getTransferType());
-        HibernateHelper.addParameterToQuery(hql, namedParameters, "t.to.type", query.getAccountType());
-        HibernateHelper.addParameterToQuery(hql, namedParameters, "t.to.type.currency", query.getCurrency());
-        HibernateHelper.addParameterToQuery(hql, namedParameters, "t.transactionNumber", query.getTransactionNumber());
-        HibernateHelper.addPeriodParameterToQuery(hql, namedParameters, "t.date", query.getGrantPeriod());
+        JpaQueryHelper.addParameterToQuery(hql, namedParameters, "a.member.broker", query.getBroker());
+        JpaQueryHelper.addParameterToQuery(hql, namedParameters, "l.loanGroup", query.getLoanGroup());
+        JpaQueryHelper.addParameterToQuery(hql, namedParameters, "t.status", query.getTransferStatus());
+        JpaQueryHelper.addParameterToQuery(hql, namedParameters, "t.type", query.getTransferType());
+        JpaQueryHelper.addParameterToQuery(hql, namedParameters, "t.to.type", query.getAccountType());
+        JpaQueryHelper.addParameterToQuery(hql, namedParameters, "t.to.type.currency", query.getCurrency());
+        JpaQueryHelper.addParameterToQuery(hql, namedParameters, "t.transactionNumber", query.getTransactionNumber());
+        JpaQueryHelper.addPeriodParameterToQuery(hql, namedParameters, "t.date", query.getGrantPeriod());
         final Period expirationPeriod = query.getExpirationPeriod();
         if (expirationPeriod != null && (expirationPeriod.getBegin() != null || expirationPeriod.getEnd() != null)) {
             hql.append(" and exists (select lp.id from l.payments lp where (lp.status = :openPaymentStatus or lp.status = :expiredPaymentStatus) ");
-            HibernateHelper.addPeriodParameterToQuery(hql, namedParameters, "lp.expirationDate", expirationPeriod);
+            JpaQueryHelper.addPeriodParameterToQuery(hql, namedParameters, "lp.expirationDate", expirationPeriod);
             hql.append(')');
         }
         final Period paymentPeriod = query.getPaymentPeriod();
         if (paymentPeriod != null && (paymentPeriod.getBegin() != null || paymentPeriod.getEnd() != null)) {
             hql.append(" and exists (select lp.id from l.payments lp where (lp.status = :repaidPaymentStatus or lp.status = :discardedPaymentStatus) ");
-            HibernateHelper.addPeriodParameterToQuery(hql, namedParameters, "lp.repaymentDate", paymentPeriod);
+            JpaQueryHelper.addPeriodParameterToQuery(hql, namedParameters, "lp.repaymentDate", paymentPeriod);
             hql.append(')');
         }
         if (query.getGroups() != null && !query.getGroups().isEmpty()) {
-            hql.append(" and a.member.group in (:groups) ");
+            hql.append(" and a.member.group in :groups ");
             namedParameters.put("groups", query.getGroups());
         }
-        hibernateCustomFieldHandler.appendConditions(hql, namedParameters, query.getMemberCustomValues());
-        hibernateCustomFieldHandler.appendConditions(hql, namedParameters, query.getLoanCustomValues());
+        jpaCustomFieldHandler.appendConditions(hql, namedParameters, query.getMemberCustomValues());
+        jpaCustomFieldHandler.appendConditions(hql, namedParameters, query.getLoanCustomValues());
         return list(query, hql.toString(), namedParameters);
     }
 
-    public void setHibernateCustomFieldHandler(final HibernateCustomFieldHandler hibernateCustomFieldHandler) {
-        this.hibernateCustomFieldHandler = hibernateCustomFieldHandler;
+    public void setJpaCustomFieldHandler(final JpaCustomFieldHandler jpaCustomFieldHandler) {
+        this.jpaCustomFieldHandler = jpaCustomFieldHandler;
     }
 
 }

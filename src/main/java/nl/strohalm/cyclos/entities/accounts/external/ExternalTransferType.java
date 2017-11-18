@@ -27,6 +27,7 @@ import nl.strohalm.cyclos.utils.StringValuedEnum;
 import javax.persistence.Cacheable;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -89,6 +90,7 @@ public class ExternalTransferType extends Entity {
     @Column(length = 20, nullable = false) // unique-key="uk_account_code"
     private String                       code;
 
+    @Convert(converter = ExternalTransferTypeActionAttributeConverter.class)
     @Column(length = 1, nullable = false)
 	private Action                       action;
 

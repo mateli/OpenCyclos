@@ -25,6 +25,7 @@ import nl.strohalm.cyclos.entities.members.Member;
 import nl.strohalm.cyclos.utils.StringValuedEnum;
 
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -99,6 +100,7 @@ public class Card extends Entity {
     @JoinColumn(nullable = false)
 	private Member              owner;
 
+    @Convert(converter = CardStatusAttributeConverter.class)
     @Column(length = 1, nullable = false)
 	private Status              status;
 

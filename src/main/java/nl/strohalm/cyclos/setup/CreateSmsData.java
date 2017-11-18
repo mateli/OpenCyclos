@@ -52,7 +52,6 @@ import nl.strohalm.cyclos.entities.settings.Setting;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
-import org.hibernate.criterion.Restrictions;
 
 import javax.persistence.EntityManager;
 

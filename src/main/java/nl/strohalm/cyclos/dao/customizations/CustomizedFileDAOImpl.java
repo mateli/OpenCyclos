@@ -33,7 +33,7 @@ import nl.strohalm.cyclos.entities.exceptions.DaoException;
 import nl.strohalm.cyclos.entities.exceptions.EntityNotFoundException;
 import nl.strohalm.cyclos.entities.groups.Group;
 import nl.strohalm.cyclos.entities.groups.GroupFilter;
-import nl.strohalm.cyclos.utils.hibernate.HibernateHelper;
+import nl.strohalm.cyclos.utils.jpa.JpaQueryHelper;
 
 /**
  * Implementation class for customized files
@@ -46,10 +46,10 @@ public class CustomizedFileDAOImpl extends BaseDAOImpl<CustomizedFile> implement
     }
 
     public CustomizedFile load(final Type type, final String name, final Relationship... fetch) throws DaoException {
-        final StringBuilder hql = HibernateHelper.getInitialQuery(getEntityType(), "f", fetch == null ? null : Arrays.asList(fetch));
+        final StringBuilder hql = JpaQueryHelper.getInitialQuery(getEntityType(), "f", fetch == null ? null : Arrays.asList(fetch));
         final Map<String, Object> namedParameters = new HashMap<String, Object>();
-        HibernateHelper.addParameterToQuery(hql, namedParameters, "f.type", type);
-        HibernateHelper.addParameterToQuery(hql, namedParameters, "f.name", name);
+        JpaQueryHelper.addParameterToQuery(hql, namedParameters, "f.type", type);
+        JpaQueryHelper.addParameterToQuery(hql, namedParameters, "f.name", name);
         hql.append(" and f.group is null and f.groupFilter is null");
         final CustomizedFile file = uniqueResult(hql.toString(), namedParameters);
         if (file == null) {
@@ -59,24 +59,24 @@ public class CustomizedFileDAOImpl extends BaseDAOImpl<CustomizedFile> implement
     }
 
     public List<CustomizedFile> search(final CustomizedFileQuery query) {
-        final StringBuilder hql = HibernateHelper.getInitialQuery(getEntityType(), "f", query.getFetch());
+        final StringBuilder hql = JpaQueryHelper.getInitialQuery(getEntityType(), "f", query.getFetch());
         final Map<String, Object> namedParameters = new HashMap<String, Object>();
         if (!query.isAll()) {
-            HibernateHelper.addParameterToQuery(hql, namedParameters, "f.type", query.getType());
+            JpaQueryHelper.addParameterToQuery(hql, namedParameters, "f.type", query.getType());
             final Group group = query.getGroup();
             if (group == null) {
                 hql.append(" and f.group is null");
             } else {
-                HibernateHelper.addParameterToQuery(hql, namedParameters, "f.group", group);
+                JpaQueryHelper.addParameterToQuery(hql, namedParameters, "f.group", group);
             }
             final GroupFilter groupFilter = query.getGroupFilter();
             if (groupFilter == null) {
                 hql.append(" and f.groupFilter is null");
             } else {
-                HibernateHelper.addParameterToQuery(hql, namedParameters, "f.groupFilter", groupFilter);
+                JpaQueryHelper.addParameterToQuery(hql, namedParameters, "f.groupFilter", groupFilter);
             }
         }
-        HibernateHelper.appendOrder(hql, "f.type", "f.name");
+        JpaQueryHelper.appendOrder(hql, "f.type", "f.name");
         return list(query, hql.toString(), namedParameters);
     }
 

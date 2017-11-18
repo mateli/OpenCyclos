@@ -19,16 +19,13 @@
  */
 package nl.strohalm.cyclos.utils;
 
-import java.io.File;
-import java.sql.Blob;
-
-import javax.servlet.ServletContext;
-
 import nl.strohalm.cyclos.entities.customization.images.Image;
 import nl.strohalm.cyclos.servlets.ImageByIdServlet;
 import nl.strohalm.cyclos.utils.customizedfile.CustomizedFileHandler;
-
 import org.springframework.web.context.ServletContextAware;
+
+import javax.servlet.ServletContext;
+import java.io.File;
 
 /**
  * Helper class for images
@@ -155,13 +152,7 @@ public final class WebImageHelper implements ServletContextAware {
         if (dir == null) {
             return;
         }
-        final Blob blob = isThumbnail ? image.getThumbnail() : image.getImage();
-        byte[] contents;
-        try {
-            contents = blob.getBytes(1, (int) blob.length());
-        } catch (final Exception e) {
-            throw new IllegalStateException("Error reading the image contents", e);
-        }
+        final byte[] contents = isThumbnail ? image.getThumbnail() : image.getImage();
         final File file = new File(dir, image.getName());
         final long lastModified = image.getLastModified().getTimeInMillis();
         customizationHelper.updateFile(file, lastModified, contents);

@@ -17,27 +17,33 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 
  */
-package nl.strohalm.cyclos.dao;
+package nl.strohalm.cyclos.utils.jpa;
 
-import nl.strohalm.cyclos.entities.Application;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import nl.strohalm.cyclos.utils.transaction.CurrentTransactionData;
+
+import javax.persistence.PostPersist;
+import javax.persistence.PostRemove;
+import javax.persistence.PostUpdate;
+
 
 /**
- * Implementation for application dao
+ * A listener for events which change the databasse
+ * 
  * @author luis
  */
-public class ApplicationDAOImpl extends BaseDAOImpl<Application> implements ApplicationDAO {
+public class WriteDetectEventListener {
 
-    private static final Log LOG = LogFactory.getLog(ApplicationDAOImpl.class);
+    private static final long serialVersionUID = 2936564522256205828L;
 
-    public ApplicationDAOImpl() {
-        super(Application.class);
+    @PostRemove
+    @PostPersist
+    @PostUpdate
+    public void onPostModyfingOperation(final Object o) {
+        markWrite();
     }
 
-    @Override
-    public Application read() {
-        return uniqueResult("from " + getEntityType().getName() + " a", null);
+    private void markWrite() {
+        CurrentTransactionData.setWrite();
     }
 
 }

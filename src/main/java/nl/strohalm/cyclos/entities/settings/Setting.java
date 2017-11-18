@@ -23,6 +23,7 @@ import nl.strohalm.cyclos.entities.Entity;
 import nl.strohalm.cyclos.utils.StringValuedEnum;
 
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Table;
 
 /**
@@ -51,6 +52,7 @@ public class Setting extends Entity {
     @Column(name = "name", nullable = false, updatable = false, length = 100)
     private String            name;
 
+    @Convert(converter = SettingTypeAttributeConverter.class)
     @Column(name = "type", nullable = false, updatable = false, length = 15) // unique-key="uk_type_name"
 	private Type              type;
 

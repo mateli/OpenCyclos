@@ -27,7 +27,7 @@ import nl.strohalm.cyclos.entities.exceptions.EntityNotFoundException;
 import nl.strohalm.cyclos.entities.members.Administrator;
 import nl.strohalm.cyclos.entities.members.preferences.AdminNotificationPreference;
 import nl.strohalm.cyclos.entities.members.preferences.AdminNotificationPreferenceQuery;
-import nl.strohalm.cyclos.utils.hibernate.HibernateHelper;
+import nl.strohalm.cyclos.utils.jpa.JpaQueryHelper;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.ArrayUtils;
 
@@ -65,7 +65,7 @@ public class AdminNotificationPreferenceDAOImpl extends BaseDAOImpl<AdminNotific
         final StringBuilder hql = new StringBuilder();
         hql.append(" select a");
         hql.append(" from AdminNotificationPreference p join p.admin a where 1=1");
-        HibernateHelper.addInParameterToQuery(hql, namedParameters, "a.group", query.getAdminGroups());
+        JpaQueryHelper.addInParameterToQuery(hql, namedParameters, "a.group", query.getAdminGroups());
         if (query.isApplicationErrors()) {
             hql.append(" and p.applicationErrors = true");
         }
@@ -73,43 +73,43 @@ public class AdminNotificationPreferenceDAOImpl extends BaseDAOImpl<AdminNotific
             hql.append(" and p.systemInvoices = true");
         }
         if (query.getTransferType() != null) {
-            hql.append(" and :transferType in elements(p.transferTypes)");
+            hql.append(" and :transferType member of p.transferTypes");
             namedParameters.put("transferType", query.getTransferType());
         }
         if (query.getNewMemberGroup() != null) {
-            hql.append(" and :newMemberGroup in elements(p.newMembers)");
+            hql.append(" and :newMemberGroup member of p.newMembers");
             namedParameters.put("newMemberGroup", query.getNewMemberGroup());
         }
         if (query.getNewPendingPayment() != null) {
-            hql.append(" and :newPendingPayment in elements(p.newPendingPayments)");
+            hql.append(" and :newPendingPayment member of p.newPendingPayments");
             namedParameters.put("newPendingPayment", query.getNewPendingPayment());
         }
         if (query.getGuaranteeType() != null) {
-            hql.append(" and :guaranteeType in elements (p.guaranteeTypes)");
+            hql.append(" and :guaranteeType member of p.guaranteeTypes");
             namedParameters.put("guaranteeType", query.getGuaranteeType());
         }
         if (query.getMessageCategory() != null) {
-            hql.append(" and :messageCategory in elements(p.messageCategories)");
-            hql.append(" and exists (select ag.id from AdminGroup ag where ag.id = a.group.id and :messageCategory in elements(ag.messageCategories))");
+            hql.append(" and :messageCategory member of p.messageCategories");
+            hql.append(" and exists (select ag.id from AdminGroup ag where ag.id = a.group.id and :messageCategory member of ag.messageCategories)");
             namedParameters.put("messageCategory", query.getMessageCategory());
         }
         if (query.getSystemAlert() != null) {
-            hql.append(" and :systemAlertType in elements(p.systemAlerts)");
+            hql.append(" and :systemAlertType member of p.systemAlerts");
             namedParameters.put("systemAlertType", query.getSystemAlert());
         }
         if (query.getMemberAlert() != null) {
-            hql.append(" and :memberAlertType in elements(p.memberAlerts)");
+            hql.append(" and :memberAlertType member of p.memberAlerts");
             namedParameters.put("memberAlertType", query.getMemberAlert());
         }
         if (query.getMemberGroup() != null) {
-            hql.append(" and exists (select ag.id from AdminGroup ag where ag.id = a.group.id and :memberGroup in elements(ag.managesGroups))");
+            hql.append(" and exists (select ag.id from AdminGroup ag where ag.id = a.group.id and :memberGroup member of ag.managesGroups)");
             namedParameters.put("memberGroup", query.getMemberGroup());
         }
         if (CollectionUtils.isNotEmpty(query.getAccountTypes())) {
             int i = 0;
             for (final SystemAccountType accountType : query.getAccountTypes()) {
                 final String paramName = "accountType" + ++i;
-                hql.append(" and exists (select ag.id from AdminGroup ag where ag.id = a.group.id and :" + paramName + " in elements (ag.viewInformationOf))");
+                hql.append(" and exists (select ag.id from AdminGroup ag where ag.id = a.group.id and :" + paramName + " member of ag.viewInformationOf)");
                 namedParameters.put(paramName, accountType);
             }
         }

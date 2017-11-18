@@ -38,6 +38,7 @@ import org.apache.commons.collections.Predicate;
 import javax.persistence.Cacheable;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.Embedded;
 import javax.persistence.JoinColumn;
@@ -246,17 +247,20 @@ public abstract class CustomField extends Entity {
     @Column(name = "all_selected_label", length = 100)
     private String                               allSelectedLabel;
 
+    @Convert(converter = CustomFieldTypeAttributeConverter.class)
     @Column(name = "type", nullable = false, updatable = false, length = 10)
 	private Type                                 type             = Type.STRING;
 
+    @Convert(converter = CustomFieldControlAttributeConverter.class)
     @Column(name = "control", nullable = false, length = 10)
 	private Control                              control          = Control.TEXT;
 
+    @Convert(converter = CustomFieldSizeAttributeConverter.class)
     @Column(name = "size", length = 1)
 	private Size                                 size             = Size.DEFAULT;
 
     @Embedded
-	private Validation                           validation       = new Validation();
+	protected Validation                           validation       = new Validation();
 
     @Column(name = "pattern", length = 100)
     private String                               pattern;

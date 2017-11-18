@@ -24,6 +24,7 @@ import nl.strohalm.cyclos.entities.groups.BrokerGroup;
 import nl.strohalm.cyclos.utils.StringValuedEnum;
 
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -82,9 +83,11 @@ public class BrokerCommission extends TransactionFee {
     @Column(name = "when_count")
     private Integer                 count;
 
+    @Convert(converter = WhenAttributeConverter.class)
     @Column(name = "when_apply", length = 1)
 	private When                    when;
 
+    @Convert(converter = WhichBrokerAttributeConverter.class)
     @Column(name = "which_broker", length = 1)
 	private WhichBroker             whichBroker;
 

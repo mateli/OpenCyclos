@@ -19,16 +19,15 @@
  */
 package nl.strohalm.cyclos.entities.access;
 
-import java.util.Calendar;
+import nl.strohalm.cyclos.entities.Entity;
+import nl.strohalm.cyclos.utils.StringValuedEnum;
 
 import javax.persistence.Column;
-import javax.persistence.Enumerated;
+import javax.persistence.Convert;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-
-import nl.strohalm.cyclos.entities.Entity;
-import nl.strohalm.cyclos.utils.StringValuedEnum;
+import java.util.Calendar;
 
 /**
  * Logs a history of previous passwords used, in order to prevent the same password to be used again
@@ -56,6 +55,7 @@ public class PasswordHistoryLog extends Entity {
     @Column(nullable = false)
     private Calendar          date;
 
+    @Convert(converter = PasswordTypeAttributeConverter.class)
     @Column(length = 1, nullable = false)
 	private PasswordType      type;
 

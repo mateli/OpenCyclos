@@ -28,6 +28,7 @@ import nl.strohalm.cyclos.entities.groups.OperatorGroup;
 import nl.strohalm.cyclos.utils.StringValuedEnum;
 
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.ManyToMany;
 import java.util.Collection;
@@ -142,27 +143,33 @@ public class MemberCustomField extends CustomField {
 
     private static final long       serialVersionUID   = 8982250513905556430L;
 
+    @Convert(converter = MemberCustomFieldAccessAttributeConverter.class)
     @Column(name = "member_ad_search_access", length = 1)
 	private Access                  adSearchAccess     = Access.NONE;
 
+    @Convert(converter = MemberCustomFieldAccessAttributeConverter.class)
     @Column(name = "member_loan_search_access", length = 1)
 	private Access                  loanSearchAccess   = Access.NONE;
 
     @Column(name = "member_can_hide")
     private boolean                 memberCanHide      = true;
 
+    @Convert(converter = MemberCustomFieldAccessAttributeConverter.class)
     @Column(name = "member_search_access", length = 1)
 	private Access                  memberSearchAccess = Access.NONE;
 
+    @Convert(converter = MemberCustomFieldAccessAttributeConverter.class)
     @Column(name = "member_visibility_access", length = 1)
 	private Access                  visibilityAccess   = Access.OTHER;
 
+    @Convert(converter = MemberCustomFieldAccessAttributeConverter.class)
     @Column(name = "member_update_access", length = 1)
 	private Access                  updateAccess       = Access.MEMBER;
 
     @Column(name = "member_show_in_print", length = 1)
     private boolean                 showInPrint        = true;
 
+    @Convert(converter = MemberCustomFieldIndexingAttributeConverter.class)
     @Column(name = "member_indexing", length = 1)
 	private Indexing                indexing           = Indexing.MEMBERS_AND_ADS;
 

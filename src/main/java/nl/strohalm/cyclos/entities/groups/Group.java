@@ -25,6 +25,7 @@ import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.accounts.guarantees.GuaranteeType;
 import nl.strohalm.cyclos.entities.accounts.transactions.PaymentFilter;
 import nl.strohalm.cyclos.entities.accounts.transactions.TransferType;
+import nl.strohalm.cyclos.entities.converters.PermissionAttributeConverter;
 import nl.strohalm.cyclos.entities.customization.files.CustomizedFile;
 import nl.strohalm.cyclos.entities.members.Element;
 import nl.strohalm.cyclos.entities.members.records.MemberRecordType;
@@ -34,7 +35,7 @@ import nl.strohalm.cyclos.utils.StringValuedEnum;
 import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
-import javax.persistence.Converter;
+import javax.persistence.Convert;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.ElementCollection;
 import javax.persistence.Embedded;
@@ -149,11 +150,13 @@ public abstract class Group extends Entity implements Comparable<Group> {
         inverseJoinColumns = @JoinColumn(name = "payment_filter_id"))
 	private Collection<PaymentFilter>    paymentFilters;
 
+    @Convert(converter = PermissionAttributeConverter.class)
     @ElementCollection
     @CollectionTable(name = "permissions", joinColumns = @JoinColumn(name = "group_id"))
     @Column(name = "permission", nullable = false)
 	private Collection<Permission>       permissions;
 
+    @Convert(converter = GroupStatusAttributeConverter.class)
     @Column(name = "status", nullable = false, updatable = false, length = 1)
 	private Status                       status           = Status.NORMAL;
 

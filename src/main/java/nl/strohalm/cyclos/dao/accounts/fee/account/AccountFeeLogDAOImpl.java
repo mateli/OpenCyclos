@@ -19,13 +19,6 @@
  */
 package nl.strohalm.cyclos.dao.accounts.fee.account;
 
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import nl.strohalm.cyclos.dao.BaseDAOImpl;
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.accounts.MemberAccount;
@@ -34,7 +27,14 @@ import nl.strohalm.cyclos.entities.accounts.fees.account.AccountFeeLog;
 import nl.strohalm.cyclos.entities.accounts.fees.account.AccountFeeLogQuery;
 import nl.strohalm.cyclos.entities.exceptions.EntityNotFoundException;
 import nl.strohalm.cyclos.entities.utils.Period;
-import nl.strohalm.cyclos.utils.hibernate.HibernateHelper;
+import nl.strohalm.cyclos.utils.jpa.JpaQueryHelper;
+
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Default implementation for AccountFeeLogDAO component. Extends Spring's Hibernate Support. Delegates basic operations to instances of BaseDAO and
@@ -64,7 +64,7 @@ public class AccountFeeLogDAOImpl extends BaseDAOImpl<AccountFeeLog> implements 
     @Override
     public Iterator<MemberAccount> iterateOverAccountsWithAccountFeeChargesFor(final AccountFeeLog log) {
         final Map<String, Object> namedParameters = new HashMap<String, Object>();
-        final StringBuilder hql = HibernateHelper.getInitialQuery(MemberAccount.class, "a");
+        final StringBuilder hql = JpaQueryHelper.getInitialQuery(MemberAccount.class, "a");
         hql.append(" and exists(select c.id from AccountFeeCharge c where c.account = a and c.accountFeeLog = :log)");
         namedParameters.put("log", log);
         return iterate(hql.toString(), namedParameters);
@@ -72,21 +72,21 @@ public class AccountFeeLogDAOImpl extends BaseDAOImpl<AccountFeeLog> implements 
 
     @Override
     public AccountFeeLog nextToCharge() {
-        return uniqueResult("from AccountFeeLog l where l.date <= now() and l.finishDate is null or l.rechargingFailed = true", null);
+        return uniqueResult("from AccountFeeLog l where l.date <= CURRENT_TIMESTAMP and l.finishDate is null or l.rechargingFailed = true", null);
     }
 
     @Override
     public List<AccountFeeLog> search(final AccountFeeLogQuery query) {
         final Map<String, Object> namedParameters = new HashMap<String, Object>();
         final Set<Relationship> fetch = query.getFetch();
-        final StringBuilder hql = HibernateHelper.getInitialQuery(getEntityType(), "l", fetch);
-        HibernateHelper.addInParameterToQuery(hql, namedParameters, "l.accountFee", query.getAccountFees());
-        HibernateHelper.addParameterToQuery(hql, namedParameters, "l.accountFee.enabled", query.getAccountFeeEnabled());
-        HibernateHelper.addParameterToQuery(hql, namedParameters, "l.accountFee.accountType", query.getAccountType());
+        final StringBuilder hql = JpaQueryHelper.getInitialQuery(getEntityType(), "l", fetch);
+        JpaQueryHelper.addInParameterToQuery(hql, namedParameters, "l.accountFee", query.getAccountFees());
+        JpaQueryHelper.addParameterToQuery(hql, namedParameters, "l.accountFee.enabled", query.getAccountFeeEnabled());
+        JpaQueryHelper.addParameterToQuery(hql, namedParameters, "l.accountFee.accountType", query.getAccountType());
         if (query.getPeriodStartAt() != null) {
-            HibernateHelper.addPeriodParameterToQuery(hql, namedParameters, "l.period.begin", Period.day(query.getPeriodStartAt()));
+            JpaQueryHelper.addPeriodParameterToQuery(hql, namedParameters, "l.period.begin", Period.day(query.getPeriodStartAt()));
         }
-        HibernateHelper.appendOrder(hql, "l.date desc, l.id desc");
+        JpaQueryHelper.appendOrder(hql, "l.date desc, l.id desc");
         return list(query, hql.toString(), namedParameters);
     }
 }

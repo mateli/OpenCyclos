@@ -19,19 +19,18 @@
  */
 package nl.strohalm.cyclos.dao.infotexts;
 
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import nl.strohalm.cyclos.dao.BaseDAOImpl;
 import nl.strohalm.cyclos.entities.infotexts.InfoText;
 import nl.strohalm.cyclos.entities.infotexts.InfoTextQuery;
 import nl.strohalm.cyclos.entities.utils.Period;
-import nl.strohalm.cyclos.utils.hibernate.HibernateHelper;
-import nl.strohalm.cyclos.utils.hibernate.HibernateHelper.QueryParameter;
-
+import nl.strohalm.cyclos.utils.jpa.JpaQueryHelper;
+import nl.strohalm.cyclos.utils.jpa.JpaQueryHelper.QueryParameter;
 import org.apache.commons.lang.StringUtils;
+
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class InfoTextDAOImpl extends BaseDAOImpl<InfoText> implements InfoTextDAO {
 
@@ -42,11 +41,11 @@ public class InfoTextDAOImpl extends BaseDAOImpl<InfoText> implements InfoTextDA
     @Override
     public List<InfoText> search(final InfoTextQuery query) {
         final Map<String, Object> namedParameters = new HashMap<String, Object>();
-        final StringBuilder hql = HibernateHelper.getInitialQuery(InfoText.class, "info", query.getFetch());
+        final StringBuilder hql = JpaQueryHelper.getInitialQuery(InfoText.class, "info", query.getFetch());
 
         final String alias = StringUtils.trimToNull(query.getAlias());
         if (alias != null) {
-            hql.append(" and :alias in elements(info.aliases) ");
+            hql.append(" and :alias member of info.aliases ");
             namedParameters.put("alias", alias);
         }
 
@@ -60,22 +59,22 @@ public class InfoTextDAOImpl extends BaseDAOImpl<InfoText> implements InfoTextDA
         }
 
         if (query.isOnlyActive()) {
-            HibernateHelper.addParameterToQuery(hql, namedParameters, "info.enabled", Boolean.TRUE);
+            JpaQueryHelper.addParameterToQuery(hql, namedParameters, "info.enabled", Boolean.TRUE);
             final Period period = Period.day(Calendar.getInstance());
-            QueryParameter beginParameter = HibernateHelper.getBeginParameter(period);
+            QueryParameter beginParameter = JpaQueryHelper.getBeginParameter(period);
             if (beginParameter != null) {
                 hql.append(" and (info.validity.end is null or info.validity.end " + beginParameter.getOperator() + " :_begin_)");
                 namedParameters.put("_begin_", beginParameter.getValue());
             }
-            QueryParameter endParameter = HibernateHelper.getEndParameter(period);
+            QueryParameter endParameter = JpaQueryHelper.getEndParameter(period);
             if (endParameter != null) {
                 hql.append(" and (info.validity.begin is null or info.validity.begin " + endParameter.getOperator() + " :_end_)");
                 namedParameters.put("_end_", endParameter.getValue());
             }
         } else {
-            HibernateHelper.addParameterToQuery(hql, namedParameters, "info.enabled", query.getEnabled());
-            HibernateHelper.addPeriodParameterToQuery(hql, namedParameters, "info.validity.begin", query.getStartIn());
-            HibernateHelper.addPeriodParameterToQuery(hql, namedParameters, "info.validity.end", query.getEndIn());
+            JpaQueryHelper.addParameterToQuery(hql, namedParameters, "info.enabled", query.getEnabled());
+            JpaQueryHelper.addPeriodParameterToQuery(hql, namedParameters, "info.validity.begin", query.getStartIn());
+            JpaQueryHelper.addPeriodParameterToQuery(hql, namedParameters, "info.validity.end", query.getEndIn());
         }
 
         return list(query, hql.toString(), namedParameters);

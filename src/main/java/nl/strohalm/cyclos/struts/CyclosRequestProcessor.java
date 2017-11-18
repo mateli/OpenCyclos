@@ -511,8 +511,9 @@ public class CyclosRequestProcessor extends SecureTilesRequestProcessor {
 
         final EntityManagerHolder holder = getEntityManagerHolder();
         holder.getEntityManager().setFlushMode(FlushModeType.COMMIT);
-        holder.getEntityManager().getTransaction().setRollbackOnly();
-
+        if (holder.getEntityManager().getTransaction().isActive()) {
+            holder.getEntityManager().getTransaction().setRollbackOnly();
+        }
         TransactionSynchronizationManager.setCurrentTransactionReadOnly(true);
     }
 
@@ -546,7 +547,9 @@ public class CyclosRequestProcessor extends SecureTilesRequestProcessor {
         final EntityManagerHolder holder = getEntityManagerHolder();
         try {
             logDebug(request, "Rolling back read-only transaction");
-            holder.getEntityManager().getTransaction().rollback();
+            if (holder.getEntityManager().getTransaction().isActive()) {
+                holder.getEntityManager().getTransaction().rollback();
+            }
         } catch (final PersistenceException e) {
             throw new IllegalStateException(e);
         }

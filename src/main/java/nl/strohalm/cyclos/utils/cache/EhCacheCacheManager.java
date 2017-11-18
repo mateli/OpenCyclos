@@ -20,8 +20,6 @@
 package nl.strohalm.cyclos.utils.cache;
 
 import net.sf.ehcache.Ehcache;
-
-import org.hibernate.engine.spi.SessionFactoryImplementor;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 
@@ -33,7 +31,6 @@ import org.springframework.beans.factory.InitializingBean;
 public class EhCacheCacheManager extends BaseCacheManager implements InitializingBean, DisposableBean {
 
     private net.sf.ehcache.CacheManager ehCacheManager;
-    private SessionFactoryImplementor sessionFactory;
     private boolean cleanUpEhCache;
 
     @Override
@@ -50,10 +47,6 @@ public class EhCacheCacheManager extends BaseCacheManager implements Initializin
         if (cleanUpEhCache) {
             ehCacheManager.shutdown();
         }
-    }
-
-    public void setSessionFactory(final SessionFactoryImplementor sessionFactory) {
-        this.sessionFactory = sessionFactory;
     }
 
     @Override

@@ -27,7 +27,7 @@ import java.util.Map;
 import nl.strohalm.cyclos.dao.BaseDAOImpl;
 import nl.strohalm.cyclos.entities.members.brokerings.BrokerCommissionContract;
 import nl.strohalm.cyclos.entities.members.brokerings.BrokerCommissionContractQuery;
-import nl.strohalm.cyclos.utils.hibernate.HibernateHelper;
+import nl.strohalm.cyclos.utils.jpa.JpaQueryHelper;
 
 import org.apache.commons.collections.CollectionUtils;
 
@@ -51,7 +51,7 @@ public class BrokerCommissionContractDAOImpl extends BaseDAOImpl<BrokerCommissio
         hql.append(" and oc.brokering = :brokering ");
         hql.append(" and oc.brokerCommission = :brokerCommission ");
         hql.append(" and (oc.period.end is null or oc.period.end >= :startDate) ");
-        hql.append(" and oc.status in (:statusList) ");
+        hql.append(" and oc.status in :statusList ");
 
         final List<BrokerCommissionContract.Status> statusList = new ArrayList<BrokerCommissionContract.Status>();
         statusList.add(BrokerCommissionContract.Status.PENDING);
@@ -73,34 +73,34 @@ public class BrokerCommissionContractDAOImpl extends BaseDAOImpl<BrokerCommissio
 
     @Override
     public List<BrokerCommissionContract> search(final BrokerCommissionContractQuery query) {
-        final StringBuilder hql = HibernateHelper.getInitialQuery(getEntityType(), "bcc", query.getFetch());
+        final StringBuilder hql = JpaQueryHelper.getInitialQuery(getEntityType(), "bcc", query.getFetch());
         final Map<String, Object> namedParameters = new HashMap<String, Object>();
 
         // Broker
-        HibernateHelper.addParameterToQuery(hql, namedParameters, "bcc.brokering.broker", query.getBroker());
+        JpaQueryHelper.addParameterToQuery(hql, namedParameters, "bcc.brokering.broker", query.getBroker());
 
         // Member
-        HibernateHelper.addParameterToQuery(hql, namedParameters, "bcc.brokering.brokered", query.getMember());
+        JpaQueryHelper.addParameterToQuery(hql, namedParameters, "bcc.brokering.brokered", query.getMember());
 
         // Broker commission
-        HibernateHelper.addParameterToQuery(hql, namedParameters, "bcc.brokerCommission", query.getBrokerCommission());
+        JpaQueryHelper.addParameterToQuery(hql, namedParameters, "bcc.brokerCommission", query.getBrokerCommission());
 
         // Start period
-        HibernateHelper.addPeriodParameterToQuery(hql, namedParameters, "bcc.period.begin", query.getStartPeriod());
+        JpaQueryHelper.addPeriodParameterToQuery(hql, namedParameters, "bcc.period.begin", query.getStartPeriod());
 
         // End period
-        HibernateHelper.addPeriodParameterToQuery(hql, namedParameters, "bcc.period.end", query.getEndPeriod());
+        JpaQueryHelper.addPeriodParameterToQuery(hql, namedParameters, "bcc.period.end", query.getEndPeriod());
 
         // Status list
-        HibernateHelper.addInParameterToQuery(hql, namedParameters, "bcc.status", query.getStatusList());
+        JpaQueryHelper.addInParameterToQuery(hql, namedParameters, "bcc.status", query.getStatusList());
 
         if (CollectionUtils.isNotEmpty(query.getManagedMemberGroups())) {
-            hql.append(" and (bcc.brokering.broker.group in (:groups_) or bcc.brokering.brokered.group in (:groups_))");
+            hql.append(" and (bcc.brokering.broker.group in :groups_ or bcc.brokering.brokered.group in :groups_)");
             namedParameters.put("groups_", query.getManagedMemberGroups());
 
         }
 
-        HibernateHelper.appendOrder(hql, "bcc.brokerCommission.name");
+        JpaQueryHelper.appendOrder(hql, "bcc.brokerCommission.name");
         return list(query, hql.toString(), namedParameters);
     }
 

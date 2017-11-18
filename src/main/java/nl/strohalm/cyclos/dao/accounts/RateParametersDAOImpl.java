@@ -63,7 +63,7 @@ public abstract class RateParametersDAOImpl<R extends RateParameters> extends Ba
         StringBuilder hql = new StringBuilder();
         hql.append(" from ").append(getEntityType().getName()).append(" r ");
         hql.append(" where r.currency = :currency ");
-        // don't use HibernateHelper.addPeriodParameterToQuery, because that tests if the stored enabledSince date falls in the period.
+        // don't use JpaQueryHelper.addPeriodParameterToQuery, because that tests if the stored enabledSince date falls in the period.
         // In stead, we want to get a list of all entities with the period between enabledSince and DisabledSince overlapping the period.
         // So that includes entities with enabledSince BEFORE the period.
         if (period != null && period.getBegin() != null) {

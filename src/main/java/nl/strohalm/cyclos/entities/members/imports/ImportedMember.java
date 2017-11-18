@@ -28,6 +28,7 @@ import nl.strohalm.cyclos.utils.StringValuedEnum;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -75,6 +76,7 @@ public class ImportedMember extends Entity implements CustomFieldsContainer<Memb
     @JoinColumn(name = "import_id", nullable = false)
 	private MemberImport                       _import;
 
+    @Convert(converter = ImportedMemberStatusAttributeConverter.class)
     @Column(name = "status", nullable = false, length = 50)
 	private Status                             status;
 

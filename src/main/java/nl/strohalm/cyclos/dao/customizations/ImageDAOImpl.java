@@ -19,10 +19,6 @@
  */
 package nl.strohalm.cyclos.dao.customizations;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-
 import nl.strohalm.cyclos.dao.BaseDAOImpl;
 import nl.strohalm.cyclos.entities.Entity;
 import nl.strohalm.cyclos.entities.ads.Ad;
@@ -33,6 +29,10 @@ import nl.strohalm.cyclos.entities.exceptions.DaoException;
 import nl.strohalm.cyclos.entities.exceptions.EntityNotFoundException;
 import nl.strohalm.cyclos.entities.exceptions.UnexpectedEntityException;
 import nl.strohalm.cyclos.entities.members.Member;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Implementation class for images
@@ -45,11 +45,11 @@ public class ImageDAOImpl extends BaseDAOImpl<Image> implements ImageDAO {
     }
 
     public int countAdImages(final Ad ad) {
-        return (Integer) uniqueResult("select count(*) from AdImage i where i.ad.id = :id", ad);
+        return (Integer) uniqueResult("select count(i) from AdImage i where i.ad.id = :id", ad);
     }
 
     public int countMemberImages(final Member member) {
-        return (Integer) uniqueResult("select count(*) from MemberImage i where i.member.id = :id", member);
+        return (Integer) uniqueResult("select count(i) from MemberImage i where i.member.id = :id", member);
     }
 
     public List<? extends Image> listByNature(final Nature nature) throws DaoException {

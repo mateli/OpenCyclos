@@ -19,10 +19,6 @@
  */
 package nl.strohalm.cyclos.services;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
-
 import nl.strohalm.cyclos.access.Permission;
 import nl.strohalm.cyclos.entities.Entity;
 import nl.strohalm.cyclos.entities.Relationship;
@@ -32,10 +28,11 @@ import nl.strohalm.cyclos.services.fetch.FetchServiceLocal;
 import nl.strohalm.cyclos.services.permissions.PermissionServiceLocal;
 import nl.strohalm.cyclos.utils.access.LoggedUser;
 
-import org.hibernate.ObjectNotFoundException;
-
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Base class for implementations of service security layer
@@ -108,10 +105,10 @@ public abstract class BaseServiceSecurity implements ServiceSecurity {
 
     @SuppressWarnings("unchecked")
     protected <T extends Entity> T load(final Class<T> type, final Long id) {
-        try {
-            return (T) entityManager.find(type, id);
-        } catch (final ObjectNotFoundException e) {
+        T entity = (T) entityManager.find(type, id);
+        if (entity == null) {
             throw new EntityNotFoundException(type, id);
         }
+        return entity;
     }
 }

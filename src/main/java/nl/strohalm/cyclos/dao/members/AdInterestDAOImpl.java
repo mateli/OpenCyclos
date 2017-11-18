@@ -32,7 +32,7 @@ import nl.strohalm.cyclos.entities.exceptions.DaoException;
 import nl.strohalm.cyclos.entities.members.Member;
 import nl.strohalm.cyclos.entities.members.adInterests.AdInterest;
 import nl.strohalm.cyclos.entities.members.adInterests.AdInterestQuery;
-import nl.strohalm.cyclos.utils.hibernate.HibernateHelper;
+import nl.strohalm.cyclos.utils.jpa.JpaQueryHelper;
 
 /**
  * Implementation for ad interests dao
@@ -53,7 +53,7 @@ public class AdInterestDAOImpl extends BaseDAOImpl<AdInterest> implements AdInte
         hql.append(" select m ");
         hql.append(" from Member m, Ad ad ");
         hql.append(" where ad = :ad ");
-        hql.append("   and :ownerGroup in elements(m.group.canViewAdsOfGroups) ");
+        hql.append("   and :ownerGroup member of m.group.canViewAdsOfGroups ");
         hql.append("   and ad.owner <> m ");
         hql.append("   and exists ( ");
         hql.append("     select ai.id ");
@@ -71,7 +71,7 @@ public class AdInterestDAOImpl extends BaseDAOImpl<AdInterest> implements AdInte
         hql.append("       and (ai.groupFilter is null or exists ( ");
         hql.append("           select gf.id ");
         hql.append("           from GroupFilter gf ");
-        hql.append("           where m.group in elements(gf.groups) ");
+        hql.append("           where m.group member of gf.groups ");
         hql.append("             and gf = ai.groupFilter ");
         hql.append("          ) ");
         hql.append("       ) ");
@@ -82,8 +82,8 @@ public class AdInterestDAOImpl extends BaseDAOImpl<AdInterest> implements AdInte
     public List<AdInterest> search(final AdInterestQuery query) throws DaoException {
         final Map<String, Object> namedParameters = new HashMap<String, Object>();
         final Set<Relationship> fetch = query.getFetch();
-        final StringBuilder hql = HibernateHelper.getInitialQuery(getEntityType(), "ai", fetch);
-        HibernateHelper.addParameterToQuery(hql, namedParameters, "ai.owner", query.getOwner());
+        final StringBuilder hql = JpaQueryHelper.getInitialQuery(getEntityType(), "ai", fetch);
+        JpaQueryHelper.addParameterToQuery(hql, namedParameters, "ai.owner", query.getOwner());
         return list(query, hql.toString(), namedParameters);
     }
 

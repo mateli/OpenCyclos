@@ -87,11 +87,11 @@ public class Member extends Element implements RegisteredMember, AccountOwner {
 	private Collection<Member>                   brokeredMembers;
 
     @OneToMany(mappedBy = "brokered", cascade = CascadeType.REMOVE)
-    @OrderBy("start_date desc")
+    @OrderBy("startDate desc")
 	private Collection<Brokering>                brokerings;
 
     @OneToMany(mappedBy = "broker", cascade = CascadeType.REMOVE)
-    @OrderBy("start_date desc")
+    @OrderBy("startDate desc")
 	private Collection<Brokering>                brokeringsAsBrokered;
 
     @OneToMany(mappedBy = "contact", cascade = CascadeType.REMOVE)

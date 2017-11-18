@@ -28,7 +28,7 @@ import nl.strohalm.cyclos.dao.BaseDAOImpl;
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.accounts.guarantees.GuaranteeType;
 import nl.strohalm.cyclos.entities.accounts.guarantees.GuaranteeTypeQuery;
-import nl.strohalm.cyclos.utils.hibernate.HibernateHelper;
+import nl.strohalm.cyclos.utils.jpa.JpaQueryHelper;
 
 /**
  * Implementation class for guarantee type DAO
@@ -43,14 +43,14 @@ public class GuaranteeTypeDAOImpl extends BaseDAOImpl<GuaranteeType> implements 
     public List<GuaranteeType> search(final GuaranteeTypeQuery query) {
         final Map<String, Object> namedParameters = new HashMap<String, Object>();
         final Set<Relationship> fetch = query.getFetch();
-        final StringBuilder hql = HibernateHelper.getInitialQuery(getEntityType(), "gt", fetch);
+        final StringBuilder hql = JpaQueryHelper.getInitialQuery(getEntityType(), "gt", fetch);
         if (query.isEnabled()) {
-            HibernateHelper.addParameterToQuery(hql, namedParameters, "gt.enabled", query.isEnabled());
+            JpaQueryHelper.addParameterToQuery(hql, namedParameters, "gt.enabled", query.isEnabled());
         }
 
-        HibernateHelper.addInParameterToQuery(hql, namedParameters, "gt.currency", query.getCurrencies());
-        HibernateHelper.addInParameterToQuery(hql, namedParameters, "gt.model", query.getModels());
-        HibernateHelper.appendOrder(hql, "gt.name ASC");
+        JpaQueryHelper.addInParameterToQuery(hql, namedParameters, "gt.currency", query.getCurrencies());
+        JpaQueryHelper.addInParameterToQuery(hql, namedParameters, "gt.model", query.getModels());
+        JpaQueryHelper.appendOrder(hql, "gt.name ASC");
 
         return list(query, hql.toString(), namedParameters);
     }

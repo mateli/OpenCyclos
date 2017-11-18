@@ -35,7 +35,6 @@ import nl.strohalm.cyclos.entities.members.Reference.Level;
 import nl.strohalm.cyclos.entities.utils.TimePeriod;
 import nl.strohalm.cyclos.utils.StringValuedEnum;
 import org.apache.commons.collections.CollectionUtils;
-import org.springframework.core.annotation.Order;
 
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
@@ -286,7 +285,7 @@ public class TransferType extends Entity {
     @JoinTable(name = "transfer_types_linked_custom_fields",
             joinColumns = @JoinColumn(name = "transfer_type_id"),
             inverseJoinColumns = @JoinColumn(name = "field_id"))
-    @OrderBy("order_number")
+    @OrderBy("order")
     private Collection<PaymentCustomField>       customFields;
 
     @ManyToMany

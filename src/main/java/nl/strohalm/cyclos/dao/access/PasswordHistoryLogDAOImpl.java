@@ -19,20 +19,19 @@
  */
 package nl.strohalm.cyclos.dao.access;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import nl.strohalm.cyclos.dao.BaseDAOImpl;
 import nl.strohalm.cyclos.entities.access.PasswordHistoryLog;
 import nl.strohalm.cyclos.entities.access.PasswordHistoryLog.PasswordType;
 import nl.strohalm.cyclos.entities.access.User;
-import nl.strohalm.cyclos.utils.hibernate.HibernateHelper;
+import nl.strohalm.cyclos.utils.jpa.JpaQueryHelper;
 import nl.strohalm.cyclos.utils.query.PageHelper;
 import nl.strohalm.cyclos.utils.query.PageParameters;
 import nl.strohalm.cyclos.utils.query.QueryParameters.ResultType;
-
 import org.apache.commons.lang.StringUtils;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class PasswordHistoryLogDAOImpl extends BaseDAOImpl<PasswordHistoryLog> implements PasswordHistoryLogDAO {
 
@@ -44,10 +43,10 @@ public class PasswordHistoryLogDAOImpl extends BaseDAOImpl<PasswordHistoryLog> i
 
         final Map<String, Object> namedParameters = new HashMap<String, Object>();
 
-        final StringBuilder hql = HibernateHelper.getInitialQuery(getEntityType(), "h");
-        HibernateHelper.addParameterToQuery(hql, namedParameters, "h.user", user);
-        HibernateHelper.addParameterToQuery(hql, namedParameters, "h.type", type);
-        HibernateHelper.addParameterToQuery(hql, namedParameters, "upper(h.password)", StringUtils.trimToEmpty(password).toUpperCase());
+        final StringBuilder hql = JpaQueryHelper.getInitialQuery(getEntityType(), "h");
+        JpaQueryHelper.addParameterToQuery(hql, namedParameters, "h.user", user);
+        JpaQueryHelper.addParameterToQuery(hql, namedParameters, "h.type", type);
+        JpaQueryHelper.addParameterToQuery(hql, namedParameters, "upper(h.password)", StringUtils.trimToEmpty(password).toUpperCase());
 
         final List<Object> list = list(ResultType.PAGE, hql.toString(), namedParameters, PageParameters.count());
 

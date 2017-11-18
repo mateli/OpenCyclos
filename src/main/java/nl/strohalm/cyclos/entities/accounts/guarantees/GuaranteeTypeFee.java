@@ -19,12 +19,24 @@
  */
 package nl.strohalm.cyclos.entities.accounts.guarantees;
 
+import nl.strohalm.cyclos.utils.DataObject;
+
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Embeddable;
+import java.math.BigDecimal;
 
 @Embeddable
-public class GuaranteeTypeFee extends GuaranteeFee {
+public class GuaranteeTypeFee extends DataObject {
+
     private static final long serialVersionUID = 4259992289841136740L;
+
+    @Convert(converter = FeeTypeAttributeConverter.class)
+    @Column(name = "type", length = 1)
+    private GuaranteeType.FeeType type;
+
+    @Column(name = "fee", precision = 15, scale = 6)
+    private BigDecimal fee;
 
     @Column(name = "readonly", nullable = false)
     private boolean           readonly;
@@ -35,6 +47,22 @@ public class GuaranteeTypeFee extends GuaranteeFee {
 
     public void setReadonly(final boolean readonly) {
         this.readonly = readonly;
+    }
+
+    public BigDecimal getFee() {
+        return fee;
+    }
+
+    public GuaranteeType.FeeType getType() {
+        return type;
+    }
+
+    public void setFee(final BigDecimal fee) {
+        this.fee = fee;
+    }
+
+    public void setType(final GuaranteeType.FeeType feeType) {
+        type = feeType;
     }
 
 }

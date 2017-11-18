@@ -30,7 +30,7 @@ import nl.strohalm.cyclos.entities.sms.SmsLogStatus;
 import nl.strohalm.cyclos.entities.sms.SmsLogType;
 import nl.strohalm.cyclos.entities.sms.SmsMailingType;
 import nl.strohalm.cyclos.entities.sms.SmsType;
-import nl.strohalm.cyclos.utils.hibernate.HibernateHelper;
+import nl.strohalm.cyclos.utils.jpa.JpaQueryHelper;
 import org.apache.commons.collections.CollectionUtils;
 
 import java.util.ArrayList;
@@ -70,18 +70,18 @@ public class SmsLogDAOImpl extends BaseDAOImpl<SmsLog> implements SmsLogDAO {
         final StringBuilder hql = new StringBuilder();
         hql.append(" select l");
         processQuery(query, hql, namedParameters, true);
-        HibernateHelper.appendOrder(hql, "l.date desc");
+        JpaQueryHelper.appendOrder(hql, "l.date desc");
         return list(query, hql.toString(), namedParameters);
     }
 
     private void processQuery(final SmsLogQuery query, final StringBuilder hql, final Map<String, Object> namedParameters, final boolean addFetch) {
         hql.append(" from SmsLog l left join l.smsMailing m left join m.by b");
         if (addFetch) {
-            HibernateHelper.appendJoinFetch(hql, entityClass, "l", query.getFetch());
+            JpaQueryHelper.appendJoinFetch(hql, entityClass, "l", query.getFetch());
         }
         hql.append(" where 1=1");
 
-        HibernateHelper.addPeriodParameterToQuery(hql, namedParameters, "l.date", query.getPeriod());
+        JpaQueryHelper.addPeriodParameterToQuery(hql, namedParameters, "l.date", query.getPeriod());
 
         final Member member = query.getMember();
         if (member != null) {
@@ -109,20 +109,20 @@ public class SmsLogDAOImpl extends BaseDAOImpl<SmsLog> implements SmsLogDAO {
                     if (CollectionUtils.isEmpty(mailingTypes)) {
                         hql.append(" and l.smsMailing is not null");
                     } else {
-                        namedParameters.put("admin", Element.Nature.ADMIN);
+                        namedParameters.put("admin", Element.Nature.ADMIN.getElementClass());
                         final StringBuilder expr = new StringBuilder();
                         expr.append("(case when m.member is not null then 'INDIVIDUAL' ");
-                        expr.append("      when b.class =  :admin and m.free =  true then 'FREE_TO_GROUP' ");
-                        expr.append("      when b.class =  :admin and m.free <> true then 'PAID_TO_GROUP' ");
-                        expr.append("      when b.class <> :admin and m.free =  true then 'FREE_FROM_BROKER' ");
-                        expr.append("      when b.class <> :admin and m.free <> true then 'PAID_FROM_BROKER' ");
+                        expr.append("      when TYPE(b) =  :admin and m.free =  true then 'FREE_TO_GROUP' ");
+                        expr.append("      when TYPE(b) =  :admin and m.free <> true then 'PAID_TO_GROUP' ");
+                        expr.append("      when TYPE(b) <> :admin and m.free =  true then 'FREE_FROM_BROKER' ");
+                        expr.append("      when TYPE(b) <> :admin and m.free <> true then 'PAID_FROM_BROKER' ");
                         expr.append("      else 'UNKNOWN' end)");
                         // The expression is string, so we must convert the mailing types to string
                         final Collection<String> mailingTypesStr = new ArrayList<String>(mailingTypes.size());
                         for (final SmsMailingType mailingType : mailingTypes) {
                             mailingTypesStr.add(mailingType.name());
                         }
-                        HibernateHelper.addInParameterToQuery(hql, namedParameters, expr.toString(), mailingTypesStr);
+                        JpaQueryHelper.addInParameterToQuery(hql, namedParameters, expr.toString(), mailingTypesStr);
                     }
                     break;
                 case NOTIFICATION:
@@ -133,7 +133,7 @@ public class SmsLogDAOImpl extends BaseDAOImpl<SmsLog> implements SmsLogDAO {
                     if (CollectionUtils.isEmpty(messageTypes)) {
                         hql.append(" and l.messageType is not null");
                     } else {
-                        HibernateHelper.addInParameterToQuery(hql, namedParameters, "l.messageType", messageTypes);
+                        JpaQueryHelper.addInParameterToQuery(hql, namedParameters, "l.messageType", messageTypes);
                     }
                     break;
                 case SMS_OPERATION:
@@ -144,7 +144,7 @@ public class SmsLogDAOImpl extends BaseDAOImpl<SmsLog> implements SmsLogDAO {
                     if (CollectionUtils.isEmpty(smsTypes)) {
                         hql.append(" and l.smsType is not null");
                     } else {
-                        HibernateHelper.addInParameterToQuery(hql, namedParameters, "l.smsType", smsTypes);
+                        JpaQueryHelper.addInParameterToQuery(hql, namedParameters, "l.smsType", smsTypes);
                     }
                     break;
             }

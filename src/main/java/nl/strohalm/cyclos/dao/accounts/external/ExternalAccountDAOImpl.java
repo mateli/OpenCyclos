@@ -32,7 +32,7 @@ import nl.strohalm.cyclos.entities.accounts.external.ExternalAccountDetailsVO;
 import nl.strohalm.cyclos.entities.accounts.external.ExternalAccountQuery;
 import nl.strohalm.cyclos.entities.accounts.external.ExternalTransfer;
 import nl.strohalm.cyclos.utils.conversion.CoercionHelper;
-import nl.strohalm.cyclos.utils.hibernate.HibernateHelper;
+import nl.strohalm.cyclos.utils.jpa.JpaQueryHelper;
 
 /**
  * Implementation DAO for external accounts
@@ -55,7 +55,7 @@ public class ExternalAccountDAOImpl extends BaseDAOImpl<ExternalAccount> impleme
         hql.append(" select ea");
         hql.append(" from ExternalAccount ea");
         hql.append(" where 1=1 ");
-        HibernateHelper.addInParameterToQuery(hql, namedParameters, "ea.systemAccountType", query.getSystemAccountTypes());
+        JpaQueryHelper.addInParameterToQuery(hql, namedParameters, "ea.systemAccountType", query.getSystemAccountTypes());
         hql.append(" order by ea.name");
         final List<ExternalAccount> accounts = list(hql.toString(), namedParameters);
 
@@ -69,7 +69,7 @@ public class ExternalAccountDAOImpl extends BaseDAOImpl<ExternalAccount> impleme
             hql.append(" select sum(t.amount)");
             hql.append(" from ExternalTransfer t ");
             hql.append(" where t.account = :account ");
-            hql.append("   and t.status in (:possibleTransferStatus) ");
+            hql.append("   and t.status in :possibleTransferStatus ");
             final BigDecimal balance = CoercionHelper.coerce(BigDecimal.class, uniqueResult(hql.toString(), namedParameters));
             result.add(new ExternalAccountDetailsVO(account.getId(), account.getName(), balance));
         }
@@ -79,9 +79,9 @@ public class ExternalAccountDAOImpl extends BaseDAOImpl<ExternalAccount> impleme
     public List<ExternalAccount> search(final ExternalAccountQuery query) {
 
         final Map<String, Object> namedParameters = new HashMap<String, Object>();
-        final StringBuilder hql = HibernateHelper.getInitialQuery(ExternalAccount.class, "ea", query.getFetch());
-        HibernateHelper.addInParameterToQuery(hql, namedParameters, "ea.systemAccountType", query.getSystemAccountTypes());
-        HibernateHelper.appendOrder(hql, "ea.name");
+        final StringBuilder hql = JpaQueryHelper.getInitialQuery(ExternalAccount.class, "ea", query.getFetch());
+        JpaQueryHelper.addInParameterToQuery(hql, namedParameters, "ea.systemAccountType", query.getSystemAccountTypes());
+        JpaQueryHelper.appendOrder(hql, "ea.name");
 
         return list(query, hql.toString(), namedParameters);
 

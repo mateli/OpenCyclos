@@ -27,6 +27,7 @@ import nl.strohalm.cyclos.utils.StringValuedEnum;
 import org.apache.commons.collections.CollectionUtils;
 
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
@@ -152,6 +153,7 @@ public class Message extends Entity {
     @JoinColumn(name = "to_member_id")
 	private Member            toMember;
 
+    @Convert(converter = MessageDirectionAttributeConverter.class)
     @Column(name = "direction", nullable = false, updatable = false, length = 1)
 	private Direction         direction;
 
@@ -165,6 +167,7 @@ public class Message extends Entity {
     @JoinColumn(name = "category_id")
 	private MessageCategory   category;
 
+    @Convert(converter = MessageTypeAttributeConverter.class)
     @Column(name = "type", nullable = false, updatable = false, length = 3)
 	private Type              type;
 

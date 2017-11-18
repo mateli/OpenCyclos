@@ -31,6 +31,7 @@ import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Embedded;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -88,6 +89,7 @@ public class Certification extends Entity {
     @Embedded
 	private Period                       validity;
 
+    @Convert(converter = CertificationStatusAttributeConverter.class)
     @Column(name = "status", nullable = false, length = 2)
 	private Status                       status;
 

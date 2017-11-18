@@ -46,7 +46,7 @@ import nl.strohalm.cyclos.services.accounts.MemberAccountTypeQuery;
 import nl.strohalm.cyclos.services.accounts.SystemAccountTypeQuery;
 import nl.strohalm.cyclos.utils.BigDecimalHelper;
 import nl.strohalm.cyclos.utils.EntityHelper;
-import nl.strohalm.cyclos.utils.hibernate.HibernateHelper;
+import nl.strohalm.cyclos.utils.jpa.JpaQueryHelper;
 
 import org.apache.commons.lang.ArrayUtils;
 
@@ -114,10 +114,10 @@ public class AccountTypeDAOImpl extends BaseDAOImpl<AccountType> implements Acco
         final Class<? extends AccountType> entityType = (query instanceof SystemAccountTypeQuery) ? SystemAccountType.class : MemberAccountType.class;
         final Map<String, Object> namedParameters = new HashMap<String, Object>();
         final Set<Relationship> fetch = query.getFetch();
-        final StringBuilder hql = HibernateHelper.getInitialQuery(entityType, "at", fetch);
-        HibernateHelper.addLikeParameterToQuery(hql, namedParameters, "at.description", query.getDescription());
-        HibernateHelper.addLikeParameterToQuery(hql, namedParameters, "at.name", query.getName());
-        HibernateHelper.addParameterToQuery(hql, namedParameters, "at.currency", query.getCurrency());
+        final StringBuilder hql = JpaQueryHelper.getInitialQuery(entityType, "at", fetch);
+        JpaQueryHelper.addLikeParameterToQuery(hql, namedParameters, "at.description", query.getDescription());
+        JpaQueryHelper.addLikeParameterToQuery(hql, namedParameters, "at.name", query.getName());
+        JpaQueryHelper.addParameterToQuery(hql, namedParameters, "at.currency", query.getCurrency());
         // Handle nature-specific parameters
         if (query instanceof SystemAccountTypeQuery) {
             // System accounts
@@ -138,15 +138,15 @@ public class AccountTypeDAOImpl extends BaseDAOImpl<AccountType> implements Acco
                 memberQuery.setRelatedToGroup(member.getMemberGroup());
             }
             if (memberQuery.getRelatedToGroups() != null && !memberQuery.getRelatedToGroups().isEmpty()) {
-                hql.append(" and exists (select mgaso.id from " + MemberGroupAccountSettings.class.getName() + " mgaso where mgaso.group in (:relatedGroups) and mgaso.accountType = at)");
+                hql.append(" and exists (select mgaso.id from " + MemberGroupAccountSettings.class.getName() + " mgaso where mgaso.group in :relatedGroups and mgaso.accountType = at)");
                 namedParameters.put("relatedGroups", memberQuery.getRelatedToGroups());
             }
             if (memberQuery.getNotRelatedToGroups() != null && !memberQuery.getNotRelatedToGroups().isEmpty()) {
-                hql.append(" and not exists (select mgaso.id from " + MemberGroupAccountSettings.class.getName() + " mgaso where mgaso.group in (:notRelatedGroups) and mgaso.accountType = at)");
+                hql.append(" and not exists (select mgaso.id from " + MemberGroupAccountSettings.class.getName() + " mgaso where mgaso.group in :notRelatedGroups and mgaso.accountType = at)");
                 namedParameters.put("notRelatedGroups", memberQuery.getNotRelatedToGroups());
             }
         }
-        HibernateHelper.appendOrder(hql, "at.class", "at.name");
+        JpaQueryHelper.appendOrder(hql, "at.class", "at.name");
         return list(query, hql.toString(), namedParameters);
     }
 
@@ -177,7 +177,7 @@ public class AccountTypeDAOImpl extends BaseDAOImpl<AccountType> implements Acco
             hql.append(" and exists (");
             hql.append("     select 1");
             hql.append("     from MemberAccount ma");
-            hql.append("     where ma.member.group in (:groups)");
+            hql.append("     where ma.member.group in :groups");
             hql.append("     and (ma = t.from or ma = t.to)");
             hql.append(" )");
             namedParams.put("groups", groups);

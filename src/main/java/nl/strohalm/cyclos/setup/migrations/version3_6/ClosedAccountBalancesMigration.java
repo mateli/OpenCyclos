@@ -19,16 +19,15 @@
  */
 package nl.strohalm.cyclos.setup.migrations.version3_6;
 
+import nl.strohalm.cyclos.entities.accounts.transactions.Payment;
+import nl.strohalm.cyclos.setup.TraceableMigration;
+import nl.strohalm.cyclos.utils.JDBCWrapper;
+import org.apache.commons.lang.time.DateUtils;
+
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Calendar;
-
-import nl.strohalm.cyclos.entities.accounts.transactions.Payment;
-import nl.strohalm.cyclos.setup.TraceableMigration;
-import nl.strohalm.cyclos.utils.JDBCWrapper;
-
-import org.apache.commons.lang.time.DateUtils;
 
 /**
  * A migration class which replaces the old AccountStatus by the new ClosedAccountBalance approach
@@ -77,7 +76,7 @@ public class ClosedAccountBalancesMigration implements TraceableMigration {
                 " where reserve_amount = true ");
         jdbc.execute("insert into amount_reservations" +
                 " (subclass, account_id, date, amount, transfer_id)" +
-                " select 'I', t.from_account_id, ifnull(t.process_date, t.date), -t.amount, t.id " +
+                " select 'I', t.from_account_id, coalesce(t.process_date, t.date), -t.amount, t.id " +
                 " from transfers t inner join scheduled_payments sp on t.scheduled_payment_id = sp.id" +
                 " where sp.reserve_amount = true and t.status <> ? ", Payment.Status.SCHEDULED.getValue());
 

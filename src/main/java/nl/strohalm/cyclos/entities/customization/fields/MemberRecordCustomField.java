@@ -24,6 +24,7 @@ import nl.strohalm.cyclos.entities.members.records.MemberRecordType;
 import nl.strohalm.cyclos.utils.StringValuedEnum;
 
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -76,6 +77,7 @@ public class MemberRecordCustomField extends CustomField {
     @Column(name = "record_show_in_list")
     private boolean           showInList;
 
+    @Convert(converter = MemberRecordCustomFieldAccessAttributeConverter.class)
     @Column(name = "record_broker_access", length = 1)
 	private Access            brokerAccess;
 

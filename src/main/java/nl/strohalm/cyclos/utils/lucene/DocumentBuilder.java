@@ -19,10 +19,6 @@
  */
 package nl.strohalm.cyclos.utils.lucene;
 
-import java.math.BigDecimal;
-import java.util.Calendar;
-import java.util.Collection;
-
 import nl.strohalm.cyclos.dao.FetchDAO;
 import nl.strohalm.cyclos.entities.Entity;
 import nl.strohalm.cyclos.entities.customization.fields.CustomField;
@@ -31,14 +27,16 @@ import nl.strohalm.cyclos.entities.customization.fields.CustomFieldPossibleValue
 import nl.strohalm.cyclos.entities.customization.fields.CustomFieldValue;
 import nl.strohalm.cyclos.entities.members.Member;
 import nl.strohalm.cyclos.utils.conversion.IdConverter;
-
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.Field.Index;
 import org.apache.lucene.document.Field.Store;
-import org.hibernate.annotations.common.util.StringHelper;
+
+import java.math.BigDecimal;
+import java.util.Calendar;
+import java.util.Collection;
 
 /**
  * Helper to build a lucene {@link Document}
@@ -102,7 +100,7 @@ public class DocumentBuilder {
                 if (includeInKeywordsSearch(name, fieldValue)) {
                     if (isString && StringUtils.isNotEmpty(stringValue)) {
                         // Only analyze when there is no mask
-                        final boolean analyzed = StringHelper.isEmpty(field.getPattern());
+                        final boolean analyzed = StringUtils.isEmpty(field.getPattern());
                         stringValue = nl.strohalm.cyclos.utils.StringHelper.removeMarkupTagsAndUnescapeEntities(stringValue);
                         add(name, stringValue, analyzed);
                     } else if (isEnumerated && possibleValue != null) {
@@ -118,7 +116,7 @@ public class DocumentBuilder {
                     String filterName = name + "." + fieldValue.getField().getId();
                     if (isString) {
                         // Only analyze when there is no mask
-                        final boolean analyzed = StringHelper.isEmpty(field.getPattern());
+                        final boolean analyzed = StringUtils.isEmpty(field.getPattern());
                         stringValue = nl.strohalm.cyclos.utils.StringHelper.removeMarkupTagsAndUnescapeEntities(stringValue);
                         add(filterName, stringValue, analyzed);
                     } else if (isEnumerated) {

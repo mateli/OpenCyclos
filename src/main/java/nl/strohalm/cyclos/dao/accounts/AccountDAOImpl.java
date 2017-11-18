@@ -57,16 +57,14 @@ import nl.strohalm.cyclos.utils.IteratorListImpl;
 import nl.strohalm.cyclos.utils.PropertyHelper;
 import nl.strohalm.cyclos.utils.ScrollableResultsIterator;
 import nl.strohalm.cyclos.utils.conversion.Transformer;
-import nl.strohalm.cyclos.utils.hibernate.HibernateHelper;
-import nl.strohalm.cyclos.utils.hibernate.HibernateHelper.QueryParameter;
+import nl.strohalm.cyclos.utils.jpa.JpaQueryHelper;
+import nl.strohalm.cyclos.utils.jpa.JpaQueryHelper.QueryParameter;
 import nl.strohalm.cyclos.utils.query.IteratorList;
 import nl.strohalm.cyclos.utils.query.PageParameters;
 import nl.strohalm.cyclos.utils.query.QueryParameters.ResultType;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.WordUtils;
-import org.hibernate.type.StandardBasicTypes;
-import org.hibernate.type.Type;
 
 import javax.persistence.Query;
 import java.io.Closeable;
@@ -80,7 +78,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
@@ -194,7 +191,7 @@ public class AccountDAOImpl extends BaseDAOImpl<Account> implements AccountDAO {
         params.put("action", action);
 
         StringBuilder hql = new StringBuilder();
-        hql.append(" select count(*) ");
+        hql.append(" select count(ma) ");
         hql.append(" from MemberAccount ma");
         hql.append(" where ma.member.group = :group ");
         hql.append(" and ma.type = :type ");
@@ -205,7 +202,7 @@ public class AccountDAOImpl extends BaseDAOImpl<Account> implements AccountDAO {
 
     @Override
     public int delete(final boolean flush, final Long... ids) {
-        this.bulkUpdate("delete from AccountLock l where l.id in (:ids)", Collections.singletonMap("ids", ids));
+        this.bulkUpdate("delete from AccountLock l where l.id in :ids", Collections.singletonMap("ids", ids));
         return super.delete(flush, ids);
     };
 
@@ -215,7 +212,7 @@ public class AccountDAOImpl extends BaseDAOImpl<Account> implements AccountDAO {
         final Period period = dto.getPeriod();
         final StringBuilder hql = new StringBuilder();
         final Map<String, Object> namedParams = new HashMap<String, Object>();
-        hql.append(" select count(*), sum(t.amount)");
+        hql.append(" select count(t), sum(t.amount)");
         hql.append(" from " + Transfer.class.getName() + " t, " + BrokerCommission.class.getName() + " f");
         hql.append(" where t.accountFeeLog.accountFee = f ");
         // Here we use just one payment filter
@@ -229,7 +226,7 @@ public class AccountDAOImpl extends BaseDAOImpl<Account> implements AccountDAO {
         }
         hql.append("   and t.to = :account ");
         namedParams.put("account", account);
-        HibernateHelper.addPeriodParameterToQuery(hql, namedParams, "ifnull(t.processDate, t.date)", period);
+        JpaQueryHelper.addPeriodParameterToQuery(hql, namedParams, "coalesce(t.processDate, t.date)", period);
         return buildSummary(uniqueResult(hql.toString(), namedParams));
     }
 
@@ -249,7 +246,7 @@ public class AccountDAOImpl extends BaseDAOImpl<Account> implements AccountDAO {
         final Period period = dto.getPeriod();
         final StringBuilder hql = new StringBuilder();
         final Map<String, Object> namedParams = new HashMap<String, Object>();
-        hql.append(" select count(*), sum(t.amount)");
+        hql.append(" select count(l), sum(t.amount)");
         hql.append(" from " + Loan.class.getName() + " l join l.transfer t");
         hql.append(" where t.to = :account ");
         // Here we use just one payment filter
@@ -262,15 +259,15 @@ public class AccountDAOImpl extends BaseDAOImpl<Account> implements AccountDAO {
             }
         }
         namedParams.put("account", account);
-        HibernateHelper.addPeriodParameterToQuery(hql, namedParams, "ifnull(t.processDate, t.date)", period);
+        JpaQueryHelper.addPeriodParameterToQuery(hql, namedParams, "coalesce(t.processDate, t.date)", period);
         return buildSummary(uniqueResult(hql.toString(), namedParams));
     }
 
     @Override
     public MemberAccount getNextPendingProcessing() {
         final StringBuilder hql = new StringBuilder();
-        hql.append("from MemberAccount ");
-        hql.append(" where action is not null");
+        hql.append("from MemberAccount m ");
+        hql.append(" where m.action is not null");
         return (MemberAccount) uniqueResult(hql.toString(), null);
     }
 
@@ -298,8 +295,8 @@ public class AccountDAOImpl extends BaseDAOImpl<Account> implements AccountDAO {
     public IteratorList<AccountDailyDifference> iterateDailyDifferences(final MemberAccount account, final Period period) {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("accountId", account.getId());
-        QueryParameter beginParameter = HibernateHelper.getBeginParameter(period);
-        QueryParameter endParameter = HibernateHelper.getEndParameter(period);
+        QueryParameter beginParameter = JpaQueryHelper.getBeginParameter(period);
+        QueryParameter endParameter = JpaQueryHelper.getEndParameter(period);
         if (beginParameter != null) {
             params.put("begin", beginParameter.getValue());
         }
@@ -338,7 +335,7 @@ public class AccountDAOImpl extends BaseDAOImpl<Account> implements AccountDAO {
         sql.append(" group by type, date(d.date) ");
         sql.append(" order by date(d.date) ");
         Query query = entityManager.createNativeQuery(sql.toString());
-        getHibernateQueryHandler().setQueryParameters(query, params);
+        getJpaQueryHandler().setQueryParameters(query, params);
         return new IteratorListImpl<>(new DiffsIterator(query.getResultList().listIterator()));
     }
 
@@ -459,8 +456,8 @@ public class AccountDAOImpl extends BaseDAOImpl<Account> implements AccountDAO {
 
         // Get the period
         final Period period = params.getPeriod();
-        final QueryParameter beginParameter = HibernateHelper.getBeginParameter(period);
-        final QueryParameter endParameter = HibernateHelper.getEndParameter(period);
+        final QueryParameter beginParameter = JpaQueryHelper.getBeginParameter(period);
+        final QueryParameter endParameter = JpaQueryHelper.getEndParameter(period);
 
         // Set the parameters
         final boolean useTT = CollectionUtils.isNotEmpty(ttIds);
@@ -496,33 +493,32 @@ public class AccountDAOImpl extends BaseDAOImpl<Account> implements AccountDAO {
         sql.append(" where m.id = h.member_id");
         if (groupIds != null) {
             parameters.put("groupIds", groupIds);
-            sql.append(" and m.group_id in (:groupIds)");
+            sql.append(" and m.group_id in :groupIds");
         }
         sql.append(" order by m.name, u.username, h.account_type_name, h.date desc, h.transfer_id desc");
 
         // Prepare the query
         final Query query = entityManager.createNativeQuery(sql.toString());
-        final Map<String, Type> columns = new LinkedHashMap<>();
-        columns.put("username", StandardBasicTypes.STRING);
-        columns.put("name", StandardBasicTypes.STRING);
-        columns.put("broker_username", StandardBasicTypes.STRING);
-        columns.put("broker_name", StandardBasicTypes.STRING);
-        columns.put("account_type_name", StandardBasicTypes.STRING);
-        columns.put("date", StandardBasicTypes.CALENDAR);
-        columns.put("amount", StandardBasicTypes.BIG_DECIMAL);
-        columns.put("description", StandardBasicTypes.STRING);
-        columns.put("related_username", StandardBasicTypes.STRING);
-        columns.put("related_name", StandardBasicTypes.STRING);
-        columns.put("transfer_type_name", StandardBasicTypes.STRING);
-        columns.put("transaction_number", StandardBasicTypes.STRING);
-        getHibernateQueryHandler().setQueryParameters(query, parameters);
+        final List<String> columns = new ArrayList<>();
+        columns.add("username");
+        columns.add("name");
+        columns.add("broker_username");
+        columns.add("broker_name");
+        columns.add("account_type_name");
+        columns.add("date");
+        columns.add("amount");
+        columns.add("description");
+        columns.add("related_username");
+        columns.add("related_name");
+        columns.add("transfer_type_name");
+        columns.add("transaction_number");
+        getJpaQueryHandler().setQueryParameters(query, parameters);
 
         // Create a transformer, which will read rows as Object[] and transform them to MemberTransactionDetailsReportData
         final Transformer<Object[], MemberTransactionDetailsReportData> transformer = input -> {
             final MemberTransactionDetailsReportData data = new MemberTransactionDetailsReportData();
             int i = 0;
-            for (final Map.Entry<String, Type> entry : columns.entrySet()) {
-                final String columnName = entry.getKey();
+            for (final String columnName : columns) {
                 // Column names are transfer_type_name, property is transferTypeName
                 String propertyName = WordUtils.capitalize(columnName, COLUMN_DELIMITERS);
                 propertyName = Character.toLowerCase(propertyName.charAt(0)) + propertyName.substring(1);
@@ -551,8 +547,8 @@ public class AccountDAOImpl extends BaseDAOImpl<Account> implements AccountDAO {
         }
 
         // Get the period
-        final QueryParameter beginParameter = HibernateHelper.getBeginParameter(period);
-        final QueryParameter endParameter = HibernateHelper.getEndParameter(period);
+        final QueryParameter beginParameter = JpaQueryHelper.getBeginParameter(period);
+        final QueryParameter endParameter = JpaQueryHelper.getEndParameter(period);
 
         // Set the parameters
         final boolean useGroups = CollectionUtils.isNotEmpty(groupIds);
@@ -582,7 +578,7 @@ public class AccountDAOImpl extends BaseDAOImpl<Account> implements AccountDAO {
         sql.append(" order by ").append(order == MemberResultDisplay.NAME ? "member_name, member_id" : "username");
 
         final Query query = entityManager.createNativeQuery(sql.toString());
-        getHibernateQueryHandler().setQueryParameters(query, parameters);
+        getJpaQueryHandler().setQueryParameters(query, parameters);
 
         final Transformer<Object[], MemberTransactionSummaryVO> transformer = new Transformer<Object[], MemberTransactionSummaryVO>() {
             @Override
@@ -610,12 +606,12 @@ public class AccountDAOImpl extends BaseDAOImpl<Account> implements AccountDAO {
                 entityClass = MemberAccount.class;
             }
         }
-        final StringBuilder hql = HibernateHelper.getInitialQuery(entityClass, "a", fetch);
-        HibernateHelper.addParameterToQuery(hql, namedParameters, "a.type", query.getType());
+        final StringBuilder hql = JpaQueryHelper.getInitialQuery(entityClass, "a", fetch);
+        JpaQueryHelper.addParameterToQuery(hql, namedParameters, "a.type", query.getType());
         if (query.getOwner() instanceof Member) {
-            HibernateHelper.addParameterToQuery(hql, namedParameters, "a.member", query.getOwner());
+            JpaQueryHelper.addParameterToQuery(hql, namedParameters, "a.member", query.getOwner());
         }
-        HibernateHelper.appendOrder(hql, "a.type.name");
+        JpaQueryHelper.appendOrder(hql, "a.type.name");
         return list(query, hql.toString(), namedParameters);
     }
 
@@ -628,7 +624,7 @@ public class AccountDAOImpl extends BaseDAOImpl<Account> implements AccountDAO {
         sql.append(" where t.status = :processed");
         sql.append("   and t.chargeback_of_id is ").append(notChargeBack ? "" : "not ").append("null");
         if (useTT) {
-            sql.append("   and t.type_id in (:ttIds)");
+            sql.append("   and t.type_id in :ttIds");
         }
         if (beginParameter != null) {
             sql.append("   and t.process_date " + beginParameter.getOperator() + " :beginDate");
@@ -647,10 +643,10 @@ public class AccountDAOImpl extends BaseDAOImpl<Account> implements AccountDAO {
         sql.append(" where t.status = :processed");
         sql.append("   and t.chargeback_of_id is ").append(notChargeBack ? "null" : "not null");
         if (useGroups) {
-            sql.append("   and m.group_id in (:groupIds)");
+            sql.append("   and m.group_id in :groupIds");
         }
         if (useTT) {
-            sql.append("   and t.type_id in (:ttIds)");
+            sql.append("   and t.type_id in :ttIds");
         }
         if (beginParameter != null) {
             sql.append("   and t.process_date " + beginParameter.getOperator() + " :beginDate");
@@ -677,12 +673,12 @@ public class AccountDAOImpl extends BaseDAOImpl<Account> implements AccountDAO {
 
         final StringBuilder hql = new StringBuilder();
         final Map<String, Object> namedParams = new HashMap<String, Object>();
-        hql.append(" select count(*), sum(abs(t.amount))");
+        hql.append(" select count(t), sum(abs(t.amount))");
         hql.append(" from " + Transfer.class.getName() + " t");
         hql.append(" where ((t.amount > 0 and t.").append(credits ? "to" : "from").append(" = :account) ");
         hql.append("  or (t.amount < 0 and t.").append(credits ? "from" : "to").append(" = :account)) ");
         namedParams.put("account", account);
-        HibernateHelper.addParameterToQuery(hql, namedParams, "t.status", status);
+        JpaQueryHelper.addParameterToQuery(hql, namedParams, "t.status", status);
 
         // Count root transfers only
         if (dto.isRootOnly()) {
@@ -712,7 +708,7 @@ public class AccountDAOImpl extends BaseDAOImpl<Account> implements AccountDAO {
                 }
             }
             if (CollectionUtils.isNotEmpty(transferTypes)) {
-                hql.append(" and t.type in (:transferTypes) ");
+                hql.append(" and t.type in :transferTypes ");
                 namedParams.put("transferTypes", transferTypes);
             }
         }
@@ -723,7 +719,7 @@ public class AccountDAOImpl extends BaseDAOImpl<Account> implements AccountDAO {
             namedParams.put("by", by);
         }
 
-        HibernateHelper.addPeriodParameterToQuery(hql, namedParams, "ifnull(t.processDate,t.date)", period);
+        JpaQueryHelper.addPeriodParameterToQuery(hql, namedParams, "coalesce(t.processDate,t.date)", period);
         return buildSummary(uniqueResult(hql.toString(), namedParams));
     }
 }

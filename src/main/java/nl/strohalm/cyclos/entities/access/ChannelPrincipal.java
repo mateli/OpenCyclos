@@ -19,16 +19,17 @@
  */
 package nl.strohalm.cyclos.entities.access;
 
-import javax.persistence.Cacheable;
-import javax.persistence.Column;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-
 import nl.strohalm.cyclos.entities.Entity;
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.access.Channel.Principal;
 import nl.strohalm.cyclos.entities.customization.fields.MemberCustomField;
+
+import javax.persistence.Cacheable;
+import javax.persistence.Column;
+import javax.persistence.Convert;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 /**
  * Contains the relationship between a channel and the allowed principals
@@ -60,6 +61,7 @@ public class ChannelPrincipal extends Entity {
     @JoinColumn(name = "channel_id", nullable = false)
 	private Channel           channel;
 
+    @Convert(converter = PrincipalAttributeConverter.class)
     @Column(length = 1, nullable = false)
 	private Principal         principal;
 

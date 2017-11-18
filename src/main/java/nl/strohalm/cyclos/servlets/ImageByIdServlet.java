@@ -19,20 +19,6 @@
  */
 package nl.strohalm.cyclos.servlets;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import nl.strohalm.cyclos.CyclosConfiguration;
 import nl.strohalm.cyclos.annotations.Inject;
 import nl.strohalm.cyclos.entities.customization.images.Image;
@@ -44,13 +30,26 @@ import nl.strohalm.cyclos.utils.SpringHelper;
 import nl.strohalm.cyclos.utils.TransactionHelper;
 import nl.strohalm.cyclos.utils.customizedfile.CustomizedFileHandler;
 import nl.strohalm.cyclos.utils.customizedfile.ImageChangeListener;
-
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionCallback;
 import org.springframework.transaction.support.TransactionCallbackWithoutResult;
+
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * This servlet will show images that are on database
@@ -84,7 +83,7 @@ public class ImageByIdServlet extends HttpServlet {
                         }
                         setContentType(image.getContentType());
                         // setContentLength(isThumbnail ? image.getThumbnailSize() : image.getImageSize());
-                        final InputStream in = (isThumbnail ? image.getThumbnail() : image.getImage()).getBinaryStream();
+                        final InputStream in = new ByteArrayInputStream(isThumbnail ? image.getThumbnail() : image.getImage());
                         writeContents(in);
                     } catch (final EntityNotFoundException e) {
                         sendError(HttpServletResponse.SC_NOT_FOUND);
@@ -103,7 +102,7 @@ public class ImageByIdServlet extends HttpServlet {
                     status.setRollbackOnly();
                     try {
                         final Image image = imageService.load(id);
-                        final InputStream in = (isThumbnail ? image.getThumbnail() : image.getImage()).getBinaryStream();
+                        final InputStream in = new ByteArrayInputStream(isThumbnail ? image.getThumbnail() : image.getImage());
                         file.getParentFile().mkdirs();
                         IOUtils.copy(in, new FileOutputStream(file));
                         file.setLastModified(image.getLastModified().getTimeInMillis());

@@ -26,6 +26,7 @@ import nl.strohalm.cyclos.utils.StringValuedEnum;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.Inheritance;
 import javax.persistence.OneToMany;
@@ -103,6 +104,7 @@ public abstract class User extends Entity {
     @Column(name = "transaction_password", length = 64)
     private String                      transactionPassword;
 
+    @Convert(converter = TransactionPasswordStatusAttributeConverter.class)
     @Column(name = "transaction_password_status", length = 1, nullable = false)
 	private TransactionPasswordStatus   transactionPasswordStatus = TransactionPasswordStatus.NEVER_CREATED;
 

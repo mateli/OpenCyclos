@@ -19,14 +19,6 @@
  */
 package nl.strohalm.cyclos.dao.accounts.cards;
 
-import java.math.BigInteger;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import nl.strohalm.cyclos.dao.BaseDAOImpl;
 import nl.strohalm.cyclos.entities.Relationship;
 import nl.strohalm.cyclos.entities.accounts.cards.Card;
@@ -35,9 +27,16 @@ import nl.strohalm.cyclos.entities.accounts.cards.CardQuery;
 import nl.strohalm.cyclos.entities.exceptions.DaoException;
 import nl.strohalm.cyclos.entities.exceptions.EntityNotFoundException;
 import nl.strohalm.cyclos.entities.members.Member;
-import nl.strohalm.cyclos.utils.hibernate.HibernateHelper;
-
+import nl.strohalm.cyclos.utils.jpa.JpaQueryHelper;
 import org.apache.commons.lang.ArrayUtils;
+
+import java.math.BigInteger;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Implementation DAO for Cards
@@ -63,7 +62,7 @@ public class CardDAOImpl extends BaseDAOImpl<Card> implements CardDAO {
     public boolean existsNumber(final BigInteger cardNumber) throws DaoException {
         final StringBuilder hql = new StringBuilder();
         final Map<String, Object> namedParameters = new HashMap<String, Object>();
-        hql.append(" select count(*)");
+        hql.append(" select count(c)");
         hql.append(" from " + Card.class.getName() + " c");
         hql.append(" where c.cardNumber = :cardNumber ");
         namedParameters.put("cardNumber", cardNumber);
@@ -93,7 +92,7 @@ public class CardDAOImpl extends BaseDAOImpl<Card> implements CardDAO {
         hql.append(" where c.owner.id = :memberId ");
         namedParameters.put("memberId", memberId);
 
-        HibernateHelper.appendOrder(hql, "c.creationDate desc");
+        JpaQueryHelper.appendOrder(hql, "c.creationDate desc");
         return list(hql.toString(), namedParameters);
     }
 
@@ -134,17 +133,17 @@ public class CardDAOImpl extends BaseDAOImpl<Card> implements CardDAO {
         final Set<Relationship> fetch = query.getFetch();
         final StringBuilder hql = new StringBuilder("select c from " + getEntityType().getName() + " c");
         hql.append(" left join c.owner owr");
-        HibernateHelper.appendJoinFetch(hql, getEntityType(), "c", fetch);
+        JpaQueryHelper.appendJoinFetch(hql, getEntityType(), "c", fetch);
         hql.append(" where 1 = 1");
-        HibernateHelper.addPeriodParameterToQuery(hql, namedParameters, "c.expirationDate", query.getExpiration());
-        HibernateHelper.addInParameterToQuery(hql, namedParameters, "c.status", query.getStatus());
-        HibernateHelper.addInParameterToQuery(hql, namedParameters, "owr.group", query.getGroups());
-        HibernateHelper.addParameterToQuery(hql, namedParameters, "c.cardType", query.getCardType());
-        HibernateHelper.addParameterToQuery(hql, namedParameters, "c.owner", query.getMember());
-        HibernateHelper.addParameterToQuery(hql, namedParameters, "c.cardNumber", query.getNumber());
-        HibernateHelper.addParameterToQuery(hql, namedParameters, "owr.broker", query.getBroker());
+        JpaQueryHelper.addPeriodParameterToQuery(hql, namedParameters, "c.expirationDate", query.getExpiration());
+        JpaQueryHelper.addInParameterToQuery(hql, namedParameters, "c.status", query.getStatus());
+        JpaQueryHelper.addInParameterToQuery(hql, namedParameters, "owr.group", query.getGroups());
+        JpaQueryHelper.addParameterToQuery(hql, namedParameters, "c.cardType", query.getCardType());
+        JpaQueryHelper.addParameterToQuery(hql, namedParameters, "c.owner", query.getMember());
+        JpaQueryHelper.addParameterToQuery(hql, namedParameters, "c.cardNumber", query.getNumber());
+        JpaQueryHelper.addParameterToQuery(hql, namedParameters, "owr.broker", query.getBroker());
 
-        HibernateHelper.appendOrder(hql, "owr.name", "c.creationDate desc");
+        JpaQueryHelper.appendOrder(hql, "owr.name", "c.creationDate desc");
         return list(query, hql.toString(), namedParameters);
     }
 

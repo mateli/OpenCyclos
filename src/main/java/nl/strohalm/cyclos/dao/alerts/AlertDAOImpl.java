@@ -19,19 +19,19 @@
  */
 package nl.strohalm.cyclos.dao.alerts;
 
+import nl.strohalm.cyclos.dao.BaseDAOImpl;
+import nl.strohalm.cyclos.entities.Relationship;
+import nl.strohalm.cyclos.entities.alerts.Alert;
+import nl.strohalm.cyclos.entities.alerts.Alert.Type;
+import nl.strohalm.cyclos.entities.alerts.AlertQuery;
+import nl.strohalm.cyclos.utils.jpa.JpaQueryHelper;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import nl.strohalm.cyclos.dao.BaseDAOImpl;
-import nl.strohalm.cyclos.entities.Relationship;
-import nl.strohalm.cyclos.entities.alerts.Alert;
-import nl.strohalm.cyclos.entities.alerts.Alert.Type;
-import nl.strohalm.cyclos.entities.alerts.AlertQuery;
-import nl.strohalm.cyclos.utils.hibernate.HibernateHelper;
 
 /**
  * Implementation class for AlertDAO component. It delegates basic operations to a InsertableDAO and a BaseDAO. Extends Spring's Hibernate Support.
@@ -53,7 +53,7 @@ public class AlertDAOImpl extends BaseDAOImpl<Alert> implements AlertDAO {
         if (ids == null || ids.length == 0) {
             return 0;
         }
-        final String hql = "update " + getEntityType().getName() + " a set a.removed=true where a.id in (:ids)";
+        final String hql = "update " + getEntityType().getName() + " a set a.removed=true where a.id in :ids";
         final Map<String, ?> namedParameters = Collections.singletonMap("ids", Arrays.asList(ids));
         final int results = bulkUpdate(hql.toString(), namedParameters);
         if (flush) {
@@ -64,7 +64,7 @@ public class AlertDAOImpl extends BaseDAOImpl<Alert> implements AlertDAO {
 
     @Override
     public int getCount(final Type type) {
-        final Integer count = uniqueResult("select count(*) from " + type.getEntityType().getName() + " a where a.removed=false", null);
+        final Integer count = uniqueResult("select count(a) from " + type.getEntityType().getName() + " a where a.removed=false", null);
         return count;
     }
 
@@ -78,22 +78,22 @@ public class AlertDAOImpl extends BaseDAOImpl<Alert> implements AlertDAO {
         }
         final Map<String, Object> namedParameters = new HashMap<String, Object>();
         final Set<Relationship> fetch = query.getFetch();
-        final StringBuilder hql = HibernateHelper.getInitialQuery(entityType, "a", fetch);
+        final StringBuilder hql = JpaQueryHelper.getInitialQuery(entityType, "a", fetch);
         if (!query.isShowRemoved()) {
             hql.append(" and a.removed = false ");
         }
         if (entityType.equals(Type.MEMBER.getEntityType())) {
-            HibernateHelper.addParameterToQuery(hql, namedParameters, "a.member", query.getMember());
+            JpaQueryHelper.addParameterToQuery(hql, namedParameters, "a.member", query.getMember());
 
             if (query.getGroups() != null && !query.getGroups().isEmpty()) {
-                hql.append(" and a.member.group in (:groups) ");
+                hql.append(" and a.member.group in :groups ");
                 namedParameters.put("groups", query.getGroups());
             }
         }
-        HibernateHelper.addParameterToQuery(hql, namedParameters, "a.key", query.getKey());
-        HibernateHelper.addPeriodParameterToQuery(hql, namedParameters, "a.date", query.getPeriod());
+        JpaQueryHelper.addParameterToQuery(hql, namedParameters, "a.key", query.getKey());
+        JpaQueryHelper.addPeriodParameterToQuery(hql, namedParameters, "a.date", query.getPeriod());
 
-        HibernateHelper.appendOrder(hql, "a.date desc, a.id desc");
+        JpaQueryHelper.appendOrder(hql, "a.date desc, a.id desc");
         return list(query, hql.toString(), namedParameters);
     }
 

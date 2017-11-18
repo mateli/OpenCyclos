@@ -19,10 +19,11 @@
  */
 package nl.strohalm.cyclos.entities;
 
+import nl.strohalm.cyclos.entities.converters.PasswordHashAttributeConverter;
 import nl.strohalm.cyclos.utils.StringValuedEnum;
 
 import javax.persistence.Column;
-import javax.persistence.Enumerated;
+import javax.persistence.Convert;
 import javax.persistence.Table;
 import java.util.Calendar;
 
@@ -77,6 +78,7 @@ public class Application extends Entity {
     @Column(name = "last_index_rebuilding_time")
     private Calendar          lastIndexRebuidingTime;
 
+    @Convert(converter = PasswordHashAttributeConverter.class)
     @Column(name = "password_hash", length = 1)
 	private PasswordHash      passwordHash;
 
