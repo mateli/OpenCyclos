@@ -19,6 +19,10 @@
  */
 package nl.strohalm.cyclos.utils;
 
+import nl.strohalm.cyclos.exceptions.ApplicationException;
+import org.imgscalr.Scalr;
+
+import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
@@ -27,12 +31,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
-
-import nl.strohalm.cyclos.exceptions.ApplicationException;
-
-import com.mullassery.imaging.Imaging;
-import com.mullassery.imaging.ImagingFactory;
-import com.mullassery.imaging.util.Util;
 
 /**
  * Contains helper methods for image manipulation
@@ -163,7 +161,6 @@ public final class ImageHelper {
     private static final byte[] GIF_SIGNATURE  = { (byte) 0x47, (byte) 0x49, (byte) 0x46 };
     private static final byte[] JPEG_SIGNATURE = { (byte) 0xFF, (byte) 0xD8, (byte) 0xFF };
     private static final byte[] PNG_SIGNATURE  = { (byte) 0x89, (byte) 0x50, (byte) 0x4e, (byte) 0x47, (byte) 0x0d, (byte) 0x0a, (byte) 0x1a, (byte) 0x0a };
-    private static Imaging      imaging;
 
     /**
      * @see #resizeGivenMaxDimensions(BufferedImage, String, Dimensions)
@@ -176,7 +173,11 @@ public final class ImageHelper {
      * Loads an image from an stream
      */
     public static BufferedImage load(final InputStream in) {
-        return imaging().read(in);
+        try {
+            return ImageIO.read(in);
+        } catch (IOException e) {
+            return null;
+        }
     }
 
     /**
@@ -190,19 +191,11 @@ public final class ImageHelper {
 
         // Resize the image and write it to disk
         final Dimensions newDimensions = originalDimensions.resizeKeepingRatio(maxDimensions);
-        final BufferedImage thumbnail = imaging().resize(image, newDimensions.getWidth(), newDimensions.getHeight());
+        final BufferedImage thumbnail = Scalr.resize(image,  Scalr.Method.SPEED, Scalr.Mode.FIT_TO_WIDTH,
+                newDimensions.getWidth(), newDimensions.getHeight(), Scalr.OP_ANTIALIAS);
         final File thumbFile = File.createTempFile("cyclos", "image");
-        Util.saveImage(imaging, thumbnail, ImageType.getByContentType(contentType).name(), thumbFile);
+        ImageIO.write(thumbnail, ImageType.getByContentType(contentType).name(), thumbFile);
         return thumbFile;
     }
 
-    /**
-     * Returns the imaging instance
-     */
-    private synchronized static Imaging imaging() {
-        if (imaging == null) {
-            imaging = ImagingFactory.createImagingInstance();
-        }
-        return imaging;
-    }
 }

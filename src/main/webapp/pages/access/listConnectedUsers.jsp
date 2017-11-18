@@ -4,7 +4,6 @@
 <%@ taglib uri="http://jakarta.apache.org/struts/tags/struts-html" prefix="html" %>
 <%@ taglib uri="http://sslext.sf.net/tags/sslext" prefix="ssl" %>
 <%@ taglib uri="http://devel.cyclos.org/tlibs/cyclos-core" prefix="cyclos" %>
-<%@ taglib uri="http://www.servletsuite.com/servlets/toggletag" prefix="t" %> 
 
 <script>
 	var nothingSelectedMessage = "<cyclos:escapeJS><bean:message key="global.error.nothingSelected"/></cyclos:escapeJS>";
@@ -58,10 +57,10 @@
 						<td class="tdHeaderContents" width="15%"><bean:message key="connectedUsers.remoteAddress"/></td>
 						<td class="tdHeaderContents" width="5%"></td>
 	                </tr>
-					<c:forEach var="session" items="${sessions}">
+					<c:forEach var="session" items="${sessions}" varStatus="loopStatus">
 	                	<c:set var="user" value="${session.user}"/>
 	                	<c:set var="nature" value="${cyclos:name(user.element.nature)}"/>
-						<c:set var="trClass"><t:toggle>ClassColor1|ClassColor2</t:toggle></c:set>
+						<c:set var="trClass" value="${loopStatus.index % 2 == 0 ? 'ClassColor1' : 'ClassColor2'}" />
 		                <tr class="${trClass}">
 		                    <td align="left" valign="top">
 		                    	<c:choose><c:when test="${nature == 'OPERATOR' && isAdmin}">
